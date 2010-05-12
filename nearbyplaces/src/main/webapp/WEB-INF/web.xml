@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+  <display-name>citysearch3</display-name>
+  <servlet>
+    <servlet-name>sample</servlet-name>
+    <servlet-class>com.citysearch.servlets.SearchQueryServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>sample</servlet-name>
+    <url-pattern>/SearchQueryServlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>AdSample</servlet-name>
+    <servlet-class>com.citysearch.servlets.AdListQueryServlet</servlet-class>
+    <init-param>
+      <param-name>log4j-init-file</param-name>
+      <param-value>/log4j.properties</param-value>
+    </init-param>
+    <init-param>
+      <param-name>propertiesFile</param-name>
+      <param-value>/images.properties</param-value>
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AdSample</servlet-name>
+    <url-pattern>/PFPSample</url-pattern>
+  </servlet-mapping>
+  <security-role>
+    <role-name>role1</role-name>
+  </security-role>
+  <security-role>
+    <role-name>tomcat</role-name>
+  </security-role>
+  
+        <error-page> 
+  			<exception-type>com.citysearch.exception.CitySearchException</exception-type> 
+  			<location>/jsp/Error.jsp</location>
+		</error-page>
+</web-app>
