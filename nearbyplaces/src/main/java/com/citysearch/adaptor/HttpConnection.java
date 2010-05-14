@@ -6,7 +6,7 @@ import java.net.URL;
 
 import org.apache.log4j.Logger;
 
-import com.citysearch.exception.CitySearchException;
+import com.citysearch.exception.CitysearchException;
 import com.citysearch.helper.PropertiesLoader;
 
 public class HttpConnection {
@@ -14,6 +14,7 @@ public class HttpConnection {
     private static Logger log = Logger.getLogger(HttpConnection.class);
     private static final String reqMethod = "GET";
     private static final int resWaitTime = 10000;
+    private static final String error = "connection.error";
 
     /**
      * Gets the connection object for the given url Exception thrown if there is a connection
@@ -21,11 +22,10 @@ public class HttpConnection {
      * 
      * @param urlString
      * @return
-     * @throws CitySearchException
+     * @throws CitysearchException
      */
-    public static HttpURLConnection getConnection(String urlString) throws CitySearchException {
+    public static HttpURLConnection getConnection(String urlString) throws CitysearchException {
         HttpURLConnection connection = null;
-        final String error = "connectionError";
         String errorMsg = PropertiesLoader.getErrorProperties().getProperty(error);
         try {
             URL url = new URL(urlString);
@@ -36,11 +36,11 @@ public class HttpConnection {
             connection.connect();
             if (connection == null) {
                 log.error(errorMsg);
-                throw new CitySearchException(errorMsg);
+                throw new CitysearchException(errorMsg);
             }
         } catch (IOException e) {
             log.error(errorMsg, e);
-            throw new CitySearchException(errorMsg);
+            throw new CitysearchException(errorMsg);
         }
         return connection;
     }

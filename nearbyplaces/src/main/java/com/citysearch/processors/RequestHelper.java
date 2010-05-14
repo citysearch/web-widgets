@@ -1,7 +1,6 @@
-package com.citysearch.helper.request;
+package com.citysearch.processors;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.Map;
@@ -11,9 +10,9 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import com.citysearch.exception.CitySearchException;
+import com.citysearch.exception.CitysearchException;
+import com.citysearch.helper.CommonConstants;
 import com.citysearch.helper.PropertiesLoader;
-import com.citysearch.shared.CommonConstants;
 
 public class RequestHelper {
 
@@ -22,13 +21,21 @@ public class RequestHelper {
     private final static String encodeMethod = "UTF-8";
     private final static String lonURL = "lon";
     private final static String latURL = "lat";
-    private final static String pfpLocationURLProp = "pfpLocationURL";
-    private final static String pfpURLProp = "pfpURL";
+    private final static String pfpLocationURLProp = "pfplocation.url";
+    private final static String pfpURLProp = "pfp.url";
     private final static String apiKeyParam = "apikey";
-    private final static String searchRppKey = "search_rpp";
-    private final static String pfpRppKey = "pfp_rpp";
-    private final static String searchURL = "searchURL";
+    private final static String searchRppKey = "search.rpp";
+    private final static String pfpRppKey = "pfp.rpp";
+    private final static String searchURL = "search.url";
     private final static String rppParam = "rpp";
+    private final static String whatErrMsg = "what.errmsg";
+    private final static String publisherErrMsg = "publisher.errmsg";
+    private final static String whereErrMsg = "where.errmsg";
+    private final static String apiKeyErrMsg = "apikey.errmsg";
+    private final static String publisherKey = "publisher";
+    private final static String equals = "=";
+    private final static String ampersand = "&";
+    private final static String error = "urlencode.error";
     private String what;
     private String where;
     private String publisher;
@@ -45,22 +52,13 @@ public class RequestHelper {
      * user will be redirected to a default page Reads the required parameters from the map
      * 
      * @param map
-     * @throws CitySearchException
+     * @throws CitysearchException
      */
-    public RequestHelper(Map<String, String[]> map) throws CitySearchException {
-
-        properties = PropertiesLoader.apiProperties;
+    public RequestHelper(Map<String, String[]> map) throws CitysearchException {
+        properties = PropertiesLoader.getAPIProperties();
         errorProperties = PropertiesLoader.getErrorProperties();
-        if (properties == null) {
-            String error = "apiproperties";
-            String errMsg = errorProperties.getProperty(error);
-            log.error(errMsg);
-            throw new CitySearchException(errMsg);
-        }
-
-        String values[];
         this.map = map;
-        values = (String[]) map.get(CommonConstants.WHAT);
+        String values[] = (String[]) map.get(CommonConstants.WHAT);
         what = values != null ? values[0] : null;
         values = (String[]) map.get(CommonConstants.WHERE);
         where = values != null ? values[0] : null;
@@ -82,10 +80,9 @@ public class RequestHelper {
      * default page by throwing Exception
      * 
      * @return
-     * @throws CitySearchException
+     * @throws CitysearchException
      */
-    public boolean validateRequest() throws CitySearchException {
-        final String whatErrMsg = "whatErrMsg";
+    public boolean validateRequest() throws CitysearchException {
         String errMsg = null;
         boolean error = false;
         if (StringUtils.isBlank(what)) {
@@ -94,20 +91,18 @@ public class RequestHelper {
                 error = true;
             }
         }
-        final String whereErrMsg = "whereErrMsg";
         if (StringUtils.isBlank(where)) {
             if (StringUtils.isBlank(sourceLat) || StringUtils.isBlank(sourceLon)) {
                 errMsg = errorProperties.getProperty(whereErrMsg);
                 error = true;
             }
         }
-        final String publisherErrMsg = "publisherErrMsg";
         if (StringUtils.isBlank(publisher)) {
             errMsg = errorProperties.getProperty(publisherErrMsg);
             error = true;
         }
+
         // Added on 05/12/2010 to make it a required parameter
-        final String apiKeyErrMsg = "apiKeyErrMsg";
         if (StringUtils.isBlank(apiKey)) {
             errMsg = errorProperties.getProperty(apiKeyErrMsg);
             error = true;
@@ -138,8 +133,9 @@ public class RequestHelper {
      * 
      * @param queryType
      * @return
+     * @throws CitysearchException
      */
-    public String getQueryString(String queryType) {
+    public String getQueryString(String queryType) throws CitysearchException {
         String queryString = null;
         if (queryType.equalsIgnoreCase(searchQuery)) {
             queryString = getSearchQueryString();
@@ -154,31 +150,41 @@ public class RequestHelper {
      * 
      * @return
      */
-    private String getPFPQueryString() {
+    private String getPFPQueryString() throws CitysearchException {
         StringBuffer apiQueryString = new StringBuffer();
-        String key;
-        String value;
-        String values[];
-        String queryParam;
-
         Set<String> keySet = map.keySet();
         Iterator<String> keyIterator = keySet.iterator();
-
-        while (keyIterator.hasNext()) {
-            key = keyIterator.next();
-            values = map.get(key);
-            value = values[0];
-            queryParam = constructQueryParam(key, value);
-            apiQueryString.append(queryParam);
+        String value = null;
+        String key;
+        String values[];
+        String queryParam;
+        String urlString = null;
+        try {
+            while (keyIterator.hasNext()) {
+                key = keyIterator.next();
+                values = map.get(key);
+                if (values != null) {
+                    value = values[0];
+                }
+                queryParam = constructQueryParam(key, value);
+                apiQueryString.append(queryParam);
+            }
+            String url;
+            if (keySet.contains(latURL) && keySet.contains(lonURL)
+                    && StringUtils.isNotBlank(sourceLat) && StringUtils.isNotBlank(sourceLon)) {
+                url = properties.getProperty(pfpLocationURLProp);
+            } else {
+                url = properties.getProperty(pfpURLProp);
+            }
+            queryParam = constructQueryParam(rppParam, properties.getProperty(pfpRppKey));
+            urlString = url + apiQueryString.toString();
+        } catch (Exception excep) {
+            String errMsg = PropertiesLoader.getErrorProperties().getProperty(
+                    CommonConstants.ERROR_METHOD_PARAM)
+                    + " getPFPQueryString()";
+            log.error(errMsg, excep);
+            throw new CitysearchException(errMsg);
         }
-        String url;
-        if (keySet.contains(latURL) && keySet.contains(lonURL)) {
-            url = properties.getProperty(pfpLocationURLProp);
-        } else {
-            url = properties.getProperty(pfpURLProp);
-        }
-        queryParam = constructQueryParam(rppParam, properties.getProperty(pfpRppKey));
-        String urlString = getURLString(url, apiQueryString.toString());
         return urlString;
     }
 
@@ -188,7 +194,6 @@ public class RequestHelper {
      * @return
      */
     private String getSearchQueryString() {
-        final String publisherKey = "publisher";
         StringBuffer apiQueryString = new StringBuffer();
         String rppVal = properties.getProperty(searchRppKey);
         String queryParam = constructQueryParam(CommonConstants.WHAT, what);
@@ -203,28 +208,9 @@ public class RequestHelper {
         apiQueryString.append(queryParam);
         queryParam = constructQueryParam(rppParam, rppVal);
         apiQueryString.append(queryParam);
-        String urlString = getURLString(properties.getProperty(searchURL),
-                apiQueryString.toString());
+        String urlString = properties.getProperty(searchURL) + apiQueryString.toString();
         return urlString;
 
-    }
-
-    /**
-     * Encodes url string as per UTF-8 encoding
-     * 
-     * @param urlString
-     * @param queryString
-     * @return
-     */
-    private String getURLString(String urlString, String queryString) {
-        queryString = queryString.replaceAll(" ", "%20");
-        /*
-         * try { queryString = URLEncoder.encode(queryString,encodeMethod); } catch
-         * (UnsupportedEncodingException excep) { String error = "urlEncodeError"; String errMsg =
-         * errorProperties.getProperty(error); log.error(errMsg,excep); }
-         */
-        String url = urlString + queryString;
-        return url;
     }
 
     /**
@@ -233,12 +219,16 @@ public class RequestHelper {
      */
     private String constructQueryParam(String name, String value) {
         StringBuffer apiQueryString = new StringBuffer();
-        if (value != null) {
-            final String equals = "=";
-            final String ampersand = "&";
+        if (StringUtils.isNotBlank(value)) {
             apiQueryString.append(ampersand);
             apiQueryString.append(name);
             apiQueryString.append(equals);
+            try {
+                value = URLEncoder.encode(value, encodeMethod);
+            } catch (UnsupportedEncodingException excep) {
+                String errMsg = errorProperties.getProperty(error);
+                log.error(errMsg, excep);
+            }
             apiQueryString.append(value);
         }
         return apiQueryString.toString();

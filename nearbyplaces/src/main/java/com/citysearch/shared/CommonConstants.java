@@ -10,4 +10,5 @@ public class CommonConstants {
     public static final String LON_URL = "long";
     public static final String RES_CONTENT_TYPE = "text/html";
     public static final int RES_SUCCESS_CODE = 200;
+    public static final String REDIRECT_URL_PARAM = "defaultRedirectURL";
 }

@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Properties;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,82 +16,89 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 
 import com.citysearch.adaptor.HttpConnection;
-import com.citysearch.exception.CitySearchException;
+import com.citysearch.exception.CitysearchException;
+import com.citysearch.helper.CommonConstants;
 import com.citysearch.helper.PropertiesLoader;
-import com.citysearch.helper.request.RequestHelper;
-import com.citysearch.helper.response.PfpResponseHelper;
-import com.citysearch.shared.CommonConstants;
+import com.citysearch.processors.PfpResponseHelper;
+import com.citysearch.processors.RequestHelper;
 import com.citysearch.value.AdListBean;
 
 public class AdListQueryServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-    private Logger log;// = Logger.getLogger(getClass());
-
-    public void init(ServletConfig config) throws ServletException {
-        super.init(config);
-
-        String prefix = getServletContext().getRealPath("/");
-        String file = getInitParameter("log4j-init-file");
-        if (file != null) {
-            PropertyConfigurator.configure(prefix + file);
-        }
-        log = Logger.getLogger(AdListQueryServlet.class);
-    }
+    private Logger log = Logger.getLogger(getClass());
+    private static final String apiType = "pfp";
+    private static final String searchPagePath = "searchpagepath";
+    private static final String redirectURLParam = "RedirectURL";
+    private static final String resultListParam = "ResultList";
+    private static final String jspFwdPathParam = "jspfwdpath";
+    private static final String callBackURLParam = "callbackURL";
 
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException,
             IOException {
-        final String apiType = "pfp";
-        final String errMsgParam = "errMsgParam";
-        final String errPagePath = "errPagePath";
-        final String searchPagePath = "searchPagePath";
-        Map<String, String[]> paramMap = req.getParameterMap();
-        RequestHelper reqHelper = new RequestHelper(paramMap);
-        HttpSession session = req.getSession(true);
-        Properties apiProperties = getAPIProperties();
-        boolean error = reqHelper.validateRequest();
-        RequestDispatcher dispatcher;
-        if (error) {
-            session.setAttribute(apiProperties.getProperty(errMsgParam), error);
-            dispatchRequest(req, res, apiProperties.getProperty(errPagePath));
-        } else {
-            // Calling Search API to get latitude and longitude
-            if (!reqHelper.validateLatLon()) {
-                dispatcher = req.getRequestDispatcher(apiProperties.getProperty(searchPagePath));
-                dispatcher.include(req, res);
-            }
-            HttpURLConnection connection = null;
-            try {
-                String queryString = reqHelper.getQueryString(apiType);
-                log.info(queryString);
-                connection = HttpConnection.getConnection(queryString);
-                processResponse(req, res, connection, apiProperties);
-            } catch (Exception excep) {
-                log.error(excep);
-            } finally {
-                HttpConnection.closeConnection(connection);
-            }
 
+        Map<String, String[]> paramMap = req.getParameterMap();
+        Properties apiProperties = getAPIProperties();
+        RequestHelper reqHelper = new RequestHelper(paramMap);
+        setDefaultURL(req, apiProperties);
+        // If the request is not valid, user will be directed to an error page
+        if (reqHelper.validateRequest()) {
+            throw new CitysearchException();
         }
+        RequestDispatcher dispatcher;
+        // Calling Search API to get latitude and longitude
+        if (!reqHelper.validateLatLon()) {
+            dispatcher = req.getRequestDispatcher(apiProperties.getProperty(searchPagePath));
+            dispatcher.include(req, res);
+        }
+        HttpURLConnection connection = null;
+        try {
+            String queryString = reqHelper.getQueryString(apiType);
+            log.info(queryString);
+            connection = HttpConnection.getConnection(queryString);
+            processResponse(req, res, connection, apiProperties);
+        } catch (Exception excep) {
+            String errMsg = PropertiesLoader.getErrorProperties().getProperty(
+                    CommonConstants.ERROR_METHOD_PARAM)
+                    + "doGet()";
+            log.error(errMsg, excep);
+            throw new CitysearchException();
+        } finally {
+            HttpConnection.closeConnection(connection);
+        }
+
+    }
+
+    /**
+     * Sets the default redirect url in a session If any error occurs,this will be the url the user
+     * will be forwarded
+     * 
+     * @param req
+     * @param apiProperties
+     */
+    private void setDefaultURL(HttpServletRequest req, Properties apiProperties) {
+        String defaultRedirectURL = apiProperties.getProperty(CommonConstants.REDIRECT_URL_PARAM);
+        HttpSession session = req.getSession(true);
+        session.setAttribute(CommonConstants.REDIRECT_URL_PARAM, defaultRedirectURL);
     }
 
     /**
      * Reads the api properties file. If file is not found, an exception will be thrown
      * 
      * @return
-     * @throws CitySearchException
+     * @throws CitysearchException
      */
-    private Properties getAPIProperties() throws CitySearchException {
-        Properties apiProperties = PropertiesLoader.apiProperties;
-        Properties errProperties = PropertiesLoader.getErrorProperties();
-        if (apiProperties == null) {
-            String error = "apiproperties";
-            String errMsg = errProperties.getProperty(error);
+    private Properties getAPIProperties() throws CitysearchException {
+        Properties apiProperties;
+        Properties errorProperties = PropertiesLoader.getErrorProperties();
+        try {
+            apiProperties = PropertiesLoader.getAPIProperties();
+        } catch (Exception e) {
+            String errMsg = errorProperties.getProperty(CommonConstants.API_PROP_READ_ERROR);
             log.error(errMsg);
-            throw new CitySearchException(errMsg);
+            throw new CitysearchException(errMsg);
         }
         return apiProperties;
     }
@@ -105,17 +111,15 @@ public class AdListQueryServlet extends HttpServlet {
      * @param res
      * @param connection
      * @param apiProperties
-     * @throws CitySearchException
+     * @throws CitysearchException
      * @throws ServletException
+     * @throws IOException
      */
     private void processResponse(HttpServletRequest req, HttpServletResponse res,
-            HttpURLConnection connection, Properties apiProperties) throws CitySearchException,
-            ServletException {
-        String redirectURL;
-        final String redirectURLParam = "RedirectURL";
-
+            HttpURLConnection connection, Properties apiProperties) throws CitysearchException,
+            ServletException, IOException {
         res.setContentType(CommonConstants.RES_CONTENT_TYPE);
-        redirectURL = (String) req.getParameter(redirectURLParam);
+        String redirectURL = (String) req.getParameter(redirectURLParam);
         redirectURL = getRedirectURL(redirectURL, apiProperties);
         InputStream input = null;
         try {
@@ -127,8 +131,15 @@ public class AdListQueryServlet extends HttpServlet {
                 processSuccessResponse(redirectURL, req, res, connection, apiProperties);
             }
         } catch (IOException excep) {
-            log.error(excep);
-            throw new CitySearchException();
+            String errMsg = PropertiesLoader.getErrorProperties().getProperty(
+                    CommonConstants.ERROR_METHOD_PARAM)
+                    + " processResponse()";
+            log.error(errMsg, excep);
+            throw new CitysearchException();
+        } finally {
+            if (input != null) {
+                input.close();
+            }
         }
 
     }
@@ -141,38 +152,43 @@ public class AdListQueryServlet extends HttpServlet {
      * @param res
      * @param connection
      * @param apiProperties
-     * @throws CitySearchException
+     * @throws CitysearchException
      * @throws ServletException
+     * @throws IOException
      */
     private void processSuccessResponse(String redirectURL, HttpServletRequest req,
             HttpServletResponse res, HttpURLConnection connection, Properties apiProperties)
-            throws CitySearchException, ServletException {
-        final String resultListParam = "ResultList";
-        final String jspFwdPathParam = "jspFwdPath";
-        final String latitude = "latitude";
-        final String longitude = "longitude";
-        final String callBackURLParam = "callbackURL";
+            throws CitysearchException, ServletException, IOException {
         InputStream input = null;
         HttpSession session = req.getSession();
         PfpResponseHelper responseHelper = new PfpResponseHelper();
         try {
             input = connection.getInputStream();
             if (input != null) {
-                String sourceLat = (String) session.getAttribute(latitude);
-                String sourceLon = (String) session.getAttribute(longitude);
-
+                String sourceLat = (String) session.getAttribute(CommonConstants.LATITUDE);
+                String sourceLon = (String) session.getAttribute(CommonConstants.LONGITUDE);
                 String callbackURL = req.getParameter(callBackURLParam);
                 ArrayList<AdListBean> adList = responseHelper.parseXML(input, sourceLat, sourceLon,
-                        callbackURL);
+                        callbackURL, req.getContextPath());
                 if (adList.size() > 0) {
+                    String callBackFunction = req.getParameter(CommonConstants.CALL_BACK_FUNCTION_PARAM);
                     req.setAttribute(resultListParam, adList);
+                    req.setAttribute(CommonConstants.CALL_BACK_FUNCTION_PARAM, callBackFunction);
                     dispatchRequest(req, res, apiProperties.getProperty(jspFwdPathParam));
                 } else {
                     res.sendRedirect(redirectURL);
                 }
             }
         } catch (IOException excep) {
-            log.error(excep);
+            String errMsg = PropertiesLoader.getErrorProperties().getProperty(
+                    CommonConstants.ERROR_METHOD_PARAM)
+                    + " processSuccessResponse()";
+            log.error(errMsg, excep);
+            throw new CitysearchException();
+        } finally {
+            if (input != null) {
+                input.close();
+            }
         }
     }
 
@@ -184,9 +200,8 @@ public class AdListQueryServlet extends HttpServlet {
      * @return
      */
     private String getRedirectURL(String redirectURL, Properties apiProperties) {
-        String defaultRedirectURLParam = "defaultRedirectURL";
         if (StringUtils.isBlank(redirectURL)) {
-            redirectURL = apiProperties.getProperty(defaultRedirectURLParam);
+            redirectURL = apiProperties.getProperty(CommonConstants.REDIRECT_URL_PARAM);
         }
         return redirectURL;
     }
@@ -196,13 +211,16 @@ public class AdListQueryServlet extends HttpServlet {
      */
     private void dispatchRequest(HttpServletRequest req, HttpServletResponse res,
             String resourcePath) throws ServletException {
-        final String dispatchException = "Exception while request dispatching";
         try {
             RequestDispatcher dispatcher;
             dispatcher = getServletContext().getRequestDispatcher(resourcePath);
             dispatcher.forward(req, res);
         } catch (IOException ioe) {
-            log.error(dispatchException, ioe);
+            String errMsg = PropertiesLoader.getErrorProperties().getProperty(
+                    CommonConstants.ERROR_METHOD_PARAM)
+                    + " dispatchRequest()";
+            log.error(errMsg, ioe);
+            throw new CitysearchException();
         }
     }
 

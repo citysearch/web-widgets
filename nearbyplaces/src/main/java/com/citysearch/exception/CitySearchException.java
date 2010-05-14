@@ -2,21 +2,16 @@ package com.citysearch.exception;
 
 import javax.servlet.ServletException;
 
-import org.apache.log4j.Logger;
-
-public class CitySearchException extends ServletException {
+public class CitysearchException extends ServletException {
 
     private static final long serialVersionUID = 1L;
-    private Logger log = Logger.getLogger(getClass());
 
-    public CitySearchException() {
+    public CitysearchException() {
         super();
-        log.error(this.getStackTrace());
     }
 
-    public CitySearchException(String message) {
+    public CitysearchException(String message) {
         super(message);
-        log.error(this.getStackTrace());
     }
 
 }

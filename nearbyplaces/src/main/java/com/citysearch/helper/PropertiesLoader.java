@@ -6,13 +6,16 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
-import com.citysearch.exception.CitySearchException;
+import com.citysearch.exception.CitysearchException;
 
 public class PropertiesLoader {
     private static Logger log = Logger.getLogger(PropertiesLoader.class);
-    public static final Properties apiProperties = getProperties("/api.properties");
-    public static final Properties imageProperties = getProperties("/images.properties");
-    private static final Properties errorProperties = getProperties("/error.properties");
+    private static final String apiPropertiesFile = "/api.properties";
+    private static final String errorPropertiesFile = "/error.properties";
+    private static Properties errorProperties;
+    private static Properties apiProperties;
+    private final static String errorPropMsg = "Error initializing the properties file";
+    private final static String ioExcepMsg = "IOException while reading properties file";
 
     public static Properties getProperties(String fileName) {
         InputStream inputStream;
@@ -25,17 +28,38 @@ public class PropertiesLoader {
             if (inputStream != null)
                 properties.load(inputStream);
         } catch (IOException ioexcep) {
-            String errMsg = "Error Loading Properties File";
-            log.error(errMsg, ioexcep);
+            log.error(ioExcepMsg, ioexcep);
+        } finally {
+            try {
+                inputStream.close();
+            } catch (IOException ioexcep) {
+                log.error(ioExcepMsg, ioexcep);
+            }
         }
         return properties;
     }
 
-    public static Properties getErrorProperties() throws CitySearchException {
-        if (errorProperties == null) {
-            String msg = "Error initializing the error.properties file";
-            throw new CitySearchException(msg);
+    public static Properties getErrorProperties() throws CitysearchException {
+        try {
+            if (errorProperties == null) {
+                errorProperties = getProperties(errorPropertiesFile);
+            }
+        } catch (Exception e) {
+            log.error(errorPropMsg);
+            throw new CitysearchException(errorPropMsg);
         }
         return errorProperties;
+    }
+
+    public static Properties getAPIProperties() throws CitysearchException {
+        try {
+            if (apiProperties == null) {
+                apiProperties = getProperties(apiPropertiesFile);
+            }
+        } catch (Exception e) {
+            log.error(errorPropMsg);
+            throw new CitysearchException(errorPropMsg);
+        }
+        return apiProperties;
     }
 }

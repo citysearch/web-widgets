@@ -11,13 +11,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.citysearch.adaptor.HttpConnection;
-import com.citysearch.exception.CitySearchException;
-import com.citysearch.helper.request.RequestHelper;
-import com.citysearch.helper.response.SearchResponseHelper;
-import com.citysearch.shared.CommonConstants;
+import com.citysearch.exception.CitysearchException;
+import com.citysearch.helper.CommonConstants;
+import com.citysearch.helper.PropertiesLoader;
+import com.citysearch.processors.RequestHelper;
+import com.citysearch.processors.SearchResponseHelper;
 
 public class SearchQueryServlet extends HttpServlet {
 
@@ -25,8 +27,7 @@ public class SearchQueryServlet extends HttpServlet {
 
     private Logger log = Logger.getLogger(getClass());
     private static final String apiType = "search";
-    private static final String latitude = "latitude";
-    private static final String longitude = "longitude";
+    private static final String latLonError = "lat.lon.error";
 
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException,
             IOException {
@@ -43,20 +44,21 @@ public class SearchQueryServlet extends HttpServlet {
      * 
      * @param req
      * @param res
-     * @throws CitySearchException
+     * @throws CitysearchException
+     * @throws IOException
      */
     private void processRequest(HttpServletRequest req, HttpServletResponse res)
-            throws CitySearchException {
+            throws CitysearchException, IOException {
         HttpSession session = req.getSession(true);
         Map<String, String[]> paramMap = req.getParameterMap();
         res.setContentType(CommonConstants.RES_CONTENT_TYPE);
         RequestHelper reqHelper = new RequestHelper(paramMap);
         HttpURLConnection connection = null;
+        InputStream input = null;
         try {
             String queryString = reqHelper.getQueryString(apiType);
             log.info(queryString);
             connection = HttpConnection.getConnection(queryString);
-            InputStream input = null;
             if (connection.getResponseCode() != CommonConstants.RES_SUCCESS_CODE) {
                 input = connection.getErrorStream();
                 if (input != null) {
@@ -73,8 +75,14 @@ public class SearchQueryServlet extends HttpServlet {
             }
 
         } catch (IOException excep) {
-            log.error(excep);
+            String errMsg = PropertiesLoader.getErrorProperties().getProperty(
+                    CommonConstants.ERROR_METHOD_PARAM)
+                    + " processRequest()";
+            log.error(errMsg, excep);
         } finally {
+            if (input != null) {
+                input.close();
+            }
             HttpConnection.closeConnection(connection);
         }
     }
@@ -85,13 +93,17 @@ public class SearchQueryServlet extends HttpServlet {
      * 
      * @param input
      * @param session
-     * @throws CitySearchException
+     * @throws CitysearchException
      */
-    private void processResponse(InputStream input, HttpSession session) throws CitySearchException {
+    private void processResponse(InputStream input, HttpSession session) throws CitysearchException {
         SearchResponseHelper responseHelper = new SearchResponseHelper();
         String[] latLon = responseHelper.parseXML(input);
-        session.setAttribute(latitude, latLon[0]);
-        session.setAttribute(longitude, latLon[1]);
+        if (StringUtils.isBlank(latLon[0]) || StringUtils.isBlank(latLon[0])) {
+            String errMsg = PropertiesLoader.getErrorProperties().getProperty(latLonError);
+            throw new CitysearchException(errMsg);
+        }
+        session.setAttribute(CommonConstants.LATITUDE, latLon[0]);
+        session.setAttribute(CommonConstants.LONGITUDE, latLon[1]);
     }
 
 }
