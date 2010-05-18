@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="stylesheet" type="text/css" media="screen" href="http://74.208.64.80:8080/citysearch/css/citysearch.css" />
+</head>
+
+<title>Userpage</title>
+<h1></h1>
+<body >
+<H1><a href="Index.html">Back</a></H1>
+
+<div id="csWidget" style="vertical-align: top; ">
+</div>
+<script type="text/javascript">
+    var cs =
+    {
+        targetelementid: 'csWidget',
+        what: 'pizza',
+        where: 'Chicago, IL',
+        publisher: 'insiderpages',          
+        url: '',
+        callback: 'generateUrl',
+        lat: '',
+        lon: '',
+        tags: '1722',
+        radius: 25
+    };
+    function generateUrl(listing_id, phone)
+    {
+	    //Map id passed to insider pages id 
+
+	    window.open("http://www.insiderpages.com/b/" + listing_id, "insiderpages");
+
+    }
+</script>
+<script type="text/javascript" src="http://74.208.64.80:8080/citysearch/js/CSWidgetAPI.js"></script>
+
+</body>
+</html>

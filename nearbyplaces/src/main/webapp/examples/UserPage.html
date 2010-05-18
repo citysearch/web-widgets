@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+
+
+
+<script type="text/javascript">
+    var cs =
+    {
+        targetelementid: 'csWidget',
+        what: 'sushi',
+        where: 'West_Hollywood, CA',          
+        publisher: 'insiderpages',          
+        url: 'http://www.insiderpages.com/b/$l',
+        callback: 'generateUrl',
+        lat: '',
+        lon: '',
+        tags: '',
+        radius: 25
+    };
+    function generateUrl(listing_id, phone)
+    {
+	    //Map id passed to insider pages id 
+	if (listing_id=="41735803") listing_id="3710603753";
+	if (listing_id=="37243591") listing_id = "15240030513";
+	if (listing_id=="603300392") listing_id="15250644776";
+
+
+	    window.open("http://www.insiderpages.com/b/" + listing_id, "insiderpages");
+
+    }
+</script>
+
+<!-- begin ad tag -->
+<script type="text/javascript">
+//<![CDATA[
+ord=Math.random()*10000000000000000;
+document.write('<script type="text/javascript" src="http://ad.doubleclick.net/adj/5480.iac.grd/citygrid;sz=300x250;ord=' + ord + '?var=cs"><\/script>');
+//]]>
+</script>
+<noscript><a href="http://ad.doubleclick.net/jump/5480.iac.grd/citygrid;sz=300x250;ord=123456789?" target="_blank" ><img src="http://ad.doubleclick.net/ad/5480.iac.grd/citygrid;sz=300x250;ord=123456789?" border="0" alt="" /></a></noscript>
+<!-- end ad tag -->
+
+<script>
+function loadwidgets(what, where, lat, lon, url, fn, pcode, radius, tags)
+{
+
+	cs.what =what;
+	cs.where = where;
+	cs.publisher = pcode;
+	cs.url = url;
+	cs.callback = fn;
+	cs.lat = lat;
+	cs.lon = lon;
+	cs.tags = tags;
+	cs.radius = radius;
+	createwidget(cs);
+}
+
+</script>
+
+</head>
+<title>Userpage</title>
+<h1></h1>
+<body>
+<h1>Enter your values here :</h1>
+<form action="test.htm" method="post">
+
+
+<table border="0">
+<tr>
+<th>Parameters</th>
+<th>Values</th>
+</tr>
+<tr>
+<td>What:</td>
+<td><input id="txtPara1" name="what" size="24" type="text" value="sushi" /></td>
+</tr>
+<tr>
+<td>Where:</td>
+<td><input id="txtPara2" name="where" size="24" type="text" value="Los Angeles, CA" /></td>
+</tr>
+<tr>
+<td>Latitude:</td>
+<td><input id="txtPara3" name="lat" size="24" type="text" value="" /></td>
+</tr>
+<tr>
+<td>Longitude:</td>
+<td><input id="txtPara4" name="long" size="24" type="text" value="" /></td>
+</tr>
+<tr>
+<td>CallBackURL:</td>
+<td><input id="txtPara5" name="callbackurl" size="24" type="text" value="" /></td>
+</tr>
+<tr>
+<td>CallBackFunction:</td>
+<td><input id="txtPara6" name="callbackfunction" size="24" type="text" value="generateUrl" /></td>
+</tr>
+<tr>
+<td>PublisherCode:</td>
+<td><input id="txtPara7" name="publishercode" size="24" type="text" value="insiderpages" /></td>
+</tr>
+<tr>
+<td>Radius:</td>
+<td><input id="txtPara8" name="radius" size="24" type="text" value="" /></td>
+</tr>
+<tr>
+<td>Tags:</td>
+<td><input id="txtPara9" name="tags" size="24" type="text" value="" /></td>
+</tr>
+</table>
+ <br>&nbsp;&nbsp;&nbsp;<input type="button" value="Submit" onclick="javascript:loadwidgets(txtPara1.value,txtPara2.value,txtPara3.value,txtPara4.value,txtPara5.value,txtPara6.value,txtPara7.value, txtPara8.value, txtPara9.value);"/>
+
+</form>
+<div id="csWidget" style="vertical-align: top; ">
+</div>
+
+</body>
+</html>

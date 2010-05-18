@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+
+
+
+<script type="text/javascript" src="js/CSWidgetAPI.js"></script>
+
+
+<script type="text/javascript">
+function generateUrl(id)
+{
+	//Map id passed to insider pages id 
+
+	window.open("http://www.insiderpages.com/b/" + id, "insiderpages");
+
+}
+function loadwidgets()
+
+{
+    try
+    {
+
+        CSW.cswParameters =
+        {
+            targetElementId: 'csWidget',
+            width: 250,
+            height: 300,
+            what: 'pizza',
+            where: 'Chicago, IL',          
+            publishercode: 'insiderpages',          
+            callbackURL: '',
+            callbackfunction: 'generateUrl',
+            placement: '', 
+            lat: '',
+            lon: '',
+            apikey: 'gunyay6vkqnvc2geyfedbdt3',
+            tags: 1722,
+            radius: 25
+        };
+         try { CSW.xCSWidgets.CreateWidget(); } catch (e) { alert('An error occured with the search. ' + e); }
+    }
+    catch (em) { 
+    //alert(' domready ' + em);
+    }
+} 
+
+   
+</script>
+
+
+
+</head>
+<title>Userpage</title>
+<h1></h1>
+<body onLoad="loadwidgets();">
+<H1><a href="Index.html">Back</a></H1>
+
+<div id="csWidget" style="vertical-align: top; ">
+</div>
+
+</body>
+</html>
