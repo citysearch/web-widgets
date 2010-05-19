@@ -14,18 +14,18 @@
 <script type="text/javascript">
     var cs =
     {
-        targetelementid: 'csWidget',
+        target: 'csWidget',
         what: 'sushi',
         where: '',
         publisher: 'insiderpages',          
         url: '',
-        callback: 'generateUrl',
+        callback: 'navigate',
         lat: '41.9',
         lon: '-87.7',
         tags: '',
         radius: 10
     };
-    function generateUrl(listing_id, phone)
+    function navigate(listing_id, phone)
     {
 	    //Map id passed to insider pages id 
 

@@ -6,7 +6,7 @@
 <title>Userpage</title>
 <h1></h1>
 <body >
-<H1><a href="Index.html">Back</a></H1>
+
 <div id="csWidget" style="vertical-align: top; ">
 </div>
 
@@ -15,16 +15,16 @@
     {
         target: 'csWidget',
         what: 'sushi',
-        where: '',
+        where: 'West_Hollywood, CA',          
         publisher: 'insiderpages',          
         url: '',
         callback: 'navigate',
-        lat: '41.9',
-        lon: '-87.7',
+        lat: '',
+        lon: '',
         tags: '',
-        radius: 10
+        radius: 25
     };
-     function navigate(listing_id,phone)
+    function navigate(listing_id, phone)
     {
 	    //Map id passed to insider pages id 
 	if (listing_id=="41735803") listing_id="3710603753";
@@ -33,8 +33,8 @@
 
 
 	    window.open("http://www.insiderpages.com/b/" + listing_id, "insiderpages");
-   }
 
+    }
 </script>
 
 <!-- begin ad tag -->
@@ -46,6 +46,5 @@ document.write('<script type="text/javascript" src="http://ad.doubleclick.net/ad
 </script>
 <noscript><a href="http://ad.doubleclick.net/jump/5480.iac.grd/citygrid;sz=300x250;ord=123456789?" target="_blank" ><img src="http://ad.doubleclick.net/ad/5480.iac.grd/citygrid;sz=300x250;ord=123456789?" border="0" alt="" /></a></noscript>
 <!-- end ad tag -->
-
 </body>
 </html>

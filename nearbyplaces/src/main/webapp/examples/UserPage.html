@@ -7,18 +7,18 @@
 <script type="text/javascript">
     var cs =
     {
-        targetelementid: 'csWidget',
+        target: 'csWidget',
         what: 'sushi',
         where: 'West_Hollywood, CA',          
         publisher: 'insiderpages',          
         url: 'http://www.insiderpages.com/b/$l',
-        callback: 'generateUrl',
+        callback: 'navigate',
         lat: '',
         lon: '',
         tags: '',
         radius: 25
     };
-    function generateUrl(listing_id, phone)
+    function navigate(listing_id, phone)
     {
 	    //Map id passed to insider pages id 
 	if (listing_id=="41735803") listing_id="3710603753";
@@ -94,7 +94,7 @@ function loadwidgets(what, where, lat, lon, url, fn, pcode, radius, tags)
 </tr>
 <tr>
 <td>CallBackFunction:</td>
-<td><input id="txtPara6" name="callbackfunction" size="24" type="text" value="generateUrl" /></td>
+<td><input id="txtPara6" name="callbackfunction" size="24" type="text" value="navigate" /></td>
 </tr>
 <tr>
 <td>PublisherCode:</td>

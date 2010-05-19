@@ -8,7 +8,7 @@
 
 
 <script type="text/javascript">
-function generateUrl(id)
+function navigate(id)
 {
 	//Map id passed to insider pages id 
 
@@ -23,14 +23,14 @@ function loadwidgets()
 
         CSW.cswParameters =
         {
-            targetElementId: 'csWidget',
+            target: 'csWidget',
             width: 250,
             height: 300,
             what: 'pizza',
             where: 'Chicago, IL',          
             publishercode: 'insiderpages',          
             callbackURL: '',
-            callbackfunction: 'generateUrl',
+            callbackfunction: 'navigate',
             placement: '', 
             lat: '',
             lon: '',

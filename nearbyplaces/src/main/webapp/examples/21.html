@@ -6,7 +6,7 @@
 
 
 <script type="text/javascript">
-function generateUrl(id)
+function navigate(id)
 {
 	//Map id passed to insider pages id 
 
@@ -21,14 +21,14 @@ function loadwidgets()
 
         CSW.cswParameters =
         {
-            targetElementId: 'csWidget',
+            target: 'csWidget',
             width: 250,
             height: 300,
             what: 'sushi',
             where: '',          
             publishercode: 'insiderpages',          
             callbackURL: '',
-            callbackfunction: 'generateUrl',
+            callbackfunction: 'navigate',
             placement: '', 
             lat: '41.9',
             lon: '-87.7',

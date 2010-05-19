@@ -13,18 +13,18 @@
 <script type="text/javascript">
     var cs =
     {
-        targetelementid: 'csWidget',
+        target: 'csWidget',
         what: 'sushi',
         where: '',
         publisher: 'insiderpages',          
-   	url: 'http://www.insiderpages.com?listing=$l%26phone=$p',
+   	url: 'http://www.insiderpages.com/b/$l',
         callback: '',
         lat: '41.9',
         lon: '-87.7',
         tags: '',
         radius: 10
     };
-     function generateUrl(listing_id,phone)
+     function navigate(listing_id,phone)
     {
 	    //Map id passed to insider pages id 
 	if (listing_id=="41735803") listing_id="3710603753";

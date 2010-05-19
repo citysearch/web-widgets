@@ -14,18 +14,18 @@
 <script type="text/javascript">
     var cs =
     {
-        targetelementid: 'csWidget',
+        target: 'csWidget',
         what: 'pizza',
         where: 'Chicago, IL',
         publisher: 'insiderpages',          
         url: '',
-        callback: 'generateUrl',
+        callback: 'navigate',
         lat: '',
         lon: '',
         tags: '1722',
         radius: 25
     };
-    function generateUrl(listing_id, phone)
+    function  navigate(listing_id, phone)
     {
 	    //Map id passed to insider pages id 
 

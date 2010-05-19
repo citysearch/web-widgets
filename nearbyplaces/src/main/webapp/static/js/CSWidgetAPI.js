@@ -32,6 +32,12 @@ function createwidget(objCSW)
         return;
     }
     
+    if(typeof objCSW.target == "undefined" || objCSW.target == '')
+    {
+        throw 'undefiend target';
+        return;
+    }
+
     if(typeof objCSW.what == "undefined")
         objCSW.what = '';
     if(typeof objCSW.where == "undefined")
@@ -92,7 +98,7 @@ function createwidget(objCSW)
                         sScript = XMLHTTP.responseText;
                         //alert(sScript);
                         //document.write(sScript);
-                        document.getElementById(objCSW.targetelementid).innerHTML = sScript;
+                        document.getElementById(objCSW.target).innerHTML = sScript;
                         XMLHTTP = null;
                     }
                 }
