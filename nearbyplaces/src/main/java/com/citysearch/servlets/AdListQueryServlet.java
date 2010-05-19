@@ -46,7 +46,6 @@ public class AdListQueryServlet extends HttpServlet {
         RequestHelper reqHelper = new RequestHelper(paramMap);
         setDefaultURL(req, apiProperties);
         String sourceLatLon[] = new String[2];
-        // HttpSession session = req.getSession(true);
         // If the request is not valid, user will be directed to an error page
         if (reqHelper.validateRequest()) {
             throw new CitysearchException();
@@ -64,10 +63,6 @@ public class AdListQueryServlet extends HttpServlet {
             String errMsg = PropertiesLoader.getErrorProperties().getProperty(latLonError);
             log.error(errMsg);
         }
-        req.setAttribute(CommonConstants.CALL_BACK_FUNCTION_PARAM,
-                req.getParameter(CommonConstants.CALL_BACK_FUNCTION_PARAM));
-        req.setAttribute(CommonConstants.CALL_BACK_URL,
-                req.getParameter(CommonConstants.CALL_BACK_URL));
         executeRequest(reqHelper, CommonConstants.PFP_API_TYPE, req, res, apiProperties,
                 sourceLatLon);
     }
@@ -133,7 +128,6 @@ public class AdListQueryServlet extends HttpServlet {
     private void executeRequest(RequestHelper reqHelper, String apiType, HttpServletRequest req,
             HttpServletResponse res, Properties apiProperties, String[] sourceLatLon)
             throws ServletException, IOException {
-        // HttpSession session = req.getSession(true);
         String url = reqHelper.getQueryString(apiType);
         boolean response = executeRequest(url, req, res, sourceLatLon);
         if (!response) {
