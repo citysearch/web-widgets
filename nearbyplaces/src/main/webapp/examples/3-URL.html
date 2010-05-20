@@ -13,39 +13,26 @@
 <script type="text/javascript">
     var cs =
     {
-        targetelementid: 'csWidget',
+        target: 'csWidget',
         what: 'pizza',
         where: 'Chicago, IL',
         publisher: 'insiderpages',          
-        url: 'http://www.insiderpages.com?listing=$l%26phone=$p',
+        url: 'http://www.insiderpages.com/b/$l',
         callback: '',
         lat: '',
         lon: '',
         tags: '1722',
         radius: 25
     };
-     function generateUrl(listing_id,phone)
-    {
-	    //Map id passed to insider pages id 
-	if (listing_id=="41735803") listing_id="3710603753";
-	if (listing_id=="37243591") listing_id = "15240030513";
-	if (listing_id=="603300392") listing_id="15250644776";
-
-
-	    window.open("http://www.insiderpages.com/b/" + listing_id, "insiderpages");
-
-   }
-</script>
-
-<!-- begin ad tag -->
-<script type="text/javascript">
+   
 //<![CDATA[
 ord=Math.random()*10000000000000000;
 document.write('<script type="text/javascript" src="http://ad.doubleclick.net/adj/5480.iac.grd/citygrid;sz=300x250;ord=' + ord + '?var=cs"><\/script>');
 //]]>
+
 </script>
+
 <noscript><a href="http://ad.doubleclick.net/jump/5480.iac.grd/citygrid;sz=300x250;ord=123456789?" target="_blank" ><img src="http://ad.doubleclick.net/ad/5480.iac.grd/citygrid;sz=300x250;ord=123456789?" border="0" alt="" /></a></noscript>
-<!-- end ad tag -->
 
 </body>
 </html>

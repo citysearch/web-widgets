@@ -1,7 +1,7 @@
 ﻿//Widgets operation, all functionality will be placed or derived in same object.
 function createwidget(objCSW)
 {
-    var serviceRoot ='http://74.208.64.80:8080/citysearch/Nearby_Places300x250';
+    var serviceRoot ='/citysearch/Nearby_Places300x250';
     var widgeturl= serviceRoot;
     widgeturl += "?";
     if(typeof objCSW.what == "undefined" && typeof objCSW.tags == "undefined" )
@@ -90,9 +90,8 @@ function createwidget(objCSW)
                     if ((XMLHTTP.status == 200||XMLHTTP.status == 0)) {
                         var sScript = "";
                         sScript = XMLHTTP.responseText;
-                        //alert(sScript);
-                        //document.write(sScript);
-                        document.getElementById(objCSW.targetelementid).innerHTML = sScript;
+                       
+                        document.getElementById(objCSW.target).innerHTML = sScript;
                         XMLHTTP = null;
                     }
                 }
