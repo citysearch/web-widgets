@@ -19,6 +19,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
+import org.jdom.output.XMLOutputter;
 
 import com.citysearch.exception.CitysearchException;
 import com.citysearch.helper.CommonConstants;
@@ -36,8 +37,10 @@ public abstract class ResponseHelper {
     private static final int displaySize = 3;
     private static final String commaString = ",";
     private static final String spaceString = " ";
-    private static final int busNameMaxLength = 24;
-    private static final int tagLineMaxLength = 29;
+    private static final String busNameMaxLengthProp = "name.length";
+    private static final String taglineMaxLengthProp = "tagline.length";
+    private static final int busNameMaxLength = 30;
+    private static final int tagLineMaxLength = 30;
     private static final double kmToMile = 0.622;
     private static final int radius = 6371;
     private static final int totalRating = 5;
@@ -112,7 +115,6 @@ public abstract class ResponseHelper {
             String contextPath) throws CitysearchException {
         ArrayList<AdListBean> adList = new ArrayList<AdListBean>();
         try {
-            // Document doc = getDocumentfromStream(input);
             if (doc != null && doc.hasRootElement()) {
                 Element rootElement = doc.getRootElement();
                 String childElem = getApiChildElementName(apiType);
@@ -151,8 +153,10 @@ public abstract class ResponseHelper {
      * @param sLat
      * @param sLon
      * @return
+     * @throws CitysearchException
      */
-    private AdListBean processMap(HashMap<String, String> resultMap, String sLat, String sLon) {
+    private AdListBean processMap(HashMap<String, String> resultMap, String sLat, String sLon)
+            throws CitysearchException {
         AdListBean adListBean = null;
         if (resultMap != null) {
             // Calculating Distance
@@ -323,12 +327,27 @@ public abstract class ResponseHelper {
 
     /**
      * Truncates the business name to maximum length and if truncated add three ellipses at the end
+     * Reads the length from the property file.
      * 
      * @param name
      * @return name
+     * @throws CitysearchException
      */
-    protected String getBusinessName(String name) {
-        name = StringUtils.abbreviate(name, busNameMaxLength);
+    protected String getBusinessName(String name) throws CitysearchException {
+        String value = PropertiesLoader.getAPIProperties().getProperty(busNameMaxLengthProp);
+        int length = busNameMaxLength;
+        if (StringUtils.isNotBlank(value)) {
+            try {
+                length = Integer.parseInt(value);
+            } catch (Exception excep) {
+                String errMsg = PropertiesLoader.getErrorProperties().getProperty(
+                        CommonConstants.ERROR_METHOD_PARAM)
+                        + "getBusinessName()";
+                log.error(errMsg, excep);
+                throw new CitysearchException();
+            }
+        }
+        name = StringUtils.abbreviate(name, length);
         return StringUtils.trimToEmpty(name);
     }
 
@@ -337,9 +356,23 @@ public abstract class ResponseHelper {
      * 
      * @param name
      * @return tag line
+     * @throws CitysearchException
      */
-    protected String getTagLine(String tagLine) {
-        tagLine = StringUtils.abbreviate(tagLine, tagLineMaxLength);
+    protected String getTagLine(String tagLine) throws CitysearchException {
+        String value = PropertiesLoader.getAPIProperties().getProperty(taglineMaxLengthProp);
+        int length = tagLineMaxLength;
+        if (StringUtils.isNotBlank(value)) {
+            try {
+                length = Integer.parseInt(value);
+            } catch (Exception excep) {
+                String errMsg = PropertiesLoader.getErrorProperties().getProperty(
+                        CommonConstants.ERROR_METHOD_PARAM)
+                        + "getTagLine()";
+                log.error(errMsg, excep);
+                throw new CitysearchException();
+            }
+        }
+        tagLine = StringUtils.abbreviate(tagLine, length);
         return StringUtils.trimToEmpty(tagLine);
     }
 
