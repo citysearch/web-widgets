@@ -1,11 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>citysearch3</groupId>
-	<artifactId>citysearch3</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<groupId>citysearch.g3.widgets</groupId>
+	<artifactId>citysearch-nearbyplaces</artifactId>
+	<version>0.1.0</version>
 	<packaging>war</packaging>
-	<name>citysearch</name>
+	<name>Citysearch Content Ad NearbyPlaces Widget</name>
 	<repositories>
 		<repository>
 			<id>maven2-repository.dev.java.net</id>
