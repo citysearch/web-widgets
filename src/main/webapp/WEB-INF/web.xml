@@ -85,6 +85,6 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>HealthCheckServlet</servlet-name>
-    <url-pattern>/HealthCheckServlet</url-pattern>
+    <url-pattern>/healthcheck</url-pattern>
   </servlet-mapping>
 </web-app>
