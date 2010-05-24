@@ -1,7 +1,7 @@
 ﻿//Widgets operation, all functionality will be placed or derived in same object.
 function createwidget(objCSW)
 {
-    var serviceRoot ='../../Nearby_Places300x250';
+    var serviceRoot = document.location.hostname + '/' + document.location.pathname.split('/')[1] + '/Nearby_Places300x250';
     var widgeturl= serviceRoot;
     widgeturl += "?";
     if(typeof objCSW.what == "undefined" && typeof objCSW.tags == "undefined" )
@@ -9,7 +9,7 @@ function createwidget(objCSW)
     throw 'undefined what/tags';
     return;
     }
-    
+
     if(typeof objCSW.url == "undefined" && typeof objCSW.callback == "undefined" )
     {
     throw 'undefined url/callback';
@@ -31,7 +31,7 @@ function createwidget(objCSW)
         throw 'undefiend publisher';
         return;
     }
-    
+
     if(typeof objCSW.what == "undefined")
         objCSW.what = '';
     if(typeof objCSW.where == "undefined")
@@ -61,7 +61,7 @@ function createwidget(objCSW)
     widgeturl+='&callbackfunction=' + objCSW.callback;
     widgeturl+='&callbackURL=' + objCSW.url;
     //document.write(widgeturl);
-    
+
     var XMLHTTP=null;
     try {
         XMLHTTP = new ActiveXObject("Msxml2.XMLHTTP");
@@ -90,7 +90,7 @@ function createwidget(objCSW)
                     if ((XMLHTTP.status == 200||XMLHTTP.status == 0)) {
                         var sScript = "";
                         sScript = XMLHTTP.responseText;
-                       
+
                         document.getElementById(objCSW.target).innerHTML = sScript;
                         XMLHTTP = null;
                     }
@@ -104,27 +104,27 @@ function createwidget(objCSW)
     }
     XMLHTTP.send(null);
 }
-function QSObject(querystring){ 
-    //Create regular expression object to retrieve the qs part 
-    var qsReg = new RegExp("[?][^#]*","i"); 
-    hRef = unescape(querystring); 
-    var qsMatch = hRef.match(qsReg); 
-    //removes the question mark from the url 
-    qsMatch = new String(qsMatch); 
-    qsMatch = qsMatch.substr(1, qsMatch.length -1); 
-    //split it up 
-    var rootArr = qsMatch.split("&"); 
-    for(i=0;i<rootArr.length;i++){ 
-        var tempArr = rootArr[i].split("="); 
-        if(tempArr.length ==2){ 
-            tempArr[0] = unescape(tempArr[0]); 
-            tempArr[1] = unescape(tempArr[1]); 
+function QSObject(querystring){
+    //Create regular expression object to retrieve the qs part
+    var qsReg = new RegExp("[?][^#]*","i");
+    hRef = unescape(querystring);
+    var qsMatch = hRef.match(qsReg);
+    //removes the question mark from the url
+    qsMatch = new String(qsMatch);
+    qsMatch = qsMatch.substr(1, qsMatch.length -1);
+    //split it up
+    var rootArr = qsMatch.split("&");
+    for(i=0;i<rootArr.length;i++){
+        var tempArr = rootArr[i].split("=");
+        if(tempArr.length ==2){
+            tempArr[0] = unescape(tempArr[0]);
+            tempArr[1] = unescape(tempArr[1]);
             if(tempArr[0]=='var')
             {
                 document.write('<script type=\"text/javascript\">createwidget('+tempArr[1]+');<\/script>');
             }
-        } 
-    } 
-} 
+        }
+    }
+}
 var scriptSrc = document.getElementById("CSWScript").src.toLowerCase();
-qs = new QSObject(scriptSrc); 
+qs = new QSObject(scriptSrc);
