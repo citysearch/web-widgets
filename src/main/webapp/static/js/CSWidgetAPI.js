@@ -1,7 +1,7 @@
 ﻿//Widgets operation, all functionality will be placed or derived in same object.
 function createwidget(objCSW)
 {
-    var serviceRoot ='/Nearby_Places300x250';
+    var serviceRoot ='../../Nearby_Places300x250';
     var widgeturl= serviceRoot;
     widgeturl += "?";
     if(typeof objCSW.what == "undefined" && typeof objCSW.tags == "undefined" )
