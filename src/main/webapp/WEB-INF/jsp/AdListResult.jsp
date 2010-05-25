@@ -31,7 +31,7 @@
                     if(callBackURL != null && callBackURL.length() > 0){
                     	//listingIdURL = callBackURL + "?listing_id=" + adListBean.getListingId() + "&phone=" + adListBean.getPhone();
                     	listingIdURL = callBackURL.replace("$l",adListBean.getListingId());
-                    	listingIdURL = listingIdURL.replace("$p",adListBean.getPhone());
+                    	listingIdURL = "http://ad.doubleclick.net/clk;225291110;48835962;h?" + listingIdURL.replace("$p",adListBean.getPhone());
                     } else {
                    		 listingIdURL =  adListBean.getAdDisplayURL();
                     } 

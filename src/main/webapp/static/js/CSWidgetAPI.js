@@ -145,5 +145,10 @@ function QSObject(querystring){
     }
 }
 
+function cgLaunch(URL, name, features) {
+    window.open("http://ad.doubleclick.net/clk;225291110;48835962;h?"+URL, name, features);
+}
+
+
 var scriptSrc = document.getElementById("CSWScript").src.toLowerCase();
 qs = new QSObject(scriptSrc);
