@@ -1,8 +1,8 @@
 ﻿//Widgets operation, all functionality will be placed or derived in same object.
 function createwidget(objCSW)
 {
-    var serviceRoot = '/' + document.location.pathname.split('/')[1] + '/Nearby_Places300x250';
-    var widgeturl= serviceRoot;
+    var serviceRoot = 'http://contentads.citygridmedia.com/ads/Nearby_Places300x250';
+    var widgeturl = serviceRoot;
     widgeturl += "?";
     if(typeof objCSW.what == "undefined" && typeof objCSW.tags == "undefined" )
     {
@@ -62,6 +62,9 @@ function createwidget(objCSW)
     widgeturl+='&callbackURL=' + objCSW.url;
     //document.write(widgeturl);
 
+    createIframe(objCSW.target, widgeturl);
+
+    /*
     var XMLHTTP=null;
     try {
         XMLHTTP = new ActiveXObject("Msxml2.XMLHTTP");
@@ -103,7 +106,22 @@ function createwidget(objCSW)
 
     }
     XMLHTTP.send(null);
+    */
 }
+
+function createIframe(target, iframeSrc) {
+    var iframe = document.createElement('iframe');
+    iframe.setAttribute('src', iframeSrc);
+    iframe.setAttribute('scrolling', 'no');
+    iframe.setAttribute('frameborder', 0);
+    iframe.setAttribute('marginheight', 0);
+    iframe.setAttribute('marginwidth', 0);
+    iframe.setAttribute('vspace', 0);
+    iframe.setAttribute('hspace', 0);
+    iframe.setAttribute('style', 'width: 300px; height: 250px;');
+    target.appendChild(iframe);
+}
+
 function QSObject(querystring){
     //Create regular expression object to retrieve the qs part
     var qsReg = new RegExp("[?][^#]*","i");
@@ -126,5 +144,6 @@ function QSObject(querystring){
         }
     }
 }
+
 var scriptSrc = document.getElementById("CSWScript").src.toLowerCase();
 qs = new QSObject(scriptSrc);
