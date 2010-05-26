@@ -119,7 +119,7 @@ function createIframe(target, iframeSrc) {
     iframe.setAttribute('vspace', 0);
     iframe.setAttribute('hspace', 0);
     iframe.setAttribute('style', 'width: 300px; height: 250px;');
-    target.appendChild(iframe);
+    document.getElementById(target).appendChild(iframe);
 }
 
 function QSObject(querystring){
