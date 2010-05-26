@@ -1,3 +1,4 @@
+body {margin:0; padding:0; }
 .ctsrch_boxContainer{height:248px;width:298px;border:solid 1px #d9d9d9;}
 .ctsrch_header{float:left;height:29px;background:#abbd65;width:100%;background-image:url('../img/blue_header.jpg');background-repeat:repeat-x;}
 .ctsrch_headerText{font-family:Arial;font-size:18px;padding:2px 4px 4px 6px;}

@@ -116,9 +116,12 @@ function createIframe(target, iframeSrc) {
     iframe.setAttribute('frameborder', 0);
     iframe.setAttribute('marginheight', 0);
     iframe.setAttribute('marginwidth', 0);
+    iframe.setAttribute('leftmargin', 0);
+    iframe.setAttribute('topmargin', 0);
+    iframe.setAttribute('width', 300);
+    iframe.setAttribute('height', 250);
     iframe.setAttribute('vspace', 0);
     iframe.setAttribute('hspace', 0);
-    iframe.setAttribute('style', 'width: 300px; height: 250px;');
     document.getElementById(target).appendChild(iframe);
 }
 
