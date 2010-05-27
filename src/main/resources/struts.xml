@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC 
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<package name="citysearch" extends="struts-default">
+		<!-- Global Results -->
+		<global-results>
+			<result name="CitysearchException">/jsp/Error.jsp</result>
+		</global-results>
+		
+		<!-- Global Exception mapping -->
+		<global-exception-mappings>
+			<exception-mapping result="CitysearchException" exception="com.citysearch.webwidget.exception.CitysearchException" />
+		</global-exception-mappings>
+		
+		<!-- Struts configuration for Review Widget -->
+		<action name="review" class="com.citysearch.webwidget.action.ReviewAction"> 
+			<result name="success">/jsp/Review.jsp</result>
+		</action>
+	</package>
+</struts>
