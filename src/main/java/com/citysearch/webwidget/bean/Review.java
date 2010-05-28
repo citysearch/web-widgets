@@ -1,4 +1,5 @@
 package com.citysearch.webwidget.bean;
+
 //TODO: javadocs
 public class Review {
 	private String attribution_source;
@@ -17,6 +18,12 @@ public class Review {
 	private String cons;
 	private String review_date;
 	private String review_rating;
+	private String image_url;
+	private String send_to_friend_url;
+	private String profile_url;
+	private Address address;
+	private String phone;
+	private int[] rating;
 	
 	public String getAttribution_source() {
 		return attribution_source;
@@ -114,4 +121,41 @@ public class Review {
 	public void setReview_rating(String reviewRating) {
 		review_rating = reviewRating;
 	}
+	public String getImage_url() {
+		return image_url;
+	}
+	public void setImage_url(String image_url) {
+		this.image_url = image_url;
+	}
+	public void setSend_to_friend_url(String send_to_friend_url) {
+		this.send_to_friend_url = send_to_friend_url;
+	}
+	public String getSend_to_friend_url() {
+		return send_to_friend_url;
+	}
+	public void setProfile_url(String profile_url) {
+		this.profile_url = profile_url;
+	}
+	public String getProfile_url() {
+		return profile_url;
+	}
+	public void setAddress(Address address) {
+		this.address = address;
+	}
+	public Address getAddress() {
+		return address;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+	public String getPhone() {
+		return phone;
+	}
+	public void setRating(int[] rating) {
+		this.rating = rating;
+	}
+	public int[] getRating() {
+		return rating;
+	}
+	
 }
