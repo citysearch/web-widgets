@@ -8,12 +8,12 @@
 	<package name="citysearch" extends="struts-default">
 		<!-- Global Results -->
 		<global-results>
-			<result name="CitysearchException">/jsp/Error.jsp</result>
+			<result name="error">/jsp/Error.jsp</result>
 		</global-results>
 		
-		<!-- Global Exception mapping -->
+		<!-- Global Exception mapping using the default excpetion interceptor -->
 		<global-exception-mappings>
-			<exception-mapping result="CitysearchException" exception="com.citysearch.webwidget.exception.CitysearchException" />
+			<exception-mapping result="error" exception="java.lang.Exception" />
 		</global-exception-mappings>
 		
 		<!-- Struts configuration for Review Widget -->

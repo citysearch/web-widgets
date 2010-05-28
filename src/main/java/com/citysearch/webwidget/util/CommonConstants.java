@@ -36,4 +36,10 @@ public class CommonConstants {
     public static final String DISPLAY_URL = "displayURL";
     public static final String IMAGE_URL = "imageURL";
 	public static final String REVIEW_API_TYPE = "review";
+	
+	public final static String API_KEY_ERROR_CODE = "apikey.errmsg";
+    public final static String PUBLISHER_ERROR_CODE = "publisher.errmsg";
+    public final static String WHERE_ERROR_CODE = "where.errmsg";
+    
+    public final static String SYMBOL_AMPERSAND = "&";
 }

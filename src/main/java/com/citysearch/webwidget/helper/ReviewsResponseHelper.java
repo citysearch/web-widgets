@@ -101,7 +101,7 @@ public class ReviewsResponseHelper extends ResponseHelper{
 		} catch (ParseException excep) {
 			String message = PropertiesLoader.getErrorProperties().getProperty(invalidDate);
 			log.error(message, excep);
-			throw new CitysearchException();
+			throw new CitysearchException(null, null);
 		}
        return date; 
     }

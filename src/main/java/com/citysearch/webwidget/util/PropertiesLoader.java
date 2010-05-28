@@ -46,7 +46,7 @@ public class PropertiesLoader {
             }
         } catch (Exception e) {
             log.error(errorPropMsg);
-            throw new CitysearchException(errorPropMsg);
+            throw new CitysearchException("PropertiesLoader", "getErrorProperties", errorPropMsg);
         }
         return errorProperties;
     }
@@ -58,7 +58,7 @@ public class PropertiesLoader {
             }
         } catch (Exception e) {
             log.error(errorPropMsg); 
-            throw new CitysearchException(errorPropMsg);
+            throw new CitysearchException("PropertiesLoader", "getAPIProperties", errorPropMsg);
         }
         return apiProperties;
     }

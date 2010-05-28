@@ -73,7 +73,7 @@ public abstract class ResponseHelper {
         } catch (IOException ioExcep) {
             String errMsg = PropertiesLoader.getErrorProperties().getProperty(ioExcepMsg);
             log.error(errMsg, ioExcep);
-            throw new CitysearchException(errMsg);
+            throw new CitysearchException(null, null, errMsg);
         } finally {
             input.close();
         }
@@ -97,7 +97,7 @@ public abstract class ResponseHelper {
         } catch (IOException ioe) {
             String errMsg = PropertiesLoader.getErrorProperties().getProperty(ioExcepMsg);
             log.error(errMsg, ioe);
-            throw new CitysearchException(errMsg);
+            throw new CitysearchException(null, null, errMsg);
         } finally {
             input.close();
         }
@@ -137,7 +137,7 @@ public abstract class ResponseHelper {
                     CommonConstants.ERROR_METHOD_PARAM)
                     + " parseXML()";
             log.error(errMsg, excep);
-            throw new CitysearchException();
+            throw new CitysearchException(null, null);
         }
         Collections.sort(adList);
         adList = getDisplayList(adList, contextPath);
@@ -220,7 +220,7 @@ public abstract class ResponseHelper {
         } else {
             String errMsg = PropertiesLoader.getErrorProperties().getProperty(apiTypeError);
             log.error(errMsg);
-            throw new CitysearchException(errMsg);
+            throw new CitysearchException(null, null, errMsg);
         }
         return childName;
     }
@@ -343,7 +343,7 @@ public abstract class ResponseHelper {
                         CommonConstants.ERROR_METHOD_PARAM)
                         + "getBusinessName()";
                 log.error(errMsg, excep);
-                throw new CitysearchException();
+                throw new CitysearchException(null, null);
             }
         }
         name = StringUtils.abbreviate(name, length);
@@ -368,7 +368,7 @@ public abstract class ResponseHelper {
                         CommonConstants.ERROR_METHOD_PARAM)
                         + "getTagLine()";
                 log.error(errMsg, excep);
-                throw new CitysearchException();
+                throw new CitysearchException(null, null);
             }
         }
         tagLine = StringUtils.abbreviate(tagLine, length);

@@ -221,7 +221,7 @@ public class RequestHelper {
                     CommonConstants.ERROR_METHOD_PARAM)
                     + " getPFPQueryString()";
             log.error(errMsg, excep);
-            throw new CitysearchException(errMsg);
+            throw new CitysearchException(null, null, errMsg);
         }
         return urlString;
     }
@@ -317,7 +317,7 @@ public class RequestHelper {
             } catch (UnsupportedEncodingException excep) {
                 String errMsg = errorProperties.getProperty(error);
                 log.error(errMsg, excep);
-                throw new CitysearchException();
+                throw new CitysearchException(null, null);
             }
             apiQueryString.append(value);
         }
