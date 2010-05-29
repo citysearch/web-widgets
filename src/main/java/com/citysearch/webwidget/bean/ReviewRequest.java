@@ -2,18 +2,26 @@ package com.citysearch.webwidget.bean;
 
 //TODO: javadocs
 public class ReviewRequest extends AbstractRequest {
-	
+
 	private String where;
 	private String what;
 	private String tagId;
 	private String tagName;
-	private int rating;
-	private int days;
-	private int max;
+	private String rating;
+	private String days;
+	private String max;
 	private String placement;
 	private boolean customerOnly;
-	private String tag_name;
+	private String clientIP;
 	
+	public String getTagName() {
+		return tagName;
+	}
+
+	public void setTagName(String tagName) {
+		this.tagName = tagName;
+	}
+
 	public boolean isCustomerOnly() {
 		return customerOnly;
 	}
@@ -46,27 +54,27 @@ public class ReviewRequest extends AbstractRequest {
 		this.tagId = tagId;
 	}
 
-	public int getRating() {
+	public String getRating() {
 		return rating;
 	}
 
-	public void setRating(int rating) {
+	public void setRating(String rating) {
 		this.rating = rating;
 	}
 
-	public int getDays() {
+	public String getDays() {
 		return days;
 	}
 
-	public void setDays(int days) {
+	public void setDays(String days) {
 		this.days = days;
 	}
 
-	public int getMax() {
+	public String getMax() {
 		return max;
 	}
 
-	public void setMax(int max) {
+	public void setMax(String max) {
 		this.max = max;
 	}
 
@@ -78,11 +86,11 @@ public class ReviewRequest extends AbstractRequest {
 		this.placement = placement;
 	}
 
-    public void setTag_name(String tag_name) {
-        this.tag_name = tag_name;
-    }
+	public String getClientIP() {
+		return clientIP;
+	}
 
-    public String getTag_name() {
-        return tag_name;
-    }
+	public void setClientIP(String clientIP) {
+		this.clientIP = clientIP;
+	}
 }

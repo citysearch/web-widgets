@@ -2,101 +2,101 @@ package com.citysearch.webwidget.bean;
 
 //TODO: javadocs
 public class Review {
-	private String attribution_source;
-	private String attribution_logo;
-	private String attribution_text;
-	private String business_name;
-	private String listing_id;
-	private String reference_id;
-	private String review_id;
-	private String review_url;
-	private String review_title;
-	private String review_author;
-	private String review_author_url;
-	private String review_text;
+	private String attributionSource;
+	private String attributionLogo;
+	private String attributionText;
+	private String businessName;
+	private String listingId;
+	private String referenceId;
+	private String reviewId;
+	private String reviewUrl;
+	private String reviewTitle;
+	private String reviewAuthor;
+	private String reviewAuthorUrl;
+	private String reviewText;
 	private String pros;
 	private String cons;
-	private String review_date;
-	private String review_rating;
-	private String image_url;
-	private String send_to_friend_url;
-	private String profile_url;
+	private String reviewSate;
+	private String reviewRating;
+	private String imageUrl;
+	private String sendToFriendUrl;
+	private String profileUrl;
 	private Address address;
 	private String phone;
 	private int[] rating;
-	private String time_since_review;
+	private String timeSinceReview;
 	
-	public String getAttribution_source() {
-		return attribution_source;
+	public String getAttributionSource() {
+		return attributionSource;
 	}
-	public void setAttribution_source(String attributionSource) {
-		attribution_source = attributionSource;
+	public void setAttributionSource(String attributionSource) {
+		this.attributionSource = attributionSource;
 	}
-	public String getAttribution_logo() {
-		return attribution_logo;
+	public String getAttributionLogo() {
+		return attributionLogo;
 	}
-	public void setAttribution_logo(String attributionLogo) {
-		attribution_logo = attributionLogo;
+	public void setAttributionLogo(String attributionLogo) {
+		this.attributionLogo = attributionLogo;
 	}
-	public String getAttribution_text() {
-		return attribution_text;
+	public String getAttributionText() {
+		return attributionText;
 	}
-	public void setAttribution_text(String attributionText) {
-		attribution_text = attributionText;
+	public void setAttributionText(String attributionText) {
+		this.attributionText = attributionText;
 	}
-	public String getBusiness_name() {
-		return business_name;
+	public String getBusinessName() {
+		return businessName;
 	}
-	public void setBusiness_name(String businessName) {
-		business_name = businessName;
+	public void setBusinessName(String businessName) {
+		this.businessName = businessName;
 	}
-	public String getListing_id() {
-		return listing_id;
+	public String getListingId() {
+		return listingId;
 	}
-	public void setListing_id(String listingId) {
-		listing_id = listingId;
+	public void setListingId(String listingId) {
+		this.listingId = listingId;
 	}
-	public String getReference_id() {
-		return reference_id;
+	public String getReferenceId() {
+		return referenceId;
 	}
-	public void setReference_id(String referenceId) {
-		reference_id = referenceId;
+	public void setReferenceId(String referenceId) {
+		this.referenceId = referenceId;
 	}
-	public String getReview_id() {
-		return review_id;
+	public String getReviewId() {
+		return reviewId;
 	}
-	public void setReview_id(String reviewId) {
-		review_id = reviewId;
+	public void setReviewId(String reviewId) {
+		this.reviewId = reviewId;
 	}
-	public String getReview_url() {
-		return review_url;
+	public String getReviewUrl() {
+		return reviewUrl;
 	}
-	public void setReview_url(String reviewUrl) {
-		review_url = reviewUrl;
+	public void setReviewUrl(String reviewUrl) {
+		this.reviewUrl = reviewUrl;
 	}
-	public String getReview_title() {
-		return review_title;
+	public String getReviewTitle() {
+		return reviewTitle;
 	}
-	public void setReview_title(String reviewTitle) {
-		review_title = reviewTitle;
+	public void setReviewTitle(String reviewTitle) {
+		this.reviewTitle = reviewTitle;
 	}
-	public String getReview_author() {
-		return review_author;
+	public String getReviewAuthor() {
+		return reviewAuthor;
 	}
-	public void setReview_author(String reviewAuthor) {
-		review_author = reviewAuthor;
+	public void setReviewAuthor(String reviewAuthor) {
+		this.reviewAuthor = reviewAuthor;
 	}
-	public String getReview_author_url() {
-		return review_author_url;
+	public String getReviewAuthorUrl() {
+		return reviewAuthorUrl;
 	}
-	public void setReview_author_url(String reviewAuthorUrl) {
-		review_author_url = reviewAuthorUrl;
+	public void setReviewAuthorUrl(String reviewAuthorUrl) {
+		this.reviewAuthorUrl = reviewAuthorUrl;
 	}
-	public String getReview_text() {
-		return review_text;
+	public String getReviewText() {
+		return reviewText;
 	}
-	public void setReview_text(String reviewText) {
-		review_text = reviewText;
+	public void setReviewText(String reviewText) {
+		this.reviewText = reviewText;
 	}
 	public String getPros() {
 		return pros;
@@ -110,59 +110,58 @@ public class Review {
 	public void setCons(String cons) {
 		this.cons = cons;
 	}
-	public String getReview_date() {
-		return review_date;
+	public String getReviewSate() {
+		return reviewSate;
 	}
-	public void setReview_date(String reviewDate) {
-		review_date = reviewDate;
+	public void setReviewSate(String reviewSate) {
+		this.reviewSate = reviewSate;
 	}
-	public String getReview_rating() {
-		return review_rating;
+	public String getReviewRating() {
+		return reviewRating;
 	}
-	public void setReview_rating(String reviewRating) {
-		review_rating = reviewRating;
+	public void setReviewRating(String reviewRating) {
+		this.reviewRating = reviewRating;
 	}
-	public String getImage_url() {
-		return image_url;
+	public String getImageUrl() {
+		return imageUrl;
 	}
-	public void setImage_url(String image_url) {
-		this.image_url = image_url;
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
-	public void setSend_to_friend_url(String send_to_friend_url) {
-		this.send_to_friend_url = send_to_friend_url;
+	public String getSendToFriendUrl() {
+		return sendToFriendUrl;
 	}
-	public String getSend_to_friend_url() {
-		return send_to_friend_url;
+	public void setSendToFriendUrl(String sendToFriendUrl) {
+		this.sendToFriendUrl = sendToFriendUrl;
 	}
-	public void setProfile_url(String profile_url) {
-		this.profile_url = profile_url;
+	public String getProfileUrl() {
+		return profileUrl;
 	}
-	public String getProfile_url() {
-		return profile_url;
-	}
-	public void setAddress(Address address) {
-		this.address = address;
+	public void setProfileUrl(String profileUrl) {
+		this.profileUrl = profileUrl;
 	}
 	public Address getAddress() {
 		return address;
 	}
-	public void setPhone(String phone) {
-		this.phone = phone;
+	public void setAddress(Address address) {
+		this.address = address;
 	}
 	public String getPhone() {
 		return phone;
 	}
-	public void setRating(int[] rating) {
-		this.rating = rating;
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 	public int[] getRating() {
 		return rating;
 	}
-	public void setTime_since_review(String time_since_review) {
-		this.time_since_review = time_since_review;
+	public void setRating(int[] rating) {
+		this.rating = rating;
 	}
-	public String getTime_since_review() {
-		return time_since_review;
+	public String getTimeSinceReview() {
+		return timeSinceReview;
 	}
-	
+	public void setTimeSinceReview(String timeSinceReview) {
+		this.timeSinceReview = timeSinceReview;
+	}
 }

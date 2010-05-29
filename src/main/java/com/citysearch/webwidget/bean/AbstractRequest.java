@@ -1,17 +1,17 @@
 package com.citysearch.webwidget.bean;
 
 public abstract class AbstractRequest {
-	protected String api_key;
+	protected String apiKey;
 	protected String publisher;
 	protected boolean customerOnly;
 	protected String format;
  
-	public String getApi_key() {
-        return api_key;
+	public String getApiKey() {
+        return apiKey;
     }
 
-    public void setApi_key(String api_key) {
-        this.api_key = api_key;
+    public void setApiKey(String apiKey) {
+        this.apiKey = apiKey;
     }
 
     public String getPublisher() {

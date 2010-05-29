@@ -40,6 +40,7 @@ public class CommonConstants {
 	public final static String API_KEY_ERROR_CODE = "apikey.errmsg";
     public final static String PUBLISHER_ERROR_CODE = "publisher.errmsg";
     public final static String WHERE_ERROR_CODE = "where.errmsg";
+    public final static String CLIENT_IP_ERROR_CODE = "client.ip";
     
     public final static String SYMBOL_AMPERSAND = "&";
 }

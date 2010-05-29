@@ -5,7 +5,7 @@ public class Address {
 	private String street;
 	private String city;
 	private String state;
-	private String postal_code;
+	private String postalCode;
 
 	public void setStreet(String street) {
 		this.street = street;
@@ -31,12 +31,12 @@ public class Address {
 		return state;
 	}
 
-	public void setPostal_code(String postal_code) {
-		this.postal_code = postal_code;
+	public String getPostalCode() {
+		return postalCode;
 	}
 
-	public String getPostal_code() {
-		return postal_code;
+	public void setPostalCode(String postalCode) {
+		this.postalCode = postalCode;
 	}
 
 }
