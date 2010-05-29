@@ -9,7 +9,8 @@ public class ProfileRequest extends AbstractRequest {
 	private String placement;
 	private String clientIP;
 	private int nolog;
-
+	private String callback;
+	
 	public String getListingId() {
 		return listingId;
 	}
@@ -73,5 +74,13 @@ public class ProfileRequest extends AbstractRequest {
 	public void setNolog(int nolog) {
 		this.nolog = nolog;
 	}
+
+    public void setCallback(String callback) {
+        this.callback = callback;
+    }
+
+    public String getCallback() {
+        return callback;
+    }
 
 }

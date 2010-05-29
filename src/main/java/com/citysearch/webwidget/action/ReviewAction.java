@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import com.citysearch.webwidget.bean.ReviewRequest;
 import com.citysearch.webwidget.bean.ReviewResponse;
 import com.citysearch.webwidget.exception.CitysearchException;
+import com.citysearch.webwidget.helper.ProfileHelper;
 import com.citysearch.webwidget.helper.ReviewHelper;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ModelDriven;
@@ -41,6 +42,8 @@ public class ReviewAction implements ModelDriven<ReviewRequest> {
 		try
 		{
 			reviewResponse = helper.getReviews();
+			ProfileHelper profHelper = new ProfileHelper(reviewRequest, reviewResponse.getReviews());
+			reviewResponse = profHelper.getProfileForReviews(reviewResponse.getReviews());
 		}
 		catch (CitysearchException cse)
 		{

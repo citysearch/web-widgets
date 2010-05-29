@@ -24,6 +24,7 @@ public class Review {
 	private Address address;
 	private String phone;
 	private int[] rating;
+	private String time_since_review;
 	
 	public String getAttribution_source() {
 		return attribution_source;
@@ -156,6 +157,12 @@ public class Review {
 	}
 	public int[] getRating() {
 		return rating;
+	}
+	public void setTime_since_review(String time_since_review) {
+		this.time_since_review = time_since_review;
+	}
+	public String getTime_since_review() {
+		return time_since_review;
 	}
 	
 }

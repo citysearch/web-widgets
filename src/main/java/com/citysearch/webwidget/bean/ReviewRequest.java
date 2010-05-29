@@ -12,6 +12,7 @@ public class ReviewRequest extends AbstractRequest {
 	private int max;
 	private String placement;
 	private boolean customerOnly;
+	private String tag_name;
 	
 	public boolean isCustomerOnly() {
 		return customerOnly;
@@ -45,14 +46,6 @@ public class ReviewRequest extends AbstractRequest {
 		this.tagId = tagId;
 	}
 
-	public String getTagName() {
-		return tagName;
-	}
-
-	public void setTagName(String tagName) {
-		this.tagName = tagName;
-	}
-
 	public int getRating() {
 		return rating;
 	}
@@ -84,4 +77,12 @@ public class ReviewRequest extends AbstractRequest {
 	public void setPlacement(String placement) {
 		this.placement = placement;
 	}
+
+    public void setTag_name(String tag_name) {
+        this.tag_name = tag_name;
+    }
+
+    public String getTag_name() {
+        return tag_name;
+    }
 }

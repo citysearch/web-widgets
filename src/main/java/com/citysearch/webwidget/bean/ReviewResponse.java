@@ -1,16 +1,22 @@
 package com.citysearch.webwidget.bean;
 
-import java.util.List;
-
-//TODO: javadocs
+// TODO: javadocs
 public class ReviewResponse {
-	private List<Review> reviews;
+    private Review reviews;
 
-	public List<Review> getReviews() {
-		return reviews;
-	}
+    public ReviewResponse() {
 
-	public void setReviews(List<Review> reviews) {
-		this.reviews = reviews;
-	}
+    }
+
+    public ReviewResponse(Review reviews) {
+        this.reviews = reviews;
+    }
+
+    public Review getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(Review reviews) {
+        this.reviews = reviews;
+    }
 }
