@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
@@ -126,26 +127,25 @@ public class HelperUtil {
 	 * @param rating
 	 * @return
 	 */
-	public static int[] getRatingsList(String rating) {
-		int[] ratingList = new int[totalRating];
-		int count = 0;
+	public static List<Integer> getRatingsList(String rating) {
+		List<Integer> ratingList = new ArrayList<Integer>();
 		if (StringUtils.isNotBlank(rating)) {
 			double ratings = (Double.parseDouble(rating)) / 2;
 			int userRating = (int) ratings;
-			while (count < userRating) {
-				ratingList[count++] = fullStar;
+			while (ratingList.size() < userRating) {
+				ratingList.add(fullStar);
 			}
 
 			if (ratings % 1 != 0)
-				ratingList[count++] = halfStar;
+				ratingList.add(halfStar);
 
-			while (count < totalRating) {
-				ratingList[count++] = emptyStar;
+			while (ratingList.size() < totalRating) {
+				ratingList.add(emptyStar);
 			}
 
 		} else {
-			for (count = 0; count < totalRating; count++) {
-				ratingList[count] = emptyStar;
+			for (int count = 0; count < totalRating; count++) {
+				ratingList.add(emptyStar);
 			}
 		}
 		return ratingList;

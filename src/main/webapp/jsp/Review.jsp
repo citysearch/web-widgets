@@ -14,26 +14,47 @@
 		    Recent Reviews Near You
 		</div>
 		<div id="cs_content">
-		    <div id="cs_img"><img src="static/img/img.jpg" /></div>
+		    <div id="cs_img">
+		    	<img src='<s:property value="review.imageUrl"/>' />
+		    </div>
 		    <div id="cs_ratings">
 		        <div id="cs_stars">
-		        	<img src="static/img/star.jpg" />
+		        	<s:iterator value="review.rating" id="rating">
+		        		<s:if test="%{2}">
+						    <img src="static/img/Star.png" />
+						</s:if>
+						<s:elseif test="%{1}">
+						    <img src="static/img/HalfStar.png" />
+						</s:elseif>
+						<s:else>
+						    <img src="static/img/EmptyStar.png" />
+						</s:else>
+		        	</s:iterator>
 		        </div>
 		        <div id="cs_title">
-		        	<a href="#"><s:property value="review.businessName"/></a>
+		        	<a href='<s:property value="review.profileUrl"/>' target="_blank"><s:property value="review.businessName"/></a>
 		        </div>
 		        <div id="cs_address">
 		        	<s:property value="review.address.street"/><br />
 		        	<s:property value="review.address.state"/>&nbsp;<s:property value="review.address.postalCode"/>
 		        </div>
 		    </div>
-		    <div id="cs_time">Novac said 5 hours ago:</div>
+		    <div id="cs_time"><s:property value="review.reviewAuthor"/> said <s:property value="review.timeSinceReviewString" /> ago:</div>
 		    <div id="cs_reviews">
-		        <div id="cs_longTitle"><s:property value="review.reviewTitle"/></div>
+		        <div id="cs_longTitle">
+		        	<a href='<s:property value="review.reviewUrl"/>' target="_blank">
+		        		<s:property value="review.reviewTitle"/>
+		        	</a>
+		        </div>
 		        <div id="cs_description"><s:property value="review.reviewText"/></div>
+		        <div id="cs_description">
+		        	<br/>
+		        	<strong>Pros:</strong>&nbsp;<s:property value="review.pros"/><br/> 
+		            <strong>Cons:</strong>&nbsp;<s:property value="review.cons"/> 
+		        </div>
 		    </div>
 		    <div id="cs_share">
-		    	<a href='<s:property value="review.sendToFriendUrl"/>'>Share this review</a>
+		    	<a href='<s:property value="review.sendToFriendUrl"/>' target="_blank">Share this review</a>
 		    </div>
 		</div>
 	</div>

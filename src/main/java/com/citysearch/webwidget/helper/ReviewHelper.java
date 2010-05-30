@@ -2,6 +2,7 @@ package com.citysearch.webwidget.helper;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -10,6 +11,7 @@ import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang.time.DurationFormatUtils;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -26,6 +28,8 @@ import com.citysearch.webwidget.util.PropertiesLoader;
 public class ReviewHelper {
 
 	public final static String PROPERTY_REVIEW_URL = "reviews.url";
+
+	private static final String ELEMENT_REVIEW_URL = "review_url";
 	private static final String businessName = "business_name";
 	private static final String listingId = "listing_id";
 	private static final String reviewId = "review_id";
@@ -172,9 +176,7 @@ public class ReviewHelper {
 						String dateStr = reviewElem.getChildText(reviewDate);
 						Date date = HelperUtil.parseDate(dateStr, formatter);
 						if (date != null) {
-							review = new Review();
-							review = processReviews(review, reviewElem, date);
-							reviewMap.put(date, review);
+							reviewMap.put(date, getReviewInstance(reviewElem));
 						}
 					}
 				}
@@ -190,24 +192,32 @@ public class ReviewHelper {
 	 * @param review
 	 * @param reviewsElem
 	 */
-	private Review processReviews(Review reviewObj, Element reviewElem,
-			Date date) {
-		if (reviewElem != null) {
-			reviewObj.setBusinessName(reviewElem.getChildText(businessName));
-			reviewObj.setListingId(reviewElem.getChildText(listingId));
-			reviewObj.setReviewTitle(reviewElem.getChildText(reviewTitle));
-			reviewObj.setReviewAuthor(reviewElem.getChildText(reviewAuthor));
-			reviewObj.setReviewText(reviewElem.getChildText(reviewText));
-			reviewObj.setPros(reviewElem.getChildText(pros));
-			reviewObj.setCons(reviewElem.getChildText(cons));
-			String ratingVal = reviewElem.getChildText(reviewRating);
-			double rating = NumberUtils.toDouble(ratingVal) / 2;
-			reviewObj.setRating(HelperUtil.getRatingsList(ratingVal));
-			reviewObj.setReviewRating(String.valueOf(rating));
-			reviewObj.setReviewId(reviewElem.getChildText(reviewId));
-			// reviewObj.setTime_since_review(getTimeSinceReview(date));
-		}
-		return reviewObj;
+	private Review getReviewInstance(Element reviewElem)
+			throws CitysearchException {
+		Review review = new Review();
+		review.setBusinessName(reviewElem.getChildText(businessName));
+		review.setListingId(reviewElem.getChildText(listingId));
+		review.setReviewTitle(reviewElem.getChildText(reviewTitle));
+		review.setReviewAuthor(reviewElem.getChildText(reviewAuthor));
+		review.setReviewText(reviewElem.getChildText(reviewText));
+		review.setPros(reviewElem.getChildText(pros));
+		review.setCons(reviewElem.getChildText(cons));
+		String ratingVal = reviewElem.getChildText(reviewRating);
+		double rating = NumberUtils.toDouble(ratingVal) / 2;
+		review.setRating(HelperUtil.getRatingsList(ratingVal));
+		review.setReviewRating(String.valueOf(rating));
+		review.setReviewId(reviewElem.getChildText(reviewId));
+		review.setReviewUrl(reviewElem.getChildText(ELEMENT_REVIEW_URL));
+
+		String rDateStr = reviewElem.getChildText(reviewDate);
+		SimpleDateFormat formatter = new SimpleDateFormat(PropertiesLoader
+				.getAPIProperties().getProperty(dateFormat));
+		Date date = HelperUtil.parseDate(rDateStr, formatter);
+		long now = Calendar.getInstance().getTimeInMillis();
+		review.setTimeSinceReviewString(DurationFormatUtils
+				.formatDurationWords(now - date.getTime(), true, true));
+
+		return review;
 	}
 
 }

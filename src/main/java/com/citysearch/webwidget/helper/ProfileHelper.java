@@ -238,6 +238,6 @@ public class ProfileHelper {
 		 * null) { int listSize = imageList.size(); int index = new
 		 * Random().nextInt(listSize); imageurl = imageList.get(index); } }
 		 */
-		return imageURL;
+		return imageurl;
 	}
 }
