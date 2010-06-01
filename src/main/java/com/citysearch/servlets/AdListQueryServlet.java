@@ -70,7 +70,7 @@ public class AdListQueryServlet extends HttpServlet {
     /**
      * Sets the default redirect url in a session If any error occurs,this will be the url the user
      * will be forwarded
-     * 
+     *
      * @param req
      * @param apiProperties
      */
@@ -82,7 +82,7 @@ public class AdListQueryServlet extends HttpServlet {
 
     /**
      * Reads the api properties file. If file is not found, an exception will be thrown
-     * 
+     *
      * @return
      * @throws CitysearchException
      */
@@ -102,7 +102,7 @@ public class AdListQueryServlet extends HttpServlet {
     /**
      * @throws IOException
      * @throws ServletException
-     * 
+     *
      */
     private void querySearchAPI(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
@@ -115,7 +115,7 @@ public class AdListQueryServlet extends HttpServlet {
      * Calls the pfp api and processes response If pfp api does not return any result, then a call
      * to pfp api is again issued but, without geography parameters(where,lat/lon) If no results are
      * returned then search api is queried and results are returned
-     * 
+     *
      * @param reqHelper
      * @param apiType
      * @param req
@@ -154,7 +154,7 @@ public class AdListQueryServlet extends HttpServlet {
 
     /**
      * Connects to the url, gets and processes the response
-     * 
+     *
      * @param req
      * @param res
      * @param connection
@@ -188,7 +188,7 @@ public class AdListQueryServlet extends HttpServlet {
     /**
      * Processes the response received from host.If any error is received, the user will be
      * forwarded to a default page.
-     * 
+     *
      * @param req
      * @param res
      * @param connection
@@ -230,7 +230,7 @@ public class AdListQueryServlet extends HttpServlet {
 
     /**
      * Parses the response xml and forward request to JSP
-     * 
+     *
      * @param redirectURL
      * @param req
      * @param res
@@ -271,7 +271,7 @@ public class AdListQueryServlet extends HttpServlet {
 
     /**
      * Gets the default redirect url
-     * 
+     *
      * @param redirectURL
      * @param apiProperties
      * @return
