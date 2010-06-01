@@ -38,6 +38,42 @@
 
 	<!-- Servlets & Mappings-->
 	<servlet>
+		<description />
+		<display-name>HealthCheckServlet</display-name>
+		<servlet-name>HealthCheckServlet</servlet-name>
+		<servlet-class>com.citysearch.webwidget.servlet.HealthCheckServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>HealthCheckServlet</servlet-name>
+		<url-pattern>/healthcheck</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>sample</servlet-name>
+		<servlet-class>com.citysearch.webwidget.servlet.SearchQueryServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>sample</servlet-name>
+		<url-pattern>/SearchQueryServlet</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>AdSample</servlet-name>
+		<servlet-class>com.citysearch.webwidget.servlet.AdListQueryServlet</servlet-class>
+		<init-param>
+			<param-name>log4j-init-file</param-name>
+			<param-value>/log4j.properties</param-value>
+		</init-param>
+		<init-param>
+			<param-name>propertiesFile</param-name>
+			<param-value>/images.properties</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AdSample</servlet-name>
+		<url-pattern>/Nearby_Places300x250</url-pattern>
+	</servlet-mapping>
+
+
+	<servlet>
 		<servlet-name>jspSupportServlet</servlet-name>
 		<servlet-class>org.apache.struts2.views.JspSupportServlet</servlet-class>
 		<load-on-startup>5</load-on-startup>

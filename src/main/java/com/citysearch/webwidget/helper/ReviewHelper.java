@@ -16,8 +16,11 @@ import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 
+import com.citysearch.webwidget.bean.Profile;
+import com.citysearch.webwidget.bean.ProfileRequest;
 import com.citysearch.webwidget.bean.Review;
 import com.citysearch.webwidget.bean.ReviewRequest;
+import com.citysearch.webwidget.bean.SearchRequest;
 import com.citysearch.webwidget.exception.CitysearchException;
 import com.citysearch.webwidget.exception.InvalidHttpResponseException;
 import com.citysearch.webwidget.util.APIFieldNameConstants;
@@ -56,8 +59,13 @@ public class ReviewHelper {
 			throws CitysearchException {
 		// Reflection Probably???
 		StringBuilder strBuilder = new StringBuilder();
+
+		Properties properties = PropertiesLoader.getAPIProperties();
+		String apiKey = properties
+				.getProperty(CommonConstants.API_KEY_PROPERTY);
 		strBuilder.append(HelperUtil.constructQueryParam(
-				APIFieldNameConstants.API_KEY, request.getApiKey()));
+				APIFieldNameConstants.API_KEY, apiKey));
+
 		strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
 		strBuilder.append(HelperUtil.constructQueryParam(
 				APIFieldNameConstants.PUBLISHER, request.getPublisher()));
@@ -104,17 +112,39 @@ public class ReviewHelper {
 			throws CitysearchException {
 		List<String> errors = new ArrayList<String>();
 		Properties errorProperties = PropertiesLoader.getErrorProperties();
-		if (StringUtils.isBlank(request.getApiKey())) {
-			errors.add(errorProperties
-					.getProperty(CommonConstants.API_KEY_ERROR_CODE));
-		}
+
 		if (StringUtils.isBlank(request.getPublisher())) {
 			errors.add(errorProperties
 					.getProperty(CommonConstants.PUBLISHER_ERROR_CODE));
 		}
-		if (StringUtils.isBlank(request.getWhere())) {
+		if (StringUtils.isBlank(request.getLatitude())
+				&& StringUtils.isBlank(request.getLongitude())
+				&& StringUtils.isBlank(request.getWhere())) {
 			errors.add(errorProperties
 					.getProperty(CommonConstants.WHERE_ERROR_CODE));
+		}
+
+		if (!StringUtils.isBlank(request.getLatitude())
+				&& StringUtils.isBlank(request.getLongitude())) {
+			errors.add(errorProperties
+					.getProperty(CommonConstants.LONGITUDE_ERROR));
+		} else if (StringUtils.isBlank(request.getLatitude())
+				&& !StringUtils.isBlank(request.getLongitude())) {
+			errors.add(errorProperties
+					.getProperty(CommonConstants.LATITUDE_ERROR));
+		}
+
+		if (!StringUtils.isBlank(request.getLatitude())
+				&& !StringUtils.isBlank(request.getLongitude())
+				&& StringUtils.isBlank(request.getRadius())) {
+			errors.add(errorProperties
+					.getProperty(CommonConstants.RADIUS_ERROR));
+		}
+		if (!StringUtils.isBlank(request.getLatitude())
+				&& !StringUtils.isBlank(request.getLongitude())
+				&& StringUtils.isBlank(request.getWhat())) {
+			errors.add(errorProperties
+					.getProperty(CommonConstants.WHAT_ERROR_CODE));
 		}
 		if (StringUtils.isBlank(request.getClientIP())) {
 			errors.add(errorProperties
@@ -135,6 +165,21 @@ public class ReviewHelper {
 	public Review getLatestReview(ReviewRequest request)
 			throws CitysearchException {
 		validateRequest(request);
+
+		// If Lat and Lon is set find the nearest postal code using search API
+		if (!StringUtils.isBlank(request.getLatitude())
+				&& !StringUtils.isBlank(request.getLongitude())) {
+			SearchRequest searchReq = new SearchRequest();
+			searchReq.setPublisher(request.getPublisher());
+			searchReq.setWhat(request.getWhat());
+			searchReq.setLatitude(request.getLatitude());
+			searchReq.setLongitude(request.getLongitude());
+
+			SearchHelper shelper = new SearchHelper();
+			String where = shelper.getClosestLocationPostalCode(searchReq);
+			request.setWhere(where);
+		}
+
 		Properties properties = PropertiesLoader.getAPIProperties();
 		String urlString = properties.getProperty(PROPERTY_REVIEW_URL)
 				+ getQueryString(request);
@@ -150,6 +195,22 @@ public class ReviewHelper {
 			throw new CitysearchException(this.getClass().getName(),
 					"getLatestReview", "No latest review found.");
 		}
+
+		ProfileRequest profileRequest = new ProfileRequest();
+		profileRequest.setPublisher(request.getPublisher());
+		profileRequest.setClientIP(request.getClientIP());
+		profileRequest.setListingId(reviewObj.getListingId());
+
+		ProfileHelper profHelper = new ProfileHelper();
+		Profile profile = profHelper.getProfile(profileRequest);
+		if (profile != null) {
+			reviewObj.setAddress(profile.getAddress());
+			reviewObj.setPhone(profile.getPhone());
+			reviewObj.setProfileUrl(profile.getProfileUrl());
+			reviewObj.setSendToFriendUrl(profile.getSendToFriendUrl());
+			reviewObj.setImageUrl(profile.getImageUrl());
+		}
+
 		return reviewObj;
 	}
 
@@ -160,28 +221,27 @@ public class ReviewHelper {
 	 * @return
 	 * @throws CitysearchException
 	 */
-	public Review parseXML(Document doc) throws CitysearchException {
+	private Review parseXML(Document doc) throws CitysearchException {
 		Review review = null;
 		if (doc != null && doc.hasRootElement()) {
 			Element rootElement = doc.getRootElement();
 			List<Element> reviewsList = rootElement.getChildren(reviewElemName);
 			SimpleDateFormat formatter = new SimpleDateFormat(PropertiesLoader
 					.getAPIProperties().getProperty(dateFormat));
-			SortedMap<Date, Review> reviewMap = new TreeMap<Date, Review>();
+			SortedMap<Date, Element> reviewMap = new TreeMap<Date, Element>();
 			for (int i = 0; i < reviewsList.size(); i++) {
 				Element reviewElem = reviewsList.get(i);
-				if (reviewElem != null) {
-					String rating = reviewElem.getChildText(reviewRating);
-					if (NumberUtils.toInt(rating) >= minRating) {
-						String dateStr = reviewElem.getChildText(reviewDate);
-						Date date = HelperUtil.parseDate(dateStr, formatter);
-						if (date != null) {
-							reviewMap.put(date, getReviewInstance(reviewElem));
-						}
+				String rating = reviewElem.getChildText(reviewRating);
+				if (NumberUtils.toInt(rating) >= minRating) {
+					String dateStr = reviewElem.getChildText(reviewDate);
+					Date date = HelperUtil.parseDate(dateStr, formatter);
+					if (date != null) {
+						reviewMap.put(date, reviewElem);
 					}
 				}
 			}
-			review = reviewMap.get(reviewMap.lastKey());
+			Element reviewElm = reviewMap.get(reviewMap.lastKey());
+			review = getReviewInstance(reviewElm);
 		}
 		return review;
 	}

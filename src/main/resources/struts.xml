@@ -10,7 +10,6 @@
 		<global-results>
 			<result name="error">/jsp/Error.jsp</result>
 		</global-results>
-		
 		<!-- Global Exception mapping using the default excpetion interceptor -->
 		<global-exception-mappings>
 			<exception-mapping result="error" exception="java.lang.Exception" />
@@ -19,6 +18,7 @@
 		<!-- Struts configuration for Review Widget -->
 		<action name="review" class="com.citysearch.webwidget.action.ReviewAction"> 
 			<result name="success">/jsp/Review.jsp</result>
+			<result name="nearbyplaces">/Nearby_Places300x250</result>
 		</action>
 	</package>
 </struts>

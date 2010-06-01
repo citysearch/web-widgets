@@ -49,10 +49,7 @@ public class ProfileHelper {
 			throws CitysearchException {
 		List<String> errors = new ArrayList<String>();
 		Properties errorProperties = PropertiesLoader.getErrorProperties();
-		if (StringUtils.isBlank(request.getApiKey())) {
-			errors.add(errorProperties
-					.getProperty(CommonConstants.API_KEY_ERROR_CODE));
-		}
+
 		if (StringUtils.isBlank(request.getPublisher())) {
 			errors.add(errorProperties
 					.getProperty(CommonConstants.PUBLISHER_ERROR_CODE));
@@ -80,8 +77,13 @@ public class ProfileHelper {
 			throws CitysearchException {
 		// Reflection Probably???
 		StringBuilder strBuilder = new StringBuilder();
+
+		Properties properties = PropertiesLoader.getAPIProperties();
+		String apiKey = properties
+				.getProperty(CommonConstants.API_KEY_PROPERTY);
 		strBuilder.append(HelperUtil.constructQueryParam(
-				APIFieldNameConstants.API_KEY, request.getApiKey()));
+				APIFieldNameConstants.API_KEY, apiKey));
+
 		strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
 		strBuilder.append(HelperUtil.constructQueryParam(
 				APIFieldNameConstants.PUBLISHER, request.getPublisher()));

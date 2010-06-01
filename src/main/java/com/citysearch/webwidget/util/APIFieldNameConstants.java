@@ -7,9 +7,9 @@ public class APIFieldNameConstants {
 	public static final String CUSTOMER_ONLY = "customer_only";
 	public static final String FORMAT = "format";
 	public static final String PLACEMENT = "placement";
+	public static final String WHERE = "where";
 	
 	//Review API Field Names
-	public static final String WHERE = "where";
 	public static final String WHAT = "what";
 	public static final String TAG_ID = "tag_id";
 	public static final String TAG_NAME = "tag_name";
@@ -27,4 +27,9 @@ public class APIFieldNameConstants {
     public static final String CALLBACK = "callback";
     public static final String NO_LOG = "nolog";
 	
+    //Search API Field Names
+    public static final String LATITUDE = "lat";
+    public static final String LONGITUDE = "lon";
+    public static final String RADIUS = "radius";
+    public static final String TAG = "tag";
 }

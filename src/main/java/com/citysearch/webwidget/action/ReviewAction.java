@@ -1,22 +1,38 @@
 package com.citysearch.webwidget.action;
 
-import org.apache.log4j.Logger;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import com.citysearch.webwidget.bean.Profile;
-import com.citysearch.webwidget.bean.ProfileRequest;
+import org.apache.log4j.Logger;
+import org.apache.struts2.interceptor.ServletRequestAware;
+import org.apache.struts2.interceptor.ServletResponseAware;
+
 import com.citysearch.webwidget.bean.Review;
 import com.citysearch.webwidget.bean.ReviewRequest;
 import com.citysearch.webwidget.exception.CitysearchException;
-import com.citysearch.webwidget.helper.ProfileHelper;
 import com.citysearch.webwidget.helper.ReviewHelper;
 import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 
 //TODO: Javadocs
-public class ReviewAction implements ModelDriven<ReviewRequest> {
+public class ReviewAction implements ModelDriven<ReviewRequest>,
+		ServletRequestAware, ServletResponseAware {
 	private Logger log = Logger.getLogger(getClass());
 	private ReviewRequest reviewRequest = new ReviewRequest();
 	private Review review;
+	private HttpServletRequest httpRequest;
+	private HttpServletResponse httpResponse;
+
+	public void setServletRequest(HttpServletRequest httpRequest) {
+		this.httpRequest = httpRequest;
+	}
+
+	public void setServletResponse(HttpServletResponse httpResponse) {
+		this.httpResponse = httpResponse;
+	}
 
 	public ReviewRequest getReviewRequest() {
 		return reviewRequest;
@@ -37,33 +53,26 @@ public class ReviewAction implements ModelDriven<ReviewRequest> {
 	public ReviewRequest getModel() {
 		return reviewRequest;
 	}
-	
-	public String execute() throws CitysearchException
-	{
+
+	public String execute() throws CitysearchException {
 		ReviewHelper helper = new ReviewHelper();
-		try
-		{
+		try {
 			review = helper.getLatestReview(reviewRequest);
-			
-			ProfileRequest request = new ProfileRequest();
-	        request.setApiKey(reviewRequest.getApiKey());
-	        request.setPublisher(reviewRequest.getPublisher());
-	        request.setClientIP(reviewRequest.getClientIP());
-	        request.setListingId(review.getListingId());
-	        
-	        ProfileHelper profHelper = new ProfileHelper();
-			Profile profile = profHelper.getProfile(request);
-			if (profile != null)
+			/*
+			if (review == null)
 			{
-				review.setAddress(profile.getAddress());
-				review.setPhone(profile.getPhone());
-				review.setProfileUrl(profile.getProfileUrl());
-				review.setSendToFriendUrl(profile.getSendToFriendUrl());
-				review.setImageUrl(profile.getImageUrl());
+				httpRequest.getParameterMap().put("what", reviewRequest.getWhat());
+				httpRequest.getParameterMap().put("where", reviewRequest.getWhere());
+				httpRequest.getParameterMap().put("publishercode", reviewRequest.getPublisher());
+				httpRequest.getParameterMap().put("lat", reviewRequest.getLatitude());
+				httpRequest.getParameterMap().put("lon", reviewRequest.getLongitude());
+				httpRequest.getParameterMap().put("tags", reviewRequest.getTagName());
+				httpRequest.getParameterMap().put("radius", reviewRequest.getRadius());
+				ActionContext.getContext().getParameters().put("publishercode", reviewRequest.getPublisher());
+				return "nearbyplaces";
 			}
-		}
-		catch (CitysearchException cse)
-		{
+			*/
+		} catch (CitysearchException cse) {
 			log.error(cse.getDetailedMessage());
 			throw cse;
 		}
