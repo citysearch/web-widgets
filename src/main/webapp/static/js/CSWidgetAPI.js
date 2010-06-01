@@ -8,7 +8,7 @@ var citygrid = {
 
     // nearby widget
     nearby : {
-        path : 'http://contentads.citygridmedia/ads/Nearby_Places300x250',
+        path : 'http://contentads.citygridmedia.com/ads/Nearby_Places300x250',
 
         createwidget : function(objCSW) {
             objCSW = citygrid.common.checkInput(objCSW);
