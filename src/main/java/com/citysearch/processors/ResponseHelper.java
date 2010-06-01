@@ -54,7 +54,7 @@ public abstract class ResponseHelper {
 
     /**
      * Reads from input stream, constructs and returns a jdom document
-     * 
+     *
      * @param input
      * @return
      * @throws IOException
@@ -83,7 +83,7 @@ public abstract class ResponseHelper {
 
     /**
      * Converts InputStream to String and returns the String
-     * 
+     *
      * @throws CitysearchException
      */
     public String getStringFromStream(InputStream input) throws IOException, CitysearchException {
@@ -108,7 +108,7 @@ public abstract class ResponseHelper {
     /**
      * This method reads the values from the result xml, stores each of the businesses returned in a
      * list, does necessary manipulations and returns the list
-     * 
+     *
      * @throws CitysearchException
      */
     public ArrayList<AdListBean> parseXML(Document doc, String sLat, String sLon, String apiType,
@@ -148,7 +148,7 @@ public abstract class ResponseHelper {
     /**
      * Map contains the element values parsed from result xml .Does the necessary processing to
      * values and adds to AdListBean object
-     * 
+     *
      * @param resultMap
      * @param sLat
      * @param sLon
@@ -207,7 +207,7 @@ public abstract class ResponseHelper {
 
     /**
      * Reads the apiType and returns the name of the child element to be processed
-     * 
+     *
      * @param apiType
      * @return
      * @throws CitysearchException
@@ -231,7 +231,7 @@ public abstract class ResponseHelper {
     /**
      * Constructs the String as city,state and returns it. If city is not present then only state is
      * returned and vice-versa
-     * 
+     *
      * @param city
      * @param state
      * @return
@@ -280,7 +280,7 @@ public abstract class ResponseHelper {
      * Calculate the ratings value and determines the rating stars to be displayed Returns what type
      * of star to be displayed in an array E.g.for 3.5 rating the array will have values {2,2,2,1,0}
      * where 2 represents full star, 1 half star and 0 empty star
-     * 
+     *
      * @param rating
      * @return
      */
@@ -311,7 +311,7 @@ public abstract class ResponseHelper {
 
     /**
      * Calculates the rating value and returns it back
-     * 
+     *
      * @param rating
      * @return
      */
@@ -328,7 +328,7 @@ public abstract class ResponseHelper {
     /**
      * Truncates the business name to maximum length and if truncated add three ellipses at the end
      * Reads the length from the property file.
-     * 
+     *
      * @param name
      * @return name
      * @throws CitysearchException
@@ -353,7 +353,7 @@ public abstract class ResponseHelper {
 
     /**
      * Truncates the tag line to maximum length and if truncated add three ellipses at the end
-     * 
+     *
      * @param name
      * @return tag line
      * @throws CitysearchException
@@ -378,7 +378,7 @@ public abstract class ResponseHelper {
 
     /**
      * If no review count is given, returns a default value of 0
-     * 
+     *
      * @param reviewCount
      * @return
      */
@@ -392,7 +392,7 @@ public abstract class ResponseHelper {
 
     /**
      * Getting the images from the properties file, adding and returning in a ArrayList
-     * 
+     *
      * @param imagePropertiesFile
      * @return
      * @throws CitysearchException
@@ -407,7 +407,7 @@ public abstract class ResponseHelper {
             while (enumerator.hasMoreElements()) {
                 String key = (String) enumerator.nextElement();
                 String value = imageProperties.getProperty(key);
-                imageList.add(contextPath + "/" + value);
+                imageList.add(value);
             }
 
         } catch (Exception excep) {
@@ -421,7 +421,7 @@ public abstract class ResponseHelper {
     /**
      * Returns list with only three objects if the size is greater than 3 Otherwise, returns the
      * list as is
-     * 
+     *
      * @param adList
      * @param imagePropertiesFile
      * @return
@@ -443,7 +443,7 @@ public abstract class ResponseHelper {
 
     /**
      * Add default images to the final list Read the images from the list in a random order
-     * 
+     *
      * @param adList
      * @param imagePropertiesFile
      * @return
