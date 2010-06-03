@@ -27,16 +27,50 @@
 		</pluginRepository>
 	</pluginRepositories>
 	<dependencies>
+		<!-- Apaceh CXF (JAX - RS) -->
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-frontend-jaxws</artifactId>
+			<version>2.1.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-transports-http</artifactId>
+			<version>2.1.3</version>
+		</dependency>
+		<dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-transports-http-jetty</artifactId>
+            <version>2.1.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-frontend-jaxrs</artifactId>
+            <version>2.1.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-bindings-http</artifactId>
+            <version>2.1.3</version>
+        </dependency>
+		<dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+		<!-- JDOM  -->
 		<dependency>
 			<groupId>jdom</groupId>
 			<artifactId>jdom</artifactId>
 			<version>1.0</version>
 		</dependency>
+		<!-- JSTL (Need to be removed after migrating old code to Struts2 -->
 		<dependency>
 			<groupId>jstl</groupId>
 			<artifactId>jstl</artifactId>
 			<version>1.1.2</version>
 		</dependency>
+		<!-- Log4J -->
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
@@ -68,16 +102,16 @@
 
 		<!--  Struts 2 -->
 		<dependency>
-            <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-core</artifactId>
-            <version>2.0.11.2</version>
-        </dependency>
-               
-        <dependency>
-            <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-spring-plugin</artifactId>
-            <version>2.0.11.2</version>
-        </dependency>
+			<groupId>org.apache.struts</groupId>
+			<artifactId>struts2-core</artifactId>
+			<version>2.0.11.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.struts</groupId>
+			<artifactId>struts2-spring-plugin</artifactId>
+			<version>2.0.11.2</version>
+		</dependency>
 
 		<!-- Servlet & Jsp -->
 		<dependency>
@@ -106,37 +140,33 @@
 			<version>2.5</version>
 		</dependency>
 	</dependencies>
-	
-    <build>
-      <finalName>web-widgets</finalName>
-    	<plugins>
-    		<plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                   <source>1.5</source>
-                   <target>1.5</target>
-                </configuration>
-            </plugin>
-    		<plugin>
-    			<groupId>org.mortbay.jetty</groupId>
-    			<artifactId>maven-jetty-plugin</artifactId>
-    			<version>6.1.5</version>
-    			<configuration>
-    				<scanIntervalSeconds>10</scanIntervalSeconds>
-    			</configuration>
-    		</plugin>
-    		<!-- Uncomment to enable tomcat deployment using maven
-    		<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>tomcat-maven-plugin</artifactId>
-				<version>1.0</version>
+
+	<build>
+		<finalName>web-widgets</finalName>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<url>http://localhost:8080/manager</url>
-					<server>myserver</server>
-					<path>/web-widgets</path>
+					<source>1.5</source>
+					<target>1.5</target>
 				</configuration>
 			</plugin>
-			-->
-    	</plugins>
-    </build>
+			<plugin>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>maven-jetty-plugin</artifactId>
+				<version>6.1.5</version>
+				<configuration>
+					<scanIntervalSeconds>10</scanIntervalSeconds>
+				</configuration>
+			</plugin>
+			<!--
+				Uncomment to enable tomcat deployment using maven 
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>tomcat-maven-plugin</artifactId> <version>1.0</version>
+				<configuration> <url>http://localhost:8080/manager</url>
+				<server>myserver</server> <path>/web-widgets</path> </configuration>
+				</plugin>-->
+		</plugins>
+	</build>
 </project>
