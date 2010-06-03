@@ -5,10 +5,10 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 
 	<display-name>web-widgets</display-name>
-
+	
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>classpath*:applicationContext*.xml</param-value>
+		<param-value>classpath*:applicationContext*.xml, WEB-INF/beans.xml</param-value>
 	</context-param>
 
 	<!-- Filters -->
@@ -16,33 +16,41 @@
 		<filter-name>action2-cleanup</filter-name>
 		<filter-class>org.apache.struts2.dispatcher.ActionContextCleanUp</filter-class>
 	</filter>
-
 	<filter>
 		<filter-name>action2</filter-name>
 		<filter-class>org.apache.struts2.dispatcher.FilterDispatcher</filter-class>
 	</filter>
-
 	<filter-mapping>
 		<filter-name>action2-cleanup</filter-name>
-		<url-pattern>/*</url-pattern>
+		<url-pattern>/actions/*</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>action2</filter-name>
-		<url-pattern>/*</url-pattern>
+		<url-pattern>/actions/*</url-pattern>
 	</filter-mapping>
 
 	<!-- Listeners -->
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
-
+	
 	<!-- Servlets & Mappings-->
 	<servlet>
-		<description />
-		<display-name>HealthCheckServlet</display-name>
 		<servlet-name>HealthCheckServlet</servlet-name>
 		<servlet-class>com.citysearch.webwidget.servlet.HealthCheckServlet</servlet-class>
 	</servlet>
+
+	<servlet>
+		<servlet-name>CXFServlet</servlet-name>
+		<servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>CXFServlet</servlet-name>
+		<url-pattern>/services/*</url-pattern>
+	</servlet-mapping>
+
 	<servlet-mapping>
 		<servlet-name>HealthCheckServlet</servlet-name>
 		<url-pattern>/healthcheck</url-pattern>
@@ -78,7 +86,7 @@
 		<servlet-class>org.apache.struts2.views.JspSupportServlet</servlet-class>
 		<load-on-startup>5</load-on-startup>
 	</servlet>
-	<!-- 
+	 <!-- 
 	<servlet>
 		<servlet-name>ImageServlet</servlet-name>
 		<servlet-class>net.jawr.web.servlet.JawrServlet</servlet-class>
