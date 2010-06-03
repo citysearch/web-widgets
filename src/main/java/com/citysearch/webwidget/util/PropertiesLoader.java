@@ -8,15 +8,28 @@ import org.apache.log4j.Logger;
 
 import com.citysearch.webwidget.exception.CitysearchException;
 
+/**
+ * This class loads properties from property files.
+ * 
+ * @author Aspert
+ * 
+ */
 public class PropertiesLoader {
-	private static Logger log = Logger.getLogger(PropertiesLoader.class);
-    private static final String apiPropertiesFile = "/api.properties";
-    private static final String errorPropertiesFile = "/error.properties";
+    private static Logger log = Logger.getLogger(PropertiesLoader.class);
+    private static final String API_PROPERTIES_FILE = "/api.properties";
+    private static final String ERROR_PROPERTIES_FILE = "/error.properties";
     private static Properties errorProperties;
     private static Properties apiProperties;
-    private final static String errorPropMsg = "Error initializing the properties file";
-    private final static String ioExcepMsg = "IOException while reading properties file";
+    private final static String ERROR_PROP_MSG = "Error initializing the properties file";
+    private final static String IO_EXCEP_MSG = "IOException while reading properties file";
 
+    /**
+     * Takes the file name as input and reads the properties from the file. Returns the Properties
+     * object that contains parameters as key,value pairs
+     * 
+     * @param fileName
+     * @return Properties
+     */
     public static Properties getProperties(String fileName) {
         InputStream inputStream;
         Properties properties;
@@ -28,37 +41,49 @@ public class PropertiesLoader {
             if (inputStream != null)
                 properties.load(inputStream);
         } catch (IOException ioexcep) {
-            log.error(ioExcepMsg, ioexcep);
+            log.error(IO_EXCEP_MSG, ioexcep);
         } finally {
             try {
                 inputStream.close();
             } catch (IOException ioexcep) {
-                log.error(ioExcepMsg, ioexcep);
+                log.error(IO_EXCEP_MSG, ioexcep);
             }
         }
         return properties;
     }
 
+    /**
+     * Read the error.properties file. If that file is missing, throws CitysearchException
+     * 
+     * @return Properties
+     * @throws CitysearchException
+     */
     public static Properties getErrorProperties() throws CitysearchException {
         try {
             if (errorProperties == null) {
-                errorProperties = getProperties(errorPropertiesFile);
+                errorProperties = getProperties(ERROR_PROPERTIES_FILE);
             }
         } catch (Exception e) {
-            log.error(errorPropMsg);
-            throw new CitysearchException("PropertiesLoader", "getErrorProperties", errorPropMsg);
+            log.error(ERROR_PROP_MSG);
+            throw new CitysearchException("PropertiesLoader", "getErrorProperties", ERROR_PROP_MSG);
         }
         return errorProperties;
     }
 
+    /**
+     * Read the api.properties file. If that file is missing, throws CitysearchException
+     * 
+     * @return Properties
+     * @throws CitysearchException
+     */
     public static Properties getAPIProperties() throws CitysearchException {
         try {
             if (apiProperties == null) {
-                apiProperties = getProperties(apiPropertiesFile);
+                apiProperties = getProperties(API_PROPERTIES_FILE);
             }
         } catch (Exception e) {
-            log.error(errorPropMsg); 
-            throw new CitysearchException("PropertiesLoader", "getAPIProperties", errorPropMsg);
+            log.error(ERROR_PROP_MSG);
+            throw new CitysearchException("PropertiesLoader", "getAPIProperties", ERROR_PROP_MSG);
         }
         return apiProperties;
     }

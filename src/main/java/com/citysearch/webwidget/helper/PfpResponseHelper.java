@@ -8,6 +8,12 @@ import org.jdom.Element;
 
 import com.citysearch.webwidget.util.CommonConstants;
 
+/**
+ * Processes the response from PFP API and returns the individual ad element values in a map
+ * 
+ * @author Aspert
+ * 
+ */
 public class PfpResponseHelper extends ResponseHelper {
 
     private Logger log = Logger.getLogger(getClass());

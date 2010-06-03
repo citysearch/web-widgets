@@ -25,6 +25,11 @@ import com.citysearch.webwidget.exception.CitysearchException;
 import com.citysearch.webwidget.util.CommonConstants;
 import com.citysearch.webwidget.util.PropertiesLoader;
 
+/**
+ * Helper class for processing response of Search and Profile APIs
+ * @author Aspert
+ *
+ */
 public abstract class ResponseHelper {
 
     private Logger log = Logger.getLogger(getClass());

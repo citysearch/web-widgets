@@ -1,27 +1,33 @@
 package com.citysearch.webwidget.bean;
 
+/**
+ * The abstract class that contains the common Request field across APIs
+ * 
+ * @author Aspert
+ * 
+ */
 public abstract class AbstractRequest {
-	protected String publisher;
-	protected boolean customerOnly;
-	protected String format;
- 
+    protected String publisher;
+    protected boolean customerOnly;
+    protected String format;
+
     public String getPublisher() {
-		return publisher;
-	}
+        return publisher;
+    }
 
-	public void setPublisher(String publisher) {
-		this.publisher = publisher;
-	}
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
+    }
 
-	public boolean isCustomerOnly() {
-		return customerOnly;
-	}
+    public boolean isCustomerOnly() {
+        return customerOnly;
+    }
 
-	public void setCustomerOnly(boolean customerOnly) {
-		this.customerOnly = customerOnly;
-	}
-	
-	public String getFormat() {
+    public void setCustomerOnly(boolean customerOnly) {
+        this.customerOnly = customerOnly;
+    }
+
+    public String getFormat() {
         return format;
     }
 

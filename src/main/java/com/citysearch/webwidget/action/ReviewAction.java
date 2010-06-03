@@ -17,65 +17,74 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 
-//TODO: Javadocs
-public class ReviewAction implements ModelDriven<ReviewRequest>,
-		ServletRequestAware, ServletResponseAware {
-	private Logger log = Logger.getLogger(getClass());
-	private ReviewRequest reviewRequest = new ReviewRequest();
-	private Review review;
-	private HttpServletRequest httpRequest;
-	private HttpServletResponse httpResponse;
+/**
+ * This class processes the Reviews request, and gets the Reviews Response in the execute() method
+ * 
+ * @author Aspert
+ * 
+ */
+public class ReviewAction implements ModelDriven<ReviewRequest>, ServletRequestAware,
+        ServletResponseAware {
+    private Logger log = Logger.getLogger(getClass());
+    private ReviewRequest reviewRequest = new ReviewRequest();
+    private Review review;
+    private HttpServletRequest httpRequest;
+    private HttpServletResponse httpResponse;
 
-	public void setServletRequest(HttpServletRequest httpRequest) {
-		this.httpRequest = httpRequest;
-	}
+    public void setServletRequest(HttpServletRequest httpRequest) {
+        this.httpRequest = httpRequest;
+    }
 
-	public void setServletResponse(HttpServletResponse httpResponse) {
-		this.httpResponse = httpResponse;
-	}
+    public void setServletResponse(HttpServletResponse httpResponse) {
+        this.httpResponse = httpResponse;
+    }
 
-	public ReviewRequest getReviewRequest() {
-		return reviewRequest;
-	}
+    public ReviewRequest getReviewRequest() {
+        return reviewRequest;
+    }
 
-	public void setReviewRequest(ReviewRequest reviewRequest) {
-		this.reviewRequest = reviewRequest;
-	}
+    public void setReviewRequest(ReviewRequest reviewRequest) {
+        this.reviewRequest = reviewRequest;
+    }
 
-	public Review getReview() {
-		return review;
-	}
+    public Review getReview() {
+        return review;
+    }
 
-	public void setReview(Review review) {
-		this.review = review;
-	}
+    public void setReview(Review review) {
+        this.review = review;
+    }
 
-	public ReviewRequest getModel() {
-		return reviewRequest;
-	}
+    public ReviewRequest getModel() {
+        return reviewRequest;
+    }
 
-	public String execute() throws CitysearchException {
-		ReviewHelper helper = new ReviewHelper();
-		try {
-			review = helper.getLatestReview(reviewRequest);
-			/*
-			if (review == null)
-			{
-				httpRequest.getParameterMap().put("what", reviewRequest.getWhat());
-				httpRequest.getParameterMap().put("where", reviewRequest.getWhere());
-				httpRequest.getParameterMap().put("publishercode", reviewRequest.getPublisher());
-				httpRequest.getParameterMap().put("lat", reviewRequest.getLatitude());
-				httpRequest.getParameterMap().put("lon", reviewRequest.getLongitude());
-				httpRequest.getParameterMap().put("tags", reviewRequest.getTagName());
-				httpRequest.getParameterMap().put("radius", reviewRequest.getRadius());
-				ActionContext.getContext().getParameters().put("publishercode", reviewRequest.getPublisher());
-				return "nearbyplaces";
-			}
-			*/
-		} catch (CitysearchException cse) {
-			log.error(cse.getDetailedMessage());
-			throw cse;
-		}
-		return Action.SUCCESS;
-	}
+    /**
+     * Calls the getLatestReview() method from ReviewHelper class to get the latest Review
+     * Returns the Response status
+     * @return String
+     * @throws CitysearchException
+     */
+    public String execute() throws CitysearchException {
+        ReviewHelper helper = new ReviewHelper();
+        try {
+            review = helper.getLatestReview(reviewRequest);
+            /*
+             * if (review == null) { httpRequest.getParameterMap().put("what",
+             * reviewRequest.getWhat()); httpRequest.getParameterMap().put("where",
+             * reviewRequest.getWhere()); httpRequest.getParameterMap().put("publishercode",
+             * reviewRequest.getPublisher()); httpRequest.getParameterMap().put("lat",
+             * reviewRequest.getLatitude()); httpRequest.getParameterMap().put("lon",
+             * reviewRequest.getLongitude()); httpRequest.getParameterMap().put("tags",
+             * reviewRequest.getTagName()); httpRequest.getParameterMap().put("radius",
+             * reviewRequest.getRadius());
+             * ActionContext.getContext().getParameters().put("publishercode",
+             * reviewRequest.getPublisher()); return "nearbyplaces"; }
+             */
+        } catch (CitysearchException cse) {
+            log.error(cse.getDetailedMessage());
+            throw cse;
+        }
+        return Action.SUCCESS;
+    }
 }

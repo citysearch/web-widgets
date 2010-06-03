@@ -1,79 +1,85 @@
 package com.citysearch.webwidget.bean;
 
+/**
+ * Request Bean for Profile API
+ * 
+ * @author Aspert
+ * 
+ */
 public class ProfileRequest extends AbstractRequest {
-	private String listingId;
-	private String infoUSAId;
-	private String phone;
-	private boolean allResults;
-	private String reviewCount;
-	private String placement;
-	private String clientIP;
-	private int nolog;
-	private String callback;
-	
-	public String getListingId() {
-		return listingId;
-	}
+    private String listingId;
+    private String infoUSAId;
+    private String phone;
+    private boolean allResults;
+    private String reviewCount;
+    private String placement;
+    private String clientIP;
+    private int nolog;
+    private String callback;
 
-	public void setListingId(String listingId) {
-		this.listingId = listingId;
-	}
+    public String getListingId() {
+        return listingId;
+    }
 
-	public String getInfoUSAId() {
-		return infoUSAId;
-	}
+    public void setListingId(String listingId) {
+        this.listingId = listingId;
+    }
 
-	public void setInfoUSAId(String infoUSAId) {
-		this.infoUSAId = infoUSAId;
-	}
+    public String getInfoUSAId() {
+        return infoUSAId;
+    }
 
-	public String getPhone() {
-		return phone;
-	}
+    public void setInfoUSAId(String infoUSAId) {
+        this.infoUSAId = infoUSAId;
+    }
 
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
+    public String getPhone() {
+        return phone;
+    }
 
-	public boolean isAllResults() {
-		return allResults;
-	}
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
-	public void setAllResults(boolean allResults) {
-		this.allResults = allResults;
-	}
+    public boolean isAllResults() {
+        return allResults;
+    }
 
-	public String getReviewCount() {
-		return reviewCount;
-	}
+    public void setAllResults(boolean allResults) {
+        this.allResults = allResults;
+    }
 
-	public void setReviewCount(String reviewCount) {
-		this.reviewCount = reviewCount;
-	}
+    public String getReviewCount() {
+        return reviewCount;
+    }
 
-	public String getPlacement() {
-		return placement;
-	}
+    public void setReviewCount(String reviewCount) {
+        this.reviewCount = reviewCount;
+    }
 
-	public void setPlacement(String placement) {
-		this.placement = placement;
-	}
+    public String getPlacement() {
+        return placement;
+    }
 
-	public String getClientIP() {
-		return clientIP;
-	}
+    public void setPlacement(String placement) {
+        this.placement = placement;
+    }
 
-	public void setClientIP(String clientIP) {
-		this.clientIP = clientIP;
-	}
+    public String getClientIP() {
+        return clientIP;
+    }
 
-	public int getNolog() {
-		return nolog;
-	}
+    public void setClientIP(String clientIP) {
+        this.clientIP = clientIP;
+    }
 
-	public void setNolog(int nolog) {
-		this.nolog = nolog;
-	}
+    public int getNolog() {
+        return nolog;
+    }
+
+    public void setNolog(int nolog) {
+        this.nolog = nolog;
+    }
 
     public void setCallback(String callback) {
         this.callback = callback;

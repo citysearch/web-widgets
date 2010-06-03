@@ -1,10 +1,15 @@
 package com.citysearch.webwidget.helper;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
+import java.util.Random;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 
@@ -18,228 +23,255 @@ import com.citysearch.webwidget.util.CommonConstants;
 import com.citysearch.webwidget.util.HelperUtil;
 import com.citysearch.webwidget.util.PropertiesLoader;
 
+/**
+ * This helper class performs all the functionalty related to Profile API like validating request,
+ * calling Profile API and parsing response returned by Profile API
+ * 
+ * @author Aspert
+ * 
+ */
 public class ProfileHelper {
 
-	private final static String property_profile_url = "profile.url";
-	private static final String listingid_err_msg = "listingid.errmsg";
-	protected static final String location = "location";
-	private static final String street = "street";
-	private static final String city = "city";
-	private static final String state = "state";
-	private static final String postalCode = "postal_code";
-	private static final String address = "address";
-	private static final String contactInfo = "contact_info";
-	private static final String phone = "display_phone";
-	private static final String urls = "urls";
-	private static final String profileURL = "profile_url";
-	private static final String sendToFriendURL = "send_to_friend_url";
-	private static final String images = "images";
-	private static final String image = "image";
-	private static final String imageURL = "image_url";
-	private static List<String> imageList;
-	private static final String imagePropertiesFile = "review.image.properties";
+    private final static String PROPERTY_PROFILE_URL = "profile.url";
+    private static final String LSITING_ID_ERR_MSG = "listingid.errmsg";
+    protected static final String LOCATION = "location";
+    private static final String STREET = "street";
+    private static final String CITY = "city";
+    private static final String STATE = "state";
+    private static final String POSTAL_CODE = "postal_code";
+    private static final String ADDRESS = "address";
+    private static final String CONTACT_INFO = "contact_info";
+    private static final String PHONE = "display_phone";
+    private static final String URLS = "urls";
+    private static final String PROFILE_URL = "profile_url";
+    private static final String SEND_TO_FRIEND_URL = "send_to_friend_url";
+    private static final String IMAGES = "images";
+    private static final String IMAGE = "image";
+    private static final String IMAGE_URL = "image_url";
+    private static final String IMAGE_PROPERTIES_FILE = "review.image.properties";
+    private static final String IMAGE_ERROR = "image.properties.error";
+    private static List<String> imageList;
+    //private static HashMap imageMap;
+    private Logger log = Logger.getLogger(getClass());
+    /**
+     * Validates the request. If any of the parameters are missing, throws Citysearch Exception
+     * 
+     * @param request
+     * @throws CitysearchException
+     */
+    public void validateRequest(ProfileRequest request) throws CitysearchException {
+        List<String> errors = new ArrayList<String>();
+        Properties errorProperties = PropertiesLoader.getErrorProperties();
 
-	/**
-	 * Validates the request. If any of the parameters are missing, throws
-	 * Citysearch Exception
-	 * 
-	 * @throws CitysearchException
-	 */
-	public void validateRequest(ProfileRequest request)
-			throws CitysearchException {
-		List<String> errors = new ArrayList<String>();
-		Properties errorProperties = PropertiesLoader.getErrorProperties();
+        if (StringUtils.isBlank(request.getPublisher())) {
+            errors.add(errorProperties.getProperty(CommonConstants.PUBLISHER_ERROR_CODE));
+        }
+        if (StringUtils.isBlank(request.getListingId())) {
+            errors.add(errorProperties.getProperty(LSITING_ID_ERR_MSG));
+        }
+        if (StringUtils.isBlank(request.getClientIP())) {
+            errors.add(errorProperties.getProperty(CommonConstants.CLIENT_IP_ERROR_CODE));
+        }
+        if (!errors.isEmpty()) {
+            throw new CitysearchException(this.getClass().getName(), "validateRequest",
+                    "Invalid parameters.", errors);
+        }
+    }
 
-		if (StringUtils.isBlank(request.getPublisher())) {
-			errors.add(errorProperties
-					.getProperty(CommonConstants.PUBLISHER_ERROR_CODE));
-		}
-		if (StringUtils.isBlank(request.getListingId())) {
-			errors.add(errorProperties.getProperty(listingid_err_msg));
-		}
-		if (StringUtils.isBlank(request.getClientIP())) {
-			errors.add(errorProperties
-					.getProperty(CommonConstants.CLIENT_IP_ERROR_CODE));
-		}
-		if (!errors.isEmpty()) {
-			throw new CitysearchException(this.getClass().getName(),
-					"validateRequest", "Invalid parameters.", errors);
-		}
-	}
+    /**
+     * Constructs the Profile API query string with all the supplied parameters and returns query
+     * string
+     * 
+     * @param request
+     * @return String
+     * @throws CitysearchException
+     */
+    private String getQueryString(ProfileRequest request) throws CitysearchException {
+        // Reflection Probably???
+        StringBuilder strBuilder = new StringBuilder();
 
-	/**
-	 * Constructs the Profile API query string with all the supplied parameters
-	 * 
-	 * @return
-	 * @throws CitysearchException
-	 */
-	private String getQueryString(ProfileRequest request)
-			throws CitysearchException {
-		// Reflection Probably???
-		StringBuilder strBuilder = new StringBuilder();
+        Properties properties = PropertiesLoader.getAPIProperties();
+        String apiKey = properties.getProperty(CommonConstants.API_KEY_PROPERTY);
+        strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.API_KEY, apiKey));
 
-		Properties properties = PropertiesLoader.getAPIProperties();
-		String apiKey = properties
-				.getProperty(CommonConstants.API_KEY_PROPERTY);
-		strBuilder.append(HelperUtil.constructQueryParam(
-				APIFieldNameConstants.API_KEY, apiKey));
+        strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+        strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.PUBLISHER,
+                request.getPublisher()));
+        strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+        strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.LISTING_ID,
+                request.getListingId()));
+        strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+        strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.INFOUSA_ID,
+                request.getInfoUSAId()));
+        strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+        strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.PHONE,
+                request.getPhone()));
+        strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+        strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.ALL_RESULTS,
+                String.valueOf(request.isAllResults())));
+        strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+        strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.CUSTOMER_ONLY,
+                String.valueOf(request.isCustomerOnly())));
+        strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+        strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.REVIEW_COUNT,
+                request.getReviewCount()));
+        strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+        strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.CLIENT_IP,
+                request.getClientIP()));
+        strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+        strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.CALLBACK,
+                request.getCallback()));
+        strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+        strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.PLACEMENT,
+                request.getPlacement()));
+        strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+        strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.FORMAT,
+                request.getFormat()));
+        strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+        strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.NO_LOG,
+                String.valueOf(request.getNolog())));
+        return strBuilder.toString();
+    }
 
-		strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-		strBuilder.append(HelperUtil.constructQueryParam(
-				APIFieldNameConstants.PUBLISHER, request.getPublisher()));
-		strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-		strBuilder.append(HelperUtil.constructQueryParam(
-				APIFieldNameConstants.LISTING_ID, request.getListingId()));
-		strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-		strBuilder.append(HelperUtil.constructQueryParam(
-				APIFieldNameConstants.INFOUSA_ID, request.getInfoUSAId()));
-		strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-		strBuilder.append(HelperUtil.constructQueryParam(
-				APIFieldNameConstants.PHONE, request.getPhone()));
-		strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-		strBuilder.append(HelperUtil.constructQueryParam(
-				APIFieldNameConstants.ALL_RESULTS, String.valueOf(request
-						.isAllResults())));
-		strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-		strBuilder.append(HelperUtil.constructQueryParam(
-				APIFieldNameConstants.CUSTOMER_ONLY, String.valueOf(request
-						.isCustomerOnly())));
-		strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-		strBuilder.append(HelperUtil.constructQueryParam(
-				APIFieldNameConstants.REVIEW_COUNT, request.getReviewCount()));
-		strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-		strBuilder.append(HelperUtil.constructQueryParam(
-				APIFieldNameConstants.CLIENT_IP, request.getClientIP()));
-		strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-		strBuilder.append(HelperUtil.constructQueryParam(
-				APIFieldNameConstants.CALLBACK, request.getCallback()));
-		strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-		strBuilder.append(HelperUtil.constructQueryParam(
-				APIFieldNameConstants.PLACEMENT, request.getPlacement()));
-		strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-		strBuilder.append(HelperUtil.constructQueryParam(
-				APIFieldNameConstants.FORMAT, request.getFormat()));
-		strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-		strBuilder.append(HelperUtil.constructQueryParam(
-				APIFieldNameConstants.NO_LOG, String
-						.valueOf(request.getNolog())));
-		return strBuilder.toString();
-	}
+    /**
+     * Connects to the Profile API and processes the response sent by API for Reviews
+     * Response.Returns the Profile object with values set from response
+     * 
+     * @param request
+     * @return Profile
+     * @throws CitysearchException
+     */
+    public Profile getProfile(ProfileRequest request) throws CitysearchException {
+        validateRequest(request);
+        Properties properties = PropertiesLoader.getAPIProperties();
+        String urlString = properties.getProperty(PROPERTY_PROFILE_URL) + getQueryString(request);
+        Document responseDocument = null;
+        try {
+            responseDocument = HelperUtil.getAPIResponse(urlString);
+        } catch (InvalidHttpResponseException ihe) {
+            throw new CitysearchException(this.getClass().getName(), "getProfile", ihe.getMessage());
+        }
+        Profile profile = parseProfileForReviews(responseDocument);
+        return profile;
+    }
 
-	/**
-	 * Connects to the Profile API and processes the response sent by API for
-	 * Reviews Response
-	 * 
-	 * @return
-	 * @throws CitysearchException
-	 */
-	public Profile getProfile(ProfileRequest request)
-			throws CitysearchException {
-		validateRequest(request);
-		Properties properties = PropertiesLoader.getAPIProperties();
-		String urlString = properties.getProperty(property_profile_url)
-				+ getQueryString(request);
-		Document responseDocument = null;
-		try {
-			responseDocument = HelperUtil.getAPIResponse(urlString);
-		} catch (InvalidHttpResponseException ihe) {
-			throw new CitysearchException(this.getClass().getName(),
-					"getProfile", ihe.getMessage());
-		}
-		Profile profile = parseProfileForReviews(responseDocument);
-		return profile;
-	}
+    /**
+     * Parses xml response and returns the Profile object
+     * 
+     * @param doc
+     * @return Profile
+     * @throws CitysearchException
+     */
+    public Profile parseProfileForReviews(Document doc) throws CitysearchException {
+        Profile profile = null;
+        if (doc != null && doc.hasRootElement()) {
+            Element locationElem = doc.getRootElement().getChild(LOCATION);
+            if (locationElem != null) {
+                profile = new Profile();
+                profile.setAddress(getAddress(locationElem.getChild(ADDRESS)));
+                profile.setPhone(getPhone(locationElem.getChild(CONTACT_INFO)));
+                Element url = locationElem.getChild(URLS);
+                if (url != null) {
+                    profile.setProfileUrl(url.getChildText(PROFILE_URL));
+                    profile.setSendToFriendUrl(url.getChildText(SEND_TO_FRIEND_URL));
+                }
+                profile.setImageUrl(getImage(locationElem.getChild(IMAGES)));
+            }
+        }
+        return profile;
+    }
 
-	/**
-	 * Parses xml response and returns the Reviews object
-	 * 
-	 * @param doc
-	 * @param review
-	 * @return
-	 * @throws CitysearchException
-	 */
-	public Profile parseProfileForReviews(Document doc)
-			throws CitysearchException {
-		Profile profile = null;
-		if (doc != null && doc.hasRootElement()) {
-			Element locationElem = doc.getRootElement().getChild(location);
-			if (locationElem != null) {
-				profile = new Profile();
-				profile.setAddress(getAddress(locationElem.getChild(address)));
-				profile.setPhone(getPhone(locationElem.getChild(contactInfo)));
-				Element url = locationElem.getChild(urls);
-				if (url != null) {
-					profile.setProfileUrl(url.getChildText(profileURL));
-					profile.setSendToFriendUrl(url
-							.getChildText(sendToFriendURL));
-				}
-				profile.setImageUrl(getImage(locationElem.getChild(images)));
-			}
-		}
-		return profile;
-	}
+    /**
+     * Parses the address element received in response and returns Address object
+     * 
+     * @param addressElem
+     * @return Address
+     * @throws CitysearchException
+     */
+    private Address getAddress(Element addressElem) throws CitysearchException {
+        Address address = null;
+        if (addressElem != null) {
+            address = new Address();
+            address.setStreet(addressElem.getChildText(STREET));
+            address.setCity(addressElem.getChildText(CITY));
+            address.setState(addressElem.getChildText(STATE));
+            address.setPostalCode(addressElem.getChildText(POSTAL_CODE));
+        }
+        return address;
+    }
 
-	/**
-	 * Parses the address element received in response
-	 * 
-	 * @param addressElem
-	 * @return
-	 * @throws CitysearchException
-	 */
-	private Address getAddress(Element addressElem) throws CitysearchException {
-		Address address = null;
-		if (addressElem != null) {
-			address = new Address();
-			address.setStreet(addressElem.getChildText(street));
-			address.setCity(addressElem.getChildText(city));
-			address.setState(addressElem.getChildText(state));
-			address.setPostalCode(addressElem.getChildText(postalCode));
-		}
-		return address;
-	}
+    /**
+     * Gets the phone number from contact info element
+     * 
+     * @param contactInfo
+     * @return String
+     */
+    private String getPhone(Element contactInfo) {
+        if (contactInfo != null) {
+            return contactInfo.getChildText(PHONE);
+        }
+        return null;
+    }
 
-	/**
-	 * Gets the phone number from contact info element
-	 * 
-	 * @param contactInfo
-	 * @return
-	 */
-	private String getPhone(Element contactInfo) {
-		if (contactInfo != null) {
-			return contactInfo.getChildText(phone);
-		}
-		return null;
-	}
+    /**
+     * Gets the image url from xml. If no image url is found, returns the stock image related to the
+     * business category
+     * 
+     * @param images
+     * @return String
+     * @throws CitysearchException
+     */
+    private String getImage(Element images) throws CitysearchException {
+        String imageurl = null;
+        if (images != null) {
+            List<Element> imageList = images.getChildren(IMAGE);
+            int size = imageList.size();
+            for (int index = 0; index < size; index++) {
+                Element image = imageList.get(index);
+                if (image != null) {
+                    imageurl = image.getChildText(IMAGE_URL);
+                    if (StringUtils.isNotBlank(imageurl)) {
+                        break;
+                    }
+                }
+            }
+        }
 
-	/**
-	 * Gets the image url from xml. If no image url is found, returns the stock
-	 * image related to the business category
-	 * 
-	 * @param images
-	 * @return
-	 * @throws CitysearchException
-	 */
-	private String getImage(Element images) throws CitysearchException {
-		String imageurl = null;
-		if (images != null) {
-			List<Element> imageList = images.getChildren(image);
-			int size = imageList.size();
-			for (int index = 0; index < size; index++) {
-				Element image = imageList.get(index);
-				if (image != null) {
-					imageurl = image.getChildText(imageURL);
-					if (StringUtils.isNotBlank(imageurl)) {
-						break;
-					}
-				}
-			}
-		}
-		/*
-		 * if (StringUtils.isBlank(imageurl)) { if (imageList == null) {
-		 * imageList = getImageList(imagePropertiesFile); } if (imageList !=
-		 * null) { int listSize = imageList.size(); int index = new
-		 * Random().nextInt(listSize); imageurl = imageList.get(index); } }
-		 */
-		return imageurl;
-	}
+        if (StringUtils.isBlank(imageurl)) {
+            if (imageList == null) {
+                getImageList(IMAGE_PROPERTIES_FILE);
+            }
+            if (imageList != null) {
+                int listSize = imageList.size();
+                int index = new Random().nextInt(listSize);
+                imageurl = imageList.get(index);
+            }
+        }
+
+        return imageurl;
+    }
+
+    /**
+     * Reads the images from a properties file, add them to a list and returns it
+     * 
+     * @param contextPath
+     * @return ArrayList
+     * @throws CitysearchException
+     */
+    private void getImageList(String contextPath) throws CitysearchException {
+        imageList = new ArrayList<String>();
+        Properties imageProperties = null;
+        if (imageProperties == null) {
+            imageProperties = PropertiesLoader.getProperties(IMAGE_PROPERTIES_FILE);
+        }
+        if(imageProperties != null){
+            Enumeration<Object> enumerator = imageProperties.keys();
+            while (enumerator.hasMoreElements()) {
+                String key = (String) enumerator.nextElement();
+                imageList.add(imageProperties.getProperty(key));
+            }
+        }else{
+            log.error(PropertiesLoader.getErrorProperties().getProperty(IMAGE_ERROR));
+        }
+    }
 }

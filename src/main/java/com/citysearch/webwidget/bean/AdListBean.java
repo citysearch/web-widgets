@@ -1,5 +1,12 @@
 package com.citysearch.webwidget.bean;
 
+/**
+ * This class contains all the fields required for PFP API response and implements sorting method
+ * for sorting the results from API
+ * 
+ * @author Aspert
+ * 
+ */
 public class AdListBean implements Comparable<AdListBean> {
     private String name;
     private String location;

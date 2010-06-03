@@ -28,31 +28,39 @@ import com.citysearch.webwidget.util.CommonConstants;
 import com.citysearch.webwidget.util.HelperUtil;
 import com.citysearch.webwidget.util.PropertiesLoader;
 
+/**
+ * This Helper class performs all the functionality related to Reviews.
+ * Validates the Review request, calls the API, aprses the response,
+ * then calls the Profile API and returns the final response back
+ * 
+ * @author Aspert
+ *
+ */
 public class ReviewHelper {
 
 	public final static String PROPERTY_REVIEW_URL = "reviews.url";
 
 	private static final String ELEMENT_REVIEW_URL = "review_url";
-	private static final String businessName = "business_name";
-	private static final String listingId = "listing_id";
-	private static final String reviewId = "review_id";
-	private static final String reviewTitle = "review_title";
-	private static final String reviewText = "review_text";
-	private static final String pros = "pros";
-	private static final String cons = "cons";
-	private static final String reviewRating = "review_rating";
-	private static final String reviewDate = "review_date";
-	private static final String reviewAuthor = "review_author";
-	private static final String dateFormat = "reviewdate.format";
-	private static final String reviewElemName = "review";
-	private static final int minRating = 6;
+	private static final String BUSINESS_NAME = "business_name";
+	private static final String LISTING_ID = "listing_id";
+	private static final String REVIEW_ID = "review_id";
+	private static final String REVIEW_TITLE = "review_title";
+	private static final String REVIEW_TEXT = "review_text";
+	private static final String PROS = "pros";
+	private static final String CONS = "cons";
+	private static final String REVIEW_RATING = "review_rating";
+	private static final String REVIEW_DATE = "review_date";
+	private static final String REVIEW_AUTHOR = "review_author";
+	private static final String DATE_FORMAT = "reviewdate.format";
+	private static final String REVIEW_ELEMENT = "review";
+	private static final int MINIMUM_RATING = 6;
 
 	private Logger log = Logger.getLogger(getClass());
 
 	/**
 	 * Constructs the Reviews API query string with all the supplied parameters
 	 * 
-	 * @return
+	 * @return String
 	 * @throws CitysearchException
 	 */
 	private String getQueryString(ReviewRequest request)
@@ -157,9 +165,11 @@ public class ReviewHelper {
 	}
 
 	/**
-	 * Connects to the Reviews API and processes the response sent by API
-	 * 
-	 * @return
+	 * Gets the review with the latest timestamp from Review API
+	 * Then calls the profile API and gets the details not available from review API like
+	 * Address,Phone,SendToFriendURL and ImageURL
+	 * @param request
+	 * @return Review
 	 * @throws CitysearchException
 	 */
 	public Review getLatestReview(ReviewRequest request)
@@ -218,22 +228,22 @@ public class ReviewHelper {
 	 * Parses the Reviews xml. Returns Review object with values from api
 	 * 
 	 * @param doc
-	 * @return
+	 * @return Review
 	 * @throws CitysearchException
 	 */
 	private Review parseXML(Document doc) throws CitysearchException {
 		Review review = null;
 		if (doc != null && doc.hasRootElement()) {
 			Element rootElement = doc.getRootElement();
-			List<Element> reviewsList = rootElement.getChildren(reviewElemName);
+			List<Element> reviewsList = rootElement.getChildren(REVIEW_ELEMENT);
 			SimpleDateFormat formatter = new SimpleDateFormat(PropertiesLoader
-					.getAPIProperties().getProperty(dateFormat));
+					.getAPIProperties().getProperty(DATE_FORMAT));
 			SortedMap<Date, Element> reviewMap = new TreeMap<Date, Element>();
 			for (int i = 0; i < reviewsList.size(); i++) {
 				Element reviewElem = reviewsList.get(i);
-				String rating = reviewElem.getChildText(reviewRating);
-				if (NumberUtils.toInt(rating) >= minRating) {
-					String dateStr = reviewElem.getChildText(reviewDate);
+				String rating = reviewElem.getChildText(REVIEW_RATING);
+				if (NumberUtils.toInt(rating) >= MINIMUM_RATING) {
+					String dateStr = reviewElem.getChildText(REVIEW_DATE);
 					Date date = HelperUtil.parseDate(dateStr, formatter);
 					if (date != null) {
 						reviewMap.put(date, reviewElem);
@@ -251,27 +261,29 @@ public class ReviewHelper {
 	 * 
 	 * @param review
 	 * @param reviewsElem
+	 * @return Review
+	 * @throws CitysearchException
 	 */
 	private Review getReviewInstance(Element reviewElem)
 			throws CitysearchException {
 		Review review = new Review();
-		review.setBusinessName(reviewElem.getChildText(businessName));
-		review.setListingId(reviewElem.getChildText(listingId));
-		review.setReviewTitle(reviewElem.getChildText(reviewTitle));
-		review.setReviewAuthor(reviewElem.getChildText(reviewAuthor));
-		review.setReviewText(reviewElem.getChildText(reviewText));
-		review.setPros(reviewElem.getChildText(pros));
-		review.setCons(reviewElem.getChildText(cons));
-		String ratingVal = reviewElem.getChildText(reviewRating);
+		review.setBusinessName(reviewElem.getChildText(BUSINESS_NAME));
+		review.setListingId(reviewElem.getChildText(LISTING_ID));
+		review.setReviewTitle(reviewElem.getChildText(REVIEW_TITLE));
+		review.setReviewAuthor(reviewElem.getChildText(REVIEW_AUTHOR));
+		review.setReviewText(reviewElem.getChildText(REVIEW_TEXT));
+		review.setPros(reviewElem.getChildText(PROS));
+		review.setCons(reviewElem.getChildText(CONS));
+		String ratingVal = reviewElem.getChildText(REVIEW_RATING);
 		double rating = NumberUtils.toDouble(ratingVal) / 2;
 		review.setRating(HelperUtil.getRatingsList(ratingVal));
 		review.setReviewRating(String.valueOf(rating));
-		review.setReviewId(reviewElem.getChildText(reviewId));
+		review.setReviewId(reviewElem.getChildText(REVIEW_ID));
 		review.setReviewUrl(reviewElem.getChildText(ELEMENT_REVIEW_URL));
 
-		String rDateStr = reviewElem.getChildText(reviewDate);
+		String rDateStr = reviewElem.getChildText(REVIEW_DATE);
 		SimpleDateFormat formatter = new SimpleDateFormat(PropertiesLoader
-				.getAPIProperties().getProperty(dateFormat));
+				.getAPIProperties().getProperty(DATE_FORMAT));
 		Date date = HelperUtil.parseDate(rDateStr, formatter);
 		long now = Calendar.getInstance().getTimeInMillis();
 		review.setTimeSinceReviewString(DurationFormatUtils

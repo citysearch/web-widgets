@@ -1,5 +1,11 @@
 package com.citysearch.webwidget.util;
 
+/**
+ * Contains query parameter constants for all APIs
+ * 
+ * @author Aspert
+ *
+ */
 public class APIFieldNameConstants {
 	//Common API Field Names
 	public static final String API_KEY = "api_key";
