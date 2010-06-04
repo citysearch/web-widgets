@@ -1,6 +1,5 @@
 package com.citysearch.webwidget.action;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -11,10 +10,9 @@ import org.apache.struts2.interceptor.ServletResponseAware;
 import com.citysearch.webwidget.bean.Review;
 import com.citysearch.webwidget.bean.ReviewRequest;
 import com.citysearch.webwidget.exception.CitysearchException;
+import com.citysearch.webwidget.exception.InvalidRequestParametersException;
 import com.citysearch.webwidget.helper.ReviewHelper;
 import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 
 /**
@@ -60,8 +58,9 @@ public class ReviewAction implements ModelDriven<ReviewRequest>, ServletRequestA
     }
 
     /**
-     * Calls the getLatestReview() method from ReviewHelper class to get the latest Review
-     * Returns the Response status
+     * Calls the getLatestReview() method from ReviewHelper class to get the latest Review Returns
+     * the Response status
+     * 
      * @return String
      * @throws CitysearchException
      */
@@ -81,8 +80,11 @@ public class ReviewAction implements ModelDriven<ReviewRequest>, ServletRequestA
              * ActionContext.getContext().getParameters().put("publishercode",
              * reviewRequest.getPublisher()); return "nearbyplaces"; }
              */
+        } catch (InvalidRequestParametersException ihre) {
+            log.error(ihre.getDetailedMessage());
+            throw ihre;
         } catch (CitysearchException cse) {
-            log.error(cse.getDetailedMessage());
+            log.error(cse.getMessage());
             throw cse;
         }
         return Action.SUCCESS;
