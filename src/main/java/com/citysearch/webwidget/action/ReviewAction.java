@@ -18,7 +18,7 @@ import com.opensymphony.xwork2.ModelDriven;
 /**
  * This class processes the Reviews request, and gets the Reviews Response in the execute() method
  * 
- * @author Aspert
+ * @author Aspert Benjamin
  * 
  */
 public class ReviewAction implements ModelDriven<ReviewRequest>, ServletRequestAware,
@@ -56,7 +56,11 @@ public class ReviewAction implements ModelDriven<ReviewRequest>, ServletRequestA
     public ReviewRequest getModel() {
         return reviewRequest;
     }
-
+    
+    public String getRequestUrl()
+    {
+        return httpRequest.getRequestURL().toString();
+    }
     /**
      * Calls the getLatestReview() method from ReviewHelper class to get the latest Review Returns
      * the Response status
