@@ -3,7 +3,7 @@ package com.citysearch.webwidget.bean;
 /**
  * Request object for PFP API
  * 
- * @author Aspert
+ * @author Aspert Benjamin
  * 
  */
 public class AdListRequest extends AbstractRequest {

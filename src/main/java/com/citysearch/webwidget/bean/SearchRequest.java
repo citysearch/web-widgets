@@ -3,7 +3,7 @@ package com.citysearch.webwidget.bean;
 /**
  * Request bean for Search API
  * 
- * @author Aspert
+ * @author Aspert  Benjamin
  * 
  */
 public class SearchRequest extends AbstractRequest {

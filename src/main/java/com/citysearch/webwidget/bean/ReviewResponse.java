@@ -3,7 +3,7 @@ package com.citysearch.webwidget.bean;
 /**
  * Response bean for Reviews API
  * 
- * @author Aspert
+ * @author Aspert Benjamin
  * 
  */
 public class ReviewResponse {

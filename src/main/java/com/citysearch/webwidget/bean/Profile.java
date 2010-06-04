@@ -3,7 +3,7 @@ package com.citysearch.webwidget.bean;
 /**
  * Response bean class for Profile API
  * 
- * @author Aspert
+ * @author Aspert Benjamin
  * 
  */
 public class Profile {

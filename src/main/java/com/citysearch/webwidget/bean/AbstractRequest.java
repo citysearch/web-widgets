@@ -3,7 +3,7 @@ package com.citysearch.webwidget.bean;
 /**
  * The abstract class that contains the common Request field across APIs
  * 
- * @author Aspert
+ * @author Aspert Benjamin
  * 
  */
 public abstract class AbstractRequest {

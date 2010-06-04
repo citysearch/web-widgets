@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Response bean for Reviews API
  * 
- * @author Aspert
+ * @author Aspert Benjamin
  * 
  */
 public class Review {
@@ -13,16 +13,21 @@ public class Review {
     private String attributionLogo;
     private String attributionText;
     private String businessName;
+    private String shortBusinessName;
     private String listingId;
     private String referenceId;
     private String reviewId;
     private String reviewUrl;
     private String reviewTitle;
+    private String shortTitle;
     private String reviewAuthor;
     private String reviewAuthorUrl;
     private String reviewText;
+    private String shortReviewText;
     private String pros;
+    private String shortPros;
     private String cons;
+    private String shortCons;
     private String reviewSate;
     private String reviewRating;
     private String imageUrl;
@@ -32,6 +37,47 @@ public class Review {
     private String phone;
     private List<Integer> rating;
     private String timeSinceReviewString;
+    private String reviewDate;
+
+    public String getShortBusinessName() {
+        return shortBusinessName;
+    }
+
+    public void setShortBusinessName(String shortBusinessName) {
+        this.shortBusinessName = shortBusinessName;
+    }
+
+    public String getShortTitle() {
+        return shortTitle;
+    }
+
+    public void setShortTitle(String shortTitle) {
+        this.shortTitle = shortTitle;
+    }
+
+    public String getShortPros() {
+        return shortPros;
+    }
+
+    public void setShortPros(String shortPros) {
+        this.shortPros = shortPros;
+    }
+
+    public String getShortCons() {
+        return shortCons;
+    }
+
+    public void setShortCons(String shortCons) {
+        this.shortCons = shortCons;
+    }
+
+    public String getReviewDate() {
+        return reviewDate;
+    }
+
+    public void setReviewDate(String reviewDate) {
+        this.reviewDate = reviewDate;
+    }
 
     public List<Integer> getRating() {
         return rating;
@@ -111,6 +157,14 @@ public class Review {
 
     public void setReviewTitle(String reviewTitle) {
         this.reviewTitle = reviewTitle;
+    }
+
+    public String getShortReviewText() {
+        return shortReviewText;
+    }
+
+    public void setShortReviewText(String shortReviewText) {
+        this.shortReviewText = shortReviewText;
     }
 
     public String getReviewAuthor() {

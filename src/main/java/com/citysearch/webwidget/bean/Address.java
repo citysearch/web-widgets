@@ -3,7 +3,7 @@ package com.citysearch.webwidget.bean;
 /**
  * Bean class for holding Address related fields
  * 
- * @author Aspert
+ * @author Aspert Benjamin
  * 
  */
 public class Address {
