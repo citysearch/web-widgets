@@ -12,7 +12,7 @@ import com.citysearch.webwidget.exception.CitysearchException;
  * This class contains the functionality related to Http connection like getting the connecton and
  * closing the connection
  * 
- * @author Aspert
+ * @author Aspert Benjamin
  * 
  */
 public class HttpConnection {

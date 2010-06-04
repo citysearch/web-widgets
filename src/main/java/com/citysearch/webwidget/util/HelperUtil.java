@@ -25,7 +25,7 @@ import com.citysearch.webwidget.exception.InvalidHttpResponseException;
 /**
  * Helper class that contains generic methods used across all APIs
  * 
- * @author Aspert
+ * @author Aspert Benjamin
  * 
  */
 public class HelperUtil {

@@ -11,7 +11,7 @@ import com.citysearch.webwidget.exception.CitysearchException;
 /**
  * This class loads properties from property files.
  * 
- * @author Aspert
+ * @author Aspert Benjamin
  * 
  */
 public class PropertiesLoader {
