@@ -2,9 +2,11 @@ package com.citysearch.webwidget.helper;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 import java.util.Random;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -16,7 +18,6 @@ import com.citysearch.webwidget.bean.Profile;
 import com.citysearch.webwidget.bean.ProfileRequest;
 import com.citysearch.webwidget.exception.CitysearchException;
 import com.citysearch.webwidget.exception.InvalidHttpResponseException;
-import com.citysearch.webwidget.exception.InvalidRequestParametersException;
 import com.citysearch.webwidget.util.APIFieldNameConstants;
 import com.citysearch.webwidget.util.CommonConstants;
 import com.citysearch.webwidget.util.HelperUtil;
@@ -49,8 +50,12 @@ public class ProfileHelper {
     private static final String IMAGE_URL = "image_url";
     private static final String IMAGE_PROPERTIES_FILE = "review.image.properties";
     private static final String IMAGE_ERROR = "image.properties.error";
+    private static final String COMMA_STRING = ",";
     private static List<String> imageList;
-    // private static HashMap imageMap;
+    private static HashMap<String, ArrayList> imageMap;
+    private static final String CATEGORIES = "categories";
+    private static final String CATEGORY = "category";
+    private static final String CATEGORY_NAME = "name";
     private Logger log = Logger.getLogger(getClass());
 
     /**
@@ -59,8 +64,7 @@ public class ProfileHelper {
      * @param request
      * @throws CitysearchException
      */
-    public void validateRequest(ProfileRequest request) throws InvalidRequestParametersException,
-            CitysearchException {
+    public void validateRequest(ProfileRequest request) throws CitysearchException {
         List<String> errors = new ArrayList<String>();
         Properties errorProperties = PropertiesLoader.getErrorProperties();
 
@@ -74,8 +78,8 @@ public class ProfileHelper {
             errors.add(errorProperties.getProperty(CommonConstants.CLIENT_IP_ERROR_CODE));
         }
         if (!errors.isEmpty()) {
-            throw new InvalidRequestParametersException(this.getClass().getName(),
-                    "validateRequest", "Invalid parameters.", errors);
+            throw new CitysearchException(this.getClass().getName(), "validateRequest",
+                    "Invalid parameters.", errors);
         }
     }
 
@@ -142,8 +146,7 @@ public class ProfileHelper {
      * @return Profile
      * @throws CitysearchException
      */
-    public Profile getProfile(ProfileRequest request) throws InvalidRequestParametersException,
-            CitysearchException {
+    public Profile getProfile(ProfileRequest request) throws CitysearchException {
         validateRequest(request);
         Properties properties = PropertiesLoader.getAPIProperties();
         String urlString = properties.getProperty(PROPERTY_PROFILE_URL) + getQueryString(request);
@@ -177,7 +180,8 @@ public class ProfileHelper {
                     profile.setProfileUrl(url.getChildText(PROFILE_URL));
                     profile.setSendToFriendUrl(url.getChildText(SEND_TO_FRIEND_URL));
                 }
-                profile.setImageUrl(getImage(locationElem.getChild(IMAGES)));
+                profile.setImageUrl(getImage(locationElem.getChild(IMAGES),
+                        locationElem.getChild(CATEGORIES)));
             }
         }
         return profile;
@@ -223,7 +227,7 @@ public class ProfileHelper {
      * @return String
      * @throws CitysearchException
      */
-    private String getImage(Element images) throws CitysearchException {
+    private String getImage(Element images, Element categories) throws CitysearchException {
         String imageurl = null;
         if (images != null) {
             List<Element> imageList = images.getChildren(IMAGE);
@@ -240,37 +244,82 @@ public class ProfileHelper {
         }
 
         if (StringUtils.isBlank(imageurl)) {
-            if (imageList == null) {
-                getImageList(IMAGE_PROPERTIES_FILE);
-            }
-            if (imageList != null) {
-                int listSize = imageList.size();
-                int index = new Random().nextInt(listSize);
-                imageurl = imageList.get(index);
-            }
+            imageurl = getStockImage(categories);
         }
 
         return imageurl;
     }
 
     /**
-     * Reads the images from a properties file, add them to a list and returns it
+     * Returns the stock image url, if no image url is returned by API response Parses the
+     * categories element and checks if the any of the category child elements matches with the
+     * categories present in the "imageMap" If present, picks up the imageurl randomly from the list
+     * of images for that category from the "imageMap" object
+     * 
+     * @param categories
+     * @return imageurl
+     * @throws CitysearchException
+     */
+    private String getStockImage(Element categories) throws CitysearchException {
+        if (imageMap == null) {
+            getImageMap();
+        }
+        String imageURL = null;
+        if (categories != null && imageMap != null) {
+            List<Element> categoryList = categories.getChildren(CATEGORY);
+            int size = categoryList.size();
+            Set<String> imageKeySet = imageMap.keySet();
+            for (int index = 0; index < size; index++) {
+                Element category = categoryList.get(index);
+                if (category != null) {
+                    String name = category.getAttributeValue(CATEGORY_NAME);
+                    if (StringUtils.isNotBlank(name) && imageKeySet.contains(name)) {
+                        ArrayList<String> imageList = imageMap.get(name);
+                        int listSize = imageList.size();
+                        int imgIndex = new Random().nextInt(listSize);
+                        imageURL = imageList.get(imgIndex);
+                        break;
+                    }
+                }
+            }
+        }
+        return imageURL;
+    }
+
+    /**
+     * Reads the images from a properties file, adds them to a map The properties file contains
+     * properties of the format key=category,imageurl Each category is added as a key in the Map and
+     * imageurls are added to the list and set as value in the Map The Map contains <key,value> =
+     * <category,list of image urls>
      * 
      * @param contextPath
      * @return ArrayList
      * @throws CitysearchException
      */
-    private void getImageList(String contextPath) throws CitysearchException {
-        imageList = new ArrayList<String>();
+    private void getImageMap() throws CitysearchException {
+        ArrayList<String> imageList;
         Properties imageProperties = null;
         if (imageProperties == null) {
             imageProperties = PropertiesLoader.getProperties(IMAGE_PROPERTIES_FILE);
         }
         if (imageProperties != null) {
+            Set imageKeySet;
+            imageMap = new HashMap<String, ArrayList>();
             Enumeration<Object> enumerator = imageProperties.keys();
             while (enumerator.hasMoreElements()) {
                 String key = (String) enumerator.nextElement();
-                imageList.add(imageProperties.getProperty(key));
+                String value = imageProperties.getProperty(key);
+                String values[] = value.split(COMMA_STRING);
+                if (StringUtils.isNotBlank(values[0]) && StringUtils.isNotBlank(values[1])) {
+                    imageKeySet = imageMap.keySet();
+                    if (imageKeySet.contains(values[0])) {
+                        imageList = imageMap.get(values[0]);
+                    } else {
+                        imageList = new ArrayList<String>();
+                    }
+                    imageList.add(values[1]);
+                    imageMap.put(values[0], imageList);
+                }
             }
         } else {
             log.error(PropertiesLoader.getErrorProperties().getProperty(IMAGE_ERROR));
