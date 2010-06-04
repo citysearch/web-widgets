@@ -24,11 +24,11 @@
 
 	<filter-mapping>
 		<filter-name>action2-cleanup</filter-name>
-		<url-pattern>/*</url-pattern>
+		<url-pattern>/actions/*</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>action2</filter-name>
-		<url-pattern>/*</url-pattern>
+		<url-pattern>/actions/*</url-pattern>
 	</filter-mapping>
 
 	<!-- Listeners -->
