@@ -40,12 +40,10 @@ public class HttpConnection {
             connection.setReadTimeout(resWaitTime);
             connection.connect();
             if (connection == null) {
-                log.error(errorMsg);
                 throw new CitysearchException("HttpConnection", "getConnection", errorMsg);
             }
         } catch (IOException e) {
-            log.error(errorMsg, e);
-            throw new CitysearchException("HttpConnection", "getConnection", errorMsg);
+            throw new CitysearchException("HttpConnection", "getConnection", e);
         }
         return connection;
     }

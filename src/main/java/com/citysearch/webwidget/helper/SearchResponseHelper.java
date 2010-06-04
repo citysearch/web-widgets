@@ -16,7 +16,7 @@ import com.citysearch.webwidget.util.PropertiesLoader;
  * This class contains functionality for processing the Search API response
  * 
  * @author Aspert
- *
+ * 
  */
 public class SearchResponseHelper extends ResponseHelper {
 
@@ -93,8 +93,10 @@ public class SearchResponseHelper extends ResponseHelper {
                 elementMap.put(CommonConstants.DLON,
                         location.getChildText(CommonConstants.LONGITUDE));
                 elementMap.put(CommonConstants.PHONE, location.getChildText(PHONE_TAG));
-                elementMap.put(CommonConstants.LISTING_ID, location.getAttributeValue(LISTING_ID_TAG));
-                elementMap.put(CommonConstants.DISPLAY_URL, location.getChildText(AD_DISPLAY_URL_TAG));
+                elementMap.put(CommonConstants.LISTING_ID,
+                        location.getAttributeValue(LISTING_ID_TAG));
+                elementMap.put(CommonConstants.DISPLAY_URL,
+                        location.getChildText(AD_DISPLAY_URL_TAG));
                 elementMap.put(CommonConstants.IMAGE_URL, location.getChildText(AD_IMAGE_URL_TAG));
 
             }

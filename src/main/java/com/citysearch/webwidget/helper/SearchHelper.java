@@ -12,6 +12,7 @@ import org.jdom.Element;
 import com.citysearch.webwidget.bean.SearchRequest;
 import com.citysearch.webwidget.exception.CitysearchException;
 import com.citysearch.webwidget.exception.InvalidHttpResponseException;
+import com.citysearch.webwidget.exception.InvalidRequestParametersException;
 import com.citysearch.webwidget.util.APIFieldNameConstants;
 import com.citysearch.webwidget.util.CommonConstants;
 import com.citysearch.webwidget.util.HelperUtil;
@@ -70,7 +71,7 @@ public class SearchHelper {
      * @throws CitysearchException
      */
     private void validateClosestLocationPostalCodeRequest(SearchRequest request)
-            throws CitysearchException {
+            throws InvalidRequestParametersException, CitysearchException {
         List<String> errors = new ArrayList<String>();
         Properties errorProperties = PropertiesLoader.getErrorProperties();
 
@@ -87,7 +88,7 @@ public class SearchHelper {
             errors.add(errorProperties.getProperty(CommonConstants.RADIUS_ERROR));
         }
         if (!errors.isEmpty()) {
-            throw new CitysearchException(this.getClass().getName(),
+            throw new InvalidRequestParametersException(this.getClass().getName(),
                     "validateClosestLocationPostalCodeRequest", "Invalid parameters.", errors);
         }
     }
@@ -100,7 +101,8 @@ public class SearchHelper {
      * @return String
      * @throws CitysearchException
      */
-    public String getClosestLocationPostalCode(SearchRequest request) throws CitysearchException {
+    public String getClosestLocationPostalCode(SearchRequest request)
+            throws InvalidRequestParametersException, CitysearchException {
         validateClosestLocationPostalCodeRequest(request);
         Properties properties = PropertiesLoader.getAPIProperties();
         String urlString = properties.getProperty(PROPERTY_SEARCH_URL) + getQueryString(request);
@@ -153,7 +155,8 @@ public class SearchHelper {
      * @param request
      * @throws CitysearchException
      */
-    private void validateLatitudeLongitudeRequest(SearchRequest request) throws CitysearchException {
+    private void validateLatitudeLongitudeRequest(SearchRequest request)
+            throws InvalidRequestParametersException, CitysearchException {
         List<String> errors = new ArrayList<String>();
         Properties errorProperties = PropertiesLoader.getErrorProperties();
         if (StringUtils.isBlank(request.getWhat()) && StringUtils.isBlank(request.getTags())) {
@@ -167,7 +170,7 @@ public class SearchHelper {
         }
 
         if (!errors.isEmpty()) {
-            throw new CitysearchException(this.getClass().getName(),
+            throw new InvalidRequestParametersException(this.getClass().getName(),
                     "validateLatitudeLongitudeRequest", "Invalid parameters.", errors);
         }
     }
@@ -180,7 +183,7 @@ public class SearchHelper {
      * @throws CitysearchException
      */
     private String getLatitudeLongitudeRequestQueryString(SearchRequest request)
-            throws CitysearchException {
+            throws InvalidRequestParametersException, CitysearchException {
         StringBuilder apiQueryString = new StringBuilder();
 
         Properties properties = PropertiesLoader.getAPIProperties();

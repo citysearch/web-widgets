@@ -2,11 +2,9 @@ package com.citysearch.webwidget.helper;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 import java.util.Random;
-import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -18,6 +16,7 @@ import com.citysearch.webwidget.bean.Profile;
 import com.citysearch.webwidget.bean.ProfileRequest;
 import com.citysearch.webwidget.exception.CitysearchException;
 import com.citysearch.webwidget.exception.InvalidHttpResponseException;
+import com.citysearch.webwidget.exception.InvalidRequestParametersException;
 import com.citysearch.webwidget.util.APIFieldNameConstants;
 import com.citysearch.webwidget.util.CommonConstants;
 import com.citysearch.webwidget.util.HelperUtil;
@@ -51,15 +50,17 @@ public class ProfileHelper {
     private static final String IMAGE_PROPERTIES_FILE = "review.image.properties";
     private static final String IMAGE_ERROR = "image.properties.error";
     private static List<String> imageList;
-    //private static HashMap imageMap;
+    // private static HashMap imageMap;
     private Logger log = Logger.getLogger(getClass());
+
     /**
      * Validates the request. If any of the parameters are missing, throws Citysearch Exception
      * 
      * @param request
      * @throws CitysearchException
      */
-    public void validateRequest(ProfileRequest request) throws CitysearchException {
+    public void validateRequest(ProfileRequest request) throws InvalidRequestParametersException,
+            CitysearchException {
         List<String> errors = new ArrayList<String>();
         Properties errorProperties = PropertiesLoader.getErrorProperties();
 
@@ -73,8 +74,8 @@ public class ProfileHelper {
             errors.add(errorProperties.getProperty(CommonConstants.CLIENT_IP_ERROR_CODE));
         }
         if (!errors.isEmpty()) {
-            throw new CitysearchException(this.getClass().getName(), "validateRequest",
-                    "Invalid parameters.", errors);
+            throw new InvalidRequestParametersException(this.getClass().getName(),
+                    "validateRequest", "Invalid parameters.", errors);
         }
     }
 
@@ -141,7 +142,8 @@ public class ProfileHelper {
      * @return Profile
      * @throws CitysearchException
      */
-    public Profile getProfile(ProfileRequest request) throws CitysearchException {
+    public Profile getProfile(ProfileRequest request) throws InvalidRequestParametersException,
+            CitysearchException {
         validateRequest(request);
         Properties properties = PropertiesLoader.getAPIProperties();
         String urlString = properties.getProperty(PROPERTY_PROFILE_URL) + getQueryString(request);
@@ -264,13 +266,13 @@ public class ProfileHelper {
         if (imageProperties == null) {
             imageProperties = PropertiesLoader.getProperties(IMAGE_PROPERTIES_FILE);
         }
-        if(imageProperties != null){
+        if (imageProperties != null) {
             Enumeration<Object> enumerator = imageProperties.keys();
             while (enumerator.hasMoreElements()) {
                 String key = (String) enumerator.nextElement();
                 imageList.add(imageProperties.getProperty(key));
             }
-        }else{
+        } else {
             log.error(PropertiesLoader.getErrorProperties().getProperty(IMAGE_ERROR));
         }
     }

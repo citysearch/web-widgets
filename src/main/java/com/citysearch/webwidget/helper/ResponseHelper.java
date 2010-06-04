@@ -27,8 +27,9 @@ import com.citysearch.webwidget.util.PropertiesLoader;
 
 /**
  * Helper class for processing response of Search and Profile APIs
+ * 
  * @author Aspert
- *
+ * 
  */
 public abstract class ResponseHelper {
 
@@ -78,7 +79,8 @@ public abstract class ResponseHelper {
         } catch (IOException ioExcep) {
             String errMsg = PropertiesLoader.getErrorProperties().getProperty(ioExcepMsg);
             log.error(errMsg, ioExcep);
-            throw new CitysearchException(this.getClass().getName(), "getDocumentfromStream", errMsg);
+            throw new CitysearchException(this.getClass().getName(), "getDocumentfromStream",
+                    errMsg);
         } finally {
             input.close();
         }
@@ -225,7 +227,8 @@ public abstract class ResponseHelper {
         } else {
             String errMsg = PropertiesLoader.getErrorProperties().getProperty(apiTypeError);
             log.error(errMsg);
-            throw new CitysearchException(this.getClass().getName(), "getApiChildElementName", errMsg);
+            throw new CitysearchException(this.getClass().getName(), "getApiChildElementName",
+                    errMsg);
         }
         return childName;
     }
@@ -348,7 +351,8 @@ public abstract class ResponseHelper {
                         CommonConstants.ERROR_METHOD_PARAM)
                         + "getBusinessName()";
                 log.error(errMsg, excep);
-                throw new CitysearchException(this.getClass().getName(), "getBusinessName", excep.getMessage());
+                throw new CitysearchException(this.getClass().getName(), "getBusinessName",
+                        excep.getMessage());
             }
         }
         name = StringUtils.abbreviate(name, length);
@@ -373,7 +377,8 @@ public abstract class ResponseHelper {
                         CommonConstants.ERROR_METHOD_PARAM)
                         + "getTagLine()";
                 log.error(errMsg, excep);
-                throw new CitysearchException(this.getClass().getName(), "getTagLine", excep.getMessage());
+                throw new CitysearchException(this.getClass().getName(), "getTagLine",
+                        excep.getMessage());
             }
         }
         tagLine = StringUtils.abbreviate(tagLine, length);

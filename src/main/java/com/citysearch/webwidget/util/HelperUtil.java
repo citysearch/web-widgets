@@ -55,8 +55,7 @@ public class HelperUtil {
                 value = URLEncoder.encode(value, "UTF-8");
                 apiQueryString.append(value);
             } catch (UnsupportedEncodingException excep) {
-                throw new CitysearchException("HelperUtil", "constructQueryParam",
-                        excep.getMessage());
+                throw new CitysearchException("HelperUtil", "constructQueryParam", excep);
             }
         }
         return apiQueryString.toString();
@@ -79,9 +78,9 @@ public class HelperUtil {
                 document = builder.build(input);
             }
         } catch (JDOMException jde) {
-            throw new CitysearchException("HelperUtil", "buildFromStream", jde.getMessage());
+            throw new CitysearchException("HelperUtil", "buildFromStream", jde);
         } catch (IOException ioe) {
-            throw new CitysearchException("HelperUtil", "buildFromStream", ioe.getMessage());
+            throw new CitysearchException("HelperUtil", "buildFromStream", ioe);
         } finally {
             input.close();
         }
@@ -111,7 +110,7 @@ public class HelperUtil {
             InputStream iStream = connection.getInputStream();
             xmlDocument = buildFromStream(iStream);
         } catch (IOException ioe) {
-            throw new CitysearchException("HelperUtil", "getAPIResponse", ioe.getMessage());
+            throw new CitysearchException("HelperUtil", "getAPIResponse", ioe);
         } finally {
             if (connection != null) {
                 HttpConnection.closeConnection(connection);
@@ -134,7 +133,7 @@ public class HelperUtil {
         try {
             date = formatter.parse(dateStr);
         } catch (ParseException excep) {
-            throw new CitysearchException("HelperUtil", "parseDate", excep.getMessage());
+            throw new CitysearchException("HelperUtil", "parseDate", excep);
         }
         return date;
     }
@@ -177,7 +176,8 @@ public class HelperUtil {
      * @param imageProprtiesFile
      * @return ArrayList
      */
-    public static ArrayList<String> getImageList(String imageProprtiesFile) {
+    public static ArrayList<String> getImageList(String imageProprtiesFile)
+            throws CitysearchException {
         ArrayList<String> imageList = new ArrayList<String>();
         Properties imageProperties = PropertiesLoader.getProperties(imageProprtiesFile);
         Enumeration<Object> enumerator = imageProperties.keys();

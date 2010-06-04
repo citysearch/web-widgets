@@ -20,6 +20,7 @@ import com.citysearch.webwidget.bean.AdListRequest;
 import com.citysearch.webwidget.bean.SearchRequest;
 import com.citysearch.webwidget.exception.CitysearchException;
 import com.citysearch.webwidget.exception.InvalidHttpResponseException;
+import com.citysearch.webwidget.exception.InvalidRequestParametersException;
 import com.citysearch.webwidget.util.APIFieldNameConstants;
 import com.citysearch.webwidget.util.CommonConstants;
 import com.citysearch.webwidget.util.HelperUtil;
@@ -75,7 +76,8 @@ public class AdListHelper {
      * @param request
      * @throws CitysearchException
      */
-    private void validateRequest(AdListRequest request) throws CitysearchException {
+    private void validateRequest(AdListRequest request) throws InvalidRequestParametersException,
+            CitysearchException {
         List<String> errors = new ArrayList<String>();
         Properties errorProperties = PropertiesLoader.getErrorProperties();
         if (StringUtils.isBlank(request.getWhat()) && StringUtils.isBlank(request.getTags())) {
@@ -90,8 +92,8 @@ public class AdListHelper {
         }
 
         if (!errors.isEmpty()) {
-            throw new CitysearchException(this.getClass().getName(), "validateRequest",
-                    "Invalid parameters.", errors);
+            throw new InvalidRequestParametersException(this.getClass().getName(),
+                    "validateRequest", "Invalid parameters.", errors);
         }
     }
 
@@ -161,7 +163,8 @@ public class AdListHelper {
      * @param request
      * @throws CitysearchException
      */
-    public void getAdList(AdListRequest request) throws CitysearchException {
+    public void getAdList(AdListRequest request) throws InvalidRequestParametersException,
+            CitysearchException {
         validateRequest(request);
         if (StringUtils.isBlank(request.getSourceLat())
                 || StringUtils.isBlank(request.getSourceLon())) {

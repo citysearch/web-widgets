@@ -20,8 +20,6 @@ public class PropertiesLoader {
     private static final String ERROR_PROPERTIES_FILE = "/error.properties";
     private static Properties errorProperties;
     private static Properties apiProperties;
-    private final static String ERROR_PROP_MSG = "Error initializing the properties file";
-    private final static String IO_EXCEP_MSG = "IOException while reading properties file";
 
     /**
      * Takes the file name as input and reads the properties from the file. Returns the Properties
@@ -30,7 +28,7 @@ public class PropertiesLoader {
      * @param fileName
      * @return Properties
      */
-    public static Properties getProperties(String fileName) {
+    public static Properties getProperties(String fileName) throws CitysearchException {
         InputStream inputStream;
         Properties properties;
         inputStream = PropertiesLoader.class.getClassLoader().getResourceAsStream(fileName);
@@ -41,12 +39,12 @@ public class PropertiesLoader {
             if (inputStream != null)
                 properties.load(inputStream);
         } catch (IOException ioexcep) {
-            log.error(IO_EXCEP_MSG, ioexcep);
+            throw new CitysearchException("PropertiesLoader", "getProperties", ioexcep);
         } finally {
             try {
                 inputStream.close();
             } catch (IOException ioexcep) {
-                log.error(IO_EXCEP_MSG, ioexcep);
+                throw new CitysearchException("PropertiesLoader", "getProperties", ioexcep);
             }
         }
         return properties;
@@ -59,13 +57,8 @@ public class PropertiesLoader {
      * @throws CitysearchException
      */
     public static Properties getErrorProperties() throws CitysearchException {
-        try {
-            if (errorProperties == null) {
-                errorProperties = getProperties(ERROR_PROPERTIES_FILE);
-            }
-        } catch (Exception e) {
-            log.error(ERROR_PROP_MSG);
-            throw new CitysearchException("PropertiesLoader", "getErrorProperties", ERROR_PROP_MSG);
+        if (errorProperties == null) {
+            errorProperties = getProperties(ERROR_PROPERTIES_FILE);
         }
         return errorProperties;
     }
@@ -77,13 +70,8 @@ public class PropertiesLoader {
      * @throws CitysearchException
      */
     public static Properties getAPIProperties() throws CitysearchException {
-        try {
-            if (apiProperties == null) {
-                apiProperties = getProperties(API_PROPERTIES_FILE);
-            }
-        } catch (Exception e) {
-            log.error(ERROR_PROP_MSG);
-            throw new CitysearchException("PropertiesLoader", "getAPIProperties", ERROR_PROP_MSG);
+        if (apiProperties == null) {
+            apiProperties = getProperties(API_PROPERTIES_FILE);
         }
         return apiProperties;
     }
