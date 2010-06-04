@@ -4,7 +4,7 @@ package com.citysearch.webwidget.exception;
  * Custom Exception class for all APIs This exception is thrown whenever there is an error in the
  * application Logs the detailed message in the logs
  * 
- * @author Aspert
+ * @author Aspert  Benjamin
  * 
  */
 public class CitysearchException extends Exception {

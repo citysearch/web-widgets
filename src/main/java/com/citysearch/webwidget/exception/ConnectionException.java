@@ -3,7 +3,7 @@ package com.citysearch.webwidget.exception;
 /**
  * Custom Exception class for Connection failures
  * 
- * @author Aspert
+ * @author Aspert  Benjamin
  * 
  */
 public class ConnectionException extends Exception {

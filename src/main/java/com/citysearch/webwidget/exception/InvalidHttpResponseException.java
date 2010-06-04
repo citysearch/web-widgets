@@ -3,7 +3,7 @@ package com.citysearch.webwidget.exception;
 /**
  * Custom Exception class for handling Invalid(error) Http Response Codes
  * 
- * @author Aspert
+ * @author Aspert  Benjamin
  * 
  */
 public class InvalidHttpResponseException extends Exception {

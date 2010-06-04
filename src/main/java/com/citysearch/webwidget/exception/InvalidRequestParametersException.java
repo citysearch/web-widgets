@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Custom exception thrown when there are request parameter validation error(s)
  * 
- * @author Aspert Benjamin
+ * @author Aspert Benjamin 
  * 
  */
 public class InvalidRequestParametersException extends CitysearchException {
