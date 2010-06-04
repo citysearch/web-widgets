@@ -23,7 +23,7 @@ import com.citysearch.webwidget.util.PropertiesLoader;
  * parameters, querying API and processing response Constructs request with different parameters and
  * processes response accordingly for various APIs
  * 
- * @author Aspert
+ * @author Aspert Benjamin
  * 
  */
 public class SearchHelper {

@@ -11,7 +11,7 @@ import com.citysearch.webwidget.util.CommonConstants;
 /**
  * Processes the response from PFP API and returns the individual ad element values in a map
  * 
- * @author Aspert
+ * @author Aspert Benjamin
  * 
  */
 public class PfpResponseHelper extends ResponseHelper {

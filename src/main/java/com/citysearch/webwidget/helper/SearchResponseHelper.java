@@ -15,7 +15,7 @@ import com.citysearch.webwidget.util.PropertiesLoader;
 /**
  * This class contains functionality for processing the Search API response
  * 
- * @author Aspert
+ * @author Aspert Benjamin
  * 
  */
 public class SearchResponseHelper extends ResponseHelper {

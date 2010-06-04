@@ -1,5 +1,6 @@
 package com.citysearch.webwidget.helper;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -34,13 +35,20 @@ import com.citysearch.webwidget.util.PropertiesLoader;
  * request, calls the API, aprses the response, then calls the Profile API and returns the final
  * response back
  * 
- * @author Aspert
+ * @author Aspert Benjamin
  * 
  */
 public class ReviewHelper {
 
     public final static String PROPERTY_REVIEW_URL = "reviews.url";
 
+    public final static Integer BUSINESS_NAME_SIZE = 30;
+    public final static Integer REVIEW_TITLE_SIZE = 45;
+    public final static Integer REVIEW_TEXT_SIZE = 315;
+    public final static Integer PROS_SIZE = 40;
+    public final static Integer CONS_SIZE = 40;
+    private static final int MINIMUM_RATING = 6;
+    
     private static final String ELEMENT_REVIEW_URL = "review_url";
     private static final String BUSINESS_NAME = "business_name";
     private static final String LISTING_ID = "listing_id";
@@ -54,8 +62,7 @@ public class ReviewHelper {
     private static final String REVIEW_AUTHOR = "review_author";
     private static final String DATE_FORMAT = "reviewdate.format";
     private static final String REVIEW_ELEMENT = "review";
-    private static final int MINIMUM_RATING = 6;
-
+    
     private Logger log = Logger.getLogger(getClass());
 
     /**
@@ -255,13 +262,50 @@ public class ReviewHelper {
      */
     private Review getReviewInstance(Element reviewElem) throws CitysearchException {
         Review review = new Review();
-        review.setBusinessName(reviewElem.getChildText(BUSINESS_NAME));
+
+        String businessName = reviewElem.getChildText(BUSINESS_NAME);
+        review.setBusinessName(businessName);
+        if (businessName != null && businessName.trim().length() > BUSINESS_NAME_SIZE) {
+            review.setShortBusinessName(StringUtils.substring(businessName, 0,
+                    BUSINESS_NAME_SIZE - 1));
+        } else {
+            review.setShortBusinessName(businessName);
+        }
+
+        String reviewTitle = reviewElem.getChildText(REVIEW_TITLE);
+        review.setReviewTitle(reviewTitle);
+        if (reviewTitle != null && reviewTitle.trim().length() > REVIEW_TITLE_SIZE) {
+            review.setShortTitle(StringUtils.substring(reviewTitle, 0, REVIEW_TITLE_SIZE - 1));
+        } else {
+            review.setShortTitle(reviewTitle);
+        }
+
+        String reviewText = reviewElem.getChildText(REVIEW_TEXT);
+        review.setReviewText(reviewText+"Some more text");
+        if (reviewText != null && reviewText.trim().length() > REVIEW_TEXT_SIZE) {
+            review.setShortReviewText(StringUtils.substring(reviewText, 0, REVIEW_TEXT_SIZE - 1));
+        } else {
+            review.setShortReviewText(reviewText);
+        }
+
+        String pros = reviewElem.getChildText(PROS);
+        review.setPros(pros);
+        if (pros != null && pros.trim().length() > PROS_SIZE) {
+            review.setShortPros(StringUtils.substring(pros, 0, PROS_SIZE - 1));
+        } else {
+            review.setShortPros(pros);
+        }
+
+        String cons = reviewElem.getChildText(CONS);
+        review.setCons(cons);
+        if (cons != null && cons.trim().length() > CONS_SIZE) {
+            review.setShortCons(StringUtils.substring(cons, 0, CONS_SIZE - 1));
+        } else {
+            review.setShortCons(cons);
+        }
+
         review.setListingId(reviewElem.getChildText(LISTING_ID));
-        review.setReviewTitle(reviewElem.getChildText(REVIEW_TITLE));
         review.setReviewAuthor(reviewElem.getChildText(REVIEW_AUTHOR));
-        review.setReviewText(reviewElem.getChildText(REVIEW_TEXT));
-        review.setPros(reviewElem.getChildText(PROS));
-        review.setCons(reviewElem.getChildText(CONS));
         String ratingVal = reviewElem.getChildText(REVIEW_RATING);
         double rating = NumberUtils.toDouble(ratingVal) / 2;
         review.setRating(HelperUtil.getRatingsList(ratingVal));
@@ -276,6 +320,9 @@ public class ReviewHelper {
         long now = Calendar.getInstance().getTimeInMillis();
         review.setTimeSinceReviewString(DurationFormatUtils.formatDurationWords(now
                 - date.getTime(), true, true));
+
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+        review.setReviewDate(df.format(date));
 
         return review;
     }

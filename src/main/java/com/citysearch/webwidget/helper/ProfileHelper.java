@@ -18,6 +18,7 @@ import com.citysearch.webwidget.bean.Profile;
 import com.citysearch.webwidget.bean.ProfileRequest;
 import com.citysearch.webwidget.exception.CitysearchException;
 import com.citysearch.webwidget.exception.InvalidHttpResponseException;
+import com.citysearch.webwidget.exception.InvalidRequestParametersException;
 import com.citysearch.webwidget.util.APIFieldNameConstants;
 import com.citysearch.webwidget.util.CommonConstants;
 import com.citysearch.webwidget.util.HelperUtil;
@@ -27,7 +28,7 @@ import com.citysearch.webwidget.util.PropertiesLoader;
  * This helper class performs all the functionalty related to Profile API like validating request,
  * calling Profile API and parsing response returned by Profile API
  * 
- * @author Aspert
+ * @author Aspert Benjamin
  * 
  */
 public class ProfileHelper {
@@ -78,8 +79,8 @@ public class ProfileHelper {
             errors.add(errorProperties.getProperty(CommonConstants.CLIENT_IP_ERROR_CODE));
         }
         if (!errors.isEmpty()) {
-            throw new CitysearchException(this.getClass().getName(), "validateRequest",
-                    "Invalid parameters.", errors);
+            throw new InvalidRequestParametersException(this.getClass().getName(),
+                    "validateRequest", "Invalid parameters.", errors);
         }
     }
 

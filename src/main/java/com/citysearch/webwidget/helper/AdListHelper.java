@@ -30,7 +30,7 @@ import com.citysearch.webwidget.util.PropertiesLoader;
  * Helper class for PFP API. Contains the functionality to validate request parameters, queries the
  * API for different kind of requests and processes response accordingly
  * 
- * @author Aspert
+ * @author Aspert Benjamin
  * 
  */
 public class AdListHelper {

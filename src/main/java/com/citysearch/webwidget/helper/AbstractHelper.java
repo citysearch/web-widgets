@@ -10,7 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
@@ -20,7 +19,6 @@ import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 
 import com.citysearch.webwidget.exception.CitysearchException;
-import com.citysearch.webwidget.util.CommonConstants;
 import com.citysearch.webwidget.util.HttpConnection;
 import com.citysearch.webwidget.util.PropertiesLoader;
 

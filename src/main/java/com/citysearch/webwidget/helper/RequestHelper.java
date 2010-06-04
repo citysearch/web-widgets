@@ -18,7 +18,7 @@ import com.citysearch.webwidget.util.PropertiesLoader;
 /**
  * Helper class for constructing Profile and Search API requests
  * 
- * @author Aspert
+ * @author Aspert Benjamin
  * 
  */
 public class RequestHelper {
