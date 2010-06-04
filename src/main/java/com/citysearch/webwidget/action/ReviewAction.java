@@ -56,11 +56,11 @@ public class ReviewAction implements ModelDriven<ReviewRequest>, ServletRequestA
     public ReviewRequest getModel() {
         return reviewRequest;
     }
-    
-    public String getRequestUrl()
-    {
+
+    public String getRequestUrl() {
         return httpRequest.getRequestURL().toString();
     }
+
     /**
      * Calls the getLatestReview() method from ReviewHelper class to get the latest Review Returns
      * the Response status
@@ -72,18 +72,9 @@ public class ReviewAction implements ModelDriven<ReviewRequest>, ServletRequestA
         ReviewHelper helper = new ReviewHelper();
         try {
             review = helper.getLatestReview(reviewRequest);
-            /*
-             * if (review == null) { httpRequest.getParameterMap().put("what",
-             * reviewRequest.getWhat()); httpRequest.getParameterMap().put("where",
-             * reviewRequest.getWhere()); httpRequest.getParameterMap().put("publishercode",
-             * reviewRequest.getPublisher()); httpRequest.getParameterMap().put("lat",
-             * reviewRequest.getLatitude()); httpRequest.getParameterMap().put("lon",
-             * reviewRequest.getLongitude()); httpRequest.getParameterMap().put("tags",
-             * reviewRequest.getTagName()); httpRequest.getParameterMap().put("radius",
-             * reviewRequest.getRadius());
-             * ActionContext.getContext().getParameters().put("publishercode",
-             * reviewRequest.getPublisher()); return "nearbyplaces"; }
-             */
+            if (review == null) {
+                return "nearbyplaces";
+            }
         } catch (InvalidRequestParametersException ihre) {
             log.error(ihre.getDetailedMessage());
             throw ihre;

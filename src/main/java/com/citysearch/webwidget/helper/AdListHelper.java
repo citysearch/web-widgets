@@ -84,7 +84,7 @@ public class AdListHelper {
             errors.add(errorProperties.getProperty(CommonConstants.WHAT_ERROR_CODE));
         }
         if (StringUtils.isBlank(request.getWhere())
-                && (StringUtils.isBlank(request.getSourceLat()) || StringUtils.isBlank(request.getSourceLon()))) {
+                && (StringUtils.isBlank(request.getLatitude()) || StringUtils.isBlank(request.getLongitude()))) {
             errors.add(errorProperties.getProperty(CommonConstants.WHERE_ERROR_CODE));
         }
         if (StringUtils.isBlank(request.getPublisher())) {
@@ -115,10 +115,10 @@ public class AdListHelper {
                 request.getWhat()));
         apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
         apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.LATITUDE,
-                request.getSourceLat()));
+                request.getLatitude()));
         apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
         apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.LONGITUDE,
-                request.getSourceLon()));
+                request.getLongitude()));
         apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
         apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.PUBLISHER,
                 request.getPublisher()));
@@ -155,6 +155,22 @@ public class AdListHelper {
         return apiQueryString.toString();
     }
 
+    private void loadLatitudeAndLongitudeFromSearchAPI(AdListRequest request)
+            throws CitysearchException {
+        SearchRequest sRequest = new SearchRequest();
+        sRequest.setWhat(request.getWhat());
+        sRequest.setWhere(request.getWhere());
+        sRequest.setTags(request.getTags());
+        sRequest.setPublisher(request.getPublisher());
+
+        SearchHelper sHelper = new SearchHelper();
+        String[] latLon = sHelper.getLatitudeLongitude(sRequest);
+        if (latLon.length >= 2) {
+            request.setLatitude(latLon[0]);
+            request.setLongitude(latLon[1]);
+        }
+    }
+
     /**
      * Queries Search API for latitude and longitude if not present in request, then queries PFP api
      * with Geography parameters. If no results are returned then queries PFP API again but without
@@ -163,48 +179,46 @@ public class AdListHelper {
      * @param request
      * @throws CitysearchException
      */
-    public void getAdList(AdListRequest request) throws InvalidRequestParametersException,
-            CitysearchException {
+    public List<AdListBean> getAdList(AdListRequest request)
+            throws InvalidRequestParametersException, CitysearchException {
         validateRequest(request);
-        if (StringUtils.isBlank(request.getSourceLat())
-                || StringUtils.isBlank(request.getSourceLon())) {
-            SearchRequest sRequest = new SearchRequest();
-            sRequest.setWhat(request.getWhat());
-            sRequest.setWhere(request.getWhere());
-            sRequest.setTags(request.getTags());
-            sRequest.setPublisher(request.getPublisher());
+        if (StringUtils.isBlank(request.getLatitude())
+                || StringUtils.isBlank(request.getLongitude())) {
+            loadLatitudeAndLongitudeFromSearchAPI(request);
+        }
+        if (StringUtils.isBlank(request.getLatitude())
+                || StringUtils.isBlank(request.getLongitude())) {
+            throw new CitysearchException(this.getClass().getName(), "getAdList",
+                    "Invalid Latitude and Longitude");
+        }
+        
+        //TODO: clean this!!!!
+        Properties properties = PropertiesLoader.getAPIProperties();
+        String urlString = properties.getProperty(PFP_LOCATION_URL)
+                + getQueryStringWithGeography(request);
+        Document responseDocument = null;
+        try {
+            responseDocument = HelperUtil.getAPIResponse(urlString);
+        } catch (InvalidHttpResponseException ihe) {
+            throw new CitysearchException(this.getClass().getName(), "getAdList", ihe.getMessage());
+        }
+        List<AdListBean> adList = parseXML(responseDocument, request.getLatitude(),
+                request.getLongitude(), CommonConstants.PFP_API_TYPE, "/");
 
-            SearchHelper sHelper = new SearchHelper();
-            String[] latLon = sHelper.getLatitudeLongitude(sRequest);
-            if (latLon.length < 2) {
-                request.setSourceLat(latLon[0]);
-                request.setSourceLon(latLon[1]);
-            }
-
-            Properties properties = PropertiesLoader.getAPIProperties();
-            String urlString = properties.getProperty(PFP_LOCATION_URL)
-                    + getQueryStringWithGeography(request);
-            Document responseDocument = null;
+        if (adList == null || adList.size() == 0) {
+            urlString = properties.getProperty(CommonConstants.PFP_WITHOUT_GEOGRAPHY)
+                    + getQueryStringWithoutGeography(request);
+            responseDocument = null;
             try {
                 responseDocument = HelperUtil.getAPIResponse(urlString);
             } catch (InvalidHttpResponseException ihe) {
                 throw new CitysearchException(this.getClass().getName(), "getAdList",
                         ihe.getMessage());
             }
-            ArrayList<AdListBean> adList = parseXML(responseDocument, request.getSourceLat(),
-                    request.getSourceLon(), CommonConstants.PFP_API_TYPE, "/");
-            if (adList == null || adList.size() == 0) {
-                urlString = properties.getProperty(CommonConstants.PFP_WITHOUT_GEOGRAPHY)
-                        + getQueryStringWithoutGeography(request);
-                responseDocument = null;
-                try {
-                    responseDocument = HelperUtil.getAPIResponse(urlString);
-                } catch (InvalidHttpResponseException ihe) {
-                    throw new CitysearchException(this.getClass().getName(), "getAdList",
-                            ihe.getMessage());
-                }
-            }
+            adList = parseXML(responseDocument, request.getLatitude(),
+                    request.getLongitude(), CommonConstants.PFP_API_TYPE, "/");
         }
+        return adList;
     }
 
     /**

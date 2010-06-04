@@ -18,7 +18,12 @@
 		<!-- Struts configuration for Review Widget -->
 		<action name="review" class="com.citysearch.webwidget.action.ReviewAction"> 
 			<result name="success">/jsp/Review.jsp</result>
-			<result name="nearbyplaces">/Nearby_Places300x250</result>
+			<result name="nearbyplaces">/actions/nearbyplaces</result>
+		</action>
+		
+		<!-- Struts configuration for Nearby Places Widget -->
+		<action name="nearbyplaces" class="com.citysearch.webwidget.action.AdListAction"> 
+			<result name="success">/jsp/AdListResult.jsp</result>
 		</action>
 	</package>
 </struts>

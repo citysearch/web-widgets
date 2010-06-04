@@ -9,8 +9,8 @@ package com.citysearch.webwidget.bean;
 public class AdListRequest extends AbstractRequest {
     private String what;
     private String where;
-    private String sourceLat;
-    private String sourceLon;
+    private String latitude;
+    private String longitude;
     private String tags;
     private String radius;
 
@@ -30,20 +30,20 @@ public class AdListRequest extends AbstractRequest {
         this.where = where;
     }
 
-    public String getSourceLat() {
-        return sourceLat;
+    public String getLatitude() {
+        return latitude;
     }
 
-    public void setSourceLat(String sourceLat) {
-        this.sourceLat = sourceLat;
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
     }
 
-    public String getSourceLon() {
-        return sourceLon;
+    public String getLongitude() {
+        return longitude;
     }
 
-    public void setSourceLon(String sourceLon) {
-        this.sourceLon = sourceLon;
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
     }
 
     public String getTags() {
