@@ -56,4 +56,14 @@ public class CommonConstants {
     public final static String LONGITUDE_ERROR = "lan.error";
     public final static String RADIUS_ERROR = "radius.error";
     public final static String SYMBOL_AMPERSAND = "&";
+    
+    public final static int NEARBY_PLACES_DISPLAY_SIZE = 3;
+    public static final String IMAGES_PROPERTIES_FILE = "images.properties";
+    public static final String IMAGE_ERROR = "image.properties.error";
+    
+    public static final String BUSINESS_NAME_MAX_LENGTH_PROP = "name.length";
+    public static final String TAGLINE_MAX_LENGTH_PROP = "tagline.length";
+    public static final int BUSINESS_NAME_MAX_LENGTH = 30;
+    public static final int TAGLINE_MAX_LENGTH = 30;
+    public static final int EXTENDED_RADIUS = 25;
 }

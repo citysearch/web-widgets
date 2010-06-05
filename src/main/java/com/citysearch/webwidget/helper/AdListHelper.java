@@ -10,13 +10,12 @@ import java.util.Properties;
 import java.util.Random;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 
 import com.citysearch.webwidget.bean.AdListBean;
-import com.citysearch.webwidget.bean.AdListRequest;
+import com.citysearch.webwidget.bean.NearbyPlacesRequest;
 import com.citysearch.webwidget.bean.SearchRequest;
 import com.citysearch.webwidget.exception.CitysearchException;
 import com.citysearch.webwidget.exception.InvalidHttpResponseException;
@@ -40,25 +39,17 @@ public class AdListHelper {
     private Logger log = Logger.getLogger(getClass());
     private static final String IOEXCEP_MSG = "streamread.error";
     private static final String JDOMEXCEP_MSG = "jdom.excep.msg";
-    private static final String IMAGES_PROPERTIES_FILE = "images.properties";
+
     private static final String AD_TAG = "ad";
     private static final String LOCATION_TAG = "location";
     private static final int DISPLAY_SIZE = 3;
-    private static final String COMMA_STRING = ",";
-    private static final String SPACE_STRING = " ";
-    private static final String BUSINESS_NAME_MAX_LENGTH_PROP = "name.length";
-    private static final String TAGLINE_MAX_LENGTH_PROP = "tagline.length";
-    private static final int BUSINESS_NAME_MAX_LENGTH = 30;
-    private static final int TAGLINE_MAX_LENGTH = 30;
-    private static final double KM_TO_MILE = 0.622;
-    private static final int RADIUS = 6371;
+
     private static final int TOTAL_RATING = 5;
     private static final int EMPTY_STAR = 0;
     private static final int HALF_STAR = 1;
     private static final int FULL_STAR = 2;
-    private static final String IMAGE_ERROR = "image.properties.error";
+
     private static final String APITYPE_ERROR = "invalid.apitype";
-    protected static final int EXTENDED_RADIUS = 25;
 
     private static final String REVIEW_RATING_TAG = "overall_review_rating";
     private static final String REVIEWS_TAG = "reviews";
@@ -76,8 +67,8 @@ public class AdListHelper {
      * @param request
      * @throws CitysearchException
      */
-    private void validateRequest(AdListRequest request) throws InvalidRequestParametersException,
-            CitysearchException {
+    private void validateRequest(NearbyPlacesRequest request)
+            throws InvalidRequestParametersException, CitysearchException {
         List<String> errors = new ArrayList<String>();
         Properties errorProperties = PropertiesLoader.getErrorProperties();
         if (StringUtils.isBlank(request.getWhat()) && StringUtils.isBlank(request.getTags())) {
@@ -104,7 +95,8 @@ public class AdListHelper {
      * @return String
      * @throws CitysearchException
      */
-    private String getQueryStringWithGeography(AdListRequest request) throws CitysearchException {
+    private String getQueryStringWithGeography(NearbyPlacesRequest request)
+            throws CitysearchException {
         StringBuilder apiQueryString = new StringBuilder();
 
         Properties properties = PropertiesLoader.getAPIProperties();
@@ -138,7 +130,8 @@ public class AdListHelper {
      * @return String
      * @throws CitysearchException
      */
-    private String getQueryStringWithoutGeography(AdListRequest request) throws CitysearchException {
+    private String getQueryStringWithoutGeography(NearbyPlacesRequest request)
+            throws CitysearchException {
         StringBuilder apiQueryString = new StringBuilder();
         Properties properties = PropertiesLoader.getAPIProperties();
         String apiKey = properties.getProperty(CommonConstants.API_KEY_PROPERTY);
@@ -155,7 +148,7 @@ public class AdListHelper {
         return apiQueryString.toString();
     }
 
-    private void loadLatitudeAndLongitudeFromSearchAPI(AdListRequest request)
+    private void loadLatitudeAndLongitudeFromSearchAPI(NearbyPlacesRequest request)
             throws CitysearchException {
         SearchRequest sRequest = new SearchRequest();
         sRequest.setWhat(request.getWhat());
@@ -179,7 +172,7 @@ public class AdListHelper {
      * @param request
      * @throws CitysearchException
      */
-    public List<AdListBean> getAdList(AdListRequest request)
+    public List<AdListBean> getAdList(NearbyPlacesRequest request)
             throws InvalidRequestParametersException, CitysearchException {
         validateRequest(request);
         if (StringUtils.isBlank(request.getLatitude())
@@ -191,8 +184,8 @@ public class AdListHelper {
             throw new CitysearchException(this.getClass().getName(), "getAdList",
                     "Invalid Latitude and Longitude");
         }
-        
-        //TODO: clean this!!!!
+
+        // TODO: clean this!!!!
         Properties properties = PropertiesLoader.getAPIProperties();
         String urlString = properties.getProperty(PFP_LOCATION_URL)
                 + getQueryStringWithGeography(request);
@@ -215,8 +208,19 @@ public class AdListHelper {
                 throw new CitysearchException(this.getClass().getName(), "getAdList",
                         ihe.getMessage());
             }
-            adList = parseXML(responseDocument, request.getLatitude(),
-                    request.getLongitude(), CommonConstants.PFP_API_TYPE, "/");
+            adList = parseXML(responseDocument, request.getLatitude(), request.getLongitude(),
+                    CommonConstants.PFP_API_TYPE, "/");
+
+            if (adList == null || adList.size() == 0) {
+                // Query Search API
+                SearchRequest sRequest = new SearchRequest();
+                sRequest.setWhat(request.getWhat());
+                sRequest.setWhere(request.getWhere());
+                sRequest.setTags(request.getTags());
+                sRequest.setPublisher(request.getPublisher());
+
+                SearchHelper sHelper = new SearchHelper();
+            }
         }
         return adList;
     }
@@ -238,8 +242,7 @@ public class AdListHelper {
         try {
             if (doc != null && doc.hasRootElement()) {
                 Element rootElement = doc.getRootElement();
-                String childElem = getApiChildElementName(apiType);
-                List<Element> resultSet = rootElement.getChildren(childElem);
+                List<Element> resultSet = rootElement.getChildren(AD_TAG);
                 if (resultSet != null) {
                     int size = resultSet.size();
                     HashMap<String, String> resultMap;
@@ -278,8 +281,8 @@ public class AdListHelper {
     protected ArrayList<AdListBean> getDisplayList(ArrayList<AdListBean> adList, String contextPath)
             throws CitysearchException {
         ArrayList<AdListBean> displayList = new ArrayList<AdListBean>(3);
-        if (adList.size() > 3) {
-            for (int i = 0; i < DISPLAY_SIZE; i++) {
+        if (adList.size() > CommonConstants.NEARBY_PLACES_DISPLAY_SIZE) {
+            for (int i = 0; i < CommonConstants.NEARBY_PLACES_DISPLAY_SIZE; i++) {
                 displayList.add(adList.get(i));
             }
         } else {
@@ -300,7 +303,7 @@ public class AdListHelper {
         ArrayList<String> imageList = new ArrayList<String>();
         try {
             if (imageProperties == null) {
-                imageProperties = PropertiesLoader.getProperties(IMAGES_PROPERTIES_FILE);
+                imageProperties = PropertiesLoader.getProperties(CommonConstants.IMAGES_PROPERTIES_FILE);
             }
             Enumeration<Object> enumerator = imageProperties.keys();
             while (enumerator.hasMoreElements()) {
@@ -310,7 +313,8 @@ public class AdListHelper {
             }
 
         } catch (Exception excep) {
-            String errMsg = PropertiesLoader.getErrorProperties().getProperty(IMAGE_ERROR);
+            String errMsg = PropertiesLoader.getErrorProperties().getProperty(
+                    CommonConstants.IMAGE_ERROR);
             log.error(errMsg);
         }
 
@@ -417,19 +421,23 @@ public class AdListHelper {
                 BigDecimal sourceLon = new BigDecimal(sLon);
                 BigDecimal destLat = new BigDecimal(dLat);
                 BigDecimal destLon = new BigDecimal(dLon);
-                distance = getDistance(sourceLat, sourceLon, destLat, destLon);
+                distance = HelperUtil.getDistance(sourceLat, sourceLon, destLat, destLon);
             }
 
-            int[] ratingList = getRatingsList(rating);
-            double ratings = getRatingValue(rating);
-            int userReviewCount = getUserReviewCount(reviewCount);
-            name = getBusinessName(name);
-            category = getTagLine(category);
-            String location = getLocation(resultMap.get(CommonConstants.CITY),
+            List<Integer> ratingList = HelperUtil.getRatingsList(rating);
+            double ratings = HelperUtil.getRatingValue(rating);
+            int userReviewCount = HelperUtil.toInteger(reviewCount);
+            name = HelperUtil.getAbbreviatedString(name,
+                    CommonConstants.BUSINESS_NAME_MAX_LENGTH_PROP,
+                    CommonConstants.BUSINESS_NAME_MAX_LENGTH);
+            category = HelperUtil.getAbbreviatedString(category,
+                    CommonConstants.TAGLINE_MAX_LENGTH_PROP,
+                    CommonConstants.BUSINESS_NAME_MAX_LENGTH);
+            String location = HelperUtil.getLocationString(resultMap.get(CommonConstants.CITY),
                     resultMap.get(CommonConstants.STATE));
 
             // Adding to AdListBean
-            if (distance < EXTENDED_RADIUS) {
+            if (distance < CommonConstants.EXTENDED_RADIUS) {
                 adListBean = new AdListBean();
                 adListBean.setName(name);
                 adListBean.setLocation(location);
@@ -448,177 +456,19 @@ public class AdListHelper {
     }
 
     /**
-     * Calculate the ratings value and determines the rating stars to be displayed Returns what type
-     * of star to be displayed in an array E.g.for 3.5 rating the array will have values {2,2,2,1,0}
-     * where 2 represents full star, 1 half star and 0 empty star
-     * 
-     * @param rating
-     * @return int[]
-     */
-    protected int[] getRatingsList(String rating) {
-        int[] ratingList = new int[TOTAL_RATING];
-        int count = 0;
-        if (StringUtils.isNotBlank(rating)) {
-            double ratings = (Double.parseDouble(rating)) / 2;
-            int userRating = (int) ratings;
-            while (count < userRating) {
-                ratingList[count++] = FULL_STAR;
-            }
-
-            if (ratings % 1 != 0)
-                ratingList[count++] = HALF_STAR;
-
-            while (count < TOTAL_RATING) {
-                ratingList[count++] = EMPTY_STAR;
-            }
-
-        } else {
-            for (count = 0; count < TOTAL_RATING; count++) {
-                ratingList[count] = EMPTY_STAR;
-            }
-        }
-        return ratingList;
-    }
-
-    /**
-     * Calculate the Rating and rounds it to one decimal and returns it
-     * 
-     * @param rating
-     * @return double
-     */
-    protected double getRatingValue(String rating) {
-        double ratings = 0.0;
-        if (StringUtils.isNotBlank(rating)) {
-            ratings = (Double.parseDouble(rating)) / 2;
-            ratings = Math.floor(ratings * 10) / 10.0;
-        }
-        return ratings;
-
-    }
-
-    protected int getUserReviewCount(String reviewCount) {
-        int userReviewCount = 0;
-        if (StringUtils.isNotBlank(reviewCount)) {
-            userReviewCount = Integer.parseInt(reviewCount);
-        }
-        return userReviewCount;
-    }
-
-    /**
-     * Truncates the business name to maximum length and if truncated add three ellipses at the end
-     * Reads the length from the property file.
-     * 
-     * @param name
-     * @return String
-     * @throws CitysearchException
-     */
-    protected String getBusinessName(String name) throws CitysearchException {
-        String value = PropertiesLoader.getAPIProperties().getProperty(
-                BUSINESS_NAME_MAX_LENGTH_PROP);
-        int length = 0;
-        if (StringUtils.isNotBlank(value)) {
-            length = NumberUtils.toInt(value);
-        }
-        if (length == 0) {
-            length = BUSINESS_NAME_MAX_LENGTH;
-        }
-        name = StringUtils.abbreviate(name, length);
-        return StringUtils.trimToEmpty(name);
-    }
-
-    /**
-     * Truncates the tag line to maximum length and if truncated add three ellipses at the end
-     * 
-     * @param tagLine
-     * @return String
-     * @throws CitysearchException
-     */
-    protected String getTagLine(String tagLine) throws CitysearchException {
-        String value = PropertiesLoader.getAPIProperties().getProperty(TAGLINE_MAX_LENGTH_PROP);
-        int length = 0;
-        if (StringUtils.isNotBlank(value)) {
-            length = NumberUtils.toInt(value);
-        }
-        if (length == 0) {
-            length = TAGLINE_MAX_LENGTH;
-        }
-        tagLine = StringUtils.abbreviate(tagLine, length);
-        return StringUtils.trimToEmpty(tagLine);
-    }
-
-    /**
      * Reads the apiType and returns the name of the child element to be processed
      * 
      * @param apiType
      * @return String
      * @throws CitysearchException
      */
-    private String getApiChildElementName(String apiType) throws CitysearchException {
-        String childName;
-        if (apiType.equalsIgnoreCase(CommonConstants.PFP_API_TYPE)) {
-            childName = AD_TAG;
-        } else if (apiType.equalsIgnoreCase(CommonConstants.SEARCH_API_TYPE)) {
-            childName = LOCATION_TAG;
-        } else {
-            String errMsg = PropertiesLoader.getErrorProperties().getProperty(APITYPE_ERROR);
-            log.error(errMsg);
-            throw new CitysearchException(this.getClass().getName(), "getApiChildElementName",
-                    errMsg);
-        }
-        return childName;
-    }
-
-    /**
-     * Constructs the String as city,state and returns it. If city is not present then only state is
-     * returned and vice-versa
-     * 
-     * @param city
-     * @param state
-     * @return String
+    /*
+     * private String getApiChildElementName(String apiType) throws CitysearchException { String
+     * childName; if (apiType.equalsIgnoreCase(CommonConstants.PFP_API_TYPE)) { childName = AD_TAG;
+     * } else if (apiType.equalsIgnoreCase(CommonConstants.SEARCH_API_TYPE)) { childName =
+     * LOCATION_TAG; } else { String errMsg =
+     * PropertiesLoader.getErrorProperties().getProperty(APITYPE_ERROR); log.error(errMsg); throw
+     * new CitysearchException(this.getClass().getName(), "getApiChildElementName", errMsg); }
+     * return childName; }
      */
-    protected String getLocation(String city, String state) {
-        StringBuffer location = new StringBuffer();
-        if (StringUtils.isNotBlank(city))
-            location.append(city.trim());
-        if (StringUtils.isNotBlank(state)) {
-            if (location.length() > 0) {
-                location.append(COMMA_STRING);
-                location.append(SPACE_STRING);
-            }
-            location.append(state.trim());
-        }
-        return location.toString();
-    }
-
-    /**
-     * This method takes the source latitude, longitude and destination latitude, longitude to
-     * calculate the distance between two points and returns the distance
-     * 
-     * @param sourceLat
-     * @param sourceLon
-     * @param destLat
-     * @param destLon
-     * @return double
-     */
-    protected double getDistance(BigDecimal sourceLat, BigDecimal sourceLon, BigDecimal destLat,
-            BigDecimal destLon) {
-
-        double distance = 0.0;
-        double diffOfLat = Math.toRadians(destLat.doubleValue() - sourceLat.doubleValue());
-        double diffOfLon = Math.toRadians(destLon.doubleValue() - sourceLon.doubleValue());
-        double sourceLatRad = Math.toRadians(sourceLat.doubleValue());
-        double destLatRad = Math.toRadians(destLat.doubleValue());
-
-        double calcResult = Math.sin(diffOfLat / 2) * Math.sin(diffOfLat / 2)
-                + Math.cos(sourceLatRad) * Math.cos(destLatRad) * Math.sin(diffOfLon / 2)
-                * Math.sin(diffOfLon / 2);
-
-        calcResult = 2 * Math.atan2(Math.sqrt(calcResult), Math.sqrt(1 - calcResult));
-        distance = RADIUS * calcResult;
-        // Converting from kms to Miles
-        distance = distance * KM_TO_MILE;
-        // Rounding to one decimal place
-        distance = Math.floor(distance * 10) / 10.0;
-        return distance;
-    }
 }

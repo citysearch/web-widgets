@@ -22,8 +22,8 @@
 		</action>
 		
 		<!-- Struts configuration for Nearby Places Widget -->
-		<action name="nearbyplaces" class="com.citysearch.webwidget.action.AdListAction"> 
-			<result name="success">/jsp/AdListResult.jsp</result>
+		<action name="nearbyplaces" class="com.citysearch.webwidget.action.NearbyPlacesAction"> 
+			<result name="success">/jsp/NearByPlaces.jsp</result>
 		</action>
 	</package>
 </struts>

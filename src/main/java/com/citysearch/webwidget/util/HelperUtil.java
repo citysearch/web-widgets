@@ -3,6 +3,7 @@ package com.citysearch.webwidget.util;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 import java.text.ParseException;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.JDOMException;
@@ -37,6 +39,10 @@ public class HelperUtil {
     private static final int EMPTY_STAR = 0;
     private static final int HALF_STAR = 1;
     private static final int FULL_STAR = 2;
+    private static final double KM_TO_MILE = 0.622;
+    private static final int RADIUS = 6371;
+    private static final String COMMA = ",";
+    private static final String SPACE = " ";
 
     /**
      * Helper method to build a string in name=value format. Used in building http query string.
@@ -171,22 +177,81 @@ public class HelperUtil {
     }
 
     /**
-     * Reads the images from the properties files and stores them in a list
+     * This method takes the source latitude, longitude and destination latitude, longitude to
+     * calculate the distance between two points and returns the distance
      * 
-     * @param imageProprtiesFile
-     * @return ArrayList
+     * @param sourceLat
+     * @param sourceLon
+     * @param destLat
+     * @param destLon
+     * @return double
      */
-    public static ArrayList<String> getImageList(String imageProprtiesFile)
-            throws CitysearchException {
-        ArrayList<String> imageList = new ArrayList<String>();
-        Properties imageProperties = PropertiesLoader.getProperties(imageProprtiesFile);
-        Enumeration<Object> enumerator = imageProperties.keys();
-        while (enumerator.hasMoreElements()) {
-            String key = (String) enumerator.nextElement();
-            String value = imageProperties.getProperty(key);
-            // imageList.add(contextPath + "/" + value);
-            imageList.add(value);
+    public static double getDistance(BigDecimal sourceLatitude, BigDecimal sourceLongitude,
+            BigDecimal destLatitude, BigDecimal destLongitude) {
+
+        double distance = 0.0;
+        double diffOfLat = Math.toRadians(destLatitude.doubleValue() - sourceLatitude.doubleValue());
+        double diffOfLon = Math.toRadians(destLongitude.doubleValue()
+                - sourceLongitude.doubleValue());
+        double sourceLatRad = Math.toRadians(sourceLatitude.doubleValue());
+        double destLatRad = Math.toRadians(destLatitude.doubleValue());
+
+        double calcResult = Math.sin(diffOfLat / 2) * Math.sin(diffOfLat / 2)
+                + Math.cos(sourceLatRad) * Math.cos(destLatRad) * Math.sin(diffOfLon / 2)
+                * Math.sin(diffOfLon / 2);
+
+        calcResult = 2 * Math.atan2(Math.sqrt(calcResult), Math.sqrt(1 - calcResult));
+        distance = RADIUS * calcResult;
+        // Converting from kms to Miles
+        distance = distance * KM_TO_MILE;
+        // Rounding to one decimal place
+        distance = Math.floor(distance * 10) / 10.0;
+        return distance;
+    }
+
+    public static double getRatingValue(String rating) {
+        double ratings = 0.0;
+        if (StringUtils.isNotBlank(rating)) {
+            ratings = (Double.parseDouble(rating)) / 2;
+            ratings = Math.floor(ratings * 10) / 10.0;
         }
-        return imageList;
+        return ratings;
+
+    }
+
+    public static int toInteger(String stringToConvert) {
+        int intValue = 0;
+        if (StringUtils.isNotBlank(stringToConvert)) {
+            intValue = Integer.parseInt(stringToConvert);
+        }
+        return intValue;
+    }
+
+    public static String getLocationString(String city, String state) {
+        StringBuilder location = new StringBuilder();
+        if (StringUtils.isNotBlank(city))
+            location.append(city.trim());
+        if (StringUtils.isNotBlank(state)) {
+            if (location.length() > 0) {
+                location.append(COMMA);
+                location.append(SPACE);
+            }
+            location.append(state.trim());
+        }
+        return location.toString();
+    }
+
+    public static String getAbbreviatedString(String stringToAbbreviate, String apiPropertyName,
+            int defaultLength) throws CitysearchException {
+        String value = PropertiesLoader.getAPIProperties().getProperty(apiPropertyName);
+        int length = 0;
+        if (StringUtils.isNotBlank(value)) {
+            length = NumberUtils.toInt(value);
+        }
+        if (length == 0) {
+            length = defaultLength;
+        }
+        String abbreviatedString = StringUtils.abbreviate(stringToAbbreviate, length);
+        return StringUtils.trimToEmpty(abbreviatedString);
     }
 }

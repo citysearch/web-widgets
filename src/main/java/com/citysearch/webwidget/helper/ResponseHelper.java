@@ -197,7 +197,7 @@ public abstract class ResponseHelper {
                 adListBean = new AdListBean();
                 adListBean.setName(name);
                 adListBean.setLocation(location);
-                adListBean.setRating(ratingList);
+                //adListBean.setRating(ratingList);
                 adListBean.setReviewCount(userReviewCount);
                 adListBean.setDistance(distance);
                 adListBean.setListingId(StringUtils.trim(listingId));

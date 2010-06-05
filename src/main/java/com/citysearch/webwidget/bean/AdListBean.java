@@ -1,5 +1,7 @@
 package com.citysearch.webwidget.bean;
 
+import java.util.List;
+
 /**
  * This class contains all the fields required for PFP API response and implements sorting method
  * for sorting the results from API
@@ -15,10 +17,45 @@ public class AdListBean implements Comparable<AdListBean> {
     private double distance;
     private String listingId;
     private String category;
-    private int[] rating;
+    private List<Integer> rating;
     private String adDisplayURL;
     private String adImageURL;
     private String phone;
+    private String callBackFunction;
+    private String callBackUrl;
+    private String listingUrl;
+
+    public List<Integer> getRating() {
+        return rating;
+    }
+
+    public void setRating(List<Integer> rating) {
+        this.rating = rating;
+    }
+
+    public String getListingUrl() {
+        return listingUrl;
+    }
+
+    public void setListingUrl(String listingUrl) {
+        this.listingUrl = listingUrl;
+    }
+
+    public String getCallBackFunction() {
+        return callBackFunction;
+    }
+
+    public void setCallBackFunction(String callBackFunction) {
+        this.callBackFunction = callBackFunction;
+    }
+
+    public String getCallBackUrl() {
+        return callBackUrl;
+    }
+
+    public void setCallBackUrl(String callBackUrl) {
+        this.callBackUrl = callBackUrl;
+    }
 
     public AdListBean() {
     }
@@ -37,14 +74,6 @@ public class AdListBean implements Comparable<AdListBean> {
 
     public String getLocation() {
         return location;
-    }
-
-    public void setRating(int[] rating) {
-        this.rating = rating;
-    }
-
-    public int[] getRating() {
-        return rating;
     }
 
     public void setRatings(double ratings) {
