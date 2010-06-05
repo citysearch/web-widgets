@@ -14,7 +14,7 @@
 	            <div class="ctsrch_headerText">More to Try Nearby</div>
 	        </div>
 	        <div class="ctsrch_container">
-	        	<s:iterator value="nearByPlaces" status="placesStatus">
+	        	<s:iterator value="nearbyPlaces" status="placesStatus">
 		        	<div class="ctsrch_leftSide">
 		 	         	<div class="ctsrch_bigStar">
 		 	         		<s:if test="%{callBackFunction != null}">

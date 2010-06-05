@@ -9,19 +9,19 @@ import org.apache.log4j.Logger;
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.ServletResponseAware;
 
-import com.citysearch.webwidget.bean.AdListBean;
+import com.citysearch.webwidget.bean.NearbyPlace;
 import com.citysearch.webwidget.bean.NearbyPlacesRequest;
 import com.citysearch.webwidget.exception.CitysearchException;
 import com.citysearch.webwidget.exception.InvalidRequestParametersException;
-import com.citysearch.webwidget.helper.AdListHelper;
+import com.citysearch.webwidget.helper.NearbyPlacesHelper;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ModelDriven;
 
 public class NearbyPlacesAction implements ModelDriven<NearbyPlacesRequest>, ServletRequestAware,
         ServletResponseAware {
     private Logger log = Logger.getLogger(getClass());
-    private NearbyPlacesRequest adListRequest = new NearbyPlacesRequest();
-    private List<AdListBean> adList;
+    private NearbyPlacesRequest nearbyPlacesRequest = new NearbyPlacesRequest();
+    private List<NearbyPlace> nearbyPlaces;
     private HttpServletRequest httpRequest;
     private HttpServletResponse httpResponse;
 
@@ -34,52 +34,51 @@ public class NearbyPlacesAction implements ModelDriven<NearbyPlacesRequest>, Ser
     }
 
     public NearbyPlacesRequest getModel() {
-        return adListRequest;
+        return nearbyPlacesRequest;
     }
 
-    public NearbyPlacesRequest getAdListRequest() {
-        return adListRequest;
+    public NearbyPlacesRequest getNearbyPlacesRequest() {
+        return nearbyPlacesRequest;
     }
 
-    public void setAdListRequest(NearbyPlacesRequest adListRequest) {
-        this.adListRequest = adListRequest;
+    public void setNearbyPlacesRequest(NearbyPlacesRequest nearbyPlacesRequest) {
+        this.nearbyPlacesRequest = nearbyPlacesRequest;
     }
 
-    public List<AdListBean> getAdList() {
-        return adList;
+    public List<NearbyPlace> getNearbyPlaces() {
+        return nearbyPlaces;
     }
 
-    public void setAdList(List<AdListBean> adList) {
-        this.adList = adList;
+    public void setNearbyPlaces(List<NearbyPlace> nearbyPlaces) {
+        this.nearbyPlaces = nearbyPlaces;
     }
 
     public String execute() throws CitysearchException {
 
-        AdListHelper helper = new AdListHelper();
+        NearbyPlacesHelper helper = new NearbyPlacesHelper();
         try {
-            adList = helper.getAdList(adListRequest);
-            if (adList != null && !adList.isEmpty()) {
-                for (AdListBean alb : adList) {
-                    alb.setCallBackFunction(adListRequest.getCallBackFunction());
-                    alb.setCallBackUrl(adListRequest.getCallBackUrl());
+            nearbyPlaces = helper.getNearbyPlaces(nearbyPlacesRequest);
+            if (nearbyPlaces != null && !nearbyPlaces.isEmpty()) {
+                for (NearbyPlace alb : nearbyPlaces) {
+                    alb.setCallBackFunction(nearbyPlacesRequest.getCallBackFunction());
+                    alb.setCallBackUrl(nearbyPlacesRequest.getCallBackUrl());
                     String listingUrl = null;
-                    String callBackUrl = adListRequest.getCallBackUrl();
+                    String callBackUrl = nearbyPlacesRequest.getCallBackUrl();
                     if (callBackUrl != null && callBackUrl.trim().length() > 0) {
                         listingUrl = callBackUrl.replace("$l", alb.getListingId());
-                        //Probably need to go to the properties file
+                        // Probably need to go to the properties file
                         listingUrl = "http://ad.doubleclick.net/clk;225291110;48835962;h?"
                                 + listingUrl.replace("$p", alb.getPhone());
                     } else {
                         listingUrl = alb.getAdDisplayURL();
                     }
                     alb.setListingUrl(listingUrl);
-                    
-                    //Set the call back function JS function here.
-                    //Its messy to build the string in the JSP.
+
+                    // Set the call back function JS function here.
+                    // Its messy to build the string in the JSP.
                     String callBackFn = alb.getCallBackFunction();
-                    if (callBackFn != null && callBackFn.trim().length() > 0)
-                    {
-                        //Should produce javascript:fnName('param1','param2')
+                    if (callBackFn != null && callBackFn.trim().length() > 0) {
+                        // Should produce javascript:fnName('param1','param2')
                         StringBuilder strBuilder = new StringBuilder("javascript:");
                         strBuilder.append(callBackFn);
                         strBuilder.append("('");
@@ -87,7 +86,7 @@ public class NearbyPlacesAction implements ModelDriven<NearbyPlacesRequest>, Ser
                         strBuilder.append("','");
                         strBuilder.append(alb.getPhone());
                         strBuilder.append("')");
-                        
+
                         alb.setCallBackFunction(strBuilder.toString());
                     }
                 }

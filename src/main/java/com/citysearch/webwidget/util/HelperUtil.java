@@ -254,4 +254,16 @@ public class HelperUtil {
         String abbreviatedString = StringUtils.abbreviate(stringToAbbreviate, length);
         return StringUtils.trimToEmpty(abbreviatedString);
     }
+
+    public static List<String> getImages() throws CitysearchException {
+        List<String> imageList = new ArrayList<String>();
+        Properties imageProperties = PropertiesLoader.getProperties(CommonConstants.IMAGES_PROPERTIES_FILE);
+        Enumeration<Object> enumerator = imageProperties.keys();
+        while (enumerator.hasMoreElements()) {
+            String key = (String) enumerator.nextElement();
+            String value = imageProperties.getProperty(key);
+            imageList.add(value);
+        }
+        return imageList;
+    }
 }

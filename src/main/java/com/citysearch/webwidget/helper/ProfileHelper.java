@@ -50,13 +50,12 @@ public class ProfileHelper {
     private static final String IMAGE = "image";
     private static final String IMAGE_URL = "image_url";
     private static final String IMAGE_PROPERTIES_FILE = "review.image.properties";
-    private static final String IMAGE_ERROR = "image.properties.error";
     private static final String COMMA_STRING = ",";
-    private static List<String> imageList;
-    private static HashMap<String, ArrayList> imageMap;
+    private static HashMap<String, List<String>> imageMap;
     private static final String CATEGORIES = "categories";
     private static final String CATEGORY = "category";
     private static final String CATEGORY_NAME = "name";
+
     private Logger log = Logger.getLogger(getClass());
 
     /**
@@ -155,7 +154,7 @@ public class ProfileHelper {
         try {
             responseDocument = HelperUtil.getAPIResponse(urlString);
         } catch (InvalidHttpResponseException ihe) {
-            throw new CitysearchException(this.getClass().getName(), "getProfile", ihe.getMessage());
+            throw new CitysearchException(this.getClass().getName(), "getProfile", ihe);
         }
         Profile profile = parseProfileForReviews(responseDocument);
         return profile;
@@ -275,7 +274,7 @@ public class ProfileHelper {
                 if (category != null) {
                     String name = category.getAttributeValue(CATEGORY_NAME);
                     if (StringUtils.isNotBlank(name) && imageKeySet.contains(name)) {
-                        ArrayList<String> imageList = imageMap.get(name);
+                        List<String> imageList = imageMap.get(name);
                         int listSize = imageList.size();
                         int imgIndex = new Random().nextInt(listSize);
                         imageURL = imageList.get(imgIndex);
@@ -298,32 +297,30 @@ public class ProfileHelper {
      * @throws CitysearchException
      */
     private void getImageMap() throws CitysearchException {
-        ArrayList<String> imageList;
+        List<String> imageList;
         Properties imageProperties = null;
         if (imageProperties == null) {
             imageProperties = PropertiesLoader.getProperties(IMAGE_PROPERTIES_FILE);
         }
-        if (imageProperties != null) {
-            Set imageKeySet;
-            imageMap = new HashMap<String, ArrayList>();
-            Enumeration<Object> enumerator = imageProperties.keys();
-            while (enumerator.hasMoreElements()) {
-                String key = (String) enumerator.nextElement();
-                String value = imageProperties.getProperty(key);
-                String values[] = value.split(COMMA_STRING);
-                if (StringUtils.isNotBlank(values[0]) && StringUtils.isNotBlank(values[1])) {
-                    imageKeySet = imageMap.keySet();
-                    if (imageKeySet.contains(values[0])) {
-                        imageList = imageMap.get(values[0]);
-                    } else {
-                        imageList = new ArrayList<String>();
-                    }
-                    imageList.add(values[1]);
-                    imageMap.put(values[0], imageList);
+
+        Set<String> imageKeySet;
+        imageMap = new HashMap<String, List<String>>();
+        Enumeration<Object> enumerator = imageProperties.keys();
+        while (enumerator.hasMoreElements()) {
+            String key = (String) enumerator.nextElement();
+            String value = imageProperties.getProperty(key);
+            String values[] = value.split(COMMA_STRING);
+            if (StringUtils.isNotBlank(values[0]) && StringUtils.isNotBlank(values[1])) {
+                imageKeySet = imageMap.keySet();
+                if (imageKeySet.contains(values[0])) {
+                    imageList = imageMap.get(values[0]);
+                } else {
+                    imageList = new ArrayList<String>();
                 }
+                imageList.add(values[1]);
+                imageMap.put(values[0], imageList);
             }
-        } else {
-            log.error(PropertiesLoader.getErrorProperties().getProperty(IMAGE_ERROR));
         }
+
     }
 }

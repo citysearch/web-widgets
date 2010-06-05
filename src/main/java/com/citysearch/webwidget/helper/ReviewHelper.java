@@ -48,7 +48,7 @@ public class ReviewHelper {
     public final static Integer PROS_SIZE = 40;
     public final static Integer CONS_SIZE = 40;
     private static final int MINIMUM_RATING = 6;
-    
+
     private static final String ELEMENT_REVIEW_URL = "review_url";
     private static final String BUSINESS_NAME = "business_name";
     private static final String LISTING_ID = "listing_id";
@@ -62,7 +62,7 @@ public class ReviewHelper {
     private static final String REVIEW_AUTHOR = "review_author";
     private static final String DATE_FORMAT = "reviewdate.format";
     private static final String REVIEW_ELEMENT = "review";
-    
+
     private Logger log = Logger.getLogger(getClass());
 
     /**
@@ -193,8 +193,7 @@ public class ReviewHelper {
         try {
             responseDocument = HelperUtil.getAPIResponse(urlString);
         } catch (InvalidHttpResponseException ihe) {
-            throw new CitysearchException(this.getClass().getName(), "getLatestReview",
-                    ihe.getMessage());
+            throw new CitysearchException(this.getClass().getName(), "getLatestReview", ihe);
         }
         Review reviewObj = parseXML(responseDocument);
         if (reviewObj == null) {
@@ -281,7 +280,7 @@ public class ReviewHelper {
         }
 
         String reviewText = reviewElem.getChildText(REVIEW_TEXT);
-        review.setReviewText(reviewText+"Some more text");
+        review.setReviewText(reviewText + "Some more text");
         if (reviewText != null && reviewText.trim().length() > REVIEW_TEXT_SIZE) {
             review.setShortReviewText(StringUtils.substring(reviewText, 0, REVIEW_TEXT_SIZE - 1));
         } else {
