@@ -98,7 +98,6 @@ public class ProfileHelper {
         Properties properties = PropertiesLoader.getAPIProperties();
         String apiKey = properties.getProperty(CommonConstants.API_KEY_PROPERTY);
         strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.API_KEY, apiKey));
-
         strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
         strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.PUBLISHER,
                 request.getPublisher()));

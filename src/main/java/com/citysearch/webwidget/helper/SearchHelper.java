@@ -61,7 +61,6 @@ public class SearchHelper {
         String apiKey = properties.getProperty(CommonConstants.API_KEY_PROPERTY);
 
         strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.API_KEY, apiKey));
-
         strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
         strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.PUBLISHER,
                 request.getPublisher()));
@@ -205,7 +204,7 @@ public class SearchHelper {
         Properties properties = PropertiesLoader.getAPIProperties();
         String apiKey = properties.getProperty(CommonConstants.API_KEY_PROPERTY);
         apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.API_KEY, apiKey));
-
+        apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
         apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.WHAT,
                 request.getWhat()));
         apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
@@ -320,9 +319,9 @@ public class SearchHelper {
                 Element address = location.getChild(ADDRESS_TAG);
                 if (address != null) {
                     elementMap.put(CommonConstants.CITY,
-                            location.getChildText(CommonConstants.CITY));
+                            address.getChildText(CommonConstants.CITY));
                     elementMap.put(CommonConstants.STATE,
-                            location.getChildText(CommonConstants.STATE));
+                            address.getChildText(CommonConstants.STATE));
                 }
                 elementMap.put(CommonConstants.RATING, location.getChildText(REVIEW_RATING_TAG));
                 elementMap.put(CommonConstants.REVIEWCOUNT, location.getChildText(REVIEWS_TAG));

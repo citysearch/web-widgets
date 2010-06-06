@@ -81,14 +81,14 @@ public class NearbyPlacesHelper {
      * @return String
      * @throws CitysearchException
      */
-    private String getQueryStringWithGeography(NearbyPlacesRequest request)
+    private String getQueryStringWithLatitudeAndLongitude(NearbyPlacesRequest request)
             throws CitysearchException {
         StringBuilder apiQueryString = new StringBuilder();
 
         Properties properties = PropertiesLoader.getAPIProperties();
         String apiKey = properties.getProperty(CommonConstants.API_KEY_PROPERTY);
         apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.API_KEY, apiKey));
-
+        apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
         apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.WHAT,
                 request.getWhat()));
         apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
@@ -98,14 +98,46 @@ public class NearbyPlacesHelper {
         apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.LONGITUDE,
                 request.getLongitude()));
         apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
-        apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.PUBLISHER,
+        apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.PUBLISHER_CODE,
                 request.getPublisher()));
+        if (!StringUtils.isBlank(request.getTags())) {
+            apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
+            apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.TAG,
+                    request.getTags()));
+        }
+        if (!StringUtils.isBlank(request.getRadius())) {
+            apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
+            apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.RADIUS,
+                    request.getRadius()));
+        }
+        return apiQueryString.toString();
+    }
+
+    private String getQueryStringWithWhere(NearbyPlacesRequest request) throws CitysearchException {
+        StringBuilder apiQueryString = new StringBuilder();
+
+        Properties properties = PropertiesLoader.getAPIProperties();
+        String apiKey = properties.getProperty(CommonConstants.API_KEY_PROPERTY);
+        apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.API_KEY, apiKey));
         apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
-        apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.TAG,
-                request.getTags()));
+        apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.WHAT,
+                request.getWhat()));
         apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
-        apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.RADIUS,
-                request.getRadius()));
+        apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.WHERE,
+                request.getWhere()));
+        apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
+        apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.PUBLISHER_CODE,
+                request.getPublisher()));
+        if (!StringUtils.isBlank(request.getTags())) {
+            apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
+            apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.TAG,
+                    request.getTags()));
+        }
+        if (!StringUtils.isBlank(request.getRadius())) {
+            apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
+            apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.RADIUS,
+                    request.getRadius()));
+        }
         return apiQueryString.toString();
     }
 
@@ -122,11 +154,11 @@ public class NearbyPlacesHelper {
         Properties properties = PropertiesLoader.getAPIProperties();
         String apiKey = properties.getProperty(CommonConstants.API_KEY_PROPERTY);
         apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.API_KEY, apiKey));
-
+        apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
         apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.WHAT,
                 request.getWhat()));
         apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
-        apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.PUBLISHER,
+        apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.PUBLISHER_CODE,
                 request.getPublisher()));
         apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
         apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.TAG,
@@ -161,8 +193,10 @@ public class NearbyPlacesHelper {
     public List<NearbyPlace> getNearbyPlaces(NearbyPlacesRequest request)
             throws InvalidRequestParametersException, CitysearchException {
         validateRequest(request);
+        boolean latitudeLongitudePresentInRequest = true;
         if (StringUtils.isBlank(request.getLatitude())
                 || StringUtils.isBlank(request.getLongitude())) {
+            latitudeLongitudePresentInRequest = false;
             loadLatitudeAndLongitudeFromSearchAPI(request);
         }
         if (StringUtils.isBlank(request.getLatitude())
@@ -171,10 +205,11 @@ public class NearbyPlacesHelper {
                     "Invalid Latitude and Longitude");
         }
 
-        List<NearbyPlace> adList = getPlacesByGeoCodes(request);
-        if (adList == null || adList.isEmpty()) {
-            adList = getPlacesWithoutGeoCodes(request);
-            if (adList == null || adList.isEmpty()) {
+        List<NearbyPlace> nearbyPlaces = getPlacesByGeoCodes(request,
+                latitudeLongitudePresentInRequest);
+        if (nearbyPlaces == null || nearbyPlaces.isEmpty()) {
+            nearbyPlaces = getPlacesWithoutGeoCodes(request);
+            if (nearbyPlaces == null || nearbyPlaces.isEmpty()) {
                 // Query Search API
                 SearchRequest sRequest = new SearchRequest();
                 sRequest.setWhat(request.getWhat());
@@ -183,20 +218,26 @@ public class NearbyPlacesHelper {
                 sRequest.setPublisher(request.getPublisher());
 
                 SearchHelper sHelper = new SearchHelper();
-                adList = sHelper.getNearbyPlaces(sRequest);
+                nearbyPlaces = sHelper.getNearbyPlaces(sRequest);
             }
         }
-        return adList;
+        return nearbyPlaces;
     }
 
-    private List<NearbyPlace> getPlacesByGeoCodes(NearbyPlacesRequest request)
-            throws CitysearchException {
+    private List<NearbyPlace> getPlacesByGeoCodes(NearbyPlacesRequest request,
+            boolean latitudeLongitudePresentInRequest) throws CitysearchException {
         Properties properties = PropertiesLoader.getAPIProperties();
-        String urlString = properties.getProperty(PFP_LOCATION_URL)
-                + getQueryStringWithGeography(request);
+        StringBuilder urlStringBuilder = null;
+        if (latitudeLongitudePresentInRequest) {
+            urlStringBuilder = new StringBuilder(properties.getProperty(PFP_LOCATION_URL));
+            urlStringBuilder.append(getQueryStringWithLatitudeAndLongitude(request));
+        } else {
+            urlStringBuilder = new StringBuilder(properties.getProperty(PFP_URL));
+            urlStringBuilder.append(getQueryStringWithWhere(request));
+        }
         Document responseDocument = null;
         try {
-            responseDocument = HelperUtil.getAPIResponse(urlString);
+            responseDocument = HelperUtil.getAPIResponse(urlStringBuilder.toString());
         } catch (InvalidHttpResponseException ihe) {
             throw new CitysearchException(this.getClass().getName(), "getPlacesByGeoCodes", ihe);
         }
@@ -220,7 +261,7 @@ public class NearbyPlacesHelper {
 
     private List<NearbyPlace> parseXML(Document doc, String latitude, String longitude)
             throws CitysearchException {
-        List<NearbyPlace> adList = new ArrayList<NearbyPlace>();
+        List<NearbyPlace> nearbyPlaces = new ArrayList<NearbyPlace>();
         if (doc != null && doc.hasRootElement()) {
             Element rootElement = doc.getRootElement();
             List<Element> resultSet = rootElement.getChildren(AD_TAG);
@@ -228,46 +269,46 @@ public class NearbyPlacesHelper {
                 int size = resultSet.size();
                 HashMap<String, String> resultMap;
                 for (int i = 0; i < size; i++) {
-                    NearbyPlace adListBean = new NearbyPlace();
+                    NearbyPlace nearbyPlace = new NearbyPlace();
                     Element ad = (Element) resultSet.get(i);
                     resultMap = processElement(ad);
-                    adListBean = createNearbyPlace(resultMap, latitude, longitude);
-                    if (adListBean != null)
-                        adList.add(adListBean);
+                    nearbyPlace = createNearbyPlace(resultMap, latitude, longitude);
+                    if (nearbyPlace != null)
+                        nearbyPlaces.add(nearbyPlace);
                 }
             }
         }
-        Collections.sort(adList);
-        adList = getDisplayList(adList);
-        return adList;
+        Collections.sort(nearbyPlaces);
+        nearbyPlaces = getDisplayList(nearbyPlaces);
+        return nearbyPlaces;
     }
 
     /**
      * Restricts the list size to three and add default images, if images are not returned in the
      * API response
      * 
-     * @param adList
+     * @param nearbyPlaces
      * @param contextPath
      * @return ArrayList
      * @throws CitysearchException
      */
-    public static List<NearbyPlace> getDisplayList(List<NearbyPlace> adList)
+    public static List<NearbyPlace> getDisplayList(List<NearbyPlace> nearbyPlaces)
             throws CitysearchException {
         List<NearbyPlace> displayList = new ArrayList<NearbyPlace>(3);
-        if (adList.size() > CommonConstants.NEARBY_PLACES_DISPLAY_SIZE) {
+        if (nearbyPlaces.size() > CommonConstants.NEARBY_PLACES_DISPLAY_SIZE) {
             for (int i = 0; i < CommonConstants.NEARBY_PLACES_DISPLAY_SIZE; i++) {
-                displayList.add(adList.get(i));
+                displayList.add(nearbyPlaces.get(i));
             }
         } else {
-            displayList = adList;
+            displayList = nearbyPlaces;
         }
         displayList = addDefaultImages(displayList);
         return displayList;
     }
 
-    public static List<NearbyPlace> addDefaultImages(List<NearbyPlace> adList)
+    public static List<NearbyPlace> addDefaultImages(List<NearbyPlace> nearbyPlaces)
             throws CitysearchException {
-        NearbyPlace adListBean;
+        NearbyPlace nearbyPlace;
         List<String> imageList;
         Random random;
         ArrayList<Integer> indexList = new ArrayList<Integer>(3);
@@ -276,11 +317,11 @@ public class NearbyPlacesHelper {
 
         imageList = HelperUtil.getImages();
         random = new Random();
-        int size = adList.size();
+        int size = nearbyPlaces.size();
 
         for (int i = 0; i < size; i++) {
-            adListBean = adList.get(i);
-            imageUrl = adListBean.getAdImageURL();
+            nearbyPlace = nearbyPlaces.get(i);
+            imageUrl = nearbyPlace.getAdImageURL();
             if (StringUtils.isBlank(imageUrl)) {
                 int index = 0;
                 imageListSize = imageList.size();
@@ -290,13 +331,13 @@ public class NearbyPlacesHelper {
                     } while (indexList.contains(index));
                     indexList.add(index);
                     imageUrl = imageList.get(index);
-                    adListBean.setAdImageURL(imageUrl);
+                    nearbyPlace.setAdImageURL(imageUrl);
                 }
             }
-            adList.set(i, adListBean);
+            nearbyPlaces.set(i, nearbyPlace);
         }
 
-        return adList;
+        return nearbyPlaces;
     }
 
     /**
@@ -328,17 +369,17 @@ public class NearbyPlacesHelper {
     }
 
     /**
-     * Read the values from Map, do the required processing , add to AdListBean and return it
+     * Read the values from Map, do the required processing , add to nearbyPlace and return it
      * 
      * @param resultMap
      * @param sLat
      * @param sLon
-     * @return AdListBean
+     * @return nearbyPlace
      * @throws CitysearchException
      */
     public static NearbyPlace createNearbyPlace(HashMap<String, String> resultMap, String sLat,
             String sLon) throws CitysearchException {
-        NearbyPlace adListBean = null;
+        NearbyPlace nearbyPlace = null;
         if (resultMap != null) {
             // Calculating Distance
             double distance = 0.0;
@@ -371,23 +412,23 @@ public class NearbyPlacesHelper {
             String location = HelperUtil.getLocationString(resultMap.get(CommonConstants.CITY),
                     resultMap.get(CommonConstants.STATE));
 
-            // Adding to AdListBean
+            // Adding to nearbyPlace
             if (distance < CommonConstants.EXTENDED_RADIUS) {
-                adListBean = new NearbyPlace();
-                adListBean.setName(name);
-                adListBean.setLocation(location);
-                adListBean.setRating(ratingList);
-                adListBean.setReviewCount(userReviewCount);
-                adListBean.setDistance(distance);
-                adListBean.setListingId(StringUtils.trim(listingId));
-                adListBean.setCategory(category);
-                adListBean.setRatings(ratings);
-                adListBean.setAdDisplayURL(resultMap.get(CommonConstants.DISPLAY_URL));
-                adListBean.setAdImageURL(resultMap.get(CommonConstants.IMAGE_URL));
-                adListBean.setPhone(StringUtils.trim(phone));
+                nearbyPlace = new NearbyPlace();
+                nearbyPlace.setName(name);
+                nearbyPlace.setLocation(location);
+                nearbyPlace.setRating(ratingList);
+                nearbyPlace.setReviewCount(userReviewCount);
+                nearbyPlace.setDistance(distance);
+                nearbyPlace.setListingId(StringUtils.trim(listingId));
+                nearbyPlace.setCategory(category);
+                nearbyPlace.setRatings(ratings);
+                nearbyPlace.setAdDisplayURL(resultMap.get(CommonConstants.DISPLAY_URL));
+                nearbyPlace.setAdImageURL(resultMap.get(CommonConstants.IMAGE_URL));
+                nearbyPlace.setPhone(StringUtils.trim(phone));
             }
         }
-        return adListBean;
+        return nearbyPlace;
     }
 
 }

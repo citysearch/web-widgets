@@ -18,7 +18,7 @@
 		<!-- Struts configuration for Review Widget -->
 		<action name="review" class="com.citysearch.webwidget.action.ReviewAction"> 
 			<result name="success">/jsp/Review.jsp</result>
-			<result name="nearbyplaces">/actions/nearbyplaces</result>
+			<result name="backfill" type="chain">nearbyplaces</result>
 		</action>
 		
 		<!-- Struts configuration for Nearby Places Widget -->

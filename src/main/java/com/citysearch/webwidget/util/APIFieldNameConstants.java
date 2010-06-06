@@ -14,7 +14,10 @@ public class APIFieldNameConstants {
     public static final String FORMAT = "format";
     public static final String PLACEMENT = "placement";
     public static final String WHERE = "where";
-
+    
+    //PFP
+    public static final String PUBLISHER_CODE = "publishercode";
+    
     // Review API Field Names
     public static final String WHAT = "what";
     public static final String TAG_ID = "tag_id";

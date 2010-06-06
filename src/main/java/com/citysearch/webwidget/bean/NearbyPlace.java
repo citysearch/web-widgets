@@ -139,7 +139,24 @@ public class NearbyPlace implements Comparable<NearbyPlace> {
     public String getPhone() {
         return phone;
     }
-
+    
+    public boolean getIsValidCallbackFunction()
+    {
+        if (this.callBackFunction != null && this.callBackFunction.trim().length() > 0)
+        {
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean getIsValidLocation()
+    {
+        if (this.location != null && this.location.trim().length() > 0)
+        {
+            return true;
+        }
+        return false;
+    }
     /**
      * Sorts the objects based on ratings first.If,ratings are equal then sorts on distance.If
      * distance is also equal then sorts on Number of Reviews

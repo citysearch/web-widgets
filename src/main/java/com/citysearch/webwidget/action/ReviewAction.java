@@ -73,7 +73,7 @@ public class ReviewAction implements ModelDriven<ReviewRequest>, ServletRequestA
         try {
             review = helper.getLatestReview(reviewRequest);
             if (review == null) {
-                return "nearbyplaces";
+                return "backfill";
             }
         } catch (InvalidRequestParametersException ihre) {
             log.error(ihre.getDetailedMessage());

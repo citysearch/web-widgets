@@ -15,7 +15,7 @@ public class NearbyPlacesRequest extends AbstractRequest {
     private String radius;
     private String callBackFunction;
     private String callBackUrl;
-
+    
     public String getCallBackFunction() {
         return callBackFunction;
     }
