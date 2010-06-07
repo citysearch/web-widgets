@@ -2,12 +2,7 @@ package com.citysearch.webwidget.action;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.log4j.Logger;
-import org.apache.struts2.interceptor.ServletRequestAware;
-import org.apache.struts2.interceptor.ServletResponseAware;
 
 import com.citysearch.webwidget.bean.NearbyPlace;
 import com.citysearch.webwidget.bean.NearbyPlacesRequest;
@@ -17,21 +12,11 @@ import com.citysearch.webwidget.helper.NearbyPlacesHelper;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ModelDriven;
 
-public class NearbyPlacesAction implements ModelDriven<NearbyPlacesRequest>, ServletRequestAware,
-        ServletResponseAware {
+public class NearbyPlacesAction extends AbstractCitySearchAction implements
+        ModelDriven<NearbyPlacesRequest> {
     private Logger log = Logger.getLogger(getClass());
     private NearbyPlacesRequest nearbyPlacesRequest = new NearbyPlacesRequest();
     private List<NearbyPlace> nearbyPlaces;
-    private HttpServletRequest httpRequest;
-    private HttpServletResponse httpResponse;
-
-    public void setServletRequest(HttpServletRequest httpRequest) {
-        this.httpRequest = httpRequest;
-    }
-
-    public void setServletResponse(HttpServletResponse httpResponse) {
-        this.httpResponse = httpResponse;
-    }
 
     public NearbyPlacesRequest getModel() {
         return nearbyPlacesRequest;
@@ -55,7 +40,7 @@ public class NearbyPlacesAction implements ModelDriven<NearbyPlacesRequest>, Ser
 
     public String execute() throws CitysearchException {
 
-        NearbyPlacesHelper helper = new NearbyPlacesHelper();
+        NearbyPlacesHelper helper = new NearbyPlacesHelper(getResourceRootPath());
         try {
             nearbyPlaces = helper.getNearbyPlaces(nearbyPlacesRequest);
             if (nearbyPlaces != null && !nearbyPlaces.isEmpty()) {

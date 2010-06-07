@@ -47,6 +47,12 @@ public class NearbyPlacesHelper {
     private static final String AD_IMAGE_URL_TAG = "ad_image_url";
     private static final String PHONE_TAG = "phone";
 
+    private String rootPath;
+
+    public NearbyPlacesHelper(String rootPath) {
+        this.rootPath = rootPath;
+    }
+
     /**
      * Validates PFP API request parameters
      * 
@@ -174,7 +180,7 @@ public class NearbyPlacesHelper {
         sRequest.setTags(request.getTags());
         sRequest.setPublisher(request.getPublisher());
 
-        SearchHelper sHelper = new SearchHelper();
+        SearchHelper sHelper = new SearchHelper(this.rootPath);
         String[] latLon = sHelper.getLatitudeLongitude(sRequest);
         if (latLon.length >= 2) {
             request.setLatitude(latLon[0]);
@@ -217,7 +223,7 @@ public class NearbyPlacesHelper {
                 sRequest.setTags(request.getTags());
                 sRequest.setPublisher(request.getPublisher());
 
-                SearchHelper sHelper = new SearchHelper();
+                SearchHelper sHelper = new SearchHelper(this.rootPath);
                 nearbyPlaces = sHelper.getNearbyPlaces(sRequest);
             }
         }
@@ -279,7 +285,7 @@ public class NearbyPlacesHelper {
             }
         }
         Collections.sort(nearbyPlaces);
-        nearbyPlaces = getDisplayList(nearbyPlaces);
+        nearbyPlaces = getDisplayList(nearbyPlaces, this.rootPath);
         return nearbyPlaces;
     }
 
@@ -292,7 +298,7 @@ public class NearbyPlacesHelper {
      * @return ArrayList
      * @throws CitysearchException
      */
-    public static List<NearbyPlace> getDisplayList(List<NearbyPlace> nearbyPlaces)
+    public static List<NearbyPlace> getDisplayList(List<NearbyPlace> nearbyPlaces, String path)
             throws CitysearchException {
         List<NearbyPlace> displayList = new ArrayList<NearbyPlace>(3);
         if (nearbyPlaces.size() > CommonConstants.NEARBY_PLACES_DISPLAY_SIZE) {
@@ -302,11 +308,11 @@ public class NearbyPlacesHelper {
         } else {
             displayList = nearbyPlaces;
         }
-        displayList = addDefaultImages(displayList);
+        displayList = addDefaultImages(displayList, path);
         return displayList;
     }
 
-    public static List<NearbyPlace> addDefaultImages(List<NearbyPlace> nearbyPlaces)
+    public static List<NearbyPlace> addDefaultImages(List<NearbyPlace> nearbyPlaces, String path)
             throws CitysearchException {
         NearbyPlace nearbyPlace;
         List<String> imageList;
@@ -315,7 +321,7 @@ public class NearbyPlacesHelper {
         int imageListSize = 0;
         String imageUrl = "";
 
-        imageList = HelperUtil.getImages();
+        imageList = HelperUtil.getImages(path);
         random = new Random();
         int size = nearbyPlaces.size();
 

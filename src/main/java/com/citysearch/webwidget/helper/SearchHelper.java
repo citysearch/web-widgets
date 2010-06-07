@@ -46,6 +46,12 @@ public class SearchHelper {
     private static final String REVIEW_RATING_TAG = "rating";
     private static final String LOCATION_TAG = "location";
 
+    private String rootPath;
+
+    public SearchHelper(String rootPath) {
+        this.rootPath = rootPath;
+    }
+
     /**
      * Returns the Search API Query String
      * 
@@ -237,6 +243,8 @@ public class SearchHelper {
         Properties properties = PropertiesLoader.getAPIProperties();
         String urlString = properties.getProperty(PROPERTY_SEARCH_URL)
                 + getSearchRequestQueryString(request);
+        //TODO: remove later
+        System.out.println(urlString);
         Document responseDocument = null;
         try {
             responseDocument = HelperUtil.getAPIResponse(urlString);
@@ -300,7 +308,7 @@ public class SearchHelper {
             }
         }
         Collections.sort(adList);
-        adList = NearbyPlacesHelper.getDisplayList(adList);
+        adList = NearbyPlacesHelper.getDisplayList(adList, this.rootPath);
         return adList;
     }
 
@@ -318,8 +326,7 @@ public class SearchHelper {
                 elementMap.put(CommonConstants.NAME, name);
                 Element address = location.getChild(ADDRESS_TAG);
                 if (address != null) {
-                    elementMap.put(CommonConstants.CITY,
-                            address.getChildText(CommonConstants.CITY));
+                    elementMap.put(CommonConstants.CITY, address.getChildText(CommonConstants.CITY));
                     elementMap.put(CommonConstants.STATE,
                             address.getChildText(CommonConstants.STATE));
                 }

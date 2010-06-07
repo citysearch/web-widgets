@@ -1,14 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@taglib prefix="s" uri="/struts-tags" %>   
-<%@ taglib uri="http://jawr.net/tags" prefix="jwr" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>Recent Reviews Near You</title>
-	<link type="text/css" href="../static/css/Review.css"  rel="stylesheet"/>
-	<jwr:style src="/citysearch.css"/>
+	<link type="text/css" href='<s:property value="resourceRootPath"/>/static/css/Review.css'  rel="stylesheet"/>
 	<script language="JavaScript" type="text/javascript">
 		function showDetail()
 		{
@@ -34,17 +32,7 @@
 		    </div>
 		    <div id="cs_ratings">
 		        <div id="cs_stars">
-		        	<s:iterator value="review.rating" id="rating">
-		        		<s:if test="%{2}">
-						    <img src="../static/img/Star.png" />
-						</s:if>
-						<s:elseif test="%{1}">
-						    <img src="../static/img/HalfStar.png" />
-						</s:elseif>
-						<s:else>
-						    <img src="../static/img/EmptyStar.png" />
-						</s:else>
-		        	</s:iterator>
+		        	<s:iterator value="review.rating" id="rating"><s:if test="%{2}"><img src='<s:property value="resourceRootPath"/>/static/img/Star.png' /></s:if><s:elseif test="%{1}"><img src='<s:property value="resourceRootPath"/>/static/img/HalfStar.png' /></s:elseif><s:else><img src='<s:property value="resourceRootPath"/>/static/img/EmptyStar.png' /></s:else></s:iterator>
 		        </div>
 		        <div id="cs_title">
 		        	<a href='<s:property value="review.profileUrl"/>' target="_blank"><s:property value="review.shortBusinessName"/></a>
@@ -86,17 +74,7 @@
 		    		<a href="javascript:hideDetail()">Close Window</a>
 		    	</div>
 		        <div id="cs_stars_detail">
-		        	<s:iterator value="review.rating" id="rating">
-		        		<s:if test="%{2}">
-						    <img src="../static/img/Star.png" />
-						</s:if>
-						<s:elseif test="%{1}">
-						    <img src="../static/img/HalfStar.png" />
-						</s:elseif>
-						<s:else>
-						    <img src="../static/img/EmptyStar.png" />
-						</s:else>
-		        	</s:iterator>
+		        	<s:iterator value="review.rating" id="rating"><s:if test="%{2}"><img src='<s:property value="resourceRootPath"/>/static/img/Star.png' /></s:if><s:elseif test="%{1}"><img src='<s:property value="resourceRootPath"/>/static/img/HalfStar.png' /></s:elseif><s:else><img src='<s:property value="resourceRootPath"/>/static/img/EmptyStar.png' /></s:else></s:iterator>
 		        </div>
 		    </div>
 		    <div id="cs_title_detail">

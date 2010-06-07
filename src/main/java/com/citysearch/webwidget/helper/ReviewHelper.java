@@ -64,6 +64,11 @@ public class ReviewHelper {
     private static final String REVIEW_ELEMENT = "review";
 
     private Logger log = Logger.getLogger(getClass());
+    private String rootPath;
+
+    public ReviewHelper(String rootPath) {
+        this.rootPath = rootPath;
+    }
 
     /**
      * Constructs the Reviews API query string with all the supplied parameters
@@ -181,7 +186,7 @@ public class ReviewHelper {
             searchReq.setLatitude(request.getLatitude());
             searchReq.setLongitude(request.getLongitude());
 
-            SearchHelper shelper = new SearchHelper();
+            SearchHelper shelper = new SearchHelper(this.rootPath);
             String where = shelper.getClosestLocationPostalCode(searchReq);
             request.setWhere(where);
         }
@@ -205,7 +210,7 @@ public class ReviewHelper {
         profileRequest.setClientIP(request.getClientIP());
         profileRequest.setListingId(reviewObj.getListingId());
 
-        ProfileHelper profHelper = new ProfileHelper();
+        ProfileHelper profHelper = new ProfileHelper(this.rootPath);
         Profile profile = profHelper.getProfile(profileRequest);
         if (profile != null) {
             reviewObj.setAddress(profile.getAddress());

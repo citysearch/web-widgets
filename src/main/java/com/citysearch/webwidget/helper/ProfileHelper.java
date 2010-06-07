@@ -57,6 +57,11 @@ public class ProfileHelper {
     private static final String CATEGORY_NAME = "name";
 
     private Logger log = Logger.getLogger(getClass());
+    private String rootPath;
+
+    public ProfileHelper(String rootPath) {
+        this.rootPath = rootPath;
+    }
 
     /**
      * Validates the request. If any of the parameters are missing, throws Citysearch Exception
@@ -276,7 +281,7 @@ public class ProfileHelper {
                         List<String> imageList = imageMap.get(name);
                         int listSize = imageList.size();
                         int imgIndex = new Random().nextInt(listSize);
-                        imageURL = imageList.get(imgIndex);
+                        imageURL = this.rootPath + imageList.get(imgIndex);
                         break;
                     }
                 }

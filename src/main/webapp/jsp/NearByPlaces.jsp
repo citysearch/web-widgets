@@ -1,13 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@taglib prefix="s" uri="/struts-tags"%>
-<%@ taglib uri="http://jawr.net/tags" prefix="jwr" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 		<title>Nearby Places</title>
-		<jwr:style src="/citysearch.css"/>
+		<link type="text/css" href='<s:property value="resourceRootPath"/>/static/css/ie-style.css'  rel="stylesheet"/>
+		<link type="text/css" href='<s:property value="resourceRootPath"/>/static/css/citysearch.css'  rel="stylesheet"/>
 	</head>
 	<body>
 		<div class="ctsrch_boxContainer">
@@ -41,7 +41,7 @@
 	 	         		<s:if test="%{ratings > 2.5}">
 		 	         		<div class="ctsrch_starContainer">
 		                    	<div class="ctsrch_stars">
-		                    		<s:iterator value="rating"><s:if test="%{2}"><img src="../static/img/Star.png" class="ctsrch_starImg"/></s:if><s:elseif test="%{1}"><img src="../static/img/HalfStar.png" class="ctsrch_starImg"/></s:elseif><s:else><img src="../static/img/EmptyStar.png" class="ctsrch_starImg"/></s:else></s:iterator>
+		                    		<s:iterator value="rating"><s:if test="%{2}"><img src='<s:property value="resourceRootPath"/>/static/img/Star.png' class="ctsrch_starImg"/></s:if><s:elseif test="%{1}"><img src='<s:property value="resourceRootPath"/>/static/img/HalfStar.png' class="ctsrch_starImg"/></s:elseif><s:else><img src='<s:property value="resourceRootPath"/>/static/img/EmptyStar.png' class="ctsrch_starImg"/></s:else></s:iterator>
 		                    	</div>
 			 	         		<s:if test="%{reviewCount > 0}">
 			 	         			<div class="ctsrch_reviewFont">
