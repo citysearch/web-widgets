@@ -47,7 +47,18 @@
 		<servlet-name>HealthCheckServlet</servlet-name>
 		<url-pattern>/healthcheck</url-pattern>
 	</servlet-mapping>
-
+	
+	<servlet>
+		<description />
+		<display-name>CitySearchServlet</display-name>
+		<servlet-name>CitySearchServlet</servlet-name>
+		<servlet-class>com.citysearch.webwidget.servlet.CitySearchServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CitySearchServlet</servlet-name>
+		<url-pattern>/getwidget</url-pattern>
+	</servlet-mapping>
+	
 	<servlet>
 		<servlet-name>jspSupportServlet</servlet-name>
 		<servlet-class>org.apache.struts2.views.JspSupportServlet</servlet-class>
