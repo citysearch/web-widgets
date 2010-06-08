@@ -175,11 +175,13 @@ public class ReviewHelper {
      */
     public Review getLatestReview(ReviewRequest request) throws InvalidRequestParametersException,
             CitysearchException {
+        log.info("ReviewHelper.getLatestReview:: before validate");
         validateRequest(request);
-
+        log.info("ReviewHelper.getLatestReview:: after validate");
         // If Lat and Lon is set find the nearest postal code using search API
         if (!StringUtils.isBlank(request.getLatitude())
                 && !StringUtils.isBlank(request.getLongitude())) {
+            log.info("ReviewHelper.getLatestReview:: Lat and Lon received. Find zip");
             SearchRequest searchReq = new SearchRequest();
             searchReq.setPublisher(request.getPublisher());
             searchReq.setWhat(request.getWhat());
@@ -189,18 +191,22 @@ public class ReviewHelper {
             SearchHelper shelper = new SearchHelper(this.rootPath);
             String where = shelper.getClosestLocationPostalCode(searchReq);
             request.setWhere(where);
+            log.info("ReviewHelper.getLatestReview:: After finding zip");
         }
 
         Properties properties = PropertiesLoader.getAPIProperties();
         String urlString = properties.getProperty(PROPERTY_REVIEW_URL) + getQueryString(request);
+        log.info("ReviewHelper.getLatestReview:: Request URL " + urlString);
         Document responseDocument = null;
         try {
             responseDocument = HelperUtil.getAPIResponse(urlString);
+            log.info("ReviewHelper.getLatestReview:: Successfull response received.");
         } catch (InvalidHttpResponseException ihe) {
             throw new CitysearchException(this.getClass().getName(), "getLatestReview", ihe);
         }
         Review reviewObj = parseXML(responseDocument);
         if (reviewObj == null) {
+            log.info("ReviewHelper.getLatestReview:: Null review instance ");
             throw new CitysearchException(this.getClass().getName(), "getLatestReview",
                     "No latest review found.");
         }
