@@ -2,8 +2,9 @@
     pageEncoding="ISO-8859-1"%>
 <%@ page isErrorPage="true" %>
 <% 
-	response.sendRedirect("http://www.citysearch.com");
+	//response.sendRedirect("http://www.citysearch.com");
 %>
+<noscript><img src="http://ad.doubleclick.net/ad/5480.iac.grd/citygrid;sz=300x250;ord=123456789?" border="0" alt="" /></noscript>
 <!--
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>

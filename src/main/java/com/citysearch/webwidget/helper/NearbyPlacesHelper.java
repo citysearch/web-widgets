@@ -198,24 +198,30 @@ public class NearbyPlacesHelper {
      */
     public List<NearbyPlace> getNearbyPlaces(NearbyPlacesRequest request)
             throws InvalidRequestParametersException, CitysearchException {
+        log.info("NearbyPlacesHelper.getNearbyPlaces: Begin");
         validateRequest(request);
+        log.info("NearbyPlacesHelper.getNearbyPlaces: After validate");
         boolean latitudeLongitudePresentInRequest = true;
         if (StringUtils.isBlank(request.getLatitude())
                 || StringUtils.isBlank(request.getLongitude())) {
+            log.info("NearbyPlacesHelper.getNearbyPlaces: No lat lon. Find Lat and Lon");
             latitudeLongitudePresentInRequest = false;
             loadLatitudeAndLongitudeFromSearchAPI(request);
         }
         if (StringUtils.isBlank(request.getLatitude())
                 || StringUtils.isBlank(request.getLongitude())) {
+            log.info("NearbyPlacesHelper.getNearbyPlaces: No lat lon. excpetion.");
             throw new CitysearchException(this.getClass().getName(), "getNearbyPlaces",
                     "Invalid Latitude and Longitude");
         }
-
+        
         List<NearbyPlace> nearbyPlaces = getPlacesByGeoCodes(request,
                 latitudeLongitudePresentInRequest);
         if (nearbyPlaces == null || nearbyPlaces.isEmpty()) {
+            log.info("NearbyPlacesHelper.getNearbyPlaces: No results with geography.");
             nearbyPlaces = getPlacesWithoutGeoCodes(request);
             if (nearbyPlaces == null || nearbyPlaces.isEmpty()) {
+                log.info("NearbyPlacesHelper.getNearbyPlaces: No results without geography.");
                 // Query Search API
                 SearchRequest sRequest = new SearchRequest();
                 sRequest.setWhat(request.getWhat());
@@ -232,6 +238,7 @@ public class NearbyPlacesHelper {
 
     private List<NearbyPlace> getPlacesByGeoCodes(NearbyPlacesRequest request,
             boolean latitudeLongitudePresentInRequest) throws CitysearchException {
+        log.info("NearbyPlacesHelper.getPlacesByGeoCodes: Begin");
         Properties properties = PropertiesLoader.getAPIProperties();
         StringBuilder urlStringBuilder = null;
         if (latitudeLongitudePresentInRequest) {
@@ -241,9 +248,11 @@ public class NearbyPlacesHelper {
             urlStringBuilder = new StringBuilder(properties.getProperty(PFP_URL));
             urlStringBuilder.append(getQueryStringWithWhere(request));
         }
+        log.info("NearbyPlacesHelper.getPlacesByGeoCodes: Query: " + urlStringBuilder.toString());
         Document responseDocument = null;
         try {
             responseDocument = HelperUtil.getAPIResponse(urlStringBuilder.toString());
+            log.info("NearbyPlacesHelper.getPlacesByGeoCodes: successful response");
         } catch (InvalidHttpResponseException ihe) {
             throw new CitysearchException(this.getClass().getName(), "getPlacesByGeoCodes", ihe);
         }
@@ -252,12 +261,15 @@ public class NearbyPlacesHelper {
 
     private List<NearbyPlace> getPlacesWithoutGeoCodes(NearbyPlacesRequest request)
             throws CitysearchException {
+        log.info("NearbyPlacesHelper.getPlacesWithoutGeoCodes: Begin");
         Properties properties = PropertiesLoader.getAPIProperties();
         String urlString = properties.getProperty(PFP_URL)
                 + getQueryStringWithoutGeography(request);
+        log.info("NearbyPlacesHelper.getPlacesWithoutGeoCodes: Query " + urlString);
         Document responseDocument = null;
         try {
             responseDocument = HelperUtil.getAPIResponse(urlString);
+            log.info("NearbyPlacesHelper.getPlacesWithoutGeoCodes: Successful response");
         } catch (InvalidHttpResponseException ihe) {
             throw new CitysearchException(this.getClass().getName(), "getPlacesWithoutGeoCodes",
                     ihe);
@@ -267,6 +279,7 @@ public class NearbyPlacesHelper {
 
     private List<NearbyPlace> parseXML(Document doc, String latitude, String longitude)
             throws CitysearchException {
+        log.info("NearbyPlacesHelper.parseXML: Begin");
         List<NearbyPlace> nearbyPlaces = new ArrayList<NearbyPlace>();
         if (doc != null && doc.hasRootElement()) {
             Element rootElement = doc.getRootElement();
@@ -284,8 +297,12 @@ public class NearbyPlacesHelper {
                 }
             }
         }
-        Collections.sort(nearbyPlaces);
-        nearbyPlaces = getDisplayList(nearbyPlaces, this.rootPath);
+        if (!nearbyPlaces.isEmpty())
+        {
+            Collections.sort(nearbyPlaces);
+            nearbyPlaces = getDisplayList(nearbyPlaces, this.rootPath);
+        }
+        log.info("NearbyPlacesHelper.parseXML: End");
         return nearbyPlaces;
     }
 

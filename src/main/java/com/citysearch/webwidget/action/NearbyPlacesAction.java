@@ -40,7 +40,9 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
 
     public String execute() throws CitysearchException {
 
+        log.info("Begin NearbyPlacesAction");
         NearbyPlacesHelper helper = new NearbyPlacesHelper(getResourceRootPath());
+
         try {
             nearbyPlaces = helper.getNearbyPlaces(nearbyPlacesRequest);
             if (nearbyPlaces != null && !nearbyPlaces.isEmpty()) {
@@ -76,6 +78,12 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
                     }
                 }
             }
+            else
+            {
+                //If no data found.
+                throw new CitysearchException("NearbyPlacesAction", "execute", "No nearby places found.");
+            }
+            log.info("End NearbyPlacesAction");
         } catch (InvalidRequestParametersException ihre) {
             log.error(ihre.getDetailedMessage());
             throw ihre;

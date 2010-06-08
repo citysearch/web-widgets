@@ -14,51 +14,69 @@
 </head>
 <body>
 	<form action="/web-widgets/actions/review" method="GET" onSubmit="setTimestamp()">
-		<label>Publisher</label>
-		<input type="text" name="publisher" id="publisher" />
-		<br/>
-		<label>Where</label>
-		<input type="text" name="where" id="where" />
-		<br/>
-		<label>What</label>
-		<input type="text" name="what" id="what" />
-		<br/>
-		<label>Latitude</label>
-		<input type="text" name="latitude" id="latitude" />
-		<br/>
-		<label>Longitude</label>
-		<input type="text" name="longitude" id="longitude" />
-		<br/>
-		<label>Radius</label>
-		<input type="text" name="radius" id="radius" />
-		<br/>
-		<label>Tag Id</label>
-		<input type="text" name="tagId" id="tagId" />
-		<br/>
-		<label>Tag Name</label>
-		<input type="text" name="tagName" id="tagName" />
-		<br/>
-		<label>Rating</label>
-		<input type="text" name="rating" id="rating" />
-		<br/>
-		<label>Days</label>
-		<input type="text" name="days" id="days" />
-		<br/>
-		<label>Max</label>
-		<input type="text" name="max" id="max" />
-		<br/>
-		<label>Placement</label>
-		<input type="text" name="placement" id="placement" />
-		<br/>
-		<label>Customer Only?</label>
-		<input type="text" name="customerOnly" id="customerOnly" />
-		<br/>
-		<label>Client IP</label>
-		<input type="text" name="clientIP" id="clientIP" />
-		<br/>
-		<label>Time Stamp</label>
-		<input type="text" name="ts" id="ts"/>
-		<br/>
+		<table border="0" width="35%">
+			<tr>
+				<th colspan="2">Test page for Review adunit</th>
+			</tr>
+			<tr>
+				<td><label>Publisher (Required)</label></td>
+				<td><input type="text" name="publisher" id="publisher" /></td>
+			</tr>
+			
+			<tr>
+				<td><label>Where (or Lat & Lon)</label></td>
+				<td><input type="text" name="where" id="where" /></td>
+			</tr>
+			<tr>
+				<td><label>What (Required)</label></td>
+				<td><input type="text" name="what" id="what" /></td>
+			</tr>
+			<tr>
+				<td><label>Latitude</label></td>
+				<td><input type="text" name="latitude" id="latitude" /></td>
+			</tr>
+			<tr>
+				<td><label>Longitude</label></td>
+				<td><input type="text" name="longitude" id="longitude" /></td>
+			</tr>
+			<tr>
+				<td><label>Radius (Required if Lat & Lon provided)</label></td>
+				<td><input type="text" name="radius" id="radius" /></td>
+			</tr>
+			<tr>
+				<td><label>Tag Id</label></td>
+				<td><input type="text" name="tagId" id="tagId" /></td>
+			</tr>
+			<tr>
+				<td><label>Tag Name</label></td>
+				<td><input type="text" name="tagName" id="tagName" /></td>
+			</tr>
+			<tr>
+				<td><label>Rating</label></td>
+				<td><input type="text" name="rating" id="rating" /></td>
+			</tr>
+			<tr>
+				<td><label>Days</label></td>
+				<td><input type="text" name="days" id="days" /></td>
+			</tr>
+			<tr>
+				<td><label>Max</label></td>
+				<td><input type="text" name="max" id="max" /></td>
+			</tr>
+			<tr>
+				<td><label>Placement</label></td>
+				<td><input type="text" name="placement" id="placement" /></td>
+			</tr>
+			<tr>
+				<td><label>Customer Only?</label></td>
+				<td><input type="text" name="customerOnly" id="customerOnly" /></td>
+			</tr>
+			<tr>
+				<td><label>Client IP (Required)</label></td>
+				<td><input type="text" name="clientIP" id="clientIP" /></td>
+			</tr>
+		</table>
+		<input type="hidden" name="ts" id="ts"/>
 		<input type="submit" />
 	</form>
 </body>

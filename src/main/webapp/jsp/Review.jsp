@@ -52,13 +52,14 @@
 		        <div id="cs_description">
 		        	<s:property value="review.shortReviewText"/>
 		        	<s:if test="%{review.shortReviewText != review.reviewText}">
-		        		<a href="javascript:showDetail()">read entire review</a>
+		        		<a href="javascript:showDetail()">more</a>
 		        	</s:if>
 		        </div>
 		        <div id="cs_description">
-		        	<br/>
-		        	<strong>Pros:</strong>&nbsp;<s:property value="review.shortPros"/><br/> 
-		            <strong>Cons:</strong>&nbsp;<s:property value="review.shortCons"/> 
+		        	<div class="spacer"></div>
+	        		<strong>Pros:</strong>&nbsp;<s:property value="review.shortPros"/>
+	        		<div class="seperator"></div>
+	            	<strong>Cons:</strong>&nbsp;<s:property value="review.shortCons"/> 
 		        </div>
 		    </div>
 		    <div id="cs_share">

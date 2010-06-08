@@ -124,21 +124,28 @@ public class SearchHelper {
      */
     public String getClosestLocationPostalCode(SearchRequest request)
             throws InvalidRequestParametersException, CitysearchException {
+        log.info("SearchHelper.getClosestLocationPostalCode: Begin");
         validateClosestLocationPostalCodeRequest(request);
+        log.info("SearchHelper.getClosestLocationPostalCode: After validate");
         Properties properties = PropertiesLoader.getAPIProperties();
         String urlString = properties.getProperty(PROPERTY_SEARCH_URL) + getQueryString(request);
+        log.info("SearchHelper.getClosestLocationPostalCode: Query " + urlString);
         Document responseDocument = null;
         try {
             responseDocument = HelperUtil.getAPIResponse(urlString);
+            log.info("SearchHelper.getClosestLocationPostalCode: Successfull response");
         } catch (InvalidHttpResponseException ihe) {
             throw new CitysearchException(this.getClass().getName(),
                     "getClosestLocationPostalCode", ihe.getMessage());
         }
         String nearestListingPostalCode = findClosestLocationPostalCode(responseDocument);
+        log.info("SearchHelper.getClosestLocationPostalCode: Postal Code " + nearestListingPostalCode);
         if (nearestListingPostalCode == null) {
+            log.info("SearchHelper.getClosestLocationPostalCode: No postal code. Exception.");
             throw new CitysearchException(this.getClass().getName(),
                     "getClosestLocationPostalCode", "No locations found.");
         }
+        log.info("SearchHelper.getClosestLocationPostalCode: End");
         return nearestListingPostalCode;
     }
 
@@ -239,34 +246,43 @@ public class SearchHelper {
      * @throws CitysearchException
      */
     public String[] getLatitudeLongitude(SearchRequest request) throws CitysearchException {
+        log.info("SearchHelper.getLatitudeLongitude: Begin");
         validateRequest(request);
+        log.info("SearchHelper.getLatitudeLongitude: After validate");
         Properties properties = PropertiesLoader.getAPIProperties();
         String urlString = properties.getProperty(PROPERTY_SEARCH_URL)
                 + getSearchRequestQueryString(request);
-        //TODO: remove later
-        System.out.println(urlString);
+        log.info("SearchHelper.getLatitudeLongitude: Query " + urlString);
         Document responseDocument = null;
         try {
             responseDocument = HelperUtil.getAPIResponse(urlString);
+            log.info("SearchHelper.getLatitudeLongitude: Successfull response.");
         } catch (InvalidHttpResponseException ihe) {
             throw new CitysearchException(this.getClass().getName(), "getLatitudeLongitude", ihe);
         }
         String[] latLonValues = getLatitudeAndLongitude(responseDocument);
+        log.info("SearchHelper.getLatitudeLongitude: Lat & Lon " + latLonValues);
+        log.info("SearchHelper.getLatitudeLongitude: End");
         return latLonValues;
     }
 
     public List<NearbyPlace> getNearbyPlaces(SearchRequest request) throws CitysearchException {
+        log.info("SearchHelper.getNearbyPlaces: Begin");
         validateRequest(request);
+        log.info("SearchHelper.getNearbyPlaces: After validate");
         Properties properties = PropertiesLoader.getAPIProperties();
         String urlString = properties.getProperty(PROPERTY_SEARCH_URL)
                 + getSearchRequestQueryString(request);
+        log.info("SearchHelper.getNearbyPlaces: Query " + urlString);
         Document responseDocument = null;
         try {
             responseDocument = HelperUtil.getAPIResponse(urlString);
+            log.info("SearchHelper.getNearbyPlaces: Successfull response");
         } catch (InvalidHttpResponseException ihe) {
             throw new CitysearchException(this.getClass().getName(), "getNearbyPlaces", ihe);
         }
         String[] latLonValues = getLatitudeAndLongitude(responseDocument);
+        log.info("SearchHelper.getNearbyPlaces: End");
         return parseXML(responseDocument, latLonValues[0], latLonValues[1]);
     }
 
@@ -307,8 +323,11 @@ public class SearchHelper {
                 }
             }
         }
-        Collections.sort(adList);
-        adList = NearbyPlacesHelper.getDisplayList(adList, this.rootPath);
+        if (!adList.isEmpty())
+        {
+            Collections.sort(adList);
+            adList = NearbyPlacesHelper.getDisplayList(adList, this.rootPath);
+        }
         return adList;
     }
 
