@@ -24,6 +24,8 @@ public class NearbyPlace implements Comparable<NearbyPlace> {
     private String callBackFunction;
     private String callBackUrl;
     private String listingUrl;
+    private String offers;
+    private boolean displayOtherInfo;
 
     public List<Integer> getRating() {
         return rating;
@@ -172,5 +174,21 @@ public class NearbyPlace implements Comparable<NearbyPlace> {
             }
         }
         return result;
+    }
+
+    public void setOffers(String offers) {
+        this.offers = offers;
+    }
+
+    public String getOffers() {
+        return offers;
+    }
+
+    public void setDisplayOtherInfo(boolean displayOtherInfo) {
+        this.displayOtherInfo = displayOtherInfo;
+    }
+
+    public boolean isDisplayOtherInfo() {
+        return displayOtherInfo;
     }
 }

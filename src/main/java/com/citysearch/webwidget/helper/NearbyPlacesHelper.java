@@ -325,11 +325,11 @@ public class NearbyPlacesHelper {
         } else {
             displayList = nearbyPlaces;
         }
-        displayList = addDefaultImages(displayList, path);
+        displayList = addDefaultImagesAndValues(displayList, path);
         return displayList;
     }
 
-    public static List<NearbyPlace> addDefaultImages(List<NearbyPlace> nearbyPlaces, String path)
+    public static List<NearbyPlace> addDefaultImagesAndValues(List<NearbyPlace> nearbyPlaces, String path)
             throws CitysearchException {
         NearbyPlace nearbyPlace;
         List<String> imageList;
@@ -357,6 +357,9 @@ public class NearbyPlacesHelper {
                     nearbyPlace.setAdImageURL(imageUrl);
                 }
             }
+            if(size < CommonConstants.NEARBY_PLACES_DISPLAY_SIZE){
+                nearbyPlace.setDisplayOtherInfo(true);
+            }
             nearbyPlaces.set(i, nearbyPlace);
         }
 
@@ -370,10 +373,11 @@ public class NearbyPlacesHelper {
      * @return HashMap
      */
     protected HashMap<String, String> processElement(Element ad) {
-        HashMap<String, String> elementMap = new HashMap<String, String>();
+        HashMap<String, String> elementMap = null;
         if (ad != null) {
             String name = ad.getChildText(CommonConstants.NAME);
             if (StringUtils.isNotBlank(name)) {
+                elementMap = new HashMap<String, String>();
                 elementMap.put(CommonConstants.NAME, name);
                 elementMap.put(CommonConstants.CITY, ad.getChildText(CommonConstants.CITY));
                 elementMap.put(CommonConstants.STATE, ad.getChildText(CommonConstants.STATE));
@@ -386,6 +390,7 @@ public class NearbyPlacesHelper {
                 elementMap.put(CommonConstants.PHONE, ad.getChildText(PHONE_TAG));
                 elementMap.put(CommonConstants.DISPLAY_URL, ad.getChildText(AD_DISPLAY_URL_TAG));
                 elementMap.put(CommonConstants.IMAGE_URL, ad.getChildText(AD_IMAGE_URL_TAG));
+                elementMap.put(CommonConstants.OFFERS, ad.getChildText(CommonConstants.OFFERS));
             }
         }
         return elementMap;
@@ -449,6 +454,7 @@ public class NearbyPlacesHelper {
                 nearbyPlace.setAdDisplayURL(resultMap.get(CommonConstants.DISPLAY_URL));
                 nearbyPlace.setAdImageURL(resultMap.get(CommonConstants.IMAGE_URL));
                 nearbyPlace.setPhone(StringUtils.trim(phone));
+                nearbyPlace.setOffers(StringUtils.trim(resultMap.get(CommonConstants.OFFERS)));
             }
         }
         return nearbyPlace;

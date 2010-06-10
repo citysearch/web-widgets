@@ -338,10 +338,11 @@ public class SearchHelper {
      * @return AdListBean
      */
     private HashMap<String, String> processElement(Element location) {
-        HashMap<String, String> elementMap = new HashMap<String, String>();
+        HashMap<String, String> elementMap = null;
         if (location != null) {
             String name = location.getChildText(CommonConstants.NAME);
             if (StringUtils.isNotBlank(name)) {
+                elementMap = new HashMap<String, String>();
                 elementMap.put(CommonConstants.NAME, name);
                 Element address = location.getChild(ADDRESS_TAG);
                 if (address != null) {
@@ -362,6 +363,7 @@ public class SearchHelper {
                 elementMap.put(CommonConstants.DISPLAY_URL,
                         location.getChildText(AD_DISPLAY_URL_TAG));
                 elementMap.put(CommonConstants.IMAGE_URL, location.getChildText(AD_IMAGE_URL_TAG));
+                elementMap.put(CommonConstants.OFFERS, location.getChildText(CommonConstants.OFFERS));
 
             }
         }

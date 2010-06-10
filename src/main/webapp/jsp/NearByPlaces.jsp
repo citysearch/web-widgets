@@ -59,9 +59,15 @@
 		                 	<s:property value="category" />
 		                 </div> 
 	 	         	</div>
+	 	         	<s:if test="%{displayOtherInfo}">
+		                 	<div class="ctsrch_subcategoryFont">
+	 	         				<s:property value="offers" />
+                        	</div>
+	 	         	</s:if>
 	 	         	<s:if test="%{#placesStatus.index < 2}">
 	 	         		<div class="ctsrch_lineMargin"></div>
 	 	         	</s:if>
+	 	         	
  	         	</s:iterator>
 	        </div>
 		</div>

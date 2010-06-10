@@ -42,6 +42,7 @@ public class CommonConstants {
     public static final String DISPLAY_URL = "displayURL";
     public static final String IMAGE_URL = "imageURL";
     public static final String REVIEW_API_TYPE = "review";
+    public static final String OFFERS = "offers";
 
     public final static String API_KEY_PROPERTY = "apikey";
 
