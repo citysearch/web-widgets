@@ -21,9 +21,25 @@
       <param-value>/images.properties</param-value>
     </init-param>
   </servlet>
+  <servlet>
+    <servlet-name>AdSample2</servlet-name>
+    <servlet-class>com.citysearch.servlets.AdListQueryServlet2</servlet-class>
+    <init-param>
+      <param-name>log4j-init-file</param-name>
+      <param-value>/log4j.properties</param-value>
+    </init-param>
+    <init-param>
+      <param-name>propertiesFile</param-name>
+      <param-value>/images.properties</param-value>
+    </init-param>
+  </servlet>
   <servlet-mapping>
     <servlet-name>AdSample</servlet-name>
     <url-pattern>/Nearby_Places300x250</url-pattern>
+  </servlet-mapping>
+    <servlet-mapping>
+    <servlet-name>AdSample2</servlet-name>
+    <url-pattern>/Nearby_Places645x100</url-pattern>
   </servlet-mapping>
   <security-role>
     <role-name>role1</role-name>
