@@ -25,7 +25,8 @@ public class NearbyPlace implements Comparable<NearbyPlace> {
     private String callBackUrl;
     private String listingUrl;
     private String offers;
-    private boolean displayOtherInfo;
+    private String description;
+    private boolean backfill;
 
     public List<Integer> getRating() {
         return rating;
@@ -184,11 +185,21 @@ public class NearbyPlace implements Comparable<NearbyPlace> {
         return offers;
     }
 
-    public void setDisplayOtherInfo(boolean displayOtherInfo) {
-        this.displayOtherInfo = displayOtherInfo;
+    public void setBackfill(boolean backfill) {
+        this.backfill = backfill;
     }
 
-    public boolean isDisplayOtherInfo() {
-        return displayOtherInfo;
+    public boolean isBackfill() {
+        return backfill;
     }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    
 }

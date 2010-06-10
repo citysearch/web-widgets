@@ -46,8 +46,14 @@ public class NearbyPlacesHelper {
     private static final String AD_DISPLAY_URL_TAG = "ad_display_url";
     private static final String AD_IMAGE_URL_TAG = "ad_image_url";
     private static final String PHONE_TAG = "phone";
+    private static final String AD_TYPE_PFP = "local PFP";
+    private static final String AD_TYPE_BACKFILL = "backfill";
+    private static final String TYPE_TAG = "type";
+    private static final String DESC_TAG = "description";
+    private static final String HTTP_PREFIX = "http://";
 
     private String rootPath;
+    private Document pfpResponseDocument = null;
 
     public NearbyPlacesHelper(String rootPath) {
         this.rootPath = rootPath;
@@ -214,7 +220,7 @@ public class NearbyPlacesHelper {
             throw new CitysearchException(this.getClass().getName(), "getNearbyPlaces",
                     "Invalid Latitude and Longitude");
         }
-        
+
         List<NearbyPlace> nearbyPlaces = getPlacesByGeoCodes(request,
                 latitudeLongitudePresentInRequest);
         if (nearbyPlaces == null || nearbyPlaces.isEmpty()) {
@@ -231,6 +237,11 @@ public class NearbyPlacesHelper {
 
                 SearchHelper sHelper = new SearchHelper(this.rootPath);
                 nearbyPlaces = sHelper.getNearbyPlaces(sRequest);
+                if (nearbyPlaces == null || nearbyPlaces.isEmpty()) {
+                    log.info("NearbyPlacesHelper.getNearbyPlaces: No results from Search.");
+                    return parseXML(pfpResponseDocument, request.getLatitude(), request.getLongitude(),
+                            AD_TYPE_BACKFILL);
+                }
             }
         }
         return nearbyPlaces;
@@ -249,14 +260,15 @@ public class NearbyPlacesHelper {
             urlStringBuilder.append(getQueryStringWithWhere(request));
         }
         log.info("NearbyPlacesHelper.getPlacesByGeoCodes: Query: " + urlStringBuilder.toString());
-        Document responseDocument = null;
+        //Document responseDocument = null;
         try {
-            responseDocument = HelperUtil.getAPIResponse(urlStringBuilder.toString());
+            pfpResponseDocument = HelperUtil.getAPIResponse(urlStringBuilder.toString());
             log.info("NearbyPlacesHelper.getPlacesByGeoCodes: successful response");
         } catch (InvalidHttpResponseException ihe) {
             throw new CitysearchException(this.getClass().getName(), "getPlacesByGeoCodes", ihe);
         }
-        return parseXML(responseDocument, request.getLatitude(), request.getLongitude());
+        return parseXML(pfpResponseDocument, request.getLatitude(), request.getLongitude(),
+                AD_TYPE_PFP);
     }
 
     private List<NearbyPlace> getPlacesWithoutGeoCodes(NearbyPlacesRequest request)
@@ -274,10 +286,11 @@ public class NearbyPlacesHelper {
             throw new CitysearchException(this.getClass().getName(), "getPlacesWithoutGeoCodes",
                     ihe);
         }
-        return parseXML(responseDocument, request.getLatitude(), request.getLongitude());
+        return parseXML(responseDocument, request.getLatitude(), request.getLongitude(),
+                AD_TYPE_PFP);
     }
 
-    private List<NearbyPlace> parseXML(Document doc, String latitude, String longitude)
+    private List<NearbyPlace> parseXML(Document doc, String latitude, String longitude, String type)
             throws CitysearchException {
         log.info("NearbyPlacesHelper.parseXML: Begin");
         List<NearbyPlace> nearbyPlaces = new ArrayList<NearbyPlace>();
@@ -290,15 +303,14 @@ public class NearbyPlacesHelper {
                 for (int i = 0; i < size; i++) {
                     NearbyPlace nearbyPlace = new NearbyPlace();
                     Element ad = (Element) resultSet.get(i);
-                    resultMap = processElement(ad);
+                    resultMap = processElement(ad, type);
                     nearbyPlace = createNearbyPlace(resultMap, latitude, longitude);
                     if (nearbyPlace != null)
                         nearbyPlaces.add(nearbyPlace);
                 }
             }
         }
-        if (!nearbyPlaces.isEmpty())
-        {
+        if (!nearbyPlaces.isEmpty()) {
             Collections.sort(nearbyPlaces);
             nearbyPlaces = getDisplayList(nearbyPlaces, this.rootPath);
         }
@@ -325,11 +337,11 @@ public class NearbyPlacesHelper {
         } else {
             displayList = nearbyPlaces;
         }
-        displayList = addDefaultImagesAndValues(displayList, path);
+        displayList = addDefaultImages(displayList, path);
         return displayList;
     }
 
-    public static List<NearbyPlace> addDefaultImagesAndValues(List<NearbyPlace> nearbyPlaces, String path)
+    public static List<NearbyPlace> addDefaultImages(List<NearbyPlace> nearbyPlaces, String path)
             throws CitysearchException {
         NearbyPlace nearbyPlace;
         List<String> imageList;
@@ -357,12 +369,8 @@ public class NearbyPlacesHelper {
                     nearbyPlace.setAdImageURL(imageUrl);
                 }
             }
-            if(size < CommonConstants.NEARBY_PLACES_DISPLAY_SIZE){
-                nearbyPlace.setDisplayOtherInfo(true);
-            }
             nearbyPlaces.set(i, nearbyPlace);
         }
-
         return nearbyPlaces;
     }
 
@@ -370,15 +378,20 @@ public class NearbyPlacesHelper {
      * Parses the ad element returned in response and add the values to a HashMap and returns it
      * 
      * @param ad
+     * @param type
+     *            TODO
      * @return HashMap
      */
-    protected HashMap<String, String> processElement(Element ad) {
+    protected HashMap<String, String> processElement(Element ad, String type) {
         HashMap<String, String> elementMap = null;
         if (ad != null) {
-            String name = ad.getChildText(CommonConstants.NAME);
-            if (StringUtils.isNotBlank(name)) {
+            // When element type is "loacl pfp", it is returning a name.So, modified to check as per
+            // ad type instead of name
+            String adType = StringUtils.trim(ad.getChildText(TYPE_TAG));
+            if (StringUtils.equalsIgnoreCase(type, AD_TYPE_PFP)
+                    && StringUtils.equalsIgnoreCase(type, adType)) {
                 elementMap = new HashMap<String, String>();
-                elementMap.put(CommonConstants.NAME, name);
+                elementMap.put(CommonConstants.NAME, ad.getChildText(CommonConstants.NAME));
                 elementMap.put(CommonConstants.CITY, ad.getChildText(CommonConstants.CITY));
                 elementMap.put(CommonConstants.STATE, ad.getChildText(CommonConstants.STATE));
                 elementMap.put(CommonConstants.RATING, ad.getChildText(REVIEW_RATING_TAG));
@@ -390,7 +403,19 @@ public class NearbyPlacesHelper {
                 elementMap.put(CommonConstants.PHONE, ad.getChildText(PHONE_TAG));
                 elementMap.put(CommonConstants.DISPLAY_URL, ad.getChildText(AD_DISPLAY_URL_TAG));
                 elementMap.put(CommonConstants.IMAGE_URL, ad.getChildText(AD_IMAGE_URL_TAG));
+
+            } else if (StringUtils.equalsIgnoreCase(type, AD_TYPE_BACKFILL)
+                    && StringUtils.equalsIgnoreCase(type, adType)) {
+                elementMap = new HashMap<String, String>();
+                elementMap.put(CommonConstants.CATEGORY, ad.getChildText(TAGLINE_TAG));
+                String displayURL = ad.getChildText(AD_DISPLAY_URL_TAG);
+                if(StringUtils.isNotBlank(displayURL)){
+                    elementMap.put(CommonConstants.DISPLAY_URL, HTTP_PREFIX + displayURL);
+                }
+                elementMap.put(CommonConstants.IMAGE_URL, ad.getChildText(AD_IMAGE_URL_TAG));
                 elementMap.put(CommonConstants.OFFERS, ad.getChildText(CommonConstants.OFFERS));
+                elementMap.put(DESC_TAG, ad.getChildText(DESC_TAG));
+                elementMap.put(AD_TYPE_BACKFILL, "true");
             }
         }
         return elementMap;
@@ -455,6 +480,10 @@ public class NearbyPlacesHelper {
                 nearbyPlace.setAdImageURL(resultMap.get(CommonConstants.IMAGE_URL));
                 nearbyPlace.setPhone(StringUtils.trim(phone));
                 nearbyPlace.setOffers(StringUtils.trim(resultMap.get(CommonConstants.OFFERS)));
+                nearbyPlace.setDescription(StringUtils.trim(resultMap.get(DESC_TAG)));
+                if (resultMap.containsKey(AD_TYPE_BACKFILL)) {
+                    nearbyPlace.setBackfill(true);
+                }
             }
         }
         return nearbyPlace;
