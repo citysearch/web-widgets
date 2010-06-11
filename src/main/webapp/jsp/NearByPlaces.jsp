@@ -59,14 +59,6 @@
 		                 	<s:property value="category" />
 		                 </div> 
 	 	         	</div>
-	 	         	<s:if test="%{backfill}">
-		                 	<div class="ctsrch_subcategoryFont">
-	 	         				<s:property value="description" />
-                        	</div>
-                        	<div class="ctsrch_subcategoryFont">
-	 	         				<s:property value="offers" />
-                        	</div>
-	 	         	</s:if>
 	 	         	<s:if test="%{#placesStatus.index < 2}">
 	 	         		<div class="ctsrch_lineMargin"></div>
 	 	         	</s:if>

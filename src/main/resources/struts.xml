@@ -30,6 +30,8 @@
         <!-- Struts configuration for Nearby Places Widget -->
         <action name="nearbyplaces" class="com.citysearch.webwidget.action.NearbyPlacesAction">
             <result name="success">/jsp/NearByPlaces.jsp</result>
+            <result name="houseads">/jsp/HouseAds.jsp</result>
+            <result name="backfill">/jsp/NearbyPlacesBackfill.jsp</result>
         </action>
     </package>
 </struts>

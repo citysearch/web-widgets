@@ -26,7 +26,7 @@ public class NearbyPlace implements Comparable<NearbyPlace> {
     private String listingUrl;
     private String offers;
     private String description;
-    private boolean backfill;
+    private String adDestinationUrl;
 
     public List<Integer> getRating() {
         return rating;
@@ -142,24 +142,21 @@ public class NearbyPlace implements Comparable<NearbyPlace> {
     public String getPhone() {
         return phone;
     }
-    
-    public boolean getIsValidCallbackFunction()
-    {
-        if (this.callBackFunction != null && this.callBackFunction.trim().length() > 0)
-        {
+
+    public boolean getIsValidCallbackFunction() {
+        if (this.callBackFunction != null && this.callBackFunction.trim().length() > 0) {
             return true;
         }
         return false;
     }
-    
-    public boolean getIsValidLocation()
-    {
-        if (this.location != null && this.location.trim().length() > 0)
-        {
+
+    public boolean getIsValidLocation() {
+        if (this.location != null && this.location.trim().length() > 0) {
             return true;
         }
         return false;
     }
+
     /**
      * Sorts the objects based on ratings first.If,ratings are equal then sorts on distance.If
      * distance is also equal then sorts on Number of Reviews
@@ -185,14 +182,6 @@ public class NearbyPlace implements Comparable<NearbyPlace> {
         return offers;
     }
 
-    public void setBackfill(boolean backfill) {
-        this.backfill = backfill;
-    }
-
-    public boolean isBackfill() {
-        return backfill;
-    }
-
     public void setDescription(String description) {
         this.description = description;
     }
@@ -201,5 +190,12 @@ public class NearbyPlace implements Comparable<NearbyPlace> {
         return description;
     }
 
-    
+    public String getAdDestinationUrl() {
+        return adDestinationUrl;
+    }
+
+    public void setAdDestinationUrl(String adDestinationUrl) {
+        this.adDestinationUrl = adDestinationUrl;
+    }
+
 }

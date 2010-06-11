@@ -4,10 +4,12 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.citysearch.webwidget.bean.HouseAd;
 import com.citysearch.webwidget.bean.NearbyPlace;
 import com.citysearch.webwidget.bean.NearbyPlacesRequest;
 import com.citysearch.webwidget.exception.CitysearchException;
 import com.citysearch.webwidget.exception.InvalidRequestParametersException;
+import com.citysearch.webwidget.helper.HouseAdsHelper;
 import com.citysearch.webwidget.helper.NearbyPlacesHelper;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ModelDriven;
@@ -17,6 +19,7 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
     private Logger log = Logger.getLogger(getClass());
     private NearbyPlacesRequest nearbyPlacesRequest = new NearbyPlacesRequest();
     private List<NearbyPlace> nearbyPlaces;
+    private List<HouseAd> houseAds;
 
     public NearbyPlacesRequest getModel() {
         return nearbyPlacesRequest;
@@ -38,6 +41,14 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
         this.nearbyPlaces = nearbyPlaces;
     }
 
+    public List<HouseAd> getHouseAds() {
+        return houseAds;
+    }
+
+    public void setHouseAds(List<HouseAd> houseAds) {
+        this.houseAds = houseAds;
+    }
+
     public String execute() throws CitysearchException {
 
         log.info("Begin NearbyPlacesAction");
@@ -45,6 +56,7 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
 
         try {
             nearbyPlaces = helper.getNearbyPlaces(nearbyPlacesRequest);
+            nearbyPlaces = null; //TODO: REMOVE!!!
             if (nearbyPlaces != null && !nearbyPlaces.isEmpty()) {
                 for (NearbyPlace alb : nearbyPlaces) {
                     alb.setCallBackFunction(nearbyPlacesRequest.getCallBackFunction());
@@ -77,11 +89,14 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
                         alb.setCallBackFunction(strBuilder.toString());
                     }
                 }
-            }
-            else
-            {
-                //If no data found.
-                throw new CitysearchException("NearbyPlacesAction", "execute", "No nearby places found.");
+            } else {
+                nearbyPlaces = helper.getNearbyPlacesBackfill();
+                if (nearbyPlaces == null || nearbyPlaces.isEmpty())
+                {
+                    houseAds = HouseAdsHelper.getHouseAds();
+                    return "houseads";
+                }
+                return "backfill";
             }
             log.info("End NearbyPlacesAction");
         } catch (InvalidRequestParametersException ihre) {
