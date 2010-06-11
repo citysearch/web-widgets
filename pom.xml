@@ -129,13 +129,13 @@
 				</configuration>
 			</plugin>
 			<!--
-				Uncomment to enable tomcat deployment using maven 
+				Uncomment to enable tomcat deployment using maven -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>tomcat-maven-plugin</artifactId> <version>1.0</version>
 				<configuration> <url>http://localhost:8080/manager</url>
 				<server>myserver</server> <path>/web-widgets</path> </configuration>
-				</plugin>-->
+				</plugin>
 		</plugins>
 	</build>
 </project>
