@@ -16,11 +16,16 @@
 	        </div>
 	        <div class="ctsrch_container">
 	        	<s:iterator value="houseAds" status="hadStatus">
-	        		<div class="ctsrch_full">
+	        		<div class="ctsrch_leftSide">
+	        			<!-- 
+	        			<a target="_blank" href='<s:property value="destinationUrl" />'><img src='<s:property value="imageURL" />'/></a>
+	        			-->
+	        		</div>
+	        		<div class="ctsrch_rightSide">
 	        			<div class="ctsrch_mainLink">
 	        				<a target="_blank" href='<s:property value="destinationUrl" />'><s:property value="title" /></a>
 	        			</div>
-	        			<div class="ctsrch_tagLineFont">
+	        			<div class="ctsrch_descFont">
 	        				<s:property value="tagLine" />
 	        			</div>
 	        		</div>
