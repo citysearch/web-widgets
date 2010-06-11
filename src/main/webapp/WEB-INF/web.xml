@@ -1,90 +1,118 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
-  <display-name>citysearch3</display-name>
-  <servlet>
-    <servlet-name>sample</servlet-name>
-    <servlet-class>com.citysearch.servlets.SearchQueryServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>sample</servlet-name>
-    <url-pattern>/SearchQueryServlet</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>AdSample</servlet-name>
-    <servlet-class>com.citysearch.servlets.AdListQueryServlet</servlet-class>
-    <init-param>
-      <param-name>log4j-init-file</param-name>
-      <param-value>/log4j.properties</param-value>
-    </init-param>
-    <init-param>
-      <param-name>propertiesFile</param-name>
-      <param-value>/images.properties</param-value>
-    </init-param>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>AdSample</servlet-name>
-    <url-pattern>/Nearby_Places300x250</url-pattern>
-  </servlet-mapping>
-  <security-role>
-    <role-name>role1</role-name>
-  </security-role>
-  <security-role>
-    <role-name>tomcat</role-name>
-  </security-role>
-  <servlet>
-    <servlet-name>ImageServlet</servlet-name>
-    <servlet-class>net.jawr.web.servlet.JawrServlet</servlet-class>
-    <init-param>
-      <param-name>configLocation</param-name>
-      <param-value>/jawr.properties</param-value>
-    </init-param>
-    <init-param>
-      <param-name>type</param-name>
-      <param-value>img</param-value>
-    </init-param>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-  <servlet>
-    <servlet-name>CSSServlet</servlet-name>
-    <servlet-class>net.jawr.web.servlet.JawrServlet</servlet-class>
-    <init-param>
-      <param-name>configLocation</param-name>
-      <param-value>/jawr.properties</param-value>
-    </init-param>
-    <init-param>
-      <param-name>type</param-name>
-      <param-value>css</param-value>
-    </init-param>
-    <load-on-startup>2</load-on-startup>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>CSSServlet</servlet-name>
-    <url-pattern>*.css</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ImageServlet</servlet-name>
-    <url-pattern>*.png</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ImageServlet</servlet-name>
-    <url-pattern>*.gif</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ImageServlet</servlet-name>
-    <url-pattern>*.jpg</url-pattern>
-  </servlet-mapping>
-  <error-page>
-    <exception-type>com.citysearch.exception.CitysearchException</exception-type>
-    <location>/WEB-INF/jsp/Error.jsp</location>
-  </error-page>
-  <servlet>
-    <description></description>
-    <display-name>HealthCheckServlet</display-name>
-    <servlet-name>HealthCheckServlet</servlet-name>
-    <servlet-class>com.citysearch.servlets.HealthCheckServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>HealthCheckServlet</servlet-name>
-    <url-pattern>/healthcheck</url-pattern>
-  </servlet-mapping>
+
+<web-app id="starter" version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+
+	<display-name>web-widgets</display-name>
+
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath*:applicationContext*.xml</param-value>
+	</context-param>
+
+	<!-- Filters -->
+	<filter>
+		<filter-name>action2-cleanup</filter-name>
+		<filter-class>org.apache.struts2.dispatcher.ActionContextCleanUp</filter-class>
+	</filter>
+
+	<filter>
+		<filter-name>action2</filter-name>
+		<filter-class>org.apache.struts2.dispatcher.FilterDispatcher</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>action2-cleanup</filter-name>
+		<url-pattern>/actions/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>action2</filter-name>
+		<url-pattern>/actions/*</url-pattern>
+	</filter-mapping>
+
+	<!-- Listeners -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<!-- Servlets & Mappings-->
+	<servlet>
+		<description />
+		<display-name>HealthCheckServlet</display-name>
+		<servlet-name>HealthCheckServlet</servlet-name>
+		<servlet-class>com.citysearch.webwidget.servlet.HealthCheckServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>HealthCheckServlet</servlet-name>
+		<url-pattern>/healthcheck</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<description />
+		<display-name>CitySearchServlet</display-name>
+		<servlet-name>CitySearchServlet</servlet-name>
+		<servlet-class>com.citysearch.webwidget.servlet.CitySearchServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CitySearchServlet</servlet-name>
+		<url-pattern>/getwidget</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>jspSupportServlet</servlet-name>
+		<servlet-class>org.apache.struts2.views.JspSupportServlet</servlet-class>
+		<load-on-startup>5</load-on-startup>
+	</servlet>
+	<!-- 
+	<servlet>
+		<servlet-name>ImageServlet</servlet-name>
+		<servlet-class>net.jawr.web.servlet.JawrServlet</servlet-class>
+		<init-param>
+			<param-name>configLocation</param-name>
+			<param-value>/jawr.properties</param-value>
+		</init-param>
+		<init-param>
+			<param-name>type</param-name>
+			<param-value>img</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>CSSServlet</servlet-name>
+		<servlet-class>net.jawr.web.servlet.JawrServlet</servlet-class>
+		<init-param>
+			<param-name>configLocation</param-name>
+			<param-value>/jawr.properties</param-value>
+		</init-param>
+		<init-param>
+			<param-name>type</param-name>
+			<param-value>css</param-value>
+		</init-param>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CSSServlet</servlet-name>
+		<url-pattern>*.css</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>ImageServlet</servlet-name>
+		<url-pattern>*.png</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>ImageServlet</servlet-name>
+		<url-pattern>*.gif</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>ImageServlet</servlet-name>
+		<url-pattern>*.jpg</url-pattern>
+	</servlet-mapping>
+	-->
+	<!-- Welcome file lists -->
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>default.jsp</welcome-file>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+
 </web-app>

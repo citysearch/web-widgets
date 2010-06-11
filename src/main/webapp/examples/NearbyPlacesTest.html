@@ -1,0 +1,52 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+<script language="JavaScript" type="text/javascript">
+		function setTimestamp()
+		{
+			var d = new Date();
+			document.getElementById("ts").value = d.getHours() + '' + d.getMinutes() + '' + d.getSeconds();
+			document.form.submit();
+		}
+	</script>
+</head>
+<body>
+	<form action="../actions/nearbyplaces" method="get" onSubmit="setTimestamp()">
+		<table border="0" width="35%">
+			<tr>
+				<th colspan="2">Test page for Nearby Places</th>
+			</tr>
+			<tr>
+				<td><label>What (or tags)</label></td>
+				<td><input type="text" name="what" id="what" /></td>
+			</tr>
+			<tr>
+				<td><label>Where (Required)</label></td>
+				<td><input type="text" name="where" id="where" /></td>
+			</tr>
+			<tr>
+				<td><label>Publisher (Required)</label></td>
+				<td><input type="text" name="publisher" id="publisher" /></td>
+			</tr>
+			<tr>
+				<td><label>Tags (or what)</label></td>
+				<td><input type="text" name="tags" id="tags" /></td>
+			</tr>
+			<tr>
+				<td><label>Callback</label></td>
+				<td><input type="text" name="callBackFunction" id="callBackFunction" /></td>
+			</tr>
+			<tr>
+				<td><label>Radius</label></td>
+				<td><input type="text" name="radius" id="radius" /></td>
+			</tr>
+		</table>
+		<input type="hidden" name="ts" id="ts"/>
+		<input type="submit" value="Go" />
+	</form>
+</body>
+</html>

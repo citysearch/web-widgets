@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Review Widget Test Page</title>
+	<script language="JavaScript" type="text/javascript">
+		function setTimestamp()
+		{
+			var d = new Date();
+			document.getElementById("ts").value = d.getHours() + '' + d.getMinutes() + '' + d.getSeconds();
+			document.form.submit();
+		}
+	</script>
+</head>
+<body>
+	<form action="../actions/review" method="GET" onSubmit="setTimestamp()">
+		<table border="0" width="35%">
+			<tr>
+				<th colspan="2">Test page for Review adunit</th>
+			</tr>
+			<tr>
+				<td><label>Publisher (Required)</label></td>
+				<td><input type="text" name="publisher" id="publisher" /></td>
+			</tr>
+			
+			<tr>
+				<td><label>Where (or Lat & Lon)</label></td>
+				<td><input type="text" name="where" id="where" /></td>
+			</tr>
+			<tr>
+				<td><label>What (Required)</label></td>
+				<td><input type="text" name="what" id="what" /></td>
+			</tr>
+			<tr>
+				<td><label>Latitude</label></td>
+				<td><input type="text" name="latitude" id="latitude" /></td>
+			</tr>
+			<tr>
+				<td><label>Longitude</label></td>
+				<td><input type="text" name="longitude" id="longitude" /></td>
+			</tr>
+			<tr>
+				<td><label>Radius (Required if Lat & Lon provided)</label></td>
+				<td><input type="text" name="radius" id="radius" /></td>
+			</tr>
+			<tr>
+				<td><label>Tag Id</label></td>
+				<td><input type="text" name="tagId" id="tagId" /></td>
+			</tr>
+			<tr>
+				<td><label>Tag Name</label></td>
+				<td><input type="text" name="tagName" id="tagName" /></td>
+			</tr>
+			<tr>
+				<td><label>Rating</label></td>
+				<td><input type="text" name="rating" id="rating" /></td>
+			</tr>
+			<tr>
+				<td><label>Days</label></td>
+				<td><input type="text" name="days" id="days" /></td>
+			</tr>
+			<tr>
+				<td><label>Max</label></td>
+				<td><input type="text" name="max" id="max" /></td>
+			</tr>
+			<tr>
+				<td><label>Placement</label></td>
+				<td><input type="text" name="placement" id="placement" /></td>
+			</tr>
+			<tr>
+				<td><label>Customer Only?</label></td>
+				<td><input type="text" name="customerOnly" id="customerOnly" /></td>
+			</tr>
+			<tr>
+				<td><label>Client IP (Required)</label></td>
+				<td><input type="text" name="clientIP" id="clientIP" /></td>
+			</tr>
+		</table>
+		<input type="hidden" name="ts" id="ts"/>
+		<input type="submit" />
+	</form>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+    <package name="citysearch" extends="struts-default">
+        <!-- Global Results -->
+        <global-results>
+            <result name="error">/jsp/Error.jsp</result>
+        </global-results>
+        <!-- Global Exception mapping using the default excpetion interceptor -->
+        <global-exception-mappings>
+            <exception-mapping result="error" exception="java.lang.Exception" />
+        </global-exception-mappings>
+
+        <!-- Struts configuration for Review Widget -->
+        <action name="review" class="com.citysearch.webwidget.action.ReviewAction">
+            <result name="success">/jsp/Review.jsp</result>
+            <result name="backfill" type="chain">nearbyplaces</result>
+        </action>
+
+        <!-- Struts configuration for Offers Widget -->
+        <action name="offers" class="com.citysearch.webwidget.action.OffersAction">
+            <result name="success">/jsp/Offers.jsp</result>
+            <result name="backfill" type="chain">nearbyplaces</result>
+        </action>
+
+        <!-- Struts configuration for Nearby Places Widget -->
+        <action name="nearbyplaces" class="com.citysearch.webwidget.action.NearbyPlacesAction">
+            <result name="success">/jsp/NearByPlaces.jsp</result>
+            <result name="houseads">/jsp/HouseAds.jsp</result>
+            <result name="backfill">/jsp/NearbyPlacesBackfill.jsp</result>
+        </action>
+    </package>
+</struts>

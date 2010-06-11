@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<HomeAds>
+	<ad>
+		<title>Citysearch Mobile Apps</title>
+		<tagLine>For iPad, iPhone, Android &amp; more.</tagLine>
+		<url>http://www.citysearch.com/mobile-application</url>
+	</ad>
+	<ad>
+		<title>Advertise with City Search</title>
+		<tagLine>Advertise with us today! Learn How.</tagLine>
+		<url>http://www.citysearch.com/aboutcitysearch/advertise_with_us</url>
+	</ad>
+	<ad>
+		<title>Love the editor lists? </title>
+		<tagLine>You can create your own! </tagLine>
+		<url>http://my.citysearch.com/members/userlist/create</url>
+	</ad>
+</HomeAds>
