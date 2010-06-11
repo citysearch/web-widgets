@@ -4,6 +4,7 @@ public class HouseAd {
     private String title;
     private String tagLine;
     private String destinationUrl;
+    private String imageURL;
 
     public String getTitle() {
         return title;
@@ -27,6 +28,14 @@ public class HouseAd {
 
     public void setDestinationUrl(String destinationUrl) {
         this.destinationUrl = destinationUrl;
+    }
+
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 
 }

@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.jdom.Document;
 import org.jdom.Element;
 
@@ -15,7 +16,7 @@ import com.citysearch.webwidget.util.HelperUtil;
 public class HouseAdsHelper {
     private static List<HouseAd> houseAds;
 
-    public static List<HouseAd> getHouseAds() throws CitysearchException {
+    public static List<HouseAd> getHouseAds(String path) throws CitysearchException {
         InputStream inputStream = null;
         if (houseAds == null) {
             inputStream = HouseAdsHelper.class.getClassLoader().getResourceAsStream(
@@ -34,12 +35,12 @@ public class HouseAdsHelper {
                     throw new CitysearchException("HouseAdsHelper", "getHouseAds", ioe);
                 }
             }
-            houseAds = buildHouseAds(document);
+            houseAds = buildHouseAds(document, path);
         }
         return houseAds;
     }
 
-    private static List<HouseAd> buildHouseAds(Document document) {
+    private static List<HouseAd> buildHouseAds(Document document, String path) {
         List<HouseAd> hads = null;
         if (document != null && document.hasRootElement()) {
             Element rootElement = document.getRootElement();
@@ -50,11 +51,20 @@ public class HouseAdsHelper {
                     String title = elm.getChildText("title");
                     String tagLine = elm.getChildText("tagLine");
                     String url = elm.getChildText("url");
+                    String imageURL = elm.getChildText("imageURL");
+                    if (StringUtils.isNotBlank(imageURL)) {
+                        if (!imageURL.startsWith("http")) {
+                            StringBuilder strb = new StringBuilder(path);
+                            strb.append(imageURL);
+                            imageURL = strb.toString();
+                        }
+                    }
 
                     HouseAd ad = new HouseAd();
                     ad.setTitle(title);
                     ad.setTagLine(tagLine);
                     ad.setDestinationUrl(url);
+                    ad.setImageURL(imageURL);
 
                     hads.add(ad);
                 }

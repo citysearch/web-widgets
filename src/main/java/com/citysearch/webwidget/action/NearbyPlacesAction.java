@@ -56,7 +56,7 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
 
         try {
             nearbyPlaces = helper.getNearbyPlaces(nearbyPlacesRequest);
-            //nearbyPlaces = null; //TODO: REMOVE!!!
+            //nearbyPlaces = null; // TODO: REMOVE!!!
             if (nearbyPlaces != null && !nearbyPlaces.isEmpty()) {
                 for (NearbyPlace alb : nearbyPlaces) {
                     alb.setCallBackFunction(nearbyPlacesRequest.getCallBackFunction());
@@ -91,9 +91,9 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
                 }
             } else {
                 nearbyPlaces = helper.getNearbyPlacesBackfill();
-                if (nearbyPlaces == null || nearbyPlaces.isEmpty())
-                {
-                    houseAds = HouseAdsHelper.getHouseAds();
+                
+                if (nearbyPlaces == null || nearbyPlaces.isEmpty()) {
+                    houseAds = HouseAdsHelper.getHouseAds(getResourceRootPath());
                     return "houseads";
                 }
                 return "backfill";
