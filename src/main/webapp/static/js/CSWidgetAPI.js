@@ -8,12 +8,13 @@ var citygrid = {
 
     // nearby widget
     nearby : {
-        path : 'http://contentads.citygridmedia.com/ads/Nearby_Places300x250',
+        path : 'http://contentads.citygridmedia.com/ads/Nearby_Places',
 
         createwidget : function(objCSW) {
             objCSW = citygrid.common.checkInput(objCSW);
 
             var widgeturl = this.path;
+            widgeturl += objCSW.adUnitSize;
             widgeturl += '?what='+objCSW.what;
             widgeturl += '&where='+objCSW.where;
             widgeturl += '&publishercode='+objCSW.publisher;
@@ -47,7 +48,7 @@ var citygrid = {
             if (typeof objCSW.url == "undefined" && typeof objCSW.callback == "undefined" ) { throw 'undefined url/callback'; }
             if (typeof objCSW.what == "" && typeof objCSW.tags == "" ) { throw 'empty what/tags'; }
             if (typeof objCSW.url == "" && typeof objCSW.callback == "" ) { throw 'empty url/callback'; }
-            if (typeof objCSW.publisher == "undefined" || objCSW.publisher == '') { throw 'undefiend publisher'; }
+            if (typeof objCSW.publisher == "undefined" || objCSW.publisher == '') { throw 'undefined publisher'; }
             if (typeof objCSW.what == "undefined") { objCSW.what = ''; }
             if (typeof objCSW.where == "undefined") { objCSW.where = ''; }
             if (typeof objCSW.lat == "undefined") { objCSW.lat = ''; }
@@ -56,6 +57,14 @@ var citygrid = {
             if (typeof objCSW.radius == "undefined") { objCSW.radius = ''; }
             if (typeof objCSW.url == "undefined") { objCSW.url = ''; }
             if (typeof objCSW.callback == "undefined") { objCSW.callback = ''; }
+
+            // check ad unit size
+            if (objCSW.adUnitSize && objCSW.adUnitSize == '645x100') {
+            }
+            else {
+                objCSW.adUnitSize = '300x250';
+            }
+
             citygrid.objCSW = objCSW;
             return objCSW;
         },
