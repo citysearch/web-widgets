@@ -273,6 +273,7 @@ public class ProfileHelper {
             List<Element> categoryList = categories.getChildren(CATEGORY);
             int size = categoryList.size();
             Set<String> imageKeySet = imageMap.keySet();
+            Random randomizer = new Random();
             for (int index = 0; index < size; index++) {
                 Element category = categoryList.get(index);
                 if (category != null) {
@@ -280,7 +281,7 @@ public class ProfileHelper {
                     if (StringUtils.isNotBlank(name) && imageKeySet.contains(name)) {
                         List<String> imageList = imageMap.get(name);
                         int listSize = imageList.size();
-                        int imgIndex = new Random().nextInt(listSize);
+                        int imgIndex = randomizer.nextInt(listSize);
                         imageURL = this.rootPath + imageList.get(imgIndex);
                         break;
                     }

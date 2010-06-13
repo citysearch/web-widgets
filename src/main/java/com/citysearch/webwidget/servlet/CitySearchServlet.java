@@ -43,9 +43,10 @@ public class CitySearchServlet extends HttpServlet {
             response.setContentType("text/plain");// Because we don't to render
 
             HttpURLConnection connection = null;
+            InputStream iStream = null;
             try {
                 connection = HttpConnection.getConnection(strBuilder.toString());
-                InputStream iStream = connection.getInputStream();
+                iStream = connection.getInputStream();
                 StringWriter writer = new StringWriter();
                 IOUtils.copy(iStream, writer);
                 String htmlString = writer.toString();
@@ -58,6 +59,10 @@ public class CitySearchServlet extends HttpServlet {
             } finally {
                 if (connection != null) {
                     HttpConnection.closeConnection(connection);
+                }
+                if (iStream != null)
+                {
+                    iStream.close();
                 }
             }
         }
