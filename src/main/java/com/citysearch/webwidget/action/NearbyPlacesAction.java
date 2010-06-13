@@ -11,14 +11,20 @@ import com.citysearch.webwidget.exception.CitysearchException;
 import com.citysearch.webwidget.exception.InvalidRequestParametersException;
 import com.citysearch.webwidget.helper.HouseAdsHelper;
 import com.citysearch.webwidget.helper.NearbyPlacesHelper;
+import com.citysearch.webwidget.util.CommonConstants;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ModelDriven;
 
 public class NearbyPlacesAction extends AbstractCitySearchAction implements
         ModelDriven<NearbyPlacesRequest> {
+
     private Logger log = Logger.getLogger(getClass());
+
+    private static final String ACTION_FORWARD_BACKFILL_HOUSEADS = "backfillAndHouseAds";
+
     private NearbyPlacesRequest nearbyPlacesRequest = new NearbyPlacesRequest();
     private List<NearbyPlace> nearbyPlaces;
+    private List<NearbyPlace> backfill;
     private List<HouseAd> houseAds;
 
     public NearbyPlacesRequest getModel() {
@@ -49,6 +55,14 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
         this.houseAds = houseAds;
     }
 
+    public List<NearbyPlace> getBackfill() {
+        return backfill;
+    }
+
+    public void setBackfill(List<NearbyPlace> backfill) {
+        this.backfill = backfill;
+    }
+
     public String execute() throws CitysearchException {
 
         log.info("Begin NearbyPlacesAction");
@@ -56,8 +70,9 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
 
         try {
             nearbyPlaces = helper.getNearbyPlaces(nearbyPlacesRequest);
-            //nearbyPlaces = null; // TODO: REMOVE!!!
+            nearbyPlaces = null; // TODO: REMOVE!!!
             if (nearbyPlaces != null && !nearbyPlaces.isEmpty()) {
+                //For all nearby places found, set the listingUrl and callback function 
                 for (NearbyPlace alb : nearbyPlaces) {
                     alb.setCallBackFunction(nearbyPlacesRequest.getCallBackFunction());
                     alb.setCallBackUrl(nearbyPlacesRequest.getCallBackUrl());
@@ -90,13 +105,19 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
                     }
                 }
             } else {
-                nearbyPlaces = helper.getNearbyPlacesBackfill();
-                
-                if (nearbyPlaces == null || nearbyPlaces.isEmpty()) {
+                backfill = helper.getNearbyPlacesBackfill();
+                if (backfill == null || backfill.isEmpty()) {
+                    //If no backfills from PFP, return 3 house ads
                     houseAds = HouseAdsHelper.getHouseAds(getResourceRootPath());
-                    return "houseads";
                 }
-                return "backfill";
+                else if (backfill.size() < CommonConstants.NEARBY_PLACES_DISPLAY_SIZE)
+                {
+                    //If less than 3 backfills found, fill the rest with house ads.
+                    houseAds = HouseAdsHelper.getHouseAds(getResourceRootPath());
+                    int noHouseAdsNeeded = CommonConstants.NEARBY_PLACES_DISPLAY_SIZE - backfill.size();
+                    houseAds = houseAds.subList(0, noHouseAdsNeeded);
+                }
+                return ACTION_FORWARD_BACKFILL_HOUSEADS;
             }
             log.info("End NearbyPlacesAction");
         } catch (InvalidRequestParametersException ihre) {

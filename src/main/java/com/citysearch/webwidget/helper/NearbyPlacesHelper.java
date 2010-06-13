@@ -50,6 +50,7 @@ public class NearbyPlacesHelper {
     private static final String AD_TYPE_BACKFILL = "backfill";
     private static final String TYPE_TAG = "type";
     private static final String DESC_TAG = "description";
+    private static final String ZIP_TAG = "zip";
     private static final String HTTP_PREFIX = "http://";
     private static final String AD_DESTINATION_URL = "ad_destination_url";
 
@@ -377,7 +378,10 @@ public class NearbyPlacesHelper {
         nearbyPlace.setPhone(ad.getChildText(PHONE_TAG));
         nearbyPlace.setOffers(ad.getChildText(CommonConstants.OFFERS));
         nearbyPlace.setDescription(ad.getChildText(DESC_TAG));
-
+        nearbyPlace.setStreet(ad.getChildText(CommonConstants.STREET));
+        nearbyPlace.setCity(ad.getChildText(CommonConstants.CITY));
+        nearbyPlace.setState(ad.getChildText(CommonConstants.STATE));
+        nearbyPlace.setPostalCode(ad.getChildText(ZIP_TAG));
         return nearbyPlace;
     }
 
@@ -443,13 +447,12 @@ public class NearbyPlacesHelper {
             throws CitysearchException {
         NearbyPlace nearbyPlace;
         List<String> imageList;
-        Random random;
         ArrayList<Integer> indexList = new ArrayList<Integer>(3);
         int imageListSize = 0;
         String imageUrl = "";
 
         imageList = HelperUtil.getImages(path);
-        random = new Random();
+        Random randomizer = new Random();
         int size = nearbyPlaces.size();
 
         for (int i = 0; i < size; i++) {
@@ -460,7 +463,7 @@ public class NearbyPlacesHelper {
                 imageListSize = imageList.size();
                 if (imageListSize > 0) {
                     do {
-                        index = random.nextInt(imageListSize);
+                        index = randomizer.nextInt(imageListSize);
                     } while (indexList.contains(index));
                     indexList.add(index);
                     imageUrl = imageList.get(index);

@@ -28,8 +28,10 @@ public class CommonConstants {
     public static final String SEARCH_API_TYPE = "search";
     public static final String PFP_API_TYPE = "pfp";
     public static final String NAME = "name";
+    public static final String STREET = "street";
     public static final String CITY = "city";
     public static final String STATE = "state";
+    public static final String POSTALCODE = "postalcode";
     public static final String SEARCHRESPONSE = "searchResponse";
     public static final String SEARCH_API_QUERIED = "searchAPIQueried";
     public static final String RATING = "rating";
@@ -38,6 +40,7 @@ public class CommonConstants {
     public static final String CATEGORY = "category";
     public static final String DLAT = "dLat";
     public static final String DLON = "dLon";
+    public static final String PHONENUMBER = "phonenumber";
     public static final String PHONE = "phone";
     public static final String DISPLAY_URL = "displayURL";
     public static final String IMAGE_URL = "imageURL";

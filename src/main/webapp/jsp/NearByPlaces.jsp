@@ -12,7 +12,7 @@
 	<body>
 		<div class="ctsrch_boxContainer">
 	        <div class="ctsrch_header" style="">
-	            <div class="ctsrch_headerText">More to Try Nearby</div>
+	            <div class="ctsrch_headerText">More to Try</div>
 	        </div>
 	        <div class="ctsrch_container">
 	        	<s:iterator value="nearbyPlaces" status="placesStatus">

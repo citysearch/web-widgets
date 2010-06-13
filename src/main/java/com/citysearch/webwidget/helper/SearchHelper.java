@@ -2,8 +2,6 @@ package com.citysearch.webwidget.helper;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 import java.util.SortedMap;
@@ -139,7 +137,7 @@ public class SearchHelper {
             log.info("SearchHelper.getClosestLocationPostalCode: Successfull response");
         } catch (InvalidHttpResponseException ihe) {
             throw new CitysearchException(this.getClass().getName(),
-                    "getClosestLocationPostalCode", ihe.getMessage());
+                    "getClosestLocationPostalCode", ihe);
         }
         String nearestListingPostalCode = findClosestLocationPostalCode(responseDocument);
         log.info("SearchHelper.getClosestLocationPostalCode: Postal Code "
@@ -378,15 +376,21 @@ public class SearchHelper {
                 CommonConstants.TAGLINE_MAX_LENGTH_PROP, CommonConstants.BUSINESS_NAME_MAX_LENGTH);
 
         Element address = location.getChild(ADDRESS_TAG);
+
+        NearbyPlace nearbyPlace = new NearbyPlace();
+
         String addr = null;
         if (address != null) {
             addr = HelperUtil.getLocationString(address.getChildText(CommonConstants.CITY),
                     address.getChildText(CommonConstants.STATE));
+            nearbyPlace.setStreet(address.getChildText(CommonConstants.STREET));
+            nearbyPlace.setCity(address.getChildText(CommonConstants.CITY));
+            nearbyPlace.setState(address.getChildText(CommonConstants.STATE));
+            nearbyPlace.setPostalCode(address.getChildText(CommonConstants.POSTALCODE));
+            nearbyPlace.setLocation(addr);
         }
 
-        NearbyPlace nearbyPlace = new NearbyPlace();
         nearbyPlace.setName(name);
-        nearbyPlace.setLocation(addr);
         nearbyPlace.setRating(ratingList);
         nearbyPlace.setReviewCount(userReviewCount);
         nearbyPlace.setDistance(distance);
@@ -397,8 +401,6 @@ public class SearchHelper {
         nearbyPlace.setAdImageURL(location.getChildText(AD_IMAGE_URL_TAG));
         nearbyPlace.setPhone(location.getChildText(PHONE_TAG));
         nearbyPlace.setOffers(location.getChildText(CommonConstants.OFFERS));
-
         return nearbyPlace;
     }
-
 }
