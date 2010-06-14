@@ -34,9 +34,9 @@ import com.citysearch.webwidget.util.PropertiesLoader;
  * This Helper class performs all the functionality related to Reviews. Validates the Review
  * request, calls the API, aprses the response, then calls the Profile API and returns the final
  * response back
- * 
+ *
  * @author Aspert Benjamin
- * 
+ *
  */
 public class ReviewHelper {
 
@@ -72,7 +72,7 @@ public class ReviewHelper {
 
     /**
      * Constructs the Reviews API query string with all the supplied parameters
-     * 
+     *
      * @return String
      * @throws CitysearchException
      */
@@ -120,7 +120,7 @@ public class ReviewHelper {
 
     /**
      * Validates the request. If any of the parameters are missing, throws Citysearch Exception
-     * 
+     *
      * @throws CitysearchException
      */
     public void validateRequest(ReviewRequest request) throws InvalidRequestParametersException,
@@ -167,7 +167,7 @@ public class ReviewHelper {
     /**
      * Gets the review with the latest timestamp from Review API Then calls the profile API and gets
      * the details not available from review API like Address,Phone,SendToFriendURL and ImageURL
-     * 
+     *
      * @param request
      * @return Review
      * @throws InvalidRequestParametersException
@@ -188,7 +188,7 @@ public class ReviewHelper {
             searchReq.setLatitude(request.getLatitude());
             searchReq.setLongitude(request.getLongitude());
 
-            SearchHelper shelper = new SearchHelper(this.rootPath);
+            SearchHelper shelper = new SearchHelper(this.rootPath, request.getDisplaySize());
             String where = shelper.getClosestLocationPostalCode(searchReq);
             request.setWhere(where);
             log.info("ReviewHelper.getLatestReview:: After finding zip");
@@ -231,7 +231,7 @@ public class ReviewHelper {
 
     /**
      * Parses the Reviews xml. Returns Review object with values from api
-     * 
+     *
      * @param doc
      * @return Review
      * @throws CitysearchException
@@ -263,7 +263,7 @@ public class ReviewHelper {
 
     /**
      * Parses the review element and set the required values in the Review bean
-     * 
+     *
      * @param review
      * @param reviewsElem
      * @return Review

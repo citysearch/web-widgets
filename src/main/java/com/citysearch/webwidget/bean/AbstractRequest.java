@@ -2,14 +2,17 @@ package com.citysearch.webwidget.bean;
 
 /**
  * The abstract class that contains the common Request field across APIs
- * 
+ *
  * @author Aspert Benjamin
- * 
+ *
  */
 public abstract class AbstractRequest {
     protected String publisher;
     protected boolean customerOnly;
     protected String format;
+    protected String adUnitName;
+    protected String adUnitSize;
+    protected Integer displaySize;
 
     public String getPublisher() {
         return publisher;
@@ -33,5 +36,29 @@ public abstract class AbstractRequest {
 
     public void setFormat(String format) {
         this.format = format;
+    }
+
+    public String getAdUnitName() {
+        return adUnitName;
+    }
+
+    public void setAdUnitName(String adUnitName) {
+        this.adUnitName = adUnitName;
+    }
+
+    public String getAdUnitSize() {
+        return adUnitSize;
+    }
+
+    public void setAdUnitSize(String adUnitSize) {
+        this.adUnitSize = adUnitSize;
+    }
+
+    public Integer getDisplaySize() {
+        return displaySize;
+    }
+
+    public void setDisplaySize(Integer displaySize) {
+        this.displaySize = displaySize;
     }
 }

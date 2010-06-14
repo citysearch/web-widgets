@@ -27,9 +27,9 @@ import com.citysearch.webwidget.util.PropertiesLoader;
  * This class performs all the functionalities related to Search API like validating query
  * parameters, querying API and processing response Constructs request with different parameters and
  * processes response accordingly for various APIs
- * 
+ *
  * @author Aspert Benjamin
- * 
+ *
  */
 public class SearchHelper {
 
@@ -48,14 +48,16 @@ public class SearchHelper {
     private static final String LOCATION_TAG = "location";
 
     private String rootPath;
+    private Integer displaySize;
 
-    public SearchHelper(String rootPath) {
+    public SearchHelper(String rootPath, Integer displaySize) {
         this.rootPath = rootPath;
+        this.displaySize = displaySize;
     }
 
     /**
      * Returns the Search API Query String
-     * 
+     *
      * @param request
      * @return
      * @throws CitysearchException
@@ -88,7 +90,7 @@ public class SearchHelper {
 
     /**
      * Validates the Search API request parameters for fetching nearest Postal Code
-     * 
+     *
      * @param request
      * @throws CitysearchException
      */
@@ -118,7 +120,7 @@ public class SearchHelper {
     /**
      * Validates the request parameters, calls Search API and returns the closest Postal Code from
      * the response
-     * 
+     *
      * @param request
      * @return String
      * @throws CitysearchException
@@ -153,7 +155,7 @@ public class SearchHelper {
 
     /**
      * Returns the nearest Postal Code from the Search API Response
-     * 
+     *
      * @param doc
      * @return String
      * @throws CitysearchException
@@ -181,7 +183,7 @@ public class SearchHelper {
 
     /**
      * Validates the Search API request parameters to get latitude and longitude
-     * 
+     *
      * @param request
      * @throws CitysearchException
      */
@@ -207,7 +209,7 @@ public class SearchHelper {
 
     /**
      * Constructs Search API request to get latitude and longitude values
-     * 
+     *
      * @param request
      * @return
      * @throws CitysearchException
@@ -242,7 +244,7 @@ public class SearchHelper {
 
     /**
      * Queries the Search API and returns latitude, longitude values in a String Array
-     * 
+     *
      * @param request
      * @return String[]
      * @throws CitysearchException
@@ -324,7 +326,7 @@ public class SearchHelper {
                             elm.getChildText(CommonConstants.LONGITUDE));
                     double distance = HelperUtil.getDistance(sourceLatitude, sourceLongitude,
                             businessLatitude, businessLongitude);
-                    if (childrenSize <= CommonConstants.NEARBY_PLACES_DISPLAY_SIZE
+                    if (childrenSize <= displaySize
                             || distance < CommonConstants.EXTENDED_RADIUS) {
                         // Since the we are rounding the distance to the 10th, There might be
                         // multiple listings with the same distance.
@@ -340,13 +342,13 @@ public class SearchHelper {
                 if (!elmsSortedByDistance.isEmpty()) {
                     List<Element> elmsToConvert = new ArrayList<Element>();
                     for (int j = 0; j < elmsSortedByDistance.size(); j++) {
-                        if (elmsToConvert.size() >= CommonConstants.NEARBY_PLACES_DISPLAY_SIZE) {
+                        if (elmsToConvert.size() >= displaySize) {
                             break;
                         }
                         Double key = elmsSortedByDistance.firstKey();
                         List<Element> elms = elmsSortedByDistance.remove(key);
                         for (int idx = 0; idx < elms.size(); idx++) {
-                            if (elmsToConvert.size() == CommonConstants.NEARBY_PLACES_DISPLAY_SIZE) {
+                            if (elmsToConvert.size() == displaySize) {
                                 break;
                             }
                             elmsToConvert.add(elms.get(idx));

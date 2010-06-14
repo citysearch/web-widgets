@@ -27,9 +27,9 @@ import com.citysearch.webwidget.util.PropertiesLoader;
 /**
  * Helper class for PFP API. Contains the functionality to validate request parameters, queries the
  * API for different kind of requests and processes response accordingly
- * 
+ *
  * @author Aspert Benjamin
- * 
+ *
  */
 public class NearbyPlacesHelper {
 
@@ -55,6 +55,7 @@ public class NearbyPlacesHelper {
     private static final String AD_DESTINATION_URL = "ad_destination_url";
 
     private String rootPath;
+    private Integer displaySize;
 
     // Field to cache the PFP response document.
     private Document pfpResponseDocument = null;
@@ -65,7 +66,7 @@ public class NearbyPlacesHelper {
 
     /**
      * Validates PFP API request parameters
-     * 
+     *
      * @param request
      * @throws CitysearchException
      */
@@ -92,7 +93,7 @@ public class NearbyPlacesHelper {
 
     /**
      * Constructs and returns PFP query string with geography
-     * 
+     *
      * @param request
      * @return String
      * @throws CitysearchException
@@ -159,7 +160,7 @@ public class NearbyPlacesHelper {
 
     /**
      * Constructs and returns PFP Query String without geography parameters
-     * 
+     *
      * @param request
      * @return String
      * @throws CitysearchException
@@ -190,7 +191,7 @@ public class NearbyPlacesHelper {
         sRequest.setTags(request.getTags());
         sRequest.setPublisher(request.getPublisher());
 
-        SearchHelper sHelper = new SearchHelper(this.rootPath);
+        SearchHelper sHelper = new SearchHelper(this.rootPath, getDisplaySize());
         String[] latLon = sHelper.getLatitudeLongitude(sRequest);
         if (latLon.length >= 2) {
             request.setLatitude(latLon[0]);
@@ -202,7 +203,7 @@ public class NearbyPlacesHelper {
      * Queries Search API for latitude and longitude if not present in request, then queries PFP api
      * with Geography parameters. If no results are returned then queries PFP API again but without
      * geography parameters.
-     * 
+     *
      * @param request
      * @throws CitysearchException
      */
@@ -210,6 +211,7 @@ public class NearbyPlacesHelper {
             throws InvalidRequestParametersException, CitysearchException {
         log.info("NearbyPlacesHelper.getNearbyPlaces: Begin");
         validateRequest(request);
+        setDisplaySize(request.getDisplaySize());
         log.info("NearbyPlacesHelper.getNearbyPlaces: After validate");
         boolean latitudeLongitudePresentInRequest = true;
         if (StringUtils.isBlank(request.getLatitude())
@@ -239,7 +241,7 @@ public class NearbyPlacesHelper {
                 sRequest.setTags(request.getTags());
                 sRequest.setPublisher(request.getPublisher());
 
-                SearchHelper sHelper = new SearchHelper(this.rootPath);
+                SearchHelper sHelper = new SearchHelper(this.rootPath, getDisplaySize());
                 nearbyPlaces = sHelper.getNearbyPlaces(sRequest);
             }
         }
@@ -325,13 +327,14 @@ public class NearbyPlacesHelper {
                 if (!elmsSortedByDistance.isEmpty()) {
                     List<Element> elmsToConvert = new ArrayList<Element>();
                     for (int j = 0; j < elmsSortedByDistance.size(); j++) {
-                        if (elmsToConvert.size() >= CommonConstants.NEARBY_PLACES_DISPLAY_SIZE) {
+
+                        if (elmsToConvert.size() >= getDisplaySize()) {
                             break;
                         }
                         Double key = elmsSortedByDistance.firstKey();
                         List<Element> elms = elmsSortedByDistance.remove(key);
                         for (int idx = 0; idx < elms.size(); idx++) {
-                            if (elmsToConvert.size() == CommonConstants.NEARBY_PLACES_DISPLAY_SIZE) {
+                            if (elmsToConvert.size() == getDisplaySize()) {
                                 break;
                             }
                             elmsToConvert.add(elms.get(idx));
@@ -413,8 +416,8 @@ public class NearbyPlacesHelper {
                 }
                 if (!backfillElms.isEmpty()) {
                     List<Element> elmsToConvert = new ArrayList<Element>();
-                    if (backfillElms.size() >= CommonConstants.NEARBY_PLACES_DISPLAY_SIZE) {
-                        for (int idx = 0; idx < CommonConstants.NEARBY_PLACES_DISPLAY_SIZE; idx++) {
+                    if (backfillElms.size() >= getDisplaySize()) {
+                        for (int idx = 0; idx < getDisplaySize(); idx++) {
                             elmsToConvert.add(backfillElms.get(idx));
                         }
                     } else {
@@ -483,5 +486,13 @@ public class NearbyPlacesHelper {
             nearbyPlaces.set(i, nearbyPlace);
         }
         return nearbyPlaces;
+    }
+
+    public int getDisplaySize() {
+        return displaySize;
+    }
+
+    public void setDisplaySize(Integer displaySize) {
+        this.displaySize = displaySize;
     }
 }

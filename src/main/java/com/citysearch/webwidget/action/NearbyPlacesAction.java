@@ -21,6 +21,8 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
     private Logger log = Logger.getLogger(getClass());
 
     private static final String ACTION_FORWARD_BACKFILL_HOUSEADS = "backfillAndHouseAds";
+    private static final String ACTION_FORWARD_CONQUEST = "conquest";
+    private static final String ACTION_FORWARD_CONQUEST_BACKFILL_HOUSEADS = "conquestBackfillAndHouseAds";
 
     private NearbyPlacesRequest nearbyPlacesRequest = new NearbyPlacesRequest();
     private List<NearbyPlace> nearbyPlaces;
@@ -67,12 +69,13 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
 
         log.info("Begin NearbyPlacesAction");
         NearbyPlacesHelper helper = new NearbyPlacesHelper(getResourceRootPath());
+        String adUnitSize = nearbyPlacesRequest.getAdUnitSize();
 
         try {
             nearbyPlaces = helper.getNearbyPlaces(nearbyPlacesRequest);
             //nearbyPlaces = null; // TODO: REMOVE!!!
             if (nearbyPlaces != null && !nearbyPlaces.isEmpty()) {
-                //For all nearby places found, set the listingUrl and callback function 
+                //For all nearby places found, set the listingUrl and callback function
                 for (NearbyPlace alb : nearbyPlaces) {
                     alb.setCallBackFunction(nearbyPlacesRequest.getCallBackFunction());
                     alb.setCallBackUrl(nearbyPlacesRequest.getCallBackUrl());
@@ -109,15 +112,20 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
                 if (backfill == null || backfill.isEmpty()) {
                     //If no backfills from PFP, return 3 house ads
                     houseAds = HouseAdsHelper.getHouseAds(getResourceRootPath());
+                    houseAds = houseAds.subList(0, nearbyPlacesRequest.getDisplaySize());
                 }
-                else if (backfill.size() < CommonConstants.NEARBY_PLACES_DISPLAY_SIZE)
+                else if (backfill.size() < nearbyPlacesRequest.getDisplaySize())
                 {
                     //If less than 3 backfills found, fill the rest with house ads.
                     houseAds = HouseAdsHelper.getHouseAds(getResourceRootPath());
-                    int noHouseAdsNeeded = CommonConstants.NEARBY_PLACES_DISPLAY_SIZE - backfill.size();
+                    int noHouseAdsNeeded = nearbyPlacesRequest.getDisplaySize() - backfill.size();
                     houseAds = houseAds.subList(0, noHouseAdsNeeded);
                 }
-                return ACTION_FORWARD_BACKFILL_HOUSEADS;
+
+                if (adUnitSize != null && adUnitSize.equals(CommonConstants.CONQUEST_AD_SIZE))
+                    return ACTION_FORWARD_CONQUEST_BACKFILL_HOUSEADS;
+                else
+                    return ACTION_FORWARD_BACKFILL_HOUSEADS;
             }
             log.info("End NearbyPlacesAction");
         } catch (InvalidRequestParametersException ihre) {
@@ -127,6 +135,10 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
             log.error(cse.getMessage());
             throw cse;
         }
-        return Action.SUCCESS;
+
+        if (adUnitSize != null && adUnitSize.equals(CommonConstants.CONQUEST_AD_SIZE))
+            return ACTION_FORWARD_CONQUEST;
+        else
+            return Action.SUCCESS;
     }
 }

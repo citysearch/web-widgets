@@ -14,6 +14,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
 import com.citysearch.webwidget.exception.CitysearchException;
+import com.citysearch.webwidget.util.CommonConstants;
 import com.citysearch.webwidget.util.HttpConnection;
 
 public class CitySearchServlet extends HttpServlet {
@@ -22,7 +23,11 @@ public class CitySearchServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String queryString = request.getQueryString();
-        String adUnitName = request.getParameter("widget");
+        String adUnitName = request.getParameter("adUnitName");
+        String adUnitSize = request.getParameter("adUnitSize");
+        int displaySize = (adUnitSize != null && adUnitSize.equals(CommonConstants.CONQUEST_AD_SIZE)) ?
+                CommonConstants.CONQUEST_DISPLAY_SIZE : CommonConstants.MANTLE_DISPLAY_SIZE;
+
         if (adUnitName != null) {
             StringBuilder strBuilder = new StringBuilder();
             strBuilder.append(request.getScheme());
@@ -39,6 +44,7 @@ public class CitySearchServlet extends HttpServlet {
             }
             strBuilder.append("?");
             strBuilder.append(queryString);
+            strBuilder.append("&displaySize="+displaySize);
 
             response.setContentType("text/plain");// Because we don't to render
 

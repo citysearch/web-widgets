@@ -8,23 +8,22 @@ var citygrid = {
 
     // nearby widget
     nearby : {
-        path : 'http://contentads.citygridmedia.com/ads/Nearby_Places',
-
         createwidget : function(objCSW) {
             objCSW = citygrid.common.checkInput(objCSW);
 
-            var widgeturl = this.path;
-            widgeturl += objCSW.adUnitSize;
+            var widgeturl = citygrid.common.getHostName(objCSW.site);
             widgeturl += '?what='+objCSW.what;
             widgeturl += '&where='+objCSW.where;
-            widgeturl += '&publishercode='+objCSW.publisher;
+            widgeturl += '&publisher='+objCSW.publisher;
             widgeturl += '&lat='+objCSW.lat;
             widgeturl += '&lon='+objCSW.lon;
             widgeturl += '&tags='+objCSW.tags;
             widgeturl += '&radius='+objCSW.radius;
             widgeturl += '&placement=&apikey=test';
-            widgeturl += '&callbackfunction=' + objCSW.callback;
-            widgeturl += '&callbackURL=' + objCSW.url;
+            widgeturl += '&callbackfunction='+objCSW.callback;
+            widgeturl += '&callbackURL='+objCSW.url;
+            widgeturl += '&adUnitName='+objCSW.adUnitName;
+            widgeturl += '&adUnitSize='+objCSW.adUnitSize;
 
             citygrid.common.scriptInject(widgeturl);
         }
@@ -41,6 +40,15 @@ var citygrid = {
 
         loadWidget : function(widgetHTML) {
             document.getElementById(citygrid.objCSW.target).innerHTML = widgetHTML;
+        },
+
+        getHostName : function(site) {
+            if (site == "dev")
+                return "http://localhost:8080/web-widgets/getwidget";
+            else if (site == "qa")
+                return "http://contentads.qat.citygridmedia.com/ads/getwidget";
+            else
+                return "http://contentads.citygridmedia.com/ads/getwidget";
         },
 
         checkInput : function(objCSW) {
