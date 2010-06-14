@@ -70,7 +70,7 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
 
         try {
             nearbyPlaces = helper.getNearbyPlaces(nearbyPlacesRequest);
-            nearbyPlaces = null; // TODO: REMOVE!!!
+            //nearbyPlaces = null; // TODO: REMOVE!!!
             if (nearbyPlaces != null && !nearbyPlaces.isEmpty()) {
                 //For all nearby places found, set the listingUrl and callback function 
                 for (NearbyPlace alb : nearbyPlaces) {

@@ -310,7 +310,7 @@ public class SearchHelper {
         log.info("SearchHelper.getNearbyPlaces: Begin");
         List<NearbyPlace> nearbyPlaces = null;
         if (doc != null && doc.hasRootElement()) {
-            SortedMap<Double, Element> elmsSortedByDistance = new TreeMap<Double, Element>();
+            SortedMap<Double, List<Element>> elmsSortedByDistance = new TreeMap<Double, List<Element>>();
             Element rootElement = doc.getRootElement();
             List<Element> children = rootElement.getChildren(LOCATION_TAG);
             if (children != null && !children.isEmpty()) {
@@ -326,19 +326,33 @@ public class SearchHelper {
                             businessLatitude, businessLongitude);
                     if (childrenSize <= CommonConstants.NEARBY_PLACES_DISPLAY_SIZE
                             || distance < CommonConstants.EXTENDED_RADIUS) {
-                        elmsSortedByDistance.put(distance, elm);
+                        // Since the we are rounding the distance to the 10th, There might be
+                        // multiple listings with the same distance.
+                        if (elmsSortedByDistance.containsKey(distance)) {
+                            elmsSortedByDistance.get(distance).add(elm);
+                        } else {
+                            List<Element> elms = new ArrayList<Element>();
+                            elms.add(elm);
+                            elmsSortedByDistance.put(distance, elms);
+                        }
                     }
                 }
                 if (!elmsSortedByDistance.isEmpty()) {
                     List<Element> elmsToConvert = new ArrayList<Element>();
-                    if (elmsSortedByDistance.size() >= CommonConstants.NEARBY_PLACES_DISPLAY_SIZE) {
-                        for (int i = 0; i < CommonConstants.NEARBY_PLACES_DISPLAY_SIZE; i++) {
-                            Double key = elmsSortedByDistance.firstKey();
-                            elmsToConvert.add(elmsSortedByDistance.remove(key));
+                    for (int j = 0; j < elmsSortedByDistance.size(); j++) {
+                        if (elmsToConvert.size() >= CommonConstants.NEARBY_PLACES_DISPLAY_SIZE) {
+                            break;
                         }
-                    } else {
-                        elmsToConvert.addAll(elmsSortedByDistance.values());
+                        Double key = elmsSortedByDistance.firstKey();
+                        List<Element> elms = elmsSortedByDistance.remove(key);
+                        for (int idx = 0; idx < elms.size(); idx++) {
+                            if (elmsToConvert.size() == CommonConstants.NEARBY_PLACES_DISPLAY_SIZE) {
+                                break;
+                            }
+                            elmsToConvert.add(elms.get(idx));
+                        }
                     }
+
                     nearbyPlaces = new ArrayList<NearbyPlace>();
                     for (Element elm : elmsToConvert) {
                         nearbyPlaces.add(toNearbyPlace(elm, latitude, longitude));

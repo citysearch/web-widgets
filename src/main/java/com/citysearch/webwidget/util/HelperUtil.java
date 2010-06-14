@@ -262,7 +262,12 @@ public class HelperUtil {
         while (enumerator.hasMoreElements()) {
             String key = (String) enumerator.nextElement();
             String value = imageProperties.getProperty(key);
-            imageList.add(contextPath + value);
+            if (value != null && !value.startsWith("http")) {
+                StringBuilder strBuilder = new StringBuilder(contextPath);
+                strBuilder.append(value);
+                value = strBuilder.toString();
+            }
+            imageList.add(value);
         }
         return imageList;
     }

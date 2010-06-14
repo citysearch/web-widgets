@@ -296,7 +296,7 @@ public class NearbyPlacesHelper {
         log.info("NearbyPlacesHelper.getNearbyPlaces: Begin");
         List<NearbyPlace> nearbyPlaces = null;
         if (doc != null && doc.hasRootElement()) {
-            SortedMap<Double, Element> elmsSortedByDistance = new TreeMap<Double, Element>();
+            SortedMap<Double, List<Element>> elmsSortedByDistance = new TreeMap<Double, List<Element>>();
             Element rootElement = doc.getRootElement();
             List<Element> children = rootElement.getChildren(AD_TAG);
             if (children != null && !children.isEmpty()) {
@@ -312,20 +312,32 @@ public class NearbyPlacesHelper {
                         double distance = HelperUtil.getDistance(sourceLatitude, sourceLongitude,
                                 businessLatitude, businessLongitude);
                         if (distance < CommonConstants.EXTENDED_RADIUS) {
-                            elmsSortedByDistance.put(distance, elm);
+                            if (elmsSortedByDistance.containsKey(distance)) {
+                                elmsSortedByDistance.get(distance).add(elm);
+                            } else {
+                                List<Element> elms = new ArrayList<Element>();
+                                elms.add(elm);
+                                elmsSortedByDistance.put(distance, elms);
+                            }
                         }
                     }
                 }
                 if (!elmsSortedByDistance.isEmpty()) {
                     List<Element> elmsToConvert = new ArrayList<Element>();
-                    if (elmsSortedByDistance.size() >= CommonConstants.NEARBY_PLACES_DISPLAY_SIZE) {
-                        for (int i = 0; i < CommonConstants.NEARBY_PLACES_DISPLAY_SIZE; i++) {
-                            Double key = elmsSortedByDistance.firstKey();
-                            elmsToConvert.add(elmsSortedByDistance.remove(key));
+                    for (int j = 0; j < elmsSortedByDistance.size(); j++) {
+                        if (elmsToConvert.size() >= CommonConstants.NEARBY_PLACES_DISPLAY_SIZE) {
+                            break;
                         }
-                    } else {
-                        elmsToConvert.addAll(elmsSortedByDistance.values());
+                        Double key = elmsSortedByDistance.firstKey();
+                        List<Element> elms = elmsSortedByDistance.remove(key);
+                        for (int idx = 0; idx < elms.size(); idx++) {
+                            if (elmsToConvert.size() == CommonConstants.NEARBY_PLACES_DISPLAY_SIZE) {
+                                break;
+                            }
+                            elmsToConvert.add(elms.get(idx));
+                        }
                     }
+
                     nearbyPlaces = new ArrayList<NearbyPlace>();
                     for (Element elm : elmsToConvert) {
                         nearbyPlaces.add(toNearbyPlace(elm, latitude, longitude));
@@ -422,16 +434,14 @@ public class NearbyPlacesHelper {
     private NearbyPlace toBackfill(Element ad) {
         NearbyPlace nbp = new NearbyPlace();
         String category = ad.getChildText(TAGLINE_TAG);
-        if (StringUtils.isNotBlank(category))
-        {
+        if (StringUtils.isNotBlank(category)) {
             category = category.replaceAll("<b>", "");
             category = category.replaceAll("</b>", "");
             nbp.setCategory(category);
         }
         nbp.setAdImageURL(ad.getChildText(AD_IMAGE_URL_TAG));
         String description = ad.getChildText(DESC_TAG);
-        if (StringUtils.isNotBlank(description))
-        {
+        if (StringUtils.isNotBlank(description)) {
             description = description.replaceAll("<b>", "");
             description = description.replaceAll("</b>", "");
             nbp.setDescription(description);

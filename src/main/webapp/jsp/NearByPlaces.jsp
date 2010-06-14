@@ -19,10 +19,10 @@
 		        	<div class="ctsrch_leftSide">
 		 	         	<div class="ctsrch_bigStar">
 		 	         		<s:if test="%{isValidCallbackFunction == true}">
-		 	         			<a href='<s:property value="callBackFunction" />'><img src='<s:property value="adImageURL" />'/></a>
+		 	         			<a href='<s:property value="callBackFunction" />'><img src='<s:property value="adImageURL" />' border="0"/></a>
 		 	         		</s:if>
 		 	         		<s:else>
-		 	         			<a href='<s:property value="listingUrl" />' ><img src='<s:property value="adImageURL" />'/></a>
+		 	         			<a href='<s:property value="listingUrl" />' ><img src='<s:property value="adImageURL" />' border="0"/></a>
 		 	         		</s:else>
 		 	         	</div>
 		 	         	<div class="ctsrch_milesFont ctsrch_reviewFont">
@@ -41,7 +41,7 @@
 	 	         		<s:if test="%{ratings > 2.5}">
 		 	         		<div class="ctsrch_starContainer">
 		                    	<div class="ctsrch_stars">
-		                    		<s:iterator value="rating"><s:if test="%{2}"><img src='<s:property value="resourceRootPath"/>/static/img/Star.png' class="ctsrch_starImg"/></s:if><s:elseif test="%{1}"><img src='<s:property value="resourceRootPath"/>/static/img/HalfStar.png' class="ctsrch_starImg"/></s:elseif><s:else><img src='<s:property value="resourceRootPath"/>/static/img/EmptyStar.png' class="ctsrch_starImg"/></s:else></s:iterator>
+		                    		<s:iterator value="rating"><s:if test="%{2}"><img src='<s:property value="resourceRootPath"/>/static/img/Star.png' class="ctsrch_starImg" border="0"/></s:if><s:elseif test="%{1}"><img src='<s:property value="resourceRootPath"/>/static/img/HalfStar.png' class="ctsrch_starImg" border="0"/></s:elseif><s:else><img src='<s:property value="resourceRootPath"/>/static/img/EmptyStar.png' class="ctsrch_starImg" border="0"/></s:else></s:iterator>
 		                    	</div>
 			 	         		<s:if test="%{reviewCount > 0}">
 			 	         			<div class="ctsrch_reviewFont">
