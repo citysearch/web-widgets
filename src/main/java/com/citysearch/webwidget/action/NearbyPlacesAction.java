@@ -87,7 +87,8 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
                         listingUrl = "http://ad.doubleclick.net/clk;225291110;48835962;h?"
                                 + listingUrl.replace("$p", alb.getPhone());
                     } else {
-                        listingUrl = alb.getAdDisplayURL();
+                        listingUrl = "http://ad.doubleclick.net/clk;225291110;48835962;h?"
+                                + alb.getAdDisplayURL();
                     }
                     alb.setListingUrl(listingUrl);
 
