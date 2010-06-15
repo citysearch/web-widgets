@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@taglib prefix="s" uri="/struts-tags"%>
 
-citygrid.common.loadWidget(
 <div class="ctsrch_wideContainer">
     <div class="ctsrch_sponserText">
         Ads by CityGrid
@@ -52,4 +51,3 @@ citygrid.common.loadWidget(
         </s:iterator>
     </div>
 </div>
-);

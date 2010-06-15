@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@taglib prefix="s" uri="/struts-tags"%>
 
-citygrid.common.loadWidget(
 <div class="ctsrch_wideContainer">
     <div class="ctsrch_sponserText">
         Ads by CityGrid
@@ -34,7 +33,7 @@ citygrid.common.loadWidget(
                     <s:if test="%{ratings > 2.5}">
                         <div class="ctsrch_starContainer">
                             <div class="ctsrch_stars">
-                                <s:iterator value="rating"><s:if test="%{2}"><img src='<s:property value="resourceRootPath"/>/static/img/Star.png' class="ctsrch_starImg" border="0"/></s:if><s:elseif test="%{1}"><img src='<s:property value="resourceRootPath"/>/static/img/HalfStar.png' class="ctsrch_starImg" border="0"/></s:elseif><s:else><img src='<s:property value="resourceRootPath"/>/static/img/EmptyStar.png' class="ctsrch_starImg" border="0"/></s:else></s:iterator>
+                                <s:iterator value="rating"><span class='<s:if test="%{2}">full</s:if><s:elseif test="%{1}">half</s:elseif><s:else>empty</s:else>'> </span></s:iterator>
                             </div>
                             <s:if test="%{reviewCount > 0}">
                                 <div class="ctsrch_reviewFont">
@@ -99,4 +98,3 @@ citygrid.common.loadWidget(
         </s:iterator>
     </div>
 </div>
-);

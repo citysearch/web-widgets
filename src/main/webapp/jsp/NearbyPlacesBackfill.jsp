@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@taglib prefix="s" uri="/struts-tags"%>
 
-citygrid.common.loadWidget(
 <div class="ctsrch_boxContainer">
     <div class="ctsrch_header" style="">
         <div class="ctsrch_headerText">More to Try</div>
@@ -57,4 +56,3 @@ citygrid.common.loadWidget(
         </s:iterator>
     </div>
 </div>
-);

@@ -1,14 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@taglib prefix="s" uri="/struts-tags"%>
-<!--
-<html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-	<title>More to Try</title>
-	<link type="text/css" href='<s:property value="resourceRootPath"/>/static/css/citysearch.css'  rel="stylesheet"/>
-</head>
-<body> -->
-citygrid.common.loadWidget( 
+
 <div class="ctsrch_boxContainer">
     <div class="ctsrch_header" style="">
         <div class="ctsrch_headerText">More to Try</div>
@@ -40,7 +32,7 @@ citygrid.common.loadWidget(
                 <s:if test="%{ratings > 2.5}">
                     <div class="ctsrch_starContainer">
                         <div class="ctsrch_stars">
-                            <s:iterator value="rating"><s:if test="%{2}"><img src='<s:property value="resourceRootPath"/>/static/img/Star.png' class="ctsrch_starImg" border="0"/></s:if><s:elseif test="%{1}"><img src='<s:property value="resourceRootPath"/>/static/img/HalfStar.png' class="ctsrch_starImg" border="0"/></s:elseif><s:else><img src='<s:property value="resourceRootPath"/>/static/img/EmptyStar.png' class="ctsrch_starImg" border="0"/></s:else></s:iterator>
+                            <s:iterator value="rating"><span class='<s:if test="%{2}">full</s:if><s:elseif test="%{1}">half</s:elseif><s:else>empty</s:else>'> </span></s:iterator>
                         </div>
                         <s:if test="%{reviewCount > 0}">
                             <div class="ctsrch_reviewFont">
@@ -59,25 +51,25 @@ citygrid.common.loadWidget(
                 </div>
             </div>
             <s:if test="%{profile != null && profile.review != null}">
-            	<div class="review_cs_reviews">
-			        <div class="review_cs_longTitle">
-			        	<a href='<s:property value="profile.review.reviewUrl"/>' target="_blank">
-			        		<s:property value="profile.review.shortTitle"/>
-			        	</a>
-			        </div>
-			        <div class="review_cs_description">
-			        	<s:property value="profile.review.shortReviewText"/>
-			        </div>
-			        <div class="review_cs_description">
-			        	<div class="spacer"></div>
-		        		<strong>Pros:</strong>&nbsp;<s:property value="profile.review.shortPros"/>
-		        		<div class="seperator"></div>
-		            	<strong>Cons:</strong>&nbsp;<s:property value="profile.review.shortCons"/> 
-			        </div>
-		    	</div>
-		    	<div id="review_cs_share">
-		    		<a href='<s:property value="profile.review.sendToFriendUrl"/>' target="_blank">Share this review</a>
-		    	</div>
+                <div class="review_cs_reviews">
+                    <div class="review_cs_longTitle">
+                        <a href='<s:property value="profile.review.reviewUrl"/>' target="_blank">
+                            <s:property value="profile.review.shortTitle"/>
+                        </a>
+                    </div>
+                    <div class="review_cs_description">
+                        <s:property value="profile.review.shortReviewText"/>
+                    </div>
+                    <div class="review_cs_description">
+                        <div class="spacer"></div>
+                        <strong>Pros:</strong>&nbsp;<s:property value="profile.review.shortPros"/>
+                        <div class="seperator"></div>
+                        <strong>Cons:</strong>&nbsp;<s:property value="profile.review.shortCons"/>
+                    </div>
+                </div>
+                <div id="review_cs_share">
+                    <a href='<s:property value="profile.review.sendToFriendUrl"/>' target="_blank">Share this review</a>
+                </div>
             </s:if>
             <s:if test="%{#placesStatus.index < (nearbyPlaces.size()-1)}">
                 <div class="ctsrch_lineMargin"> </div>
@@ -136,7 +128,3 @@ citygrid.common.loadWidget(
         </s:iterator>
     </div>
 </div>
- 
-); <!--
-</body>
-</html>-->

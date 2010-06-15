@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.citysearch.webwidget.exception.CitysearchException;
@@ -56,6 +58,10 @@ public class CitySearchServlet extends HttpServlet {
                 StringWriter writer = new StringWriter();
                 IOUtils.copy(iStream, writer);
                 String htmlString = writer.toString();
+                htmlString = StringEscapeUtils.escapeHtml(htmlString);
+                htmlString = htmlString.replaceAll("\\n", "");
+                htmlString = "citygrid.common.loadWidget(\"" + htmlString + "\");";
+
                 response.getWriter().write(htmlString);
             } catch (IOException ioe) {
                 LOGGER.error(ioe.getMessage());
