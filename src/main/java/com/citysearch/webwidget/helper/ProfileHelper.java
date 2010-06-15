@@ -1,12 +1,16 @@
 package com.citysearch.webwidget.helper;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -16,6 +20,7 @@ import org.jdom.Element;
 import com.citysearch.webwidget.bean.Address;
 import com.citysearch.webwidget.bean.Profile;
 import com.citysearch.webwidget.bean.ProfileRequest;
+import com.citysearch.webwidget.bean.Review;
 import com.citysearch.webwidget.exception.CitysearchException;
 import com.citysearch.webwidget.exception.InvalidHttpResponseException;
 import com.citysearch.webwidget.exception.InvalidRequestParametersException;
@@ -55,6 +60,14 @@ public class ProfileHelper {
     private static final String CATEGORIES = "categories";
     private static final String CATEGORY = "category";
     private static final String CATEGORY_NAME = "name";
+
+    private static final String REVIEWS_URL = "reviews_url";
+    private static final String WEBSITE_URL = "website_url";
+    private static final String MENU_URL = "menu_url";
+    private static final String RESERVATION_URL = "reservation_url";
+    private static final String MAP_URL = "map_url";
+
+    private static final String DATE_FORMAT = "reviewdate.format";
 
     private Logger log = Logger.getLogger(getClass());
     private String rootPath;
@@ -142,6 +155,19 @@ public class ProfileHelper {
         return strBuilder.toString();
     }
 
+    private Document executeQuery(ProfileRequest request) throws CitysearchException {
+        validateRequest(request);
+        Properties properties = PropertiesLoader.getAPIProperties();
+        String urlString = properties.getProperty(PROPERTY_PROFILE_URL) + getQueryString(request);
+        Document responseDocument = null;
+        try {
+            responseDocument = HelperUtil.getAPIResponse(urlString);
+        } catch (InvalidHttpResponseException ihe) {
+            throw new CitysearchException(this.getClass().getName(), "executeQuery", ihe);
+        }
+        return responseDocument;
+    }
+
     /**
      * Connects to the Profile API and processes the response sent by API for Reviews
      * Response.Returns the Profile object with values set from response
@@ -151,15 +177,7 @@ public class ProfileHelper {
      * @throws CitysearchException
      */
     public Profile getProfile(ProfileRequest request) throws CitysearchException {
-        validateRequest(request);
-        Properties properties = PropertiesLoader.getAPIProperties();
-        String urlString = properties.getProperty(PROPERTY_PROFILE_URL) + getQueryString(request);
-        Document responseDocument = null;
-        try {
-            responseDocument = HelperUtil.getAPIResponse(urlString);
-        } catch (InvalidHttpResponseException ihe) {
-            throw new CitysearchException(this.getClass().getName(), "getProfile", ihe);
-        }
+        Document responseDocument = executeQuery(request);
         Profile profile = parseProfileForReviews(responseDocument);
         return profile;
     }
@@ -327,5 +345,52 @@ public class ProfileHelper {
             }
         }
 
+    }
+
+    public Profile getProfileAndHighestReview(ProfileRequest request) throws CitysearchException {
+        Document responseDocument = executeQuery(request);
+        Profile profile = findProfileLatestReview(responseDocument);
+        return profile;
+    }
+
+    public Profile findProfileLatestReview(Document doc) throws CitysearchException {
+        Profile profile = null;
+        if (doc != null && doc.hasRootElement()) {
+            Element locationElm = doc.getRootElement().getChild(LOCATION);
+            if (locationElm != null) {
+                profile = new Profile();
+                profile.setAddress(getAddress(locationElm.getChild(ADDRESS)));
+                profile.setPhone(getPhone(locationElm.getChild(CONTACT_INFO)));
+                Element urlElm = locationElm.getChild(URLS);
+                if (urlElm != null) {
+                    profile.setProfileUrl(urlElm.getChildText(PROFILE_URL));
+                    profile.setSendToFriendUrl(urlElm.getChildText(SEND_TO_FRIEND_URL));
+                    profile.setReviewsUrl(urlElm.getChildText(REVIEWS_URL));
+                    profile.setWebsiteUrl(urlElm.getChildText(WEBSITE_URL));
+                    profile.setMenuUrl(urlElm.getChildText(MENU_URL));
+                    profile.setReservationUrl(urlElm.getChildText(RESERVATION_URL));
+                    profile.setMapUrl(urlElm.getChildText(MAP_URL));
+                }
+                profile.setImageUrl(getImage(locationElm.getChild(IMAGES),
+                        locationElm.getChild(CATEGORIES)));
+                Element reviewsElm = locationElm.getChild("reviews");
+                List<Element> reviews = reviewsElm.getChildren("review");
+                SortedMap<Date, Element> reviewMap = new TreeMap<Date, Element>();
+                if (reviews != null && !reviews.isEmpty()) {
+                    SimpleDateFormat formatter = new SimpleDateFormat(
+                            PropertiesLoader.getAPIProperties().getProperty(DATE_FORMAT));
+                    for (Element reviewElm : reviews) {
+                        String dateStr = reviewElm.getChildText("review_date");
+                        Date date = HelperUtil.parseDate(dateStr, formatter);
+                        if (date != null) {
+                            reviewMap.put(date, reviewElm);
+                        }
+                    }
+                    Element reviewElm = reviewMap.get(reviewMap.lastKey());
+                    Review review = ReviewHelper.getReviewInstance(reviewElm);
+                }
+            }
+        }
+        return profile;
     }
 }
