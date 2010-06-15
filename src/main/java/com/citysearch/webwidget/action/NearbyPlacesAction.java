@@ -1,5 +1,9 @@
 package com.citysearch.webwidget.action;
 
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,12 +25,9 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
 
     private Logger log = Logger.getLogger(getClass());
 
-    private static final String ACTION_FORWARD_BACKFILL_HOUSEADS = "backfillAndHouseAds";
     private static final String ACTION_FORWARD_CONQUEST = "conquest";
-    private static final String ACTION_FORWARD_CONQUEST_BACKFILL_HOUSEADS = "conquestBackfillAndHouseAds";
 
     private NearbyPlacesRequest nearbyPlacesRequest = new NearbyPlacesRequest();
-
     private NearbyPlacesResponse nearbyPlacesResponse;
 
     public NearbyPlacesRequest getModel() {
@@ -79,13 +80,17 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
                     String listingUrl = null;
                     String callBackUrl = nearbyPlacesRequest.getCallBackUrl();
                     if (callBackUrl != null && callBackUrl.trim().length() > 0) {
-                        listingUrl = callBackUrl.replace("$l", alb.getListingId());
-                        // Probably need to go to the properties file
-                        listingUrl = "http://ad.doubleclick.net/clk;225291110;48835962;h?"
-                                + listingUrl.replace("$p", alb.getPhone());
+                        listingUrl = getTrackingUrl(callBackUrl,
+                                "http://ad.doubleclick.net/clk;225291110;48835962;h?",
+                                alb.getListingId(), nearbyPlacesRequest.getPublisher());
+                        listingUrl = listingUrl.replace("$l", alb.getListingId());
+                        listingUrl = listingUrl.replace("$p", alb.getPhone());
                     } else {
-                        listingUrl = "http://ad.doubleclick.net/clk;225291110;48835962;h?"
-                                + alb.getAdDisplayURL();
+                        // listingUrl = "http://ad.doubleclick.net/clk;225291110;48835962;h?"+
+                        // alb.getAdDisplayURL();
+                        listingUrl = getTrackingUrl(alb.getAdDisplayURL(),
+                                "http://ad.doubleclick.net/clk;225291110;48835962;h?",
+                                alb.getListingId(), nearbyPlacesRequest.getPublisher());
                     }
                     alb.setListingUrl(listingUrl);
 
@@ -119,5 +124,34 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
             return ACTION_FORWARD_CONQUEST;
         else
             return Action.SUCCESS;
+    }
+
+    private String getTrackingUrl(String adDisplayURL, String dartTrackingUrl, String listingId,
+            String publisher) throws CitysearchException {
+        try {
+            URL url = new URL(adDisplayURL);
+            int prodDetId = 12; // Click outside Citysearch
+            String host = url.getHost();
+            if (host.indexOf("citysearch.com") != -1) {
+                prodDetId = 16;
+            }
+            StringBuilder dartUrl = new StringBuilder(dartTrackingUrl);
+            dartUrl.append(adDisplayURL);
+
+            StringBuilder strBuilder = new StringBuilder("http://pfpc.citysearch.com/pfp/ad?");
+            strBuilder.append("directUrl=");
+            strBuilder.append(URLEncoder.encode(dartUrl.toString(), "UTF-8"));
+            strBuilder.append("&listingId=");
+            strBuilder.append(URLEncoder.encode(listingId, "UTF-8"));
+            strBuilder.append("&publisher=");
+            strBuilder.append(URLEncoder.encode(publisher, "UTF-8"));
+            strBuilder.append("&prodDetId=");
+            strBuilder.append(prodDetId);
+            return strBuilder.toString();
+        } catch (MalformedURLException mue) {
+            throw new CitysearchException("NearbyPlacesAction", "getTrackingUrl", mue);
+        } catch (UnsupportedEncodingException excep) {
+            throw new CitysearchException("NearbyPlacesAction", "getTrackingUrl", excep);
+        }
     }
 }
