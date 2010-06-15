@@ -2,9 +2,9 @@ package com.citysearch.webwidget.bean;
 
 /**
  * The abstract class that contains the common Request field across APIs
- *
+ * 
  * @author Aspert Benjamin
- *
+ * 
  */
 public abstract class AbstractRequest {
     protected String publisher;
@@ -13,6 +13,15 @@ public abstract class AbstractRequest {
     protected String adUnitName;
     protected String adUnitSize;
     protected Integer displaySize;
+    protected String clientIP;
+
+    public String getClientIP() {
+        return clientIP;
+    }
+
+    public void setClientIP(String clientIP) {
+        this.clientIP = clientIP;
+    }
 
     public String getPublisher() {
         return publisher;

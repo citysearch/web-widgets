@@ -12,6 +12,60 @@ public class Profile {
     private String profileUrl;
     private String sendToFriendUrl;
     private String imageUrl;
+    private String reviewsUrl;
+    private String websiteUrl;
+    private String menuUrl;
+    private String reservationUrl;
+    private String mapUrl;
+    private Review review;
+
+    public String getReviewsUrl() {
+        return reviewsUrl;
+    }
+
+    public void setReviewsUrl(String reviewsUrl) {
+        this.reviewsUrl = reviewsUrl;
+    }
+
+    public String getWebsiteUrl() {
+        return websiteUrl;
+    }
+
+    public void setWebsiteUrl(String websiteUrl) {
+        this.websiteUrl = websiteUrl;
+    }
+
+    public String getMenuUrl() {
+        return menuUrl;
+    }
+
+    public void setMenuUrl(String menuUrl) {
+        this.menuUrl = menuUrl;
+    }
+
+    public String getReservationUrl() {
+        return reservationUrl;
+    }
+
+    public void setReservationUrl(String reservationUrl) {
+        this.reservationUrl = reservationUrl;
+    }
+
+    public String getMapUrl() {
+        return mapUrl;
+    }
+
+    public void setMapUrl(String mapUrl) {
+        this.mapUrl = mapUrl;
+    }
+
+    public Review getReview() {
+        return review;
+    }
+
+    public void setReview(Review review) {
+        this.review = review;
+    }
 
     public Address getAddress() {
         return address;

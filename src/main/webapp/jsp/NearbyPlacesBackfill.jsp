@@ -7,7 +7,7 @@ citygrid.common.loadWidget(
         <div class="ctsrch_headerText">More to Try</div>
     </div>
     <div class="ctsrch_container">
-        <s:iterator value="backfill" status="placesStatus">
+        <s:iterator value="nearbyPlacesResponse.backfill" status="placesStatus">
             <div class="ctsrch_leftSide">
                 <a target="_blank" href='<s:property value="adDestinationUrl" />'><img src='<s:property value="adImageURL"/>' border="0"/></a>
             </div>
@@ -34,7 +34,7 @@ citygrid.common.loadWidget(
         <s:if test="%{!backfill.isEmpty() && !houseAds.isEmpty()}">
               <div class="ctsrch_lineMargin"></div>
           </s:if>
-        <s:iterator value="houseAds" status="hadStatus">
+        <s:iterator value="nearbyPlacesResponse.houseAds" status="hadStatus">
             <div class="ctsrch_leftSide">
                 <!--
                 <a target="_blank" href='<s:property value="destinationUrl" />'><img src='<s:property value="imageURL"/>' border="0"/></a>

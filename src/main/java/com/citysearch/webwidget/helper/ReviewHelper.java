@@ -34,9 +34,9 @@ import com.citysearch.webwidget.util.PropertiesLoader;
  * This Helper class performs all the functionality related to Reviews. Validates the Review
  * request, calls the API, aprses the response, then calls the Profile API and returns the final
  * response back
- *
+ * 
  * @author Aspert Benjamin
- *
+ * 
  */
 public class ReviewHelper {
 
@@ -72,7 +72,7 @@ public class ReviewHelper {
 
     /**
      * Constructs the Reviews API query string with all the supplied parameters
-     *
+     * 
      * @return String
      * @throws CitysearchException
      */
@@ -120,7 +120,7 @@ public class ReviewHelper {
 
     /**
      * Validates the request. If any of the parameters are missing, throws Citysearch Exception
-     *
+     * 
      * @throws CitysearchException
      */
     public void validateRequest(ReviewRequest request) throws InvalidRequestParametersException,
@@ -167,7 +167,7 @@ public class ReviewHelper {
     /**
      * Gets the review with the latest timestamp from Review API Then calls the profile API and gets
      * the details not available from review API like Address,Phone,SendToFriendURL and ImageURL
-     *
+     * 
      * @param request
      * @return Review
      * @throws InvalidRequestParametersException
@@ -231,7 +231,7 @@ public class ReviewHelper {
 
     /**
      * Parses the Reviews xml. Returns Review object with values from api
-     *
+     * 
      * @param doc
      * @return Review
      * @throws CitysearchException
@@ -263,20 +263,19 @@ public class ReviewHelper {
 
     /**
      * Parses the review element and set the required values in the Review bean
-     *
+     * 
      * @param review
      * @param reviewsElem
      * @return Review
      * @throws CitysearchException
      */
-    private Review getReviewInstance(Element reviewElem) throws CitysearchException {
+    public static Review getReviewInstance(Element reviewElem) throws CitysearchException {
         Review review = new Review();
 
         String businessName = reviewElem.getChildText(BUSINESS_NAME);
         review.setBusinessName(businessName);
         if (businessName != null && businessName.trim().length() > BUSINESS_NAME_SIZE) {
-            review.setShortBusinessName(StringUtils.substring(businessName, 0,
-                    BUSINESS_NAME_SIZE - 1));
+            review.setShortBusinessName(StringUtils.abbreviate(businessName, BUSINESS_NAME_SIZE));
         } else {
             review.setShortBusinessName(businessName);
         }
@@ -284,7 +283,7 @@ public class ReviewHelper {
         String reviewTitle = reviewElem.getChildText(REVIEW_TITLE);
         review.setReviewTitle(reviewTitle);
         if (reviewTitle != null && reviewTitle.trim().length() > REVIEW_TITLE_SIZE) {
-            review.setShortTitle(StringUtils.substring(reviewTitle, 0, REVIEW_TITLE_SIZE - 1));
+            review.setShortTitle(StringUtils.abbreviate(reviewTitle, REVIEW_TITLE_SIZE));
         } else {
             review.setShortTitle(reviewTitle);
         }
@@ -292,9 +291,7 @@ public class ReviewHelper {
         String reviewText = reviewElem.getChildText(REVIEW_TEXT);
         review.setReviewText(reviewText);
         if (reviewText != null && reviewText.trim().length() > REVIEW_TEXT_SIZE) {
-            StringBuilder strb = new StringBuilder(StringUtils.substring(reviewText, 0, REVIEW_TEXT_SIZE - 1));
-            strb.append("...");
-            review.setShortReviewText(strb.toString());
+            review.setShortReviewText(StringUtils.abbreviate(reviewText, REVIEW_TEXT_SIZE));
         } else {
             review.setShortReviewText(reviewText);
         }
@@ -302,7 +299,7 @@ public class ReviewHelper {
         String pros = reviewElem.getChildText(PROS);
         review.setPros(pros);
         if (pros != null && pros.trim().length() > PROS_SIZE) {
-            review.setShortPros(StringUtils.substring(pros, 0, PROS_SIZE - 1));
+            review.setShortPros(StringUtils.abbreviate(pros, PROS_SIZE));
         } else {
             review.setShortPros(pros);
         }
@@ -310,7 +307,7 @@ public class ReviewHelper {
         String cons = reviewElem.getChildText(CONS);
         review.setCons(cons);
         if (cons != null && cons.trim().length() > CONS_SIZE) {
-            review.setShortCons(StringUtils.substring(cons, 0, CONS_SIZE - 1));
+            review.setShortCons(StringUtils.abbreviate(cons, CONS_SIZE));
         } else {
             review.setShortCons(cons);
         }

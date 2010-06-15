@@ -388,6 +388,7 @@ public class ProfileHelper {
                     }
                     Element reviewElm = reviewMap.get(reviewMap.lastKey());
                     Review review = ReviewHelper.getReviewInstance(reviewElm);
+                    profile.setReview(review);
                 }
             }
         }

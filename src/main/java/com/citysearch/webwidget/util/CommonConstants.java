@@ -2,11 +2,13 @@ package com.citysearch.webwidget.util;
 
 /**
  * Contains common constants used in multiple places
- *
+ * 
  * @author Aspert
- *
+ * 
  */
 public class CommonConstants {
+    public static final Integer DEFAULT_NEARBY_DISPLAY_SIZE = 3;
+
     public static final String WHAT = "what";
     public static final String WHERE = "where";
     public static final String TAGS = "tags";

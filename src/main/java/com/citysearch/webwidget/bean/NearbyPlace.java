@@ -31,6 +31,15 @@ public class NearbyPlace implements Comparable<NearbyPlace> {
     private String offers;
     private String description;
     private String adDestinationUrl;
+    private Profile profile;
+
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
+    }
 
     public List<Integer> getRating() {
         return rating;

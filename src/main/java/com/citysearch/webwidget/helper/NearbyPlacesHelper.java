@@ -13,8 +13,12 @@ import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 
+import com.citysearch.webwidget.bean.HouseAd;
 import com.citysearch.webwidget.bean.NearbyPlace;
 import com.citysearch.webwidget.bean.NearbyPlacesRequest;
+import com.citysearch.webwidget.bean.NearbyPlacesResponse;
+import com.citysearch.webwidget.bean.Profile;
+import com.citysearch.webwidget.bean.ProfileRequest;
 import com.citysearch.webwidget.bean.SearchRequest;
 import com.citysearch.webwidget.exception.CitysearchException;
 import com.citysearch.webwidget.exception.InvalidHttpResponseException;
@@ -27,9 +31,9 @@ import com.citysearch.webwidget.util.PropertiesLoader;
 /**
  * Helper class for PFP API. Contains the functionality to validate request parameters, queries the
  * API for different kind of requests and processes response accordingly
- *
+ * 
  * @author Aspert Benjamin
- *
+ * 
  */
 public class NearbyPlacesHelper {
 
@@ -66,7 +70,7 @@ public class NearbyPlacesHelper {
 
     /**
      * Validates PFP API request parameters
-     *
+     * 
      * @param request
      * @throws CitysearchException
      */
@@ -93,7 +97,7 @@ public class NearbyPlacesHelper {
 
     /**
      * Constructs and returns PFP query string with geography
-     *
+     * 
      * @param request
      * @return String
      * @throws CitysearchException
@@ -160,7 +164,7 @@ public class NearbyPlacesHelper {
 
     /**
      * Constructs and returns PFP Query String without geography parameters
-     *
+     * 
      * @param request
      * @return String
      * @throws CitysearchException
@@ -191,7 +195,7 @@ public class NearbyPlacesHelper {
         sRequest.setTags(request.getTags());
         sRequest.setPublisher(request.getPublisher());
 
-        SearchHelper sHelper = new SearchHelper(this.rootPath, getDisplaySize());
+        SearchHelper sHelper = new SearchHelper(this.rootPath, this.displaySize);
         String[] latLon = sHelper.getLatitudeLongitude(sRequest);
         if (latLon.length >= 2) {
             request.setLatitude(latLon[0]);
@@ -203,15 +207,19 @@ public class NearbyPlacesHelper {
      * Queries Search API for latitude and longitude if not present in request, then queries PFP api
      * with Geography parameters. If no results are returned then queries PFP API again but without
      * geography parameters.
-     *
+     * 
      * @param request
      * @throws CitysearchException
      */
-    public List<NearbyPlace> getNearbyPlaces(NearbyPlacesRequest request)
+    public NearbyPlacesResponse getNearbyPlaces(NearbyPlacesRequest request)
             throws InvalidRequestParametersException, CitysearchException {
         log.info("NearbyPlacesHelper.getNearbyPlaces: Begin");
         validateRequest(request);
-        setDisplaySize(request.getDisplaySize());
+        this.displaySize = request.getDisplaySize();
+        if (this.displaySize == null)
+        {
+            this.displaySize = CommonConstants.DEFAULT_NEARBY_DISPLAY_SIZE;
+        }
         log.info("NearbyPlacesHelper.getNearbyPlaces: After validate");
         boolean latitudeLongitudePresentInRequest = true;
         if (StringUtils.isBlank(request.getLatitude())
@@ -227,12 +235,14 @@ public class NearbyPlacesHelper {
                     "Invalid Latitude and Longitude");
         }
 
+        boolean responseFromSearch = false;
         List<NearbyPlace> nearbyPlaces = getPlacesByGeoCodes(request,
                 latitudeLongitudePresentInRequest);
         if (nearbyPlaces == null || nearbyPlaces.isEmpty()) {
             log.info("NearbyPlacesHelper.getNearbyPlaces: No results with geography.");
             nearbyPlaces = getPlacesWithoutGeoCodes(request);
             if (nearbyPlaces == null || nearbyPlaces.isEmpty()) {
+                responseFromSearch = true;
                 log.info("NearbyPlacesHelper.getNearbyPlaces: No results without geography.");
                 // Query Search API
                 SearchRequest sRequest = new SearchRequest();
@@ -241,11 +251,70 @@ public class NearbyPlacesHelper {
                 sRequest.setTags(request.getTags());
                 sRequest.setPublisher(request.getPublisher());
 
-                SearchHelper sHelper = new SearchHelper(this.rootPath, getDisplaySize());
+                SearchHelper sHelper = new SearchHelper(this.rootPath, this.displaySize);
                 nearbyPlaces = sHelper.getNearbyPlaces(sRequest);
             }
         }
-        return nearbyPlaces;
+
+        return createResponse(nearbyPlaces, request, responseFromSearch);
+    }
+
+    private NearbyPlacesResponse createResponse(List<NearbyPlace> nearbyPlaces,
+            NearbyPlacesRequest request, boolean searchResponse) throws CitysearchException {
+        NearbyPlacesResponse response = new NearbyPlacesResponse();
+
+        // When no results from PFP or Search
+        if (nearbyPlaces == null || nearbyPlaces.isEmpty()) {
+            List<NearbyPlace> backfill = getNearbyPlacesBackfill();
+            List<HouseAd> houseAds = null;
+            if (backfill == null || backfill.isEmpty()) {
+                // If no backfills from PFP, return 3 house ads
+                houseAds = HouseAdsHelper.getHouseAds(this.rootPath);
+                houseAds = houseAds.subList(0, this.displaySize);
+            } else if (backfill.size() < this.displaySize) {
+                // If less than 3 backfills found, fill the rest with house ads.
+                houseAds = HouseAdsHelper.getHouseAds(this.rootPath);
+                int noHouseAdsNeeded = this.displaySize - backfill.size();
+                houseAds = houseAds.subList(0, noHouseAdsNeeded);
+            }
+            response.setBackfill(backfill);
+            response.setHouseAds(houseAds);
+        } else {
+            response.setNearbyPlaces(nearbyPlaces);
+            // If the # of results returned by PFP or Search is less than required size
+            if (nearbyPlaces.size() < this.displaySize) {
+                // If Response was from search
+                if (searchResponse) {
+                    int moreRequired = this.displaySize - nearbyPlaces.size();
+                    List<NearbyPlace> backfill = getNearbyPlacesBackfill();
+                    List<HouseAd> houseAds = null;
+                    if (backfill == null || backfill.isEmpty()) {
+                        houseAds = HouseAdsHelper.getHouseAds(this.rootPath);
+                        houseAds = houseAds.subList(0, moreRequired);
+                    } else if (backfill.size() < moreRequired) {
+                        houseAds = HouseAdsHelper.getHouseAds(this.rootPath);
+                        houseAds = houseAds.subList(0, moreRequired - backfill.size());
+                    } else if (backfill.size() > moreRequired) {
+                        backfill = backfill.subList(0, moreRequired);
+                    }
+                    response.setBackfill(backfill);
+                    response.setHouseAds(houseAds);
+                } else {
+                    if (nearbyPlaces.size() < this.displaySize) {
+                        ProfileHelper phelper = new ProfileHelper(this.rootPath);
+                        ProfileRequest profileRequest = new ProfileRequest();
+                        profileRequest.setPublisher(request.getPublisher());
+                        profileRequest.setClientIP(request.getClientIP());
+                        for (NearbyPlace nbp : nearbyPlaces) {
+                            profileRequest.setListingId(nbp.getListingId());
+                            Profile profile = phelper.getProfileAndHighestReview(profileRequest);
+                            nbp.setProfile(profile);
+                        }
+                    }
+                }
+            }
+        }
+        return response;
     }
 
     public List<NearbyPlace> getNearbyPlacesBackfill() throws CitysearchException {
@@ -328,13 +397,13 @@ public class NearbyPlacesHelper {
                     List<Element> elmsToConvert = new ArrayList<Element>();
                     for (int j = 0; j < elmsSortedByDistance.size(); j++) {
 
-                        if (elmsToConvert.size() >= getDisplaySize()) {
+                        if (elmsToConvert.size() >= this.displaySize) {
                             break;
                         }
                         Double key = elmsSortedByDistance.firstKey();
                         List<Element> elms = elmsSortedByDistance.remove(key);
                         for (int idx = 0; idx < elms.size(); idx++) {
-                            if (elmsToConvert.size() == getDisplaySize()) {
+                            if (elmsToConvert.size() == this.displaySize) {
                                 break;
                             }
                             elmsToConvert.add(elms.get(idx));
@@ -397,6 +466,7 @@ public class NearbyPlacesHelper {
         nearbyPlace.setCity(ad.getChildText(CommonConstants.CITY));
         nearbyPlace.setState(ad.getChildText(CommonConstants.STATE));
         nearbyPlace.setPostalCode(ad.getChildText(ZIP_TAG));
+        nearbyPlace.setAdDestinationUrl(ad.getChildText(AD_DESTINATION_URL));
         return nearbyPlace;
     }
 
@@ -416,8 +486,8 @@ public class NearbyPlacesHelper {
                 }
                 if (!backfillElms.isEmpty()) {
                     List<Element> elmsToConvert = new ArrayList<Element>();
-                    if (backfillElms.size() >= getDisplaySize()) {
-                        for (int idx = 0; idx < getDisplaySize(); idx++) {
+                    if (backfillElms.size() >= this.displaySize) {
+                        for (int idx = 0; idx < this.displaySize; idx++) {
                             elmsToConvert.add(backfillElms.get(idx));
                         }
                     } else {
@@ -486,13 +556,5 @@ public class NearbyPlacesHelper {
             nearbyPlaces.set(i, nearbyPlace);
         }
         return nearbyPlaces;
-    }
-
-    public int getDisplaySize() {
-        return displaySize;
-    }
-
-    public void setDisplaySize(Integer displaySize) {
-        this.displaySize = displaySize;
     }
 }

@@ -17,7 +17,6 @@ public class ReviewRequest extends AbstractRequest {
     private String max;
     private String placement;
     private boolean customerOnly;
-    private String clientIP;
     private String latitude;
     private String longitude;
     private String radius;
@@ -92,14 +91,6 @@ public class ReviewRequest extends AbstractRequest {
 
     public void setPlacement(String placement) {
         this.placement = placement;
-    }
-
-    public String getClientIP() {
-        return clientIP;
-    }
-
-    public void setClientIP(String clientIP) {
-        this.clientIP = clientIP;
     }
 
     public String getLatitude() {
