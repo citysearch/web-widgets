@@ -15,13 +15,14 @@ var citygrid = {
             widgeturl += '?what='+objCSW.what;
             widgeturl += '&where='+objCSW.where;
             widgeturl += '&publisher='+objCSW.publisher;
-            widgeturl += '&lat='+objCSW.lat;
-            widgeturl += '&lon='+objCSW.lon;
+            widgeturl += '&latitude='+objCSW.latitude;
+            widgeturl += '&longitude='+objCSW.longitude;
             widgeturl += '&tags='+objCSW.tags;
             widgeturl += '&radius='+objCSW.radius;
-            widgeturl += '&placement=&apikey=test';
-            widgeturl += '&callbackfunction='+objCSW.callback;
-            widgeturl += '&callbackURL='+objCSW.url;
+            widgeturl += '&placement=';
+            widgeturl += '&apikey=test';
+            widgeturl += '&callBackFunction='+objCSW.callBackFunction;
+            widgeturl += '&callBackUrl='+objCSW.callBackUrl;
             widgeturl += '&adUnitName='+objCSW.adUnitName;
             widgeturl += '&adUnitSize='+objCSW.adUnitSize;
 
@@ -56,26 +57,17 @@ var citygrid = {
         },
 
         checkInput : function(objCSW) {
-            if (typeof objCSW.what == "undefined" && typeof objCSW.tags == "undefined" ) { throw 'undefined what/tags'; }
-            if (typeof objCSW.url == "undefined" && typeof objCSW.callback == "undefined" ) { throw 'undefined url/callback'; }
-            if (typeof objCSW.what == "" && typeof objCSW.tags == "" ) { throw 'empty what/tags'; }
-            if (typeof objCSW.url == "" && typeof objCSW.callback == "" ) { throw 'empty url/callback'; }
-            if (typeof objCSW.publisher == "undefined" || objCSW.publisher == '') { throw 'undefined publisher'; }
-            if (typeof objCSW.what == "undefined") { objCSW.what = ''; }
-            if (typeof objCSW.where == "undefined") { objCSW.where = ''; }
-            if (typeof objCSW.lat == "undefined") { objCSW.lat = ''; }
-            if (typeof objCSW.lon == "undefined") { objCSW.lon = ''; }
+            if (typeof objCSW.what == "undefined") { objCSW.what = 'Restaurants'; }
+            if (typeof objCSW.where == "undefined") { objCSW.where = 'West Hollywood, CA'; }
+            if (typeof objCSW.publisher == "undefined") { objCSW.publisher = ''; }
+            if (typeof objCSW.latitude == "undefined") { objCSW.latitude = ''; }
+            if (typeof objCSW.longitude == "undefined") { objCSW.longitude = ''; }
             if (typeof objCSW.tags == "undefined") { objCSW.tags = ''; }
-            if (typeof objCSW.radius == "undefined") { objCSW.radius = ''; }
-            if (typeof objCSW.url == "undefined") { objCSW.url = ''; }
-            if (typeof objCSW.callback == "undefined") { objCSW.callback = ''; }
-
-            // check ad unit size
-            if (objCSW.adUnitSize && objCSW.adUnitSize == '645x100') {
-            }
-            else {
-                objCSW.adUnitSize = '300x250';
-            }
+            if (typeof objCSW.radius == "undefined") { objCSW.radius = '10'; }
+            if (typeof objCSW.callBackUrl == "undefined") { objCSW.callBackUrl = ''; }
+            if (typeof objCSW.callBackFunction == "undefined") { objCSW.callBackFunction = ''; }
+            if (typeof objCSW.adUnitName == "undefined") { objCSW.adUnitName = 'nearby'; }
+            if (typeof objCSW.adUnitSize == "undefined") { objCSW.adUnitName = '300x250'; }
 
             citygrid.objCSW = objCSW;
             return objCSW;
