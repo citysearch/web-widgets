@@ -101,11 +101,13 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
                         // Should produce javascript:fnName('param1','param2')
                         StringBuilder strBuilder = new StringBuilder("javascript:");
                         strBuilder.append(callBackFn);
-                        strBuilder.append("('");
+                        strBuilder.append("(\"");
                         strBuilder.append(alb.getListingId());
-                        strBuilder.append("','");
+                        strBuilder.append("\",\"");
                         strBuilder.append(alb.getPhone());
-                        strBuilder.append("')");
+                        strBuilder.append("\")");
+
+                        log.info("CallBackFunction: "+strBuilder.toString());
 
                         alb.setCallBackFunction(strBuilder.toString());
                     }
