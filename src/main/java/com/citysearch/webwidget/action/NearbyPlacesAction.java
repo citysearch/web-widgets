@@ -80,11 +80,11 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
                     String listingUrl = null;
                     String callBackUrl = nearbyPlacesRequest.getCallBackUrl();
                     if (callBackUrl != null && callBackUrl.trim().length() > 0) {
+                        callBackUrl = callBackUrl.replace("$l", alb.getListingId());
+                        callBackUrl = callBackUrl.replace("$p", alb.getPhone());
                         listingUrl = getTrackingUrl(callBackUrl,
                                 "http://ad.doubleclick.net/clk;225291110;48835962;h?",
                                 alb.getListingId(), nearbyPlacesRequest.getPublisher());
-                        listingUrl = listingUrl.replace("$l", alb.getListingId());
-                        listingUrl = listingUrl.replace("$p", alb.getPhone());
                     } else {
                         // listingUrl = "http://ad.doubleclick.net/clk;225291110;48835962;h?"+
                         // alb.getAdDisplayURL();
