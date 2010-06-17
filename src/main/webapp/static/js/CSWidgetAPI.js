@@ -40,10 +40,10 @@ var citygrid = {
         },
 
         loadWidget : function(widgetHTML) {
+        	widgetHTML = widgetHTML.replace(/&amp;/g, "&");
             widgetHTML = widgetHTML.replace(/&lt;/g, "<");
             widgetHTML = widgetHTML.replace(/&gt;/g, ">");
             widgetHTML = widgetHTML.replace(/&quot;/g, "\"");
-            widgetHTML = widgetHTML.replace(/&amp;/g, "&");
             document.getElementById(citygrid.objCSW.target).innerHTML = widgetHTML;
         },
 
