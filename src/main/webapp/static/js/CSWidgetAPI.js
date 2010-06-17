@@ -8,23 +8,19 @@ var citygrid = {
 
     // nearby widget
     nearby : {
-        createwidget : function(objCSW) {
-            objCSW = citygrid.common.checkInput(objCSW);
-
-            var widgeturl = citygrid.common.getHostName(objCSW.site);
-            widgeturl += '?what='+objCSW.what;
-            widgeturl += '&where='+objCSW.where;
-            widgeturl += '&publisher='+objCSW.publisher;
-            widgeturl += '&latitude='+objCSW.latitude;
-            widgeturl += '&longitude='+objCSW.longitude;
-            widgeturl += '&tags='+objCSW.tags;
-            widgeturl += '&radius='+objCSW.radius;
-            widgeturl += '&placement=';
-            widgeturl += '&apikey=test';
-            widgeturl += '&callBackFunction='+objCSW.callBackFunction;
-            widgeturl += '&callBackUrl='+objCSW.callBackUrl;
-            widgeturl += '&adUnitName='+objCSW.adUnitName;
-            widgeturl += '&adUnitSize='+objCSW.adUnitSize;
+        createwidget : function(data) {
+            var widgeturl = citygrid.common.getHostName(data.site);
+            widgeturl += '?what='+data.what;
+            widgeturl += '&where='+data.where;
+            widgeturl += '&publisher='+data.publisher;
+            widgeturl += '&latitude='+data.latitude;
+            widgeturl += '&longitude='+data.longitude;
+            widgeturl += '&tags='+data.tags;
+            widgeturl += '&radius='+data.radius;
+            widgeturl += '&callBackFunction='+data.callBackFunction;
+            widgeturl += '&callBackUrl='+data.callBackUrl;
+            widgeturl += '&adUnitName='+data.adUnitName;
+            widgeturl += '&adUnitSize='+data.adUnitSize;
 
             citygrid.common.scriptInject(widgeturl);
         }
@@ -40,11 +36,11 @@ var citygrid = {
         },
 
         loadWidget : function(widgetHTML) {
-        	widgetHTML = widgetHTML.replace(/&amp;/g, "&");
+            widgetHTML = widgetHTML.replace(/&amp;/g, "&");
             widgetHTML = widgetHTML.replace(/&lt;/g, "<");
             widgetHTML = widgetHTML.replace(/&gt;/g, ">");
             widgetHTML = widgetHTML.replace(/&quot;/g, "\"");
-            document.getElementById(citygrid.objCSW.target).innerHTML = widgetHTML;
+            document.getElementById(citygrid.data.target).innerHTML = widgetHTML;
         },
 
         getHostName : function(site) {
@@ -56,48 +52,31 @@ var citygrid = {
                 return "http://contentads.citygridmedia.com/ads/getwidget";
         },
 
-        checkInput : function(objCSW) {
-            if (typeof objCSW.what == "undefined") { objCSW.what = 'Restaurants'; }
-            if (typeof objCSW.where == "undefined") { objCSW.where = 'West Hollywood, CA'; }
-            if (typeof objCSW.publisher == "undefined") { objCSW.publisher = ''; }
-            if (typeof objCSW.latitude == "undefined") { objCSW.latitude = ''; }
-            if (typeof objCSW.longitude == "undefined") { objCSW.longitude = ''; }
-            if (typeof objCSW.tags == "undefined") { objCSW.tags = ''; }
-            if (typeof objCSW.radius == "undefined") { objCSW.radius = '10'; }
-            if (typeof objCSW.callBackUrl == "undefined") { objCSW.callBackUrl = ''; }
-            if (typeof objCSW.callBackFunction == "undefined") { objCSW.callBackFunction = ''; }
-            if (typeof objCSW.adUnitName == "undefined") { objCSW.adUnitName = 'nearby'; }
-            if (typeof objCSW.adUnitSize == "undefined") { objCSW.adUnitName = '300x250'; }
+        checkInput : function(data) {
 
-            citygrid.objCSW = objCSW;
-            return objCSW;
-        },
+            if (!data.what) { data.what = 'Restaurants'; }
+            if (!data.where) { data.where = 'West Hollywood, CA'; }
+            if (!data.publisher) { data.publisher = ''; }
+            if (!data.latitude) { data.latitude = ''; }
+            if (!data.longitude) { data.longitude = ''; }
+            if (!data.tags) { data.tags = ''; }
+            if (!data.radius) { data.radius = '10'; }
+            if (!data.callBackUrl) { data.callBackUrl = ''; }
+            if (!data.callBackFunction) { data.callBackFunction = ''; }
+            if (!data.adUnitName) { data.adUnitName = 'nearby'; }
+            if (!data.adUnitSize) { data.adUnitName = '300x250'; }
+            if (!data.clientIP) { data.clientIP = ''; }
 
-        QSObject : function(querystring) {
-            //Create regular expression object to retrieve the qs part
-            var qsReg = new RegExp("[?][^#]*","i");
-            var hRef = unescape(querystring);
-            var qsMatch = hRef.match(qsReg);
-            //removes the question mark from the url
-            qsMatch = new String(qsMatch);
-            qsMatch = qsMatch.substr(1, qsMatch.length -1);
-            //split it up
-            var rootArr = qsMatch.split("&");
-            for (var i=0;i<rootArr.length;i++) {
-                var tempArr = rootArr[i].split("=");
-                if (tempArr.length ==2) {
-                    tempArr[0] = unescape(tempArr[0]);
-                    tempArr[1] = unescape(tempArr[1]);
-                    if(tempArr[0]=='var') {
-                        document.write('<script type=\"text/javascript\">citygrid.nearby.createwidget('+tempArr[1]+');<\/script>');
-                    }
-                }
-            }
+            citygrid.data = data;
+            return data;
         }
     }
 };
 
 (function() {
-    var scriptSrc = document.getElementById("CSWScript").src.toLowerCase();
-    citygrid.common.QSObject(scriptSrc);
+    var scriptSrc = document.getElementById("CSWScript").src;
+    var data = eval(scriptSrc.split("?var=")[1]);
+
+    data = citygrid.common.checkInput(data);
+    citygrid.nearby.createwidget(data);
 }());
