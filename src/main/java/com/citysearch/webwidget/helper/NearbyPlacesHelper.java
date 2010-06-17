@@ -230,9 +230,10 @@ public class NearbyPlacesHelper {
         }
         if (StringUtils.isBlank(request.getLatitude())
                 || StringUtils.isBlank(request.getLongitude())) {
-            log.info("NearbyPlacesHelper.getNearbyPlaces: No lat lon. excpetion.");
-            throw new CitysearchException(this.getClass().getName(), "getNearbyPlaces",
-                    "Invalid Latitude and Longitude");
+            log.info("NearbyPlacesHelper.getNearbyPlaces: No lat lon. return house ads.");
+            //If lat and lon cannot be found, then return house ads.
+            return createResponse(null, request, false);
+            //throw new CitysearchException(this.getClass().getName(), "getNearbyPlaces", "Invalid Latitude and Longitude");
         }
 
         boolean responseFromSearch = false;
