@@ -118,9 +118,11 @@ public class NearbyPlacesHelper {
         apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
         apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.LONGITUDE,
                 request.getLongitude()));
+        /* PFP is not accepting publisher with lat lon
         apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
         apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.PUBLISHER_CODE,
                 request.getPublisher()));
+        */
         if (!StringUtils.isBlank(request.getTags())) {
             apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
             apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.TAG,
@@ -216,8 +218,7 @@ public class NearbyPlacesHelper {
         log.info("NearbyPlacesHelper.getNearbyPlaces: Begin");
         validateRequest(request);
         this.displaySize = request.getDisplaySize();
-        if (this.displaySize == null)
-        {
+        if (this.displaySize == null) {
             this.displaySize = CommonConstants.DEFAULT_NEARBY_DISPLAY_SIZE;
         }
         log.info("NearbyPlacesHelper.getNearbyPlaces: After validate");
@@ -227,13 +228,17 @@ public class NearbyPlacesHelper {
             log.info("NearbyPlacesHelper.getNearbyPlaces: No lat lon. Find Lat and Lon");
             latitudeLongitudePresentInRequest = false;
             loadLatitudeAndLongitudeFromSearchAPI(request);
+            if (StringUtils.isBlank(request.getRadius())) {
+                request.setRadius(String.valueOf(CommonConstants.EXTENDED_RADIUS));
+            }
         }
         if (StringUtils.isBlank(request.getLatitude())
                 || StringUtils.isBlank(request.getLongitude())) {
             log.info("NearbyPlacesHelper.getNearbyPlaces: No lat lon. return house ads.");
-            //If lat and lon cannot be found, then return house ads.
+            // If lat and lon cannot be found, then return house ads.
             return createResponse(null, request, false);
-            //throw new CitysearchException(this.getClass().getName(), "getNearbyPlaces", "Invalid Latitude and Longitude");
+            // throw new CitysearchException(this.getClass().getName(), "getNearbyPlaces",
+            // "Invalid Latitude and Longitude");
         }
 
         boolean responseFromSearch = false;
@@ -327,6 +332,7 @@ public class NearbyPlacesHelper {
         log.info("NearbyPlacesHelper.getPlacesByGeoCodes: Begin");
         Properties properties = PropertiesLoader.getAPIProperties();
         StringBuilder urlStringBuilder = null;
+        /*
         if (latitudeLongitudePresentInRequest) {
             urlStringBuilder = new StringBuilder(properties.getProperty(PFP_LOCATION_URL));
             urlStringBuilder.append(getQueryStringWithLatitudeAndLongitude(request));
@@ -334,10 +340,13 @@ public class NearbyPlacesHelper {
             urlStringBuilder = new StringBuilder(properties.getProperty(PFP_URL));
             urlStringBuilder.append(getQueryStringWithWhere(request));
         }
+        */
+        urlStringBuilder = new StringBuilder(properties.getProperty(PFP_LOCATION_URL));
+        urlStringBuilder.append(getQueryStringWithLatitudeAndLongitude(request));
         log.info("NearbyPlacesHelper.getPlacesByGeoCodes: Query: " + urlStringBuilder.toString());
         // Document responseDocument = null;
         try {
-            pfpResponseDocument = HelperUtil.getAPIResponse(urlStringBuilder.toString());
+            pfpResponseDocument = HelperUtil.getAPIResponse(urlStringBuilder.toString(), null);
             log.info("NearbyPlacesHelper.getPlacesByGeoCodes: successful response");
         } catch (InvalidHttpResponseException ihe) {
             throw new CitysearchException(this.getClass().getName(), "getPlacesByGeoCodes", ihe);
@@ -354,7 +363,7 @@ public class NearbyPlacesHelper {
         log.info("NearbyPlacesHelper.getPlacesWithoutGeoCodes: Query " + urlString);
         Document responseDocument = null;
         try {
-            responseDocument = HelperUtil.getAPIResponse(urlString);
+            responseDocument = HelperUtil.getAPIResponse(urlString, null);
             log.info("NearbyPlacesHelper.getPlacesWithoutGeoCodes: Successful response");
         } catch (InvalidHttpResponseException ihe) {
             throw new CitysearchException(this.getClass().getName(), "getPlacesWithoutGeoCodes",

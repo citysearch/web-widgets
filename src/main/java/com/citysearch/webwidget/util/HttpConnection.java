@@ -3,6 +3,7 @@ package com.citysearch.webwidget.util;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -26,15 +27,24 @@ public class HttpConnection {
      * failure
      * 
      * @param urlString
+     * @param headers
+     *            Map for HTTP Headers
      * @return
      * @throws CitysearchException
      */
-    public static HttpURLConnection getConnection(String urlString) throws CitysearchException {
+    public static HttpURLConnection getConnection(String urlString, Map<String, String> headers)
+            throws CitysearchException {
         HttpURLConnection connection = null;
         String errorMsg = PropertiesLoader.getErrorProperties().getProperty(error);
         try {
             URL url = new URL(urlString);
             connection = (HttpURLConnection) url.openConnection();
+            // Set HTTP headers if passed.
+            if (headers != null && !headers.isEmpty()) {
+                for (String key : headers.keySet()) {
+                    connection.setRequestProperty(key, headers.get(key));
+                }
+            }
             connection.setRequestMethod(reqMethod);
             connection.setDoOutput(true);
             connection.setReadTimeout(resWaitTime);

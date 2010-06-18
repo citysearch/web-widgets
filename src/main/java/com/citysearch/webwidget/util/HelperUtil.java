@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
@@ -103,12 +104,12 @@ public class HelperUtil {
      * @throws CitysearchException
      * @throws InvalidHttpResponseException
      */
-    public static Document getAPIResponse(String url) throws CitysearchException,
+    public static Document getAPIResponse(String url, Map<String, String> headers) throws CitysearchException,
             InvalidHttpResponseException {
         HttpURLConnection connection = null;
         Document xmlDocument = null;
         try {
-            connection = HttpConnection.getConnection(url);
+            connection = HttpConnection.getConnection(url, headers);
             if (connection.getResponseCode() != CommonConstants.RES_SUCCESS_CODE) {
                 throw new InvalidHttpResponseException(connection.getResponseCode(),
                         "Invalid HTTP Status Code.");

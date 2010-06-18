@@ -53,7 +53,7 @@ public class CitySearchServlet extends HttpServlet {
             HttpURLConnection connection = null;
             InputStream iStream = null;
             try {
-                connection = HttpConnection.getConnection(strBuilder.toString());
+                connection = HttpConnection.getConnection(strBuilder.toString(), null);
                 iStream = connection.getInputStream();
                 StringWriter writer = new StringWriter();
                 IOUtils.copy(iStream, writer);

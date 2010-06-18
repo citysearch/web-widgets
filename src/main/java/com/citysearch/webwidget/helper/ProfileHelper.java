@@ -161,7 +161,7 @@ public class ProfileHelper {
         String urlString = properties.getProperty(PROPERTY_PROFILE_URL) + getQueryString(request);
         Document responseDocument = null;
         try {
-            responseDocument = HelperUtil.getAPIResponse(urlString);
+            responseDocument = HelperUtil.getAPIResponse(urlString, null);
         } catch (InvalidHttpResponseException ihe) {
             throw new CitysearchException(this.getClass().getName(), "executeQuery", ihe);
         }

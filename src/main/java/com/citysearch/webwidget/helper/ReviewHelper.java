@@ -199,7 +199,7 @@ public class ReviewHelper {
         log.info("ReviewHelper.getLatestReview:: Request URL " + urlString);
         Document responseDocument = null;
         try {
-            responseDocument = HelperUtil.getAPIResponse(urlString);
+            responseDocument = HelperUtil.getAPIResponse(urlString, null);
             log.info("ReviewHelper.getLatestReview:: Successfull response received.");
         } catch (InvalidHttpResponseException ihe) {
             throw new CitysearchException(this.getClass().getName(), "getLatestReview", ihe);

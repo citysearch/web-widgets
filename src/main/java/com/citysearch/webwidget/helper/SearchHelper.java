@@ -27,9 +27,9 @@ import com.citysearch.webwidget.util.PropertiesLoader;
  * This class performs all the functionalities related to Search API like validating query
  * parameters, querying API and processing response Constructs request with different parameters and
  * processes response accordingly for various APIs
- *
+ * 
  * @author Aspert Benjamin
- *
+ * 
  */
 public class SearchHelper {
 
@@ -57,7 +57,7 @@ public class SearchHelper {
 
     /**
      * Returns the Search API Query String
-     *
+     * 
      * @param request
      * @return
      * @throws CitysearchException
@@ -90,7 +90,7 @@ public class SearchHelper {
 
     /**
      * Validates the Search API request parameters for fetching nearest Postal Code
-     *
+     * 
      * @param request
      * @throws CitysearchException
      */
@@ -120,7 +120,7 @@ public class SearchHelper {
     /**
      * Validates the request parameters, calls Search API and returns the closest Postal Code from
      * the response
-     *
+     * 
      * @param request
      * @return String
      * @throws CitysearchException
@@ -135,7 +135,7 @@ public class SearchHelper {
         log.info("SearchHelper.getClosestLocationPostalCode: Query " + urlString);
         Document responseDocument = null;
         try {
-            responseDocument = HelperUtil.getAPIResponse(urlString);
+            responseDocument = HelperUtil.getAPIResponse(urlString, null);
             log.info("SearchHelper.getClosestLocationPostalCode: Successfull response");
         } catch (InvalidHttpResponseException ihe) {
             throw new CitysearchException(this.getClass().getName(),
@@ -155,7 +155,7 @@ public class SearchHelper {
 
     /**
      * Returns the nearest Postal Code from the Search API Response
-     *
+     * 
      * @param doc
      * @return String
      * @throws CitysearchException
@@ -183,7 +183,7 @@ public class SearchHelper {
 
     /**
      * Validates the Search API request parameters to get latitude and longitude
-     *
+     * 
      * @param request
      * @throws CitysearchException
      */
@@ -209,7 +209,7 @@ public class SearchHelper {
 
     /**
      * Constructs Search API request to get latitude and longitude values
-     *
+     * 
      * @param request
      * @return
      * @throws CitysearchException
@@ -244,7 +244,7 @@ public class SearchHelper {
 
     /**
      * Queries the Search API and returns latitude, longitude values in a String Array
-     *
+     * 
      * @param request
      * @return String[]
      * @throws CitysearchException
@@ -259,7 +259,7 @@ public class SearchHelper {
         log.info("SearchHelper.getLatitudeLongitude: Query " + urlString);
         Document responseDocument = null;
         try {
-            responseDocument = HelperUtil.getAPIResponse(urlString);
+            responseDocument = HelperUtil.getAPIResponse(urlString, null);
             log.info("SearchHelper.getLatitudeLongitude: Successfull response.");
         } catch (InvalidHttpResponseException ihe) {
             throw new CitysearchException(this.getClass().getName(), "getLatitudeLongitude", ihe);
@@ -280,7 +280,7 @@ public class SearchHelper {
         log.info("SearchHelper.getNearbyPlaces: Query " + urlString);
         Document responseDocument = null;
         try {
-            responseDocument = HelperUtil.getAPIResponse(urlString);
+            responseDocument = HelperUtil.getAPIResponse(urlString, null);
             log.info("SearchHelper.getNearbyPlaces: Successfull response");
         } catch (InvalidHttpResponseException ihe) {
             throw new CitysearchException(this.getClass().getName(), "getNearbyPlaces", ihe);
@@ -326,8 +326,7 @@ public class SearchHelper {
                             elm.getChildText(CommonConstants.LONGITUDE));
                     double distance = HelperUtil.getDistance(sourceLatitude, sourceLongitude,
                             businessLatitude, businessLongitude);
-                    if (childrenSize <= displaySize
-                            || distance < CommonConstants.EXTENDED_RADIUS) {
+                    if (childrenSize <= displaySize || distance < CommonConstants.EXTENDED_RADIUS) {
                         // Since the we are rounding the distance to the 10th, There might be
                         // multiple listings with the same distance.
                         if (elmsSortedByDistance.containsKey(distance)) {
