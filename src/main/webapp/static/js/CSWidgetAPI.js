@@ -21,8 +21,40 @@ var citygrid = {
             widgeturl += '&callBackUrl='+data.callBackUrl;
             widgeturl += '&adUnitName='+data.adUnitName;
             widgeturl += '&adUnitSize='+data.adUnitSize;
+            widgeturl += '&clientIP='+data.clientIP;
 
             citygrid.common.scriptInject(widgeturl);
+        }
+    },
+
+    // review widget
+    review : {
+        createwidget : function(data) {
+            var widgeturl = citygrid.common.getHostName(data.site);
+            widgeturl += '?what='+data.what;
+            widgeturl += '&where='+data.where;
+            widgeturl += '&publisher='+data.publisher;
+            widgeturl += '&latitude='+data.latitude;
+            widgeturl += '&longitude='+data.longitude;
+            widgeturl += '&tags='+data.tags;
+            widgeturl += '&radius='+data.radius;
+            widgeturl += '&callBackFunction='+data.callBackFunction;
+            widgeturl += '&callBackUrl='+data.callBackUrl;
+            widgeturl += '&adUnitName='+data.adUnitName;
+            widgeturl += '&adUnitSize='+data.adUnitSize;
+            widgeturl += '&clientIP='+data.clientIP;
+
+            citygrid.common.scriptInject(widgeturl);
+        },
+
+        showDetail : function() {
+            document.getElementById('cs_mainContainer').style.display='none';
+            document.getElementById('cs_mainContainer_detail').style.display='block';
+        },
+
+        hideDetail : function() {
+            document.getElementById('cs_mainContainer').style.display='block';
+            document.getElementById('cs_mainContainer_detail').style.display='none';
         }
     },
 
@@ -64,7 +96,7 @@ var citygrid = {
             if (!data.callBackUrl) { data.callBackUrl = ''; }
             if (!data.callBackFunction) { data.callBackFunction = ''; }
             if (!data.adUnitName) { data.adUnitName = 'nearby'; }
-            if (!data.adUnitSize) { data.adUnitName = '300x250'; }
+            if (!data.adUnitSize) { data.adUnitSize = '300x250'; }
             if (!data.clientIP) { data.clientIP = ''; }
 
             citygrid.data = data;
