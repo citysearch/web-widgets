@@ -84,13 +84,13 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
                         callBackUrl = callBackUrl.replace("$p", alb.getPhone());
                         listingUrl = getTrackingUrl(callBackUrl,
                                 "http://ad.doubleclick.net/clk;225291110;48835962;h?",
-                                alb.getListingId(), nearbyPlacesRequest.getPublisher());
+                                alb.getListingId(), nearbyPlacesRequest.getPublisher(),
+                                nearbyPlacesRequest.getAdUnitName(), nearbyPlacesRequest.getAdUnitSize());
                     } else {
-                        // listingUrl = "http://ad.doubleclick.net/clk;225291110;48835962;h?"+
-                        // alb.getAdDisplayURL();
                         listingUrl = getTrackingUrl(alb.getAdDisplayURL(),
                                 "http://ad.doubleclick.net/clk;225291110;48835962;h?",
-                                alb.getListingId(), nearbyPlacesRequest.getPublisher());
+                                alb.getListingId(), nearbyPlacesRequest.getPublisher(),
+                                nearbyPlacesRequest.getAdUnitName(), nearbyPlacesRequest.getAdUnitSize());
                     }
                     alb.setListingUrl(listingUrl);
 
@@ -129,7 +129,7 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
     }
 
     private String getTrackingUrl(String adDisplayURL, String dartTrackingUrl, String listingId,
-            String publisher) throws CitysearchException {
+            String publisher, String adUnitName, String adUnitSize) throws CitysearchException {
         try {
             URL url = new URL(adDisplayURL);
             int prodDetId = 12; // Click outside Citysearch
@@ -149,6 +149,8 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
             strBuilder.append(URLEncoder.encode(publisher, "UTF-8"));
             strBuilder.append("&prodDetId=");
             strBuilder.append(prodDetId);
+            strBuilder.append("&placement=");
+            strBuilder.append(URLEncoder.encode(publisher+"_"+adUnitName+"_"+adUnitSize, "UTF-8"));
             return strBuilder.toString();
         } catch (MalformedURLException mue) {
             throw new CitysearchException("NearbyPlacesAction", "getTrackingUrl", mue);
