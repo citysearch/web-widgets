@@ -131,6 +131,12 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
     private String getTrackingUrl(String adDisplayURL, String dartTrackingUrl, String listingId,
             String publisher) throws CitysearchException {
         try {
+            if (!adDisplayURL.startsWith("http://"))
+            {
+                StringBuilder strb = new StringBuilder("http://");
+                strb.append(adDisplayURL);
+                adDisplayURL = strb.toString();
+            }
             URL url = new URL(adDisplayURL);
             int prodDetId = 12; // Click outside Citysearch
             String host = url.getHost();
