@@ -138,7 +138,7 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
                 adDisplayURL = strb.toString();
             }
             URL url = new URL(adDisplayURL);
-            int prodDetId = 12; // Click outside Citysearch
+            int prodDetId = 12; 
             String host = url.getHost();
             if (host.indexOf("citysearch.com") != -1) {
                 prodDetId = 16;
