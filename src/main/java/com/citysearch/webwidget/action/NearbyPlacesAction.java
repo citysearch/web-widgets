@@ -7,6 +7,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.citysearch.webwidget.bean.HouseAd;
@@ -66,6 +67,13 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
     public String execute() throws CitysearchException {
 
         log.info("Begin NearbyPlacesAction");
+        
+        nearbyPlacesRequest.setAdUnitName(CommonConstants.AD_UNIT_NAME_NEARBY);
+        if (StringUtils.isBlank(nearbyPlacesRequest.getAdUnitSize()))
+        {
+            nearbyPlacesRequest.setAdUnitSize(CommonConstants.MANTLE_AD_SIZE);
+        }
+        
         NearbyPlacesHelper helper = new NearbyPlacesHelper(getResourceRootPath());
         String adUnitSize = nearbyPlacesRequest.getAdUnitSize();
 

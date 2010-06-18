@@ -76,4 +76,7 @@ public class CommonConstants {
     public static final String CONQUEST_AD_SIZE = "645x100";
     public static final int MANTLE_DISPLAY_SIZE = 3;
     public static final int CONQUEST_DISPLAY_SIZE = 2;
+    
+    public static final String AD_UNIT_NAME_NEARBY = "nearby";
+    public static final String AD_UNIT_NAME_REVIEW = "review";
 }

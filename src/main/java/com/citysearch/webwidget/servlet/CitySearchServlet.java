@@ -39,9 +39,9 @@ public class CitySearchServlet extends HttpServlet {
             strBuilder.append(request.getServerPort());
             strBuilder.append(request.getContextPath());
             strBuilder.append("/actions");
-            if (adUnitName.equalsIgnoreCase("nearby")) {
+            if (adUnitName.equalsIgnoreCase(CommonConstants.AD_UNIT_NAME_NEARBY)) {
                 strBuilder.append("/nearbyplaces");
-            } else if (adUnitName.equalsIgnoreCase("review")) {
+            } else if (adUnitName.equalsIgnoreCase(CommonConstants.AD_UNIT_NAME_REVIEW)) {
                 strBuilder.append("/review");
             }
             strBuilder.append("?");
