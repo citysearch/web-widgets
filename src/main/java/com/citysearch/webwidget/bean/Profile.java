@@ -18,6 +18,15 @@ public class Profile {
     private String reservationUrl;
     private String mapUrl;
     private Review review;
+    private String reviewCount;
+    
+    public String getReviewCount() {
+        return reviewCount;
+    }
+
+    public void setReviewCount(String reviewCount) {
+        this.reviewCount = reviewCount;
+    }
 
     public String getReviewsUrl() {
         return reviewsUrl;

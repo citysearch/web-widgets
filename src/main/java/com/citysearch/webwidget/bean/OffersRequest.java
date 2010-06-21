@@ -1,6 +1,10 @@
 package com.citysearch.webwidget.bean;
 
 public class OffersRequest extends AbstractRequest {
+	
+	private String version;
+	private String placement;	
+	
     private String what;
     private String where;
     private String tag;
@@ -8,11 +12,23 @@ public class OffersRequest extends AbstractRequest {
     private String longitude;
     private String page;
     private String rpp;
-    private String expires_before;
-    private boolean customer_hasbudget;
+    private String expiresBefore;
+    private String customerHasbudget;
     private String radius;
-    private String callback;
-
+    private String callbackFunction;    
+   
+    public String getVersion() {
+        return version;
+    }
+    public void setVersion(String version) {
+        this.version = version;
+    }    
+    public String getPlacement() {
+        return placement;
+    }
+    public void setPlacement(String placement) {
+        this.placement = placement;
+    }            
     public String getWhat() {
         return what;
     }
@@ -55,17 +71,17 @@ public class OffersRequest extends AbstractRequest {
     public void setRpp(String rpp) {
         this.rpp = rpp;
     }
-    public String getExpires_before() {
-        return expires_before;
+    public String getExpiresBefore() {
+        return expiresBefore;
     }
-    public void setExpires_before(String expiresBefore) {
-        expires_before = expiresBefore;
+    public void setExpiresBefore(String expiresBefore) {
+        this.expiresBefore = expiresBefore;
     }
-    public boolean isCustomer_hasbudget() {
-        return customer_hasbudget;
+    public String getCustomerHasbudget() {
+        return customerHasbudget;
     }
-    public void setCustomer_hasbudget(boolean customerHasbudget) {
-        customer_hasbudget = customerHasbudget;
+    public void setCustomerHasbudget(String customerHasbudget) {
+        this.customerHasbudget = customerHasbudget;
     }
     public String getRadius() {
         return radius;
@@ -73,10 +89,10 @@ public class OffersRequest extends AbstractRequest {
     public void setRadius(String radius) {
         this.radius = radius;
     }
-    public String getCallback() {
-        return callback;
-    }
-    public void setCallback(String callback) {
-        this.callback = callback;
-    }
+	public String getCallbackFunction() {
+		return callbackFunction;
+	}
+	public void setCallbackFunction(String callbackFunction) {
+		this.callbackFunction = callbackFunction;
+	}      
 }

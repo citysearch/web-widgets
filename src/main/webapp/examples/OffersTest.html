@@ -1,73 +1,68 @@
+<!-- saved from url=(0022)http://internet.e-mail -->
 <html>
 <head>
     <title>Offers Ad Unit Testing Page</title>
-    <style type="text/css">
-        <!--
-        div, h3, h4, ul, li, img { margin: 0; padding: 0; border: 0; }
-        body { margin: 15px auto; width: 500px; font: normal 76%/133.33% Arial, sans-serif; color: #626669; }
-        a:link { color: #3C99D7; }
-        a:visited { color: #3A99D7; }
-
-        .clearfix:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
-        .clearfix { display: inline-block; }
-        .clearfix { display: block; }
-
-        label { float: left; width: 100px; }
-        input { float: left; width: 250px; }
-        input.submit { width: auto; }
-        -->
-    </style>
+    <script language="JavaScript" type="text/javascript">
+		function setTimestamp(){ 			
+			var d = new Date();
+			document.getElementById("ts").value = d.getHours() + '' + d.getMinutes() + '' + d.getSeconds();
+			document.form.submit();
+		}
+	</script>   
 </head>
 <body>
-    <h2>Offers Ad Unit Testing Page</h2>
-    <form action="/web-widgets/actions/offers" method="GET">
-        <div class="clearfix">
-            <label>What:</label>
-            <input name="what" type="text"/>
-        </div>
-        <div class="clearfix">
-            <label>Where:</label>
-            <input name="where" type="text"/>
-        </div>
-        <div class="clearfix">
-            <label>tag:</label>
-            <input name="tag" type="text"/>
-        </div>
-        <div class="clearfix">
-            <label>Latitude:</label>
-            <input name="latitude" type="text"/>
-        </div>
-        <div class="clearfix">
-            <label>Longitude:</label>
-            <input name="longitude" type="text"/>
-        </div>
-        <div class="clearfix">
-            <label>Page:</label>
-            <input name="page" type="text"/>
-        </div>
-        <div class="clearfix">
-            <label>RPP:</label>
-            <input name="rpp" type="text"/>
-        </div>
-        <div class="clearfix">
-            <label>Expires Before:</label>
-            <input name="expires_before" type="text"/>
-        </div>
-        <div class="clearfix">
-            <label>Customer Has Budget:</label>
-            <input name="customer_hasbudget" type="text"/>
-        </div>
-        <div class="clearfix">
-            <label>Radius:</label>
-            <input name="radius" type="text"/>
-        </div>
-        <div class="clearfix">
-            <label>Callback:</label>
-            <input name="callback" type="text"/>
-        </div>
-        <div class="clearfix">
-            <input class="submit" type="submit" value="Submit" />
-        </div>
+	<form action="/web-widgets/actions/offers" method="GET" onSubmit="setTimestamp()" >    	
+		<table border="0" width="35%">		
+			<tr>
+				<th colspan="2">Test page for most matching 2 offers</th>
+			</tr>			
+			<tr>
+	           <td><label>Publisher (Required)</label></td>
+	           <td><input type="text" name="publisher" id="publisher" value="citysearch" /></td>
+	        </tr>       
+	        <tr>
+	            <td><label>What</label></td>
+	            <td><input name="what" type="text"/></td>
+	        </tr>
+	        <tr>
+	            <td><label>Where (or Lat & Lon)</label></td>
+	            <td><input name="where" type="text"/></td>
+	        </tr>
+	        <tr>
+	            <td><label>tag:</label></td>
+	            <td><input name="tag" type="text"/></td>
+	        </tr>
+	        <tr>
+	            <td><label>Latitude:</label></td>
+	            <td><input name="latitude" type="text"/></td>
+	        </tr>
+	        <tr>
+	            <td><label>Longitude:</label></td>
+	            <td><input name="longitude" type="text"/></td>
+	        </tr>          
+	        <tr>
+	            <td><label>Expires Before:</label></td>
+	            <td><input name="expiresBefore" type="text"/></td>
+	        </tr>
+	        <tr>
+	            <td><label>Customer Has Budget:</label></td>
+	            <td><input name="customerHasbudget" type="text" value="true" /></td>
+	        </tr>
+	        <tr>
+	            <td><label>Radius (Required if Lat & Lon provided)</label></td>
+	            <td><input name="radius" type="text"/></td>
+	        </tr> 
+	        <tr>
+	            <td><label>Client's IP(Required)</label></td>
+	            <td><input name="clientIP" type="text"/></td>
+	        </tr>       
+	        <tr>
+	        	<td><input type="hidden" name="ts" id="ts"/></td>
+	        </tr>        
+	        <tr>
+	            <td><input class="button" type="submit" value="Submit" /></td>
+	        </tr>
+	    </table>    
     </form>
 </body>
 </html>

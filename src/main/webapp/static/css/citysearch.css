@@ -83,3 +83,7 @@ div.seperator { clear: both; line-height: 1px; height: 1px;}
 .review_cs_description_detail a {color:#4580c5;font-weight:normal;font-family:Arial;font-size:13px;text-decoration:none}
 .review_cs_close_detail{float:right;clear:right;height:18px;width:28%;}
 .review_cs_close_detail a {color:#4580c5;font-weight:normal;font-family:Arial;font-size:11px;text-decoration:none}
+
+.ctsrch_offerFont {padding:3px 0px 0px 2px;float:left;font-family:Arial;font-size:12px;width:75%;}
+.ctsrch_getOffer{float:right;clear:right;}
+.ctsrch_getOffer a {color:#4580c5;font-weight:normal;font-family:Arial;font-size:11px;text-decoration:none}
