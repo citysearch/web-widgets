@@ -3,7 +3,7 @@ package com.citysearch.webwidget.bean;
 /**
  * Request bean for Search API
  * 
- * @author Aspert  Benjamin
+ * @author Aspert Benjamin
  * 
  */
 public class SearchRequest extends AbstractRequest {
@@ -11,8 +11,8 @@ public class SearchRequest extends AbstractRequest {
     private String what;
     private String latitude;
     private String longitude;
-    private String radius = "25";// TODO:
-    private String rpp = "20";// TODO:
+    private String radius;
+    private String rpp;
     private String tags;
 
     public String getLatitude() {
