@@ -32,7 +32,7 @@
                 <s:if test="%{ratings > 2.5}">
                     <div class="ctsrch_starContainer">
                         <div class="ctsrch_stars">
-                            <s:iterator value="rating"><span class='<s:if test="%{2}">full</s:if><s:elseif test="%{1}">half</s:elseif><s:else>empty</s:else>'> </span></s:iterator>
+                            <s:iterator value="rating" status="stat"><span class='<s:if test="%{rating[#stat.index] == 2}">full</s:if><s:elseif test="%{rating[#stat.index] == 1}">half</s:elseif><s:else>empty</s:else>'> </span></s:iterator>
                         </div>
                         <s:if test="%{reviewCount > 0}">
                             <div class="ctsrch_reviewFont">
