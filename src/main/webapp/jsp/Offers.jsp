@@ -6,44 +6,56 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 		<title>Matching Offers</title>
+		<link type="text/css" href='<s:property value="resourceRootPath"/>/static/css/ie-style.css'  rel="stylesheet"/>
 		<link type="text/css" href='<s:property value="resourceRootPath"/>/static/css/citysearch.css'  rel="stylesheet"/>
+		<link type="text/css" href='<s:property value="resourceRootPath"/>/static/css/Review.css'  rel="stylesheet"/>		
 	</head>
 	<body>
 		<div class="ctsrch_boxContainer">
-			<div class="ctsrch_header" style="">
-		        <div class="ctsrch_headerText">Offers</div>
-		    </div>
-			<div class="ctsrch_container">
+			<div>
 	        	<s:iterator value="offersList" status="stat">	 	         	
-	        		<div class="ctsrch_offerFont"><s:property value="offerTtl" /></div>	
-	        		<div class="ctsrch_getOffer"><a href='<s:property value="profileUrl" />' >Get Offer</a></div>
+	        		<div id="cs_longTitle_detail" >
+	        			<s:property value="offerTitle" />
+	        			<span style="float:right;padding-right:10px;">
+	        			<a target="_blank" href='<s:property value="profileUrl" />#target-couponLink' >
+							get offer		
+	        			</a>
+	        			</span>
+	        		</div>	
 		        	<div class="ctsrch_leftSide">
-		 	         	<div class="ctsrch_bigStar">	
-		 	         		<a href='<s:property value="profileUrl" />' ><img src='<s:property value="imgUrl" />' border="0"/></a>
+		 	         	<div class="ctsrch_maxStar">	
+		 	         		<a target="_blank" href='<s:property value="profileUrl" />' >
+								<img src='<s:property value="imgUrl" />'/>								
+							</a>
 		 	         	</div>	 	         		         	 
 	 	         	</div>
 	 	         	<div class="ctsrch_rightSide">	
-	 	         		<div class="ctsrch_mainLink">	
-         				 	<a href='<s:property value="profileUrl" />' ><s:property value="listingName" /></a>
-	 	         		</div> 
- 	         		   	<div class="ctsrch_starContainer">
-                    		<div class="ctsrch_stars">
-                           		<s:iterator value="csRating" status="stat"><span class='<s:if test="%{csRating[#stat.index] == 2}">full</s:if><s:elseif test="%{csRating[#stat.index] == 1}">half</s:elseif><s:else>empty</s:else>'> </span></s:iterator>
-                       		</div>	                    			                    		
-                    		<div class="ctsrch_reviewFont"><s:property value="reviewCount" />&nbsp;Reviews</div>          		
-                    	</div>	                    	
-	 	         		<div class="ctsrch_cityFont">
-         					<s:property value="city" /> , <s:property value="state" />          					
-         				</div>
-         				<div class="ctsrch_descFont"> 	         					
-         					<s:property value="offerDesc" />        						                   		
-         				</div>
+	 	         		<div>
+	 	         		   	<div class="ctsrch_starContainer">	 	         		   	
+	                    		<div class="ctsrch_stars"> 
+                            		<s:iterator value="csRating" status="stat"><span class='<s:if test="%{csRating[#stat.index] == 2}">full</s:if><s:elseif test="%{csRating[#stat.index] == 1}">half</s:elseif><s:else>empty</s:else>'> </span></s:iterator>
+                        		</div>           		                		
+	                    		<div>                    		
+	                    			<label style="float:right;width:32%" class="ctsrch_reviewFont" > <s:property value="reviewCount" /> &nbsp; Reviews</label>	 	         			
+	                    		</div>          		
+	                    	</div>	                    	
+	         				<div class="ctsrch_starContainer">	
+	         				 	<label style="float:left;" class="ctsrch_mainLink"><a target="_blank" href='<s:property value="profileUrl" />' ><s:property value="listingName" /></a></label>
+		 	         		</div> 
+		 	         		<div style="float:left;" class="ctsrch_cityFont">
+	         					<s:property value="city" /> , <s:property value="state" />          					
+	         				</div>
+	         				<div style="font-size:13px;float:left;"> 	         					
+	         					<s:property value="offerDesc" />        						                   		
+	         				</div>
+	 	         		</div> 	         				       				        				
 	 	         	</div>		
-	 	         	<s:if test="%{#stat.index < (offersList.size() - 1)}">
+	 	         	<s:if test="%{#stat.index == 0 }">
 		 	        	<div class="ctsrch_lineMargin" style="height:9px;"></div>
 					</s:if>         					              
 	 	        </s:iterator>
 	        </div>
+	        <div class="ctsrch_logoFont" style="float:right;font-size:11px;padding-top:9px;padding-right:5px;">Ads by Citysearch</div>	        
 		</div>
 	</body>
 </html>
