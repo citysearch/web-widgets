@@ -45,6 +45,7 @@ public class ReviewHelper {
     public final static Integer BUSINESS_NAME_SIZE = 30;
     public final static Integer REVIEW_TITLE_SIZE = 45;
     public final static Integer REVIEW_TEXT_SIZE = 250;
+    public final static Integer REVIEW_TEXT_SIZE_100 = 100;
     public final static Integer PROS_SIZE = 40;
     public final static Integer CONS_SIZE = 40;
     private static final int MINIMUM_RATING = 6;
@@ -294,6 +295,11 @@ public class ReviewHelper {
             review.setShortReviewText(StringUtils.abbreviate(reviewText, REVIEW_TEXT_SIZE));
         } else {
             review.setShortReviewText(reviewText);
+        }
+        if (reviewText != null && reviewText.trim().length() > REVIEW_TEXT_SIZE_100) {
+            review.setSmallReviewText(StringUtils.abbreviate(reviewText, REVIEW_TEXT_SIZE_100));
+        } else {
+            review.setSmallReviewText(reviewText);
         }
 
         String pros = reviewElem.getChildText(PROS);

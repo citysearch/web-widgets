@@ -24,6 +24,7 @@ public class Review {
     private String reviewAuthorUrl;
     private String reviewText;
     private String shortReviewText;
+    private String smallReviewText;
     private String pros;
     private String shortPros;
     private String cons;
@@ -38,6 +39,14 @@ public class Review {
     private List<Integer> rating;
     private String timeSinceReviewString;
     private String reviewDate;
+
+    public String getSmallReviewText() {
+        return smallReviewText;
+    }
+
+    public void setSmallReviewText(String smallReviewText) {
+        this.smallReviewText = smallReviewText;
+    }
 
     public String getShortBusinessName() {
         return shortBusinessName;
