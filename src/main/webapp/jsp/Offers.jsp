@@ -28,7 +28,7 @@
 	 	         		</div> 
  	         		   	<div class="ctsrch_starContainer">
                     		<div class="ctsrch_stars">
-                           		<s:iterator value="csRating"><span class='<s:if test="%{2}">full</s:if><s:elseif test="%{1}">half</s:elseif><s:else>empty</s:else>'></span></s:iterator>
+                           		<s:iterator value="csRating" status="stat"><span class='<s:if test="%{csRating[#stat.index] == 2}">full</s:if><s:elseif test="%{csRating[#stat.index] == 1}">half</s:elseif><s:else>empty</s:else>'> </span></s:iterator>
                        		</div>	                    			                    		
                     		<div class="ctsrch_reviewFont"><s:property value="reviewCount" />&nbsp;Reviews</div>          		
                     	</div>	                    	

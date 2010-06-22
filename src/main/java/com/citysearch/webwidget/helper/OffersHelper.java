@@ -2,6 +2,7 @@ package com.citysearch.webwidget.helper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
@@ -27,9 +28,9 @@ public class OffersHelper {
 
     private final static String PROPERTY_OFFERS_URL = "offers.url";
     private Logger log = Logger.getLogger(getClass());
-    private String rootPath;
-
-    private static final String OFFER = "offer";
+    private String rootPath;    
+  
+    private static final String OFFER = "offer";    
     private static final String RPP_OFFERS = "2";
     private static final String CITY = "city";
     private static final String ATTRIBUTION_SOURCE = "attribution_source";
@@ -47,8 +48,8 @@ public class OffersHelper {
     private static final String STATE = "state";
     private static final String STREET = "street";
     private static final String ZIP = "zip";
-    private static final String OFFER_API_PUBLISHER_HEADER = "X-Publisher";
-
+    private static final String PUBLISHER_HEADER = "X-Publisher";
+    
     public OffersHelper(String rootPath) {
         this.rootPath = rootPath;
     }
@@ -60,62 +61,61 @@ public class OffersHelper {
      * @throws CitysearchException
      */
     private String getQueryString(OffersRequest request) throws CitysearchException {
-        log.info("=========Start offersHelper getQueryString()============================ >");
-        StringBuilder strBuilder = new StringBuilder();
+        log.info("=========Start offersHelper getQueryString()============================ >");    
+        StringBuilder strBuilder = new StringBuilder();        
         strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.PUBLISHER,
                 request.getPublisher().trim()));
         strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-
-        strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.RPP, RPP_OFFERS));
+        
+        strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.RPP,
+        		RPP_OFFERS));
         strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-
-        if (!StringUtils.isBlank(request.getWhat())) {
-            strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.WHAT,
-                    request.getWhat()));
+        
+        if(!StringUtils.isBlank( request.getWhat())){
+        	strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.WHAT,
+        			request.getWhat().trim()));
         }
-        if (!StringUtils.isBlank(request.getWhere())) {
-            strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-            strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.WHERE,
-                    request.getWhere()));
-        }
-        if (!StringUtils.isBlank(request.getTag())) {
-            strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-            strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.TAG,
-                    request.getTag()));
-        }
-        if (!StringUtils.isBlank(request.getLatitude())) {
-            strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-            strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.LATITUDE,
-                    request.getLatitude().trim()));
-        }
-        if (!StringUtils.isBlank(request.getLongitude())) {
-            strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-            strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.LONGITUDE,
-                    request.getLongitude().trim()));
-        }
-        if (!StringUtils.isBlank(request.getExpiresBefore())) {
-            strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-            strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.EXPIRES_BEFORE,
-                    request.getExpiresBefore().trim()));
-        }
-        if (!StringUtils.isBlank(request.getCustomerHasbudget())) {
-            strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-            strBuilder.append(HelperUtil.constructQueryParam(
-                    APIFieldNameConstants.CUSTOMER_HASBUDGET,
-                    String.valueOf(request.getCustomerHasbudget().trim())));
-        }
-        if (!StringUtils.isBlank(request.getRadius())) {
-            strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-            strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.RADIUS,
-                    request.getRadius().trim()));
-        }
-        if (!StringUtils.isBlank(request.getCallbackFunction())) {
-            strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-            strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.CALLBACK,
-                    request.getCallbackFunction().trim()));
-        }
-        log.info("=========Start offersHelper getQueryString() querystring is ============================ >"
-                + strBuilder);
+        if(!StringUtils.isBlank( request.getWhere())){
+	        strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+	        strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.WHERE,
+	                request.getWhere().trim()));
+	    }
+        if(!StringUtils.isBlank( request.getTag())){
+	        strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+	        strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.TAG,
+	                request.getTag().trim()));
+	    }
+        if(!StringUtils.isBlank( request.getLatitude())){
+	        strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+	        strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.LATITUDE,
+	                request.getLatitude().trim()));
+	    }
+        if(!StringUtils.isBlank( request.getLongitude())){
+	        strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+	        strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.LONGITUDE,
+	                request.getLongitude().trim()));
+	    }        
+        if(!StringUtils.isBlank(request.getExpiresBefore())){
+        	strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+        	strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.EXPIRES_BEFORE,
+                request.getExpiresBefore().trim()));
+        }        
+        if(!StringUtils.isBlank(request.getCustomerHasbudget())){
+	        strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+	        strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.CUSTOMER_HASBUDGET,
+	                String.valueOf(request.getCustomerHasbudget().trim())));
+	    }
+        if(!StringUtils.isBlank( request.getRadius())){
+	        strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+	        strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.RADIUS,
+	                request.getRadius().trim()));
+	    }
+        if(!StringUtils.isBlank( request.getCallbackFunction())){
+	        strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+	        strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.CALLBACK,
+	                request.getCallbackFunction().trim()));
+	    }
+        log.info("=========Start offersHelper getQueryString() querystring is ============================ >" + strBuilder ); 
         return strBuilder.toString();
     }
 
@@ -125,58 +125,59 @@ public class OffersHelper {
      * @throws CitysearchException
      */
     public void validateRequest(OffersRequest request) throws InvalidRequestParametersException,
-            CitysearchException {
+            CitysearchException{
         log.info("=========Start offersHelper validateRequest()============================ >");
         List<String> errors = new ArrayList<String>();
         Properties errorProperties = PropertiesLoader.getErrorProperties();
 
         if (StringUtils.isBlank(request.getPublisher())) {
             errors.add(errorProperties.getProperty(CommonConstants.PUBLISHER_ERROR_CODE));
-        }
-        if ((StringUtils.isBlank(request.getLatitude()) && !StringUtils.isBlank(request.getLongitude()))
-                || (StringUtils.isBlank(request.getLongitude()) && !StringUtils.isBlank(request.getLatitude()))) {
+        }       
+        if(  (StringUtils.isBlank(request.getLatitude())
+              && !StringUtils.isBlank(request.getLongitude()))
+              || (StringUtils.isBlank(request.getLongitude())
+                        && !StringUtils.isBlank(request.getLatitude()))){
             errors.add(errorProperties.getProperty(CommonConstants.LAT_LONG_ERROR));
         }
-        if (!StringUtils.isBlank(request.getRadius())
+        if(!StringUtils.isBlank(request.getRadius())
                 && !StringUtils.isBlank(request.getLatitude())
                 && !StringUtils.isBlank(request.getLongitude())
-                && !StringUtils.isBlank(request.getWhere())) {
+                && !StringUtils.isBlank(request.getWhere())){
             errors.add(errorProperties.getProperty(CommonConstants.LOCATION_ERROR));
         }
-        if (StringUtils.isBlank(request.getLatitude())
+        if(StringUtils.isBlank(request.getLatitude())
                 && StringUtils.isBlank(request.getLongitude())
-                && StringUtils.isBlank(request.getWhere())) {
+                && StringUtils.isBlank(request.getWhere())){
             errors.add(errorProperties.getProperty(CommonConstants.WHERE_ERROR_CODE));
         }
-        if (!StringUtils.isBlank(request.getLatitude())
-                && StringUtils.isBlank(request.getLongitude())) {
+        if(!StringUtils.isBlank(request.getLatitude())
+                && StringUtils.isBlank(request.getLongitude())){
             errors.add(errorProperties.getProperty(CommonConstants.LONGITUDE_ERROR));
-        } else if (StringUtils.isBlank(request.getLatitude())
-                && !StringUtils.isBlank(request.getLongitude())) {
+        }else if (StringUtils.isBlank(request.getLatitude())
+                && !StringUtils.isBlank(request.getLongitude())){
             errors.add(errorProperties.getProperty(CommonConstants.LATITUDE_ERROR));
-        }
-        if (!StringUtils.isBlank(request.getLatitude())
+        }        
+        if(!StringUtils.isBlank(request.getLatitude())
                 && !StringUtils.isBlank(request.getLongitude())
-                && (StringUtils.isBlank(request.getRadius())
-                        || (new Integer(request.getRadius()).intValue() > 25) || (new Integer(
-                        request.getRadius()).intValue() < 1))) {
+                && ( StringUtils.isBlank(request.getRadius())
+                || ( new Integer(request.getRadius()).intValue() > 25 ) || ( new Integer(request.getRadius()).intValue() < 1 ) ) ) {
             errors.add(errorProperties.getProperty(CommonConstants.RADIUS_ERROR));
-        }
+        }         
         if (StringUtils.isBlank(request.getWhere())) {
             errors.add(errorProperties.getProperty(CommonConstants.ZIPCODE_ERROR));
-        }
+        }         
         if (StringUtils.isBlank(request.getClientIP())) {
             errors.add(errorProperties.getProperty(CommonConstants.CLIENT_IP_ERROR_CODE));
-        }
+        } 
         if (!errors.isEmpty()) {
             throw new InvalidRequestParametersException(this.getClass().getName(),
                     "validateRequest", "Invalid parameters.", errors);
         }
-        log.info("=========End offersHelper validateRequest()============================ >");
-    }
-
+        log.info("=========End offersHelper validateRequest()============================ >");   
+    }    
+    
     /**
-     * Get the offers from Offers API
+     * Get the offers from Offers API 
      * 
      * @param request
      * @return List of Offers
@@ -185,47 +186,51 @@ public class OffersHelper {
      */
     public List<Offer> getOffers(OffersRequest request) throws InvalidRequestParametersException,
             CitysearchException {
-        log.info("=========Start offersHelper getOffers()============================ >");
+        log.info("=========Start offersHelper getOffers()============================ >");        
         validateRequest(request);
 
         Properties properties = PropertiesLoader.getAPIProperties();
         String urlString = properties.getProperty(PROPERTY_OFFERS_URL) + getQueryString(request);
         Document responseDocument = null;
         try {
-            String publisherHdr = request.getPublisher().trim();
-            HashMap<String, String> headers = new HashMap<String, String>();
-            headers.put(OFFER_API_PUBLISHER_HEADER, publisherHdr);
-            responseDocument = HelperUtil.getAPIResponse(urlString, headers);
-        } catch (InvalidHttpResponseException ihe) {
+        	String publisherHdr = request.getPublisher().trim();        	
+        	HashMap<String, String> hdrMap = new HashMap<String, String>();
+        	hdrMap.put(PUBLISHER_HEADER, publisherHdr);        	
+            responseDocument = HelperUtil.getAPIResponse(urlString, hdrMap);
+        }catch (InvalidHttpResponseException ihe) {
             throw new CitysearchException(this.getClass().getName(), "getOffers", ihe);
         }
         List<Offer> offersList = parseXML(responseDocument);
         if (offersList == null) {
-            log.info("OffersHelper.getOffers:: Null offers instance ");
-            throw new CitysearchException(this.getClass().getName(), "getOffers", "No offer found.");
+        	log.info("OffersHelper.getOffers:: Null offers instance ");
+            throw new CitysearchException(this.getClass().getName(), "getOffers",
+                    "No offer found.");
         }
         // call for Profile API to get review count, profile url and phone#
-        ProfileHelper profHelper = new ProfileHelper(this.rootPath);
-        ProfileRequest profileRequest = new ProfileRequest();
-        profileRequest.setPublisher(request.getPublisher());
-        profileRequest.setClientIP(request.getClientIP());
-        for (Offer offer : offersList) {
-            profileRequest.setListingId(offer.getListingId());
-            Profile profile = profHelper.getProfile(profileRequest);
-            if (profile != null) {
-                offer.setReviewCount(HelperUtil.toInteger(profile.getReviewCount()));
-                offer.setProfileUrl(profile.getProfileUrl());
-                offer.setPhone(profile.getPhone());
-            } else {
-                offer.setReviewCount(0);
-                offer.setProfileUrl("#");
-                offer.setPhone("");
-            }
-        }
-        log.info("=========End offersHelper getOffers()============================ >");
-        return offersList;
-    }
+        Iterator<Offer> it = offersList.iterator();
+	    while(it.hasNext()){        
+        	 Offer offer = (Offer) it.next();        	
+        	 ProfileRequest profileRequest = new ProfileRequest();
+             profileRequest.setPublisher(request.getPublisher());
+             profileRequest.setClientIP(request.getClientIP());
+             profileRequest.setListingId(offer.getListingId());
 
+             ProfileHelper profHelper = new ProfileHelper(this.rootPath);
+             Profile profile = profHelper.getProfile(profileRequest);
+             if( profile != null ){
+	             offer.setReviewCount(HelperUtil.toInteger(profile.getReviewCount()));
+	             offer.setProfileUrl(profile.getProfileUrl()); 
+	             offer.setPhone(profile.getPhone());             
+             }else{
+            	 offer.setReviewCount(0);
+            	 offer.setProfileUrl(null);
+            	 offer.setPhone(null);            	 
+             }
+        }         
+        log.info("=========End offersHelper getOffers()============================ >"); 
+        return offersList;
+    }    
+    
     /**
      * Parses the offers xml. Returns List of offer objects
      * 
@@ -233,60 +238,62 @@ public class OffersHelper {
      * @return List of Offer objects
      * @throws CitysearchException
      */
-    private List<Offer> parseXML(Document doc) throws CitysearchException {
-        log.info("========================== Start OffersHelper parseXML=======================");
-        List<Element> offersElementList = null;
+    private List<Offer> parseXML(Document doc) throws CitysearchException{
+    	log.info("========================== Start OffersHelper parseXML=======================" );
+        List<Element> offersElementList = null;        
         List<Offer> offersList = null;
         if (doc != null && doc.hasRootElement()) {
             Element rootElement = doc.getRootElement();
-            offersElementList = rootElement.getChildren(OFFER);
-            offersList = getOffersList(offersElementList);
+            offersElementList = (List<Element>) rootElement.getChildren(OFFER);
+            offersList = (List<Offer>)getOffersList(offersElementList);
         }
-        log.info("========================== End OffersHelper parseXML=======================");
+    	log.info("========================== End OffersHelper parseXML=======================" );
         return offersList;
     }
-
+    
     /**
      * Parses the offers element list and create list of Offer objects
      * 
-     * @param List
-     *            of Offer Elements
+     * @param List of Offer Elements
      * @return List of Offer beans
      * @throws CitysearchException
      */
-    private List<Offer> getOffersList(List<Element> offerElemList) throws CitysearchException {
-        log.info("========================== Start OffersHelper getOffersList=======================");
-        Offer offer = null;
-        List<Offer> offersLst = new ArrayList<Offer>();
-        if (offerElemList.size() != 0) {
-            for (int c = 0; c < 2; c++) {
-                Element offerElement = (Element) offerElemList.get(c);
-
-                offer = new Offer();
-                offer.setCity(offerElement.getChildText(CITY));
-                offer.setAttributionSrc(offerElement.getChildText(ATTRIBUTION_SOURCE));
-
-                String ratingVal = offerElement.getChildText(CS_RATING);
-                double rating = NumberUtils.toDouble(ratingVal) / 2;
-                List<Integer> ratingList = HelperUtil.getRatingsList(ratingVal);
-                offer.setCsRating(ratingList);
-                offer.setReviewCount(HelperUtil.toInteger(offerElement.getChildText(REVIEW_COUNT)));
-                offer.setImgUrl(offerElement.getChildText(IMAGE_URL));
-                offer.setLatitude(offerElement.getChildText(LATITUDE));
-                offer.setListingId(offerElement.getChildText(LISTING_ID));
-                offer.setListingName(offerElement.getChildText(LISTING_NAME));
-                offer.setLatitude(offerElement.getChildText(LONGITUDE));
-                offer.setOfferDesc(offerElement.getChildText(OFFER_DESCRIPTION));
-                offer.setOfferId(offerElement.getChildText(OFFER_ID));
-                offer.setOfferTtl(offerElement.getChildText(OFFER_TITLE));
-                offer.setRefId(offerElement.getChildText(REFERENCE_ID));
-                offer.setState(offerElement.getChildText(STATE));
-                offer.setStreet(offerElement.getChildText(STREET));
-                offer.setZip(offerElement.getChildText(ZIP));
-                offersLst.add(offer);
-            }
-        }
-        log.info("========================== End OffersHelper getOffersList=======================");
-        return offersLst;
-    }
+    private List<Offer> getOffersList(List<Element> offerElemList) throws CitysearchException {  
+    	log.info("========================== Start OffersHelper getOffersList=======================" );
+    	Offer offer = null;
+    	List<Offer> offersLst = new ArrayList<Offer>();    	
+    	if( !offerElemList.isEmpty() ){
+    		int cnt = 0;
+    		Iterator<Element> it = offerElemList.iterator();
+     	    while(it.hasNext() && cnt < 2){
+	    		Element offerElement = ( Element ) it.next();
+	    		
+	    		offer = new Offer();    		
+	    		offer.setCity( offerElement.getChildText(CITY) );
+	    		offer.setAttributionSrc(offerElement.getChildText(ATTRIBUTION_SOURCE));
+	    		
+	    		String ratingVal = offerElement.getChildText(CS_RATING);
+	    	    double rating = NumberUtils.toDouble(ratingVal) / 2;	    	    
+	            List<Integer> ratingList = HelperUtil.getRatingsList(ratingVal);	    	    
+	    	    offer.setCsRating(ratingList);
+	    		offer.setReviewCount( HelperUtil.toInteger( offerElement.getChildText(REVIEW_COUNT) ) );	    		
+	    		offer.setImgUrl(offerElement.getChildText(IMAGE_URL));
+	    		offer.setLatitude(offerElement.getChildText(LATITUDE));
+	    		offer.setListingId(offerElement.getChildText(LISTING_ID));
+	    		offer.setListingName(offerElement.getChildText(LISTING_NAME));
+	    		offer.setLatitude(offerElement.getChildText(LONGITUDE));
+	    		offer.setOfferDesc(offerElement.getChildText(OFFER_DESCRIPTION));
+	    		offer.setOfferId(offerElement.getChildText(OFFER_ID));
+	    		offer.setOfferTitle(offerElement.getChildText(OFFER_TITLE));
+	    		offer.setRefId(offerElement.getChildText(REFERENCE_ID));
+	    		offer.setState(offerElement.getChildText(STATE));
+	    		offer.setStreet(offerElement.getChildText(STREET));
+	    		offer.setZip(offerElement.getChildText(ZIP));    	
+	    		offersLst.add(offer);	    		
+     	    	cnt = cnt +1;
+	    	}  
+    	}
+    	log.info("========================== End OffersHelper getOffersList=======================" );
+    	return offersLst;
+    } 
 }
