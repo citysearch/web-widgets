@@ -87,3 +87,8 @@ div.seperator { clear: both; line-height: 1px; height: 1px;}
 .ctsrch_offerFont {padding:3px 0px 0px 2px;float:left;font-family:Arial;font-size:12px;width:75%;}
 .ctsrch_getOffer{float:right;clear:right;}
 .ctsrch_getOffer a {color:#4580c5;font-weight:normal;font-family:Arial;font-size:11px;text-decoration:none}
+
+.ctsrch_stars_hori{width:80px;}
+.ctsrch_logoFont {color:#4580C5;height:16px;padding:3px 0 0 5px;float:left;font-size:9px;font-weight:700;width:105px;padding-top:9px;}
+.ctsrch_maxStar img {margin-top:3px;height:75px;width:70px;border:solid 1px #ccc;padding:3px;}
+
