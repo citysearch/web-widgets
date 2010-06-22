@@ -91,4 +91,5 @@ div.seperator { clear: both; line-height: 1px; height: 1px;}
 .ctsrch_stars_hori{width:80px;}
 .ctsrch_logoFont {color:#4580C5;height:16px;padding:3px 0 0 5px;float:left;font-size:9px;font-weight:700;width:105px;padding-top:9px;}
 .ctsrch_maxStar img {margin-top:3px;height:75px;width:70px;border:solid 1px #ccc;padding:3px;}
+.ctsrch_rightSideWide{float:left;width:71%;padding-top:4px;}
 
