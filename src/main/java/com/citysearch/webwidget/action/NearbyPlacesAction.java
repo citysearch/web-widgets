@@ -83,14 +83,16 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
                         callBackUrl = callBackUrl.replace("$l", alb.getListingId());
                         callBackUrl = callBackUrl.replace("$p", alb.getPhone());
                         listingUrl = getTrackingUrl(callBackUrl,
-                                "http://ad.doubleclick.net/clk;225291110;48835962;h?",
-                                alb.getListingId(), nearbyPlacesRequest.getPublisher(),
-                                nearbyPlacesRequest.getAdUnitName(), nearbyPlacesRequest.getAdUnitSize());
+                                nearbyPlacesRequest.getDartClickTrackUrl(), alb.getListingId(),
+                                nearbyPlacesRequest.getPublisher(),
+                                nearbyPlacesRequest.getAdUnitName(),
+                                nearbyPlacesRequest.getAdUnitSize());
                     } else {
                         listingUrl = getTrackingUrl(alb.getAdDisplayURL(),
-                                "http://ad.doubleclick.net/clk;225291110;48835962;h?",
-                                alb.getListingId(), nearbyPlacesRequest.getPublisher(),
-                                nearbyPlacesRequest.getAdUnitName(), nearbyPlacesRequest.getAdUnitSize());
+                                nearbyPlacesRequest.getDartClickTrackUrl(), alb.getListingId(),
+                                nearbyPlacesRequest.getPublisher(),
+                                nearbyPlacesRequest.getAdUnitName(),
+                                nearbyPlacesRequest.getAdUnitSize());
                     }
                     alb.setListingUrl(listingUrl);
 
@@ -107,7 +109,7 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
                         strBuilder.append(alb.getPhone());
                         strBuilder.append("\")");
 
-                        log.info("CallBackFunction: "+strBuilder.toString());
+                        log.info("CallBackFunction: " + strBuilder.toString());
 
                         alb.setCallBackFunction(strBuilder.toString());
                     }
@@ -126,36 +128,5 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
             return ACTION_FORWARD_CONQUEST;
         else
             return Action.SUCCESS;
-    }
-
-    private String getTrackingUrl(String adDisplayURL, String dartTrackingUrl, String listingId,
-            String publisher, String adUnitName, String adUnitSize) throws CitysearchException {
-        try {
-            URL url = new URL(adDisplayURL);
-            int prodDetId = 12; // Click outside Citysearch
-            String host = url.getHost();
-            if (host.indexOf("citysearch.com") != -1) {
-                prodDetId = 16;
-            }
-            StringBuilder dartUrl = new StringBuilder(dartTrackingUrl);
-            dartUrl.append(adDisplayURL);
-
-            StringBuilder strBuilder = new StringBuilder("http://pfpc.citysearch.com/pfp/ad?");
-            strBuilder.append("directUrl=");
-            strBuilder.append(URLEncoder.encode(dartUrl.toString(), "UTF-8"));
-            strBuilder.append("&listingId=");
-            strBuilder.append(URLEncoder.encode(listingId, "UTF-8"));
-            strBuilder.append("&publisher=");
-            strBuilder.append(URLEncoder.encode(publisher, "UTF-8"));
-            strBuilder.append("&prodDetId=");
-            strBuilder.append(prodDetId);
-            strBuilder.append("&placement=");
-            strBuilder.append(URLEncoder.encode(publisher+"_"+adUnitName+"_"+adUnitSize, "UTF-8"));
-            return strBuilder.toString();
-        } catch (MalformedURLException mue) {
-            throw new CitysearchException("NearbyPlacesAction", "getTrackingUrl", mue);
-        } catch (UnsupportedEncodingException excep) {
-            throw new CitysearchException("NearbyPlacesAction", "getTrackingUrl", excep);
-        }
     }
 }

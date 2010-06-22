@@ -14,6 +14,15 @@ public abstract class AbstractRequest {
     protected String adUnitSize;
     protected Integer displaySize;
     protected String clientIP;
+    protected String dartClickTrackUrl;
+
+    public String getDartClickTrackUrl() {
+        return dartClickTrackUrl;
+    }
+
+    public void setDartClickTrackUrl(String dartClickTrackUrl) {
+        this.dartClickTrackUrl = dartClickTrackUrl;
+    }
 
     public String getClientIP() {
         return clientIP;

@@ -57,6 +57,7 @@ public class NearbyPlacesHelper {
     private static final String ZIP_TAG = "zip";
     private static final String HTTP_PREFIX = "http://";
     private static final String AD_DESTINATION_URL = "ad_destination_url";
+    private static final String DEFAULT_RADIUS = "25";
 
     private String rootPath;
     private Integer displaySize;
@@ -118,21 +119,23 @@ public class NearbyPlacesHelper {
         apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
         apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.LONGITUDE,
                 request.getLongitude()));
-        /* PFP is not accepting publisher with lat lon
-        apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
-        apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.PUBLISHER_CODE,
-                request.getPublisher()));
-        */
+        /*
+         * PFP is not accepting publisher with lat lon
+         * apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
+         * apiQueryString.append(HelperUtil.
+         * constructQueryParam(APIFieldNameConstants.PUBLISHER_CODE, request.getPublisher()));
+         */
         if (!StringUtils.isBlank(request.getTags())) {
             apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
             apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.TAG,
                     request.getTags()));
         }
-        if (!StringUtils.isBlank(request.getRadius())) {
-            apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
-            apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.RADIUS,
-                    request.getRadius()));
-        }
+
+        String radius = (StringUtils.isBlank(request.getRadius())) ? DEFAULT_RADIUS
+                : request.getRadius();
+        apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
+        apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.RADIUS, radius));
+
         return apiQueryString.toString();
     }
 
@@ -254,6 +257,9 @@ public class NearbyPlacesHelper {
                 SearchRequest sRequest = new SearchRequest();
                 sRequest.setWhat(request.getWhat());
                 sRequest.setWhere(request.getWhere());
+                sRequest.setLatitude(request.getLatitude());
+                sRequest.setLongitude(request.getLongitude());
+                sRequest.setRadius(request.getRadius());
                 sRequest.setTags(request.getTags());
                 sRequest.setPublisher(request.getPublisher());
 
@@ -333,14 +339,12 @@ public class NearbyPlacesHelper {
         Properties properties = PropertiesLoader.getAPIProperties();
         StringBuilder urlStringBuilder = null;
         /*
-        if (latitudeLongitudePresentInRequest) {
-            urlStringBuilder = new StringBuilder(properties.getProperty(PFP_LOCATION_URL));
-            urlStringBuilder.append(getQueryStringWithLatitudeAndLongitude(request));
-        } else {
-            urlStringBuilder = new StringBuilder(properties.getProperty(PFP_URL));
-            urlStringBuilder.append(getQueryStringWithWhere(request));
-        }
-        */
+         * if (latitudeLongitudePresentInRequest) { urlStringBuilder = new
+         * StringBuilder(properties.getProperty(PFP_LOCATION_URL));
+         * urlStringBuilder.append(getQueryStringWithLatitudeAndLongitude(request)); } else {
+         * urlStringBuilder = new StringBuilder(properties.getProperty(PFP_URL));
+         * urlStringBuilder.append(getQueryStringWithWhere(request)); }
+         */
         urlStringBuilder = new StringBuilder(properties.getProperty(PFP_LOCATION_URL));
         urlStringBuilder.append(getQueryStringWithLatitudeAndLongitude(request));
         log.info("NearbyPlacesHelper.getPlacesByGeoCodes: Query: " + urlStringBuilder.toString());

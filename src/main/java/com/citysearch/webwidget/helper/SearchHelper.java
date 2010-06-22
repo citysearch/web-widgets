@@ -36,7 +36,10 @@ public class SearchHelper {
     public final static String PROPERTY_SEARCH_URL = "search.url";
 
     private Logger log = Logger.getLogger(getClass());
-
+    
+    private static final String DEFAULT_RADIUS = "25";
+    private static final String DEFAULT_RPP = "20";
+    
     private static final String ADDRESS_TAG = "address";
     private static final String LISTING_ID_TAG = "id";
     private static final String REVIEWS_TAG = "userreviewcount";
@@ -80,8 +83,11 @@ public class SearchHelper {
         strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.LONGITUDE,
                 request.getLongitude()));
         strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-        strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.RADIUS,
-                request.getRadius()));
+        
+        String radius = (StringUtils.isBlank(request.getRadius())) ? DEFAULT_RADIUS
+                : request.getRadius();
+        strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.RADIUS, radius));
+        
         strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
         strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.WHAT,
                 request.getWhat()));
@@ -233,11 +239,15 @@ public class SearchHelper {
         apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
         apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.TAG,
                 request.getTags()));
+                
         apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
-        apiQueryString.append(HelperUtil.constructQueryParam("rpp", request.getRpp()));
+        String rpp = (StringUtils.isBlank(request.getRpp())) ? DEFAULT_RPP : request.getRpp();
+        apiQueryString.append(HelperUtil.constructQueryParam("rpp", rpp));
+        
         apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
-        apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.RADIUS,
-                request.getRadius()));
+        String radius = (StringUtils.isBlank(request.getRadius())) ? DEFAULT_RADIUS
+                : request.getRadius();
+        apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.RADIUS, radius));
         return apiQueryString.toString();
 
     }
@@ -272,11 +282,10 @@ public class SearchHelper {
 
     public List<NearbyPlace> getNearbyPlaces(SearchRequest request) throws CitysearchException {
         log.info("SearchHelper.getNearbyPlaces: Begin");
-        validateRequest(request);
-        log.info("SearchHelper.getNearbyPlaces: After validate");
+        //No need to validate.
         Properties properties = PropertiesLoader.getAPIProperties();
         String urlString = properties.getProperty(PROPERTY_SEARCH_URL)
-                + getSearchRequestQueryString(request);
+                + getQueryString(request);
         log.info("SearchHelper.getNearbyPlaces: Query " + urlString);
         Document responseDocument = null;
         try {
@@ -285,9 +294,8 @@ public class SearchHelper {
         } catch (InvalidHttpResponseException ihe) {
             throw new CitysearchException(this.getClass().getName(), "getNearbyPlaces", ihe);
         }
-        String[] latLonValues = getLatitudeAndLongitude(responseDocument);
         log.info("SearchHelper.getNearbyPlaces: End");
-        return getNearbyPlaces(responseDocument, latLonValues[0], latLonValues[1]);
+        return getNearbyPlaces(responseDocument, request.getLatitude(), request.getLongitude());
     }
 
     private String[] getLatitudeAndLongitude(Document document) {
