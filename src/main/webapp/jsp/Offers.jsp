@@ -29,7 +29,7 @@
 							</a>
 		 	         	</div>	 	         		         	 
 	 	         	</div>
-	 	         	<div class="ctsrch_rightSide">	
+	 	         	<div class="ctsrch_rightSideWide"">	
 	 	         		<div>
 	 	         		   	<div class="ctsrch_starContainer">	 	         		   	
 	                    		<div class="ctsrch_stars"> 
