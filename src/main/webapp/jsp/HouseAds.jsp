@@ -9,18 +9,18 @@
         <s:iterator value="houseAds" status="hadStatus">
             <div class="ctsrch_leftSide">
                 <!--
-                <a target="_blank" href='<s:property value="destinationUrl" />'><img src='<s:property value="imageURL"/>' border="0"/></a>
+                <a href='<s:property value="destinationUrl" />'><img src='<s:property value="imageURL"/>' border="0"/></a>
                 -->
             </div>
             <div class="ctsrch_rightSide">
                 <div class="ctsrch_mainLink">
-                    <a target="_blank" href='<s:property value="destinationUrl" />'><s:property value="title" /></a>
+                    <a href='<s:property value="destinationUrl" />'><s:property value="title" /></a>
                 </div>
                 <div class="ctsrch_descFont">
                     <s:property value="tagLine" />
                 </div>
                 <div class="ctsrch_subLink_bf" >
-                    <a target="_blank" href='<s:property value="destinationUrl" />'>www.citysearch.com</a>
+                    <a href='<s:property value="destinationUrl" />'>www.citysearch.com</a>
                 </div>
             </div>
             <s:if test="%{#hadStatus.index < (houseAds.size() - 1)}">
