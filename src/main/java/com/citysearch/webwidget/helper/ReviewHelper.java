@@ -43,11 +43,11 @@ public class ReviewHelper {
     public final static String PROPERTY_REVIEW_URL = "reviews.url";
 
     public final static Integer BUSINESS_NAME_SIZE = 30;
-    public final static Integer REVIEW_TITLE_SIZE = 45;
+    public final static Integer REVIEW_TITLE_SIZE = 30;
     public final static Integer REVIEW_TEXT_SIZE = 250;
     public final static Integer REVIEW_TEXT_SIZE_50 = 50;
-    public final static Integer PROS_SIZE = 40;
-    public final static Integer CONS_SIZE = 40;
+    public final static Integer PROS_SIZE = 30;
+    public final static Integer CONS_SIZE = 30;
     private static final int MINIMUM_RATING = 6;
 
     private static final String ELEMENT_REVIEW_URL = "review_url";
