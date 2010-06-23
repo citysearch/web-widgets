@@ -73,14 +73,14 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
             log.info("End NearbyPlacesAction");
         } catch (InvalidRequestParametersException ihre) {
             log.error(ihre.getDetailedMessage());
-            // throw ihre;
             nearbyPlacesResponse = new NearbyPlacesResponse();
             nearbyPlacesResponse.setHouseAds(getHouseAds(
                     nearbyPlacesRequest.getDartClickTrackUrl(),
                     nearbyPlacesRequest.getDisplaySize()));
-        } catch (CitysearchException cse) {
-            log.error(cse.getMessage());
-            // throw cse;
+        } catch (Exception e) {
+            // On any exception, want the house ads to be returned.
+            // Idea is to not return a blank widget.
+            log.error(e.getMessage());
             nearbyPlacesResponse = new NearbyPlacesResponse();
             nearbyPlacesResponse.setHouseAds(getHouseAds(
                     nearbyPlacesRequest.getDartClickTrackUrl(),
