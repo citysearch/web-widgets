@@ -21,6 +21,20 @@ public class ReviewRequest extends AbstractRequest {
     private String longitude;
     private String radius;
 
+    public ReviewRequest() {
+        super();
+    }
+
+    public ReviewRequest(AbstractRequest request) {
+        super();
+        setPublisher(request.getPublisher());
+        setDartClickTrackUrl(request.getDartClickTrackUrl());
+        setCallBackFunction(request.getCallBackFunction());
+        setCallBackUrl(request.getCallBackUrl());
+        setAdUnitName(request.getAdUnitName());
+        setAdUnitSize(request.getAdUnitSize());
+    }
+
     public String getTagName() {
         return tagName;
     }

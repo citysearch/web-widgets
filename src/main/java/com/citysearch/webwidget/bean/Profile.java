@@ -18,6 +18,24 @@ public class Profile {
     private String reservationUrl;
     private String mapUrl;
     private Review review;
+    private String trackingUrl;
+    private String listingId;
+    
+    public String getListingId() {
+        return listingId;
+    }
+
+    public void setListingId(String listingId) {
+        this.listingId = listingId;
+    }
+
+    public String getTrackingUrl() {
+        return trackingUrl;
+    }
+
+    public void setTrackingUrl(String trackingUrl) {
+        this.trackingUrl = trackingUrl;
+    }
 
     public String getReviewsUrl() {
         return reviewsUrl;

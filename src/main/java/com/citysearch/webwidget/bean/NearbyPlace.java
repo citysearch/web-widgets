@@ -32,6 +32,24 @@ public class NearbyPlace implements Comparable<NearbyPlace> {
     private String description;
     private String adDestinationUrl;
     private Profile profile;
+    private String adDisplayTrackingURL;
+    private String adDestinationTrackingUrl;
+
+    public String getAdDisplayTrackingURL() {
+        return adDisplayTrackingURL;
+    }
+
+    public void setAdDisplayTrackingURL(String adDisplayTrackingURL) {
+        this.adDisplayTrackingURL = adDisplayTrackingURL;
+    }
+
+    public String getAdDestinationTrackingUrl() {
+        return adDestinationTrackingUrl;
+    }
+
+    public void setAdDestinationTrackingUrl(String adDestinationTrackingUrl) {
+        this.adDestinationTrackingUrl = adDestinationTrackingUrl;
+    }
 
     public Profile getProfile() {
         return profile;

@@ -1,9 +1,5 @@
 package com.citysearch.webwidget.action;
 
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +22,7 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
     private Logger log = Logger.getLogger(getClass());
 
     private static final String ACTION_FORWARD_CONQUEST = "conquest";
+    private static final String HOUSE_ADS = "houseAds";
 
     private NearbyPlacesRequest nearbyPlacesRequest = new NearbyPlacesRequest();
     private NearbyPlacesResponse nearbyPlacesResponse;
@@ -71,57 +68,15 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
 
         try {
             nearbyPlacesResponse = helper.getNearbyPlaces(nearbyPlacesRequest);
-            if (nearbyPlacesResponse.getNearbyPlaces() != null
-                    && !nearbyPlacesResponse.getNearbyPlaces().isEmpty()) {
-                // For all nearby places found, set the listingUrl and callback function
-                for (NearbyPlace alb : nearbyPlacesResponse.getNearbyPlaces()) {
-                    alb.setCallBackFunction(nearbyPlacesRequest.getCallBackFunction());
-                    alb.setCallBackUrl(nearbyPlacesRequest.getCallBackUrl());
-                    String listingUrl = null;
-                    String callBackUrl = nearbyPlacesRequest.getCallBackUrl();
-                    if (callBackUrl != null && callBackUrl.trim().length() > 0) {
-                        callBackUrl = callBackUrl.replace("$l", alb.getListingId());
-                        callBackUrl = callBackUrl.replace("$p", alb.getPhone());
-                        listingUrl = getTrackingUrl(callBackUrl,
-                                nearbyPlacesRequest.getDartClickTrackUrl(), alb.getListingId(),
-                                nearbyPlacesRequest.getPublisher(),
-                                nearbyPlacesRequest.getAdUnitName(),
-                                nearbyPlacesRequest.getAdUnitSize());
-                    } else {
-                        listingUrl = getTrackingUrl(alb.getAdDisplayURL(),
-                                nearbyPlacesRequest.getDartClickTrackUrl(), alb.getListingId(),
-                                nearbyPlacesRequest.getPublisher(),
-                                nearbyPlacesRequest.getAdUnitName(),
-                                nearbyPlacesRequest.getAdUnitSize());
-                    }
-                    alb.setListingUrl(listingUrl);
-
-                    // Set the call back function JS function here.
-                    // Its messy to build the string in the JSP.
-                    String callBackFn = alb.getCallBackFunction();
-                    if (callBackFn != null && callBackFn.trim().length() > 0) {
-                        // Should produce javascript:fnName('param1','param2')
-                        StringBuilder strBuilder = new StringBuilder("javascript:");
-                        strBuilder.append(callBackFn);
-                        strBuilder.append("(\"");
-                        strBuilder.append(alb.getListingId());
-                        strBuilder.append("\",\"");
-                        strBuilder.append(alb.getPhone());
-                        strBuilder.append("\")");
-
-                        log.info("CallBackFunction: " + strBuilder.toString());
-
-                        alb.setCallBackFunction(strBuilder.toString());
-                    }
-                }
-            }
             log.info("End NearbyPlacesAction");
         } catch (InvalidRequestParametersException ihre) {
             log.error(ihre.getDetailedMessage());
-            throw ihre;
+            // throw ihre;
+            return HOUSE_ADS;
         } catch (CitysearchException cse) {
             log.error(cse.getMessage());
-            throw cse;
+            // throw cse;
+            return HOUSE_ADS;
         }
 
         if (adUnitSize != null && adUnitSize.equals(CommonConstants.CONQUEST_AD_SIZE))

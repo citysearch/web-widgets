@@ -39,6 +39,12 @@ public class AbstractCitySearchAction implements ServletRequestAware, ServletRes
     public String getTrackingUrl(String adDisplayURL, String dartTrackingUrl, String listingId,
             String publisher, String adUnitName, String adUnitSize) throws CitysearchException {
         try {
+            if (!adDisplayURL.startsWith("http://")) {
+                StringBuilder strb = new StringBuilder("http://");
+                strb.append(adDisplayURL);
+                adDisplayURL = strb.toString();
+            }
+
             URL url = new URL(adDisplayURL);
             int prodDetId = 12; // Click outside Citysearch
             String host = url.getHost();

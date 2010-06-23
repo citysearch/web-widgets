@@ -39,6 +39,33 @@ public class Review {
     private List<Integer> rating;
     private String timeSinceReviewString;
     private String reviewDate;
+    private String reviewTrackingUrl;
+    private String callBackFunction;
+    private String callBackUrl;
+
+    public String getCallBackFunction() {
+        return callBackFunction;
+    }
+
+    public void setCallBackFunction(String callBackFunction) {
+        this.callBackFunction = callBackFunction;
+    }
+
+    public String getCallBackUrl() {
+        return callBackUrl;
+    }
+
+    public void setCallBackUrl(String callBackUrl) {
+        this.callBackUrl = callBackUrl;
+    }
+
+    public String getReviewTrackingUrl() {
+        return reviewTrackingUrl;
+    }
+
+    public void setReviewTrackingUrl(String reviewTrackingUrl) {
+        this.reviewTrackingUrl = reviewTrackingUrl;
+    }
 
     public String getSmallReviewText() {
         return smallReviewText;

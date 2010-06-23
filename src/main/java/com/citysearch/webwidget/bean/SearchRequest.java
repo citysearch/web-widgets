@@ -3,7 +3,7 @@ package com.citysearch.webwidget.bean;
 /**
  * Request bean for Search API
  * 
- * @author Aspert  Benjamin
+ * @author Aspert Benjamin
  * 
  */
 public class SearchRequest extends AbstractRequest {
@@ -11,9 +11,23 @@ public class SearchRequest extends AbstractRequest {
     private String what;
     private String latitude;
     private String longitude;
-    private String radius = "25";// TODO:
-    private String rpp = "20";// TODO:
+    private String radius;
+    private String rpp;
     private String tags;
+
+    public SearchRequest() {
+        super();
+    }
+
+    public SearchRequest(AbstractRequest request) {
+        super();
+        setPublisher(request.getPublisher());
+        setDartClickTrackUrl(request.getDartClickTrackUrl());
+        setCallBackFunction(request.getCallBackFunction());
+        setCallBackUrl(request.getCallBackUrl());
+        setAdUnitName(request.getAdUnitName());
+        setAdUnitSize(request.getAdUnitSize());
+    }
 
     public String getLatitude() {
         return latitude;

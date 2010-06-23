@@ -16,7 +16,8 @@ import com.citysearch.webwidget.util.HelperUtil;
 public class HouseAdsHelper {
     private static List<HouseAd> houseAds;
 
-    public static List<HouseAd> getHouseAds(String path) throws CitysearchException {
+    public static List<HouseAd> getHouseAds(String path, String dartTrackUrl)
+            throws CitysearchException {
         InputStream inputStream = null;
         if (houseAds == null) {
             inputStream = HouseAdsHelper.class.getClassLoader().getResourceAsStream(
@@ -35,12 +36,12 @@ public class HouseAdsHelper {
                     throw new CitysearchException("HouseAdsHelper", "getHouseAds", ioe);
                 }
             }
-            houseAds = buildHouseAds(document, path);
+            houseAds = buildHouseAds(document, path, dartTrackUrl);
         }
         return houseAds;
     }
 
-    private static List<HouseAd> buildHouseAds(Document document, String path) {
+    private static List<HouseAd> buildHouseAds(Document document, String path, String dartTrackUrl) {
         List<HouseAd> hads = null;
         if (document != null && document.hasRootElement()) {
             Element rootElement = document.getRootElement();
@@ -63,7 +64,14 @@ public class HouseAdsHelper {
                     HouseAd ad = new HouseAd();
                     ad.setTitle(title);
                     ad.setTagLine(tagLine);
-                    ad.setDestinationUrl(url);
+                    if (dartTrackUrl != null) {
+                        StringBuilder destUrl = new StringBuilder(dartTrackUrl);
+                        destUrl.append(url);
+                        ad.setDestinationUrl(destUrl.toString());
+                    } else {
+                        ad.setDestinationUrl(url);
+                    }
+
                     ad.setImageURL(imageURL);
 
                     hads.add(ad);
