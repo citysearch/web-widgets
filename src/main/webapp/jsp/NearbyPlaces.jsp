@@ -66,9 +66,9 @@
 	                        <strong>Cons:</strong>&nbsp;<s:property value="profile.review.shortCons"/>
 	                    </div>
 	                </div>
-	                <s:if test='%{profile.review.sendToFriendUrl != null && !"".equals(profile.review.sendToFriendUrl)}'>
+	                <s:if test='%{profile.sendToFriendTrackingUrl != null && !"".equals(profile.sendToFriendTrackingUrl)}'>
 		                <div id="review_cs_share">
-		                    <a href='<s:property value="profile.review.sendToFriendUrl"/>' target="_blank">Share this review</a>
+		                    <a href='<s:property value="profile.sendToFriendTrackingUrl"/>' target="_blank">Share this review</a>
 		                </div>
 	                </s:if>
             	</s:if>

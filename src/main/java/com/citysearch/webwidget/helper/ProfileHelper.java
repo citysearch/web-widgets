@@ -393,15 +393,28 @@ public class ProfileHelper {
                     Review review = ReviewHelper.getReviewInstance(null, reviewElm);
                     review.setCallBackFunction(request.getCallBackFunction());
                     review.setCallBackUrl(request.getCallBackUrl());
+
                     String adDisplayTrackingUrl = HelperUtil.getTrackingUrl(review.getReviewUrl(),
                             request.getCallBackUrl(), request.getDartClickTrackUrl(),
-                            profile.getListingId(), "", request.getPublisher(),
+                            profile.getListingId(), profile.getPhone(), request.getPublisher(),
                             request.getAdUnitName(), request.getAdUnitSize());
                     review.setReviewTrackingUrl(adDisplayTrackingUrl);
+
                     String callBackFn = HelperUtil.getCallBackFunctionString(
-                            request.getCallBackFunction(), profile.getListingId(), "");
+                            request.getCallBackFunction(), profile.getListingId(),
+                            profile.getPhone());
                     review.setCallBackFunction(callBackFn);
+
                     profile.setReview(review);
+
+                    if (profile.getSendToFriendUrl() != null) {
+                        String sendToFriendTrackingUrl = HelperUtil.getTrackingUrl(
+                                profile.getSendToFriendUrl(), request.getCallBackUrl(),
+                                request.getDartClickTrackUrl(), profile.getListingId(),
+                                profile.getPhone(), request.getPublisher(),
+                                request.getAdUnitName(), request.getAdUnitSize());
+                        profile.setSendToFriendTrackingUrl(sendToFriendTrackingUrl);
+                    }
                 }
             }
         }

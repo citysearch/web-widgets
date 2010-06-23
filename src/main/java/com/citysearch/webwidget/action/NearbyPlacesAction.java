@@ -22,7 +22,6 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
     private Logger log = Logger.getLogger(getClass());
 
     private static final String ACTION_FORWARD_CONQUEST = "conquest";
-    private static final String HOUSE_ADS = "houseAds";
 
     private NearbyPlacesRequest nearbyPlacesRequest = new NearbyPlacesRequest();
     private NearbyPlacesResponse nearbyPlacesResponse;
@@ -63,6 +62,9 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
     public String execute() throws CitysearchException {
 
         log.info("Begin NearbyPlacesAction");
+        if (nearbyPlacesRequest.getDisplaySize() == null) {
+            nearbyPlacesRequest.setDisplaySize(CommonConstants.DEFAULT_NEARBY_DISPLAY_SIZE);
+        }
         NearbyPlacesHelper helper = new NearbyPlacesHelper(getResourceRootPath());
         String adUnitSize = nearbyPlacesRequest.getAdUnitSize();
 
@@ -72,11 +74,17 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
         } catch (InvalidRequestParametersException ihre) {
             log.error(ihre.getDetailedMessage());
             // throw ihre;
-            return HOUSE_ADS;
+            nearbyPlacesResponse = new NearbyPlacesResponse();
+            nearbyPlacesResponse.setHouseAds(getHouseAds(
+                    nearbyPlacesRequest.getDartClickTrackUrl(),
+                    nearbyPlacesRequest.getDisplaySize()));
         } catch (CitysearchException cse) {
             log.error(cse.getMessage());
             // throw cse;
-            return HOUSE_ADS;
+            nearbyPlacesResponse = new NearbyPlacesResponse();
+            nearbyPlacesResponse.setHouseAds(getHouseAds(
+                    nearbyPlacesRequest.getDartClickTrackUrl(),
+                    nearbyPlacesRequest.getDisplaySize()));
         }
 
         if (adUnitSize != null && adUnitSize.equals(CommonConstants.CONQUEST_AD_SIZE))

@@ -11,6 +11,7 @@ public class Profile {
     private String phone;
     private String profileUrl;
     private String sendToFriendUrl;
+    private String sendToFriendTrackingUrl;
     private String imageUrl;
     private String reviewsUrl;
     private String websiteUrl;
@@ -20,7 +21,15 @@ public class Profile {
     private Review review;
     private String trackingUrl;
     private String listingId;
-    
+
+    public String getSendToFriendTrackingUrl() {
+        return sendToFriendTrackingUrl;
+    }
+
+    public void setSendToFriendTrackingUrl(String sendToFriendTrackingUrl) {
+        this.sendToFriendTrackingUrl = sendToFriendTrackingUrl;
+    }
+
     public String getListingId() {
         return listingId;
     }
