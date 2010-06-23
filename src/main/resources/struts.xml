@@ -26,13 +26,21 @@
             <result name="success">/jsp/Offers.jsp</result>
             <result name="backfill" type="chain">nearbyplaces</result>
         </action>
-
+		
+		<!-- Struts configuration for House Ads -->
+        <action name="houseAds" class="com.citysearch.webwidget.action.HouseAdsAction">
+            <result name="success">/jsp/HouseAds.jsp</result>
+        </action>
+        
         <!-- Struts configuration for Nearby Places Widget -->
         <action name="nearbyplaces" class="com.citysearch.webwidget.action.NearbyPlacesAction">
             <result name="success">/jsp/NearbyPlaces.jsp</result>
             <result name="conquest">/jsp/NearbyPlacesConquest.jsp</result>
             <result name="backfillAndHouseAds">/jsp/NearbyPlacesBackfill.jsp</result>
             <result name="conquestBackfillAndHouseAds">/jsp/NearbyPlacesConquestBackfill.jsp</result>
+            <result name="houseAds" type="chain">houseAds</result>
         </action>
+        
+        
     </package>
 </struts>
