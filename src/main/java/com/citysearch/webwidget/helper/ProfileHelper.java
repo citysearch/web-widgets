@@ -69,9 +69,14 @@ public class ProfileHelper {
     private static final String MAP_URL = "map_url";
 
     private static final String DATE_FORMAT = "reviewdate.format";
+    
+    private static final String TOTAL_USER_REVIEWS = "total_user_reviews";
+    private static final String REVIEWS = "reviews";    
 
     private Logger log = Logger.getLogger(getClass());
     private String rootPath;
+    
+    
 
     public ProfileHelper(String rootPath) {
         this.rootPath = rootPath;
@@ -203,6 +208,10 @@ public class ProfileHelper {
                     profile.setProfileUrl(url.getChildText(PROFILE_URL));
                     profile.setSendToFriendUrl(url.getChildText(SEND_TO_FRIEND_URL));
                 }
+                Element review = locationElem.getChild(REVIEWS);
+                if (review != null) {
+                    profile.setReviewCount(review.getChildText(TOTAL_USER_REVIEWS));
+                }    
                 profile.setImageUrl(getImage(locationElem.getChild(IMAGES),
                         locationElem.getChild(CATEGORIES)));
             }

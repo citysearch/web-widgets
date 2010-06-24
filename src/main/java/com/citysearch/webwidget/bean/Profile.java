@@ -21,8 +21,17 @@ public class Profile {
     private Review review;
     private String trackingUrl;
     private String listingId;
+    private String reviewCount;
+    
+    public String getReviewCount() {
+		return reviewCount;
+	}
 
-    public String getSendToFriendTrackingUrl() {
+	public void setReviewCount(String reviewCount) {
+		this.reviewCount = reviewCount;
+	}
+
+	public String getSendToFriendTrackingUrl() {
         return sendToFriendTrackingUrl;
     }
 
