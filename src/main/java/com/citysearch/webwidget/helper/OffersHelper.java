@@ -132,13 +132,7 @@ public class OffersHelper {
 
         if (StringUtils.isBlank(request.getPublisher())) {
             errors.add(errorProperties.getProperty(CommonConstants.PUBLISHER_ERROR_CODE));
-        }       
-        if(  (StringUtils.isBlank(request.getLatitude())
-              && !StringUtils.isBlank(request.getLongitude()))
-              || (StringUtils.isBlank(request.getLongitude())
-                        && !StringUtils.isBlank(request.getLatitude()))){
-            errors.add(errorProperties.getProperty(CommonConstants.LAT_LONG_ERROR));
-        }
+        }        
         if(!StringUtils.isBlank(request.getRadius())
                 && !StringUtils.isBlank(request.getLatitude())
                 && !StringUtils.isBlank(request.getLongitude())
@@ -275,14 +269,14 @@ public class OffersHelper {
 	    		String ratingVal = offerElement.getChildText(CS_RATING);
 	    	    double rating = NumberUtils.toDouble(ratingVal) / 2;	    	    
 	            List<Integer> ratingList = HelperUtil.getRatingsList(ratingVal);	    	    
-	    	    offer.setCsRating(ratingList);
+	    	    offer.setListingRating(ratingList);
 	    		offer.setReviewCount( HelperUtil.toInteger( offerElement.getChildText(REVIEW_COUNT) ) );	    		
-	    		offer.setImgUrl(offerElement.getChildText(IMAGE_URL));
+	    		offer.setImageUrl(offerElement.getChildText(IMAGE_URL));
 	    		offer.setLatitude(offerElement.getChildText(LATITUDE));
 	    		offer.setListingId(offerElement.getChildText(LISTING_ID));
 	    		offer.setListingName(offerElement.getChildText(LISTING_NAME));
-	    		offer.setLatitude(offerElement.getChildText(LONGITUDE));
-	    		offer.setOfferDesc(offerElement.getChildText(OFFER_DESCRIPTION));
+	    		offer.setLongitude(offerElement.getChildText(LONGITUDE));
+	    		offer.setOfferDescription(offerElement.getChildText(OFFER_DESCRIPTION));
 	    		offer.setOfferId(offerElement.getChildText(OFFER_ID));
 	    		offer.setOfferTitle(offerElement.getChildText(OFFER_TITLE));
 	    		offer.setRefId(offerElement.getChildText(REFERENCE_ID));

@@ -5,62 +5,59 @@ import java.util.List;
 public class Offer{
 	
     private String attributionSrc;
-    private List<Integer> csRating;
+    private List<Integer> listingRating;
     private int reviewCount;    
     private String  profileUrl;    
     private String  phone; 
-	private String imgUrl;
+	private String imageUrl;
     private String listingId;
     private String listingName;
-	private String offerDesc;
+	private String offerDescription;
     private String offerId;
-    private String offerTtl;
+    private String offerTitle;
     private String refId;
-    private String lat;
-    private String longs;    
+    private String latitude;
+    private String longitude;    
     private String street;
     private String city;
     private String state;
     private String zip;
-
-    public String getPhone() {
-		return phone;
+	
+	public String getAttributionSrc() {
+		return attributionSrc;
 	}
-	public void setPhone(String phone) {
-		this.phone = phone;
+	public void setAttributionSrc(String attributionSrc) {
+		this.attributionSrc = attributionSrc;
 	}
-    public String getProfileUrl() {
-		return profileUrl;
+	public List<Integer> getListingRating() {
+		return listingRating;
 	}
-	public void setProfileUrl(String profileUrl) {
-		this.profileUrl = profileUrl;
+	public void setListingRating(List<Integer> listingRating) {
+		this.listingRating = listingRating;
 	}
-    public List<Integer> getCsRating() {
-		return csRating;
-	}
-	public void setCsRating(List<Integer> csRating) {
-		this.csRating = csRating;
-	}	
 	public int getReviewCount() {
 		return reviewCount;
 	}
 	public void setReviewCount(int reviewCount) {
 		this.reviewCount = reviewCount;
 	}
-	public void setLat(String lat) {
-		this.lat = lat;
-	}    
-	public String getAttributionSrc() {
-		return attributionSrc;
+	public String getProfileUrl() {
+		return profileUrl;
 	}
-	public void setAttributionSrc(String attributionSrc) {
-		this.attributionSrc = attributionSrc;
-	}	
-	public String getImgUrl() {
-		return imgUrl;
+	public void setProfileUrl(String profileUrl) {
+		this.profileUrl = profileUrl;
 	}
-	public void setImgUrl(String imgUrl) {
-		this.imgUrl = imgUrl;
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+	public String getImageUrl() {
+		return imageUrl;
+	}
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 	public String getListingId() {
 		return listingId;
@@ -74,14 +71,14 @@ public class Offer{
 	public void setListingName(String listingName) {
 		this.listingName = listingName;
 	}
-	public String getOfferDesc() {
-		if( offerDesc != null && offerDesc.length() > 36 )
-			offerDesc = offerDesc.substring(0, 36) + "...";
+	public String getOfferDescription() {
+		if( offerDescription != null && offerDescription.length() > 36 )
+			offerDescription = offerDescription.substring(0, 36) + "...";
 		
-		return offerDesc;
+		return offerDescription;		
 	}
-	public void setOfferDesc(String offerDesc) {
-		this.offerDesc = offerDesc;
+	public void setOfferDescription(String offerDescription) {
+		this.offerDescription = offerDescription;
 	}
 	public String getOfferId() {
 		return offerId;
@@ -89,32 +86,23 @@ public class Offer{
 	public void setOfferId(String offerId) {
 		this.offerId = offerId;
 	}
-	public String getOfferTtl() {
-		if( offerTtl != null && offerTtl.length() > 20 )
-			offerTtl = offerTtl.substring(0, 20) + "...";
-		
-		return offerTtl;
-	}
-	public void setOfferTtl(String offerTtl) {
-		this.offerTtl = offerTtl;
-	}
 	public String getRefId() {
 		return refId;
 	}
 	public void setRefId(String refId) {
 		this.refId = refId;
 	}
-	public String getLat() {
-		return lat;
+	public String getLatitude() {
+		return latitude;
 	}
-	public void setLatitude(String lat) {
-		this.lat = lat;
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
 	}
-	public String getLongs() {
-		return longs;
+	public String getLongitude() {
+		return longitude;
 	}
-	public void setLongs(String longs) {
-		this.longs = longs;
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
 	}
 	public String getStreet() {
 		return street;
@@ -139,27 +127,36 @@ public class Offer{
 	}
 	public void setZip(String zip) {
 		this.zip = zip;
+	}
+	public String getOfferTitle() {
+		if( offerTitle != null && offerTitle.length() > 20 )
+			offerTitle = offerTitle.substring(0, 20) + "...";
+		
+		return offerTitle;
 	}	
+	public void setOfferTitle(String offerTitle) {
+		this.offerTitle = offerTitle;
+	}
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("==reviewCount==========" + reviewCount );
 		sb.append("==attributionSrc================" + attributionSrc );
-		sb.append("==csRating==" + csRating );
-		sb.append("==imgUrl==" + imgUrl );
+		sb.append("==csRating==" + listingRating );
+		sb.append("==imgUrl==" + imageUrl );
 		sb.append("=listingId===" + listingId );
 		sb.append("=listingName===" + listingName );
-		sb.append("==offerDesc==" + offerDesc );
+		sb.append("==offerDesc==" + offerDescription );
 		sb.append("==offerId==" + offerId );
-		sb.append("==offerTtl==" + offerTtl );
+		sb.append("==offerTtl==" + offerTitle );
 		sb.append("==refId==" + refId );
-		sb.append("==lat==" + lat );
-		sb.append("==longs==" + longs );
+		sb.append("==lat==" + latitude );
+		sb.append("==longs==" + longitude );
 		sb.append("==street==" + street );
 		sb.append("==city==" + city );
 		sb.append("==state==" + state );
 		sb.append("==zip==" + zip );	
 		
 		return sb.toString();
-	}
+	}	
 }

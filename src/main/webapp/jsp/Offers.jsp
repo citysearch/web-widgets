@@ -25,28 +25,28 @@
 		        	<div class="ctsrch_leftSide">
 		 	         	<div class="ctsrch_maxStar">	
 		 	         		<a target="_blank" href='<s:property value="profileUrl" />' >
-								<img src='<s:property value="imgUrl" />'/>								
+								<img src='<s:property value="imageUrl" />'/>								
 							</a>
 		 	         	</div>	 	         		         	 
 	 	         	</div>
-	 	         	<div class="ctsrch_rightSideWide"">	
+	 	         	<div class="ctsrch_rightSideWide_Offer">	
 	 	         		<div>
 	 	         		   	<div class="ctsrch_starContainer">	 	         		   	
 	                    		<div class="ctsrch_stars"> 
-                            		<s:iterator value="csRating" status="stat"><span class='<s:if test="%{csRating[#stat.index] == 2}">full</s:if><s:elseif test="%{csRating[#stat.index] == 1}">half</s:elseif><s:else>empty</s:else>'> </span></s:iterator>
+                            		<s:iterator value="listingRating" status="stat"><span class='<s:if test="%{listingRating[#stat.index] == 2}">full</s:if><s:elseif test="%{listingRating[#stat.index] == 1}">half</s:elseif><s:else>empty</s:else>'> </span></s:iterator>
                         		</div>           		                		
 	                    		<div>                    		
-	                    			<label style="float:right;width:32%" class="ctsrch_reviewFont" > <s:property value="reviewCount" /> &nbsp; Reviews</label>	 	         			
+	                    			<label class="ctsrch_reviewFont_Offer" > <s:property value="reviewCount" /> &nbsp; Reviews</label>	 	         			
 	                    		</div>          		
 	                    	</div>	                    	
 	         				<div class="ctsrch_starContainer">	
 	         				 	<label style="float:left;" class="ctsrch_mainLink"><a target="_blank" href='<s:property value="profileUrl" />' ><s:property value="listingName" /></a></label>
 		 	         		</div> 
-		 	         		<div style="float:left;" class="ctsrch_cityFont">
+		 	         		<div style="float:left;" class="ctsrch_cityFont_Offer">
 	         					<s:property value="city" /> , <s:property value="state" />          					
 	         				</div>
-	         				<div style="font-size:13px;float:left;"> 	         					
-	         					<s:property value="offerDesc" />        						                   		
+	         				<div style="font-size:13px;float:left;width:69%;"> 	         					
+	         					<s:property value="offerDescription" />        						                   		
 	         				</div>
 	 	         		</div> 	         				       				        				
 	 	         	</div>		

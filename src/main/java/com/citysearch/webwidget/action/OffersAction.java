@@ -50,7 +50,8 @@ public class OffersAction extends AbstractCitySearchAction implements ModelDrive
         log.info("=========Start offersAction execute()============================ >"); 
         OffersHelper helper = new OffersHelper(getResourceRootPath());        
         try{
-        	offersList = (List<Offer>) helper.getOffers(offersRequest);        	
+        	offersList = (List<Offer>) helper.getOffers(offersRequest);        
+        	System.out.println( "============offersList============>>>>" + offersList );
     	    if (offersList.size() == 0) {
     	    	 log.info("Returning backfill from offer");
                  return "backfill";                 
@@ -60,10 +61,12 @@ public class OffersAction extends AbstractCitySearchAction implements ModelDrive
     	    	 Offer offer = (Offer)it.next();
         		 String listingUrl = null;        		  
         		 if(offer.getProfileUrl() != null){
-                     listingUrl = getTrackingUrl(offer.getProfileUrl(),
+                     /*
+        			 listingUrl = getTrackingUrl(offer.getProfileUrl(),
                     		 CLICK_TRACKING_URL,
                              offer.getListingId(), offersRequest.getPublisher(),
                              offersRequest.getAdUnitName(),offersRequest.getAdUnitSize());
+                     */
         		 }else{
         			 listingUrl = "";
         		 }
