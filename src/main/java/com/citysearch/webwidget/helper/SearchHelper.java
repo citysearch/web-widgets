@@ -83,11 +83,11 @@ public class SearchHelper {
         strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.LONGITUDE,
                 request.getLongitude()));
         strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-        
+
         String radius = (StringUtils.isBlank(request.getRadius())) ? DEFAULT_RADIUS
                 : request.getRadius();
         strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.RADIUS, radius));
-        
+
         strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
         strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.WHAT,
                 request.getWhat()));
@@ -239,7 +239,7 @@ public class SearchHelper {
         apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
         apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.TAG,
                 request.getTags()));
-        
+
         apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
         String rpp = (StringUtils.isBlank(request.getRpp())) ? DEFAULT_RPP : request.getRpp();
         apiQueryString.append(HelperUtil.constructQueryParam("rpp", rpp));
@@ -282,10 +282,13 @@ public class SearchHelper {
 
     public List<NearbyPlace> getNearbyPlaces(SearchRequest request) throws CitysearchException {
         log.info("SearchHelper.getNearbyPlaces: Begin");
-        //Do need to validate.
+        if (request == null) {
+            throw new CitysearchException(this.getClass().getName(), "getNearbyPlaces",
+                    "NULL Request.");
+        }
+        // No need to validate.
         Properties properties = PropertiesLoader.getAPIProperties();
-        String urlString = properties.getProperty(PROPERTY_SEARCH_URL)
-                + getQueryString(request);
+        String urlString = properties.getProperty(PROPERTY_SEARCH_URL) + getQueryString(request);
         log.info("SearchHelper.getNearbyPlaces: Query " + urlString);
         Document responseDocument = null;
         try {
@@ -295,7 +298,7 @@ public class SearchHelper {
             throw new CitysearchException(this.getClass().getName(), "getNearbyPlaces", ihe);
         }
         log.info("SearchHelper.getNearbyPlaces: End");
-        return getNearbyPlaces(responseDocument, request.getLatitude(), request.getLongitude());
+        return getNearbyPlaces(request, responseDocument);
     }
 
     private String[] getLatitudeAndLongitude(Document document) {
@@ -315,7 +318,7 @@ public class SearchHelper {
         return latLonValues;
     }
 
-    private List<NearbyPlace> getNearbyPlaces(Document doc, String latitude, String longitude)
+    private List<NearbyPlace> getNearbyPlaces(SearchRequest request, Document doc)
             throws CitysearchException {
         log.info("SearchHelper.getNearbyPlaces: Begin");
         List<NearbyPlace> nearbyPlaces = null;
@@ -325,8 +328,8 @@ public class SearchHelper {
             List<Element> children = rootElement.getChildren(LOCATION_TAG);
             if (children != null && !children.isEmpty()) {
                 int childrenSize = children.size();
-                BigDecimal sourceLatitude = new BigDecimal(latitude);
-                BigDecimal sourceLongitude = new BigDecimal(longitude);
+                BigDecimal sourceLatitude = new BigDecimal(request.getLatitude());
+                BigDecimal sourceLongitude = new BigDecimal(request.getLongitude());
                 for (Element elm : children) {
                     BigDecimal businessLatitude = new BigDecimal(
                             elm.getChildText(CommonConstants.LATITUDE));
@@ -364,7 +367,7 @@ public class SearchHelper {
 
                     nearbyPlaces = new ArrayList<NearbyPlace>();
                     for (Element elm : elmsToConvert) {
-                        nearbyPlaces.add(toNearbyPlace(elm, latitude, longitude));
+                        nearbyPlaces.add(toNearbyPlace(request, elm));
                     }
                     NearbyPlacesHelper.addDefaultImages(nearbyPlaces, this.rootPath);
                 }
@@ -374,12 +377,12 @@ public class SearchHelper {
         return nearbyPlaces;
     }
 
-    private NearbyPlace toNearbyPlace(Element location, String latitude, String longitude)
+    private NearbyPlace toNearbyPlace(SearchRequest request, Element location)
             throws CitysearchException {
         String dLat = location.getChildText(CommonConstants.LATITUDE);
         String dLon = location.getChildText(CommonConstants.LONGITUDE);
-        BigDecimal sourceLat = new BigDecimal(latitude);
-        BigDecimal sourceLon = new BigDecimal(longitude);
+        BigDecimal sourceLat = new BigDecimal(request.getLatitude());
+        BigDecimal sourceLon = new BigDecimal(request.getLongitude());
         BigDecimal destLat = new BigDecimal(dLat);
         BigDecimal destLon = new BigDecimal(dLon);
         double distance = HelperUtil.getDistance(sourceLat, sourceLon, destLat, destLon);
@@ -424,6 +427,20 @@ public class SearchHelper {
         nearbyPlace.setAdImageURL(location.getChildText(AD_IMAGE_URL_TAG));
         nearbyPlace.setPhone(location.getChildText(PHONE_TAG));
         nearbyPlace.setOffers(location.getChildText(CommonConstants.OFFERS));
+
+        nearbyPlace.setCallBackFunction(request.getCallBackFunction());
+        nearbyPlace.setCallBackUrl(request.getCallBackUrl());
+
+        String adDisplayTrackingUrl = HelperUtil.getTrackingUrl(nearbyPlace.getAdDisplayURL(),
+                request.getCallBackUrl(), request.getDartClickTrackUrl(),
+                nearbyPlace.getListingId(), nearbyPlace.getPhone(), request.getPublisher(),
+                request.getAdUnitName(), request.getAdUnitSize());
+        nearbyPlace.setAdDisplayTrackingURL(adDisplayTrackingUrl);
+
+        String callBackFn = HelperUtil.getCallBackFunctionString(request.getCallBackFunction(),
+                nearbyPlace.getListingId(), nearbyPlace.getPhone());
+        nearbyPlace.setCallBackFunction(callBackFn);
+
         return nearbyPlace;
     }
 }

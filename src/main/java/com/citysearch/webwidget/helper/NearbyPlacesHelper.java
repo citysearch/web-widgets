@@ -58,14 +58,14 @@ public class NearbyPlacesHelper {
     private static final String HTTP_PREFIX = "http://";
     private static final String AD_DESTINATION_URL = "ad_destination_url";
     private static final String DEFAULT_RADIUS = "25";
-    
+
     private String rootPath;
     private Integer displaySize;
 
     // Field to cache the PFP response document.
     private Document pfpResponseDocument = null;
 
-    public NearbyPlacesHelper(String rootPath) {
+    public NearbyPlacesHelper(String rootPath) throws CitysearchException {
         this.rootPath = rootPath;
     }
 
@@ -119,22 +119,23 @@ public class NearbyPlacesHelper {
         apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
         apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.LONGITUDE,
                 request.getLongitude()));
-        /* PFP is not accepting publisher with lat lon
-        apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
-        apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.PUBLISHER_CODE,
-                request.getPublisher()));
-        */
+        /*
+         * PFP is not accepting publisher with lat lon
+         * apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
+         * apiQueryString.append(HelperUtil.
+         * constructQueryParam(APIFieldNameConstants.PUBLISHER_CODE, request.getPublisher()));
+         */
         if (!StringUtils.isBlank(request.getTags())) {
             apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
             apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.TAG,
                     request.getTags()));
         }
-        
+
         String radius = (StringUtils.isBlank(request.getRadius())) ? DEFAULT_RADIUS
                 : request.getRadius();
         apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
         apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.RADIUS, radius));
-        
+
         return apiQueryString.toString();
     }
 
@@ -193,11 +194,10 @@ public class NearbyPlacesHelper {
 
     private void loadLatitudeAndLongitudeFromSearchAPI(NearbyPlacesRequest request)
             throws CitysearchException {
-        SearchRequest sRequest = new SearchRequest();
+        SearchRequest sRequest = new SearchRequest(request);
         sRequest.setWhat(request.getWhat());
         sRequest.setWhere(request.getWhere());
         sRequest.setTags(request.getTags());
-        sRequest.setPublisher(request.getPublisher());
 
         SearchHelper sHelper = new SearchHelper(this.rootPath, this.displaySize);
         String[] latLon = sHelper.getLatitudeLongitude(sRequest);
@@ -237,10 +237,8 @@ public class NearbyPlacesHelper {
         if (StringUtils.isBlank(request.getLatitude())
                 || StringUtils.isBlank(request.getLongitude())) {
             log.info("NearbyPlacesHelper.getNearbyPlaces: No lat lon. return house ads.");
-            // If lat and lon cannot be found, then return house ads.
-            return createResponse(null, request, false);
-            // throw new CitysearchException(this.getClass().getName(), "getNearbyPlaces",
-            // "Invalid Latitude and Longitude");
+            throw new CitysearchException(this.getClass().getName(), "getNearbyPlaces",
+                    "Invalid Latitude and Longitude");
         }
 
         boolean responseFromSearch = false;
@@ -253,14 +251,13 @@ public class NearbyPlacesHelper {
                 responseFromSearch = true;
                 log.info("NearbyPlacesHelper.getNearbyPlaces: No results without geography.");
                 // Query Search API
-                SearchRequest sRequest = new SearchRequest();
+                SearchRequest sRequest = new SearchRequest(request);
                 sRequest.setWhat(request.getWhat());
                 sRequest.setWhere(request.getWhere());
                 sRequest.setLatitude(request.getLatitude());
                 sRequest.setLongitude(request.getLongitude());
                 sRequest.setRadius(request.getRadius());
                 sRequest.setTags(request.getTags());
-                sRequest.setPublisher(request.getPublisher());
 
                 SearchHelper sHelper = new SearchHelper(this.rootPath, this.displaySize);
                 nearbyPlaces = sHelper.getNearbyPlaces(sRequest);
@@ -276,15 +273,15 @@ public class NearbyPlacesHelper {
 
         // When no results from PFP or Search
         if (nearbyPlaces == null || nearbyPlaces.isEmpty()) {
-            List<NearbyPlace> backfill = getNearbyPlacesBackfill();
+            List<NearbyPlace> backfill = getNearbyPlacesBackfill(request);
             List<HouseAd> houseAds = null;
             if (backfill == null || backfill.isEmpty()) {
                 // If no backfills from PFP, return 3 house ads
-                houseAds = HouseAdsHelper.getHouseAds(this.rootPath);
+                houseAds = HouseAdsHelper.getHouseAds(this.rootPath, request.getDartClickTrackUrl());
                 houseAds = houseAds.subList(0, this.displaySize);
             } else if (backfill.size() < this.displaySize) {
                 // If less than 3 backfills found, fill the rest with house ads.
-                houseAds = HouseAdsHelper.getHouseAds(this.rootPath);
+                houseAds = HouseAdsHelper.getHouseAds(this.rootPath, request.getDartClickTrackUrl());
                 int noHouseAdsNeeded = this.displaySize - backfill.size();
                 houseAds = houseAds.subList(0, noHouseAdsNeeded);
             }
@@ -297,13 +294,15 @@ public class NearbyPlacesHelper {
                 // If Response was from search
                 if (searchResponse) {
                     int moreRequired = this.displaySize - nearbyPlaces.size();
-                    List<NearbyPlace> backfill = getNearbyPlacesBackfill();
+                    List<NearbyPlace> backfill = getNearbyPlacesBackfill(request);
                     List<HouseAd> houseAds = null;
                     if (backfill == null || backfill.isEmpty()) {
-                        houseAds = HouseAdsHelper.getHouseAds(this.rootPath);
+                        houseAds = HouseAdsHelper.getHouseAds(this.rootPath,
+                                request.getDartClickTrackUrl());
                         houseAds = houseAds.subList(0, moreRequired);
                     } else if (backfill.size() < moreRequired) {
-                        houseAds = HouseAdsHelper.getHouseAds(this.rootPath);
+                        houseAds = HouseAdsHelper.getHouseAds(this.rootPath,
+                                request.getDartClickTrackUrl());
                         houseAds = houseAds.subList(0, moreRequired - backfill.size());
                     } else if (backfill.size() > moreRequired) {
                         backfill = backfill.subList(0, moreRequired);
@@ -311,11 +310,26 @@ public class NearbyPlacesHelper {
                     response.setBackfill(backfill);
                     response.setHouseAds(houseAds);
                 } else {
-                    if (nearbyPlaces.size() < this.displaySize) {
-                        ProfileHelper phelper = new ProfileHelper(this.rootPath);
-                        ProfileRequest profileRequest = new ProfileRequest();
-                        profileRequest.setPublisher(request.getPublisher());
+                    //If Conquest
+                    if (this.displaySize == 2) {
+                        // Add 1 backfill or 1 house ad
+                        List<NearbyPlace> backfill = getNearbyPlacesBackfill(request);
+                        List<HouseAd> houseAds = null;
+                        if (backfill == null || backfill.isEmpty()) {
+                            houseAds = HouseAdsHelper.getHouseAds(this.rootPath,
+                                    request.getDartClickTrackUrl());
+                            houseAds = houseAds.subList(0, 1);
+                        } else if (backfill.size() > 1) {
+                            backfill = backfill.subList(0, 1);
+                        }
+                        response.setBackfill(backfill);
+                        response.setHouseAds(houseAds);
+                    } else {
+                        //If Mantel
+                        ProfileRequest profileRequest = new ProfileRequest(request);
                         profileRequest.setClientIP(request.getClientIP());
+
+                        ProfileHelper phelper = new ProfileHelper(this.rootPath);
                         for (NearbyPlace nbp : nearbyPlaces) {
                             profileRequest.setListingId(nbp.getListingId());
                             Profile profile = phelper.getProfileAndHighestReview(profileRequest);
@@ -328,8 +342,9 @@ public class NearbyPlacesHelper {
         return response;
     }
 
-    public List<NearbyPlace> getNearbyPlacesBackfill() throws CitysearchException {
-        return getNearbyPlacesBackfill(pfpResponseDocument);
+    private List<NearbyPlace> getNearbyPlacesBackfill(NearbyPlacesRequest request)
+            throws CitysearchException {
+        return getNearbyPlacesBackfill(request, pfpResponseDocument);
     }
 
     private List<NearbyPlace> getPlacesByGeoCodes(NearbyPlacesRequest request,
@@ -337,15 +352,6 @@ public class NearbyPlacesHelper {
         log.info("NearbyPlacesHelper.getPlacesByGeoCodes: Begin");
         Properties properties = PropertiesLoader.getAPIProperties();
         StringBuilder urlStringBuilder = null;
-        /*
-        if (latitudeLongitudePresentInRequest) {
-            urlStringBuilder = new StringBuilder(properties.getProperty(PFP_LOCATION_URL));
-            urlStringBuilder.append(getQueryStringWithLatitudeAndLongitude(request));
-        } else {
-            urlStringBuilder = new StringBuilder(properties.getProperty(PFP_URL));
-            urlStringBuilder.append(getQueryStringWithWhere(request));
-        }
-        */
         urlStringBuilder = new StringBuilder(properties.getProperty(PFP_LOCATION_URL));
         urlStringBuilder.append(getQueryStringWithLatitudeAndLongitude(request));
         log.info("NearbyPlacesHelper.getPlacesByGeoCodes: Query: " + urlStringBuilder.toString());
@@ -356,7 +362,7 @@ public class NearbyPlacesHelper {
         } catch (InvalidHttpResponseException ihe) {
             throw new CitysearchException(this.getClass().getName(), "getPlacesByGeoCodes", ihe);
         }
-        return getNearbyPlaces(pfpResponseDocument, request.getLatitude(), request.getLongitude());
+        return getNearbyPlaces(request, pfpResponseDocument);
     }
 
     private List<NearbyPlace> getPlacesWithoutGeoCodes(NearbyPlacesRequest request)
@@ -374,10 +380,10 @@ public class NearbyPlacesHelper {
             throw new CitysearchException(this.getClass().getName(), "getPlacesWithoutGeoCodes",
                     ihe);
         }
-        return getNearbyPlaces(responseDocument, request.getLatitude(), request.getLongitude());
+        return getNearbyPlaces(request, responseDocument);
     }
 
-    private List<NearbyPlace> getNearbyPlaces(Document doc, String latitude, String longitude)
+    private List<NearbyPlace> getNearbyPlaces(NearbyPlacesRequest request, Document doc)
             throws CitysearchException {
         log.info("NearbyPlacesHelper.getNearbyPlaces: Begin");
         List<NearbyPlace> nearbyPlaces = null;
@@ -386,8 +392,8 @@ public class NearbyPlacesHelper {
             Element rootElement = doc.getRootElement();
             List<Element> children = rootElement.getChildren(AD_TAG);
             if (children != null && !children.isEmpty()) {
-                BigDecimal sourceLatitude = new BigDecimal(latitude);
-                BigDecimal sourceLongitude = new BigDecimal(longitude);
+                BigDecimal sourceLatitude = new BigDecimal(request.getLatitude());
+                BigDecimal sourceLongitude = new BigDecimal(request.getLongitude());
                 for (Element elm : children) {
                     String adType = StringUtils.trim(elm.getChildText(TYPE_TAG));
                     if (adType != null && adType.equalsIgnoreCase(AD_TYPE_PFP)) {
@@ -427,7 +433,7 @@ public class NearbyPlacesHelper {
 
                     nearbyPlaces = new ArrayList<NearbyPlace>();
                     for (Element elm : elmsToConvert) {
-                        nearbyPlaces.add(toNearbyPlace(elm, latitude, longitude));
+                        nearbyPlaces.add(toNearbyPlace(request, elm));
                     }
                     addDefaultImages(nearbyPlaces, this.rootPath);
                 }
@@ -437,12 +443,12 @@ public class NearbyPlacesHelper {
         return nearbyPlaces;
     }
 
-    private NearbyPlace toNearbyPlace(Element ad, String latitude, String longitude)
+    private NearbyPlace toNearbyPlace(NearbyPlacesRequest request, Element ad)
             throws CitysearchException {
         String dLat = ad.getChildText(CommonConstants.LATITUDE);
         String dLon = ad.getChildText(CommonConstants.LONGITUDE);
-        BigDecimal sourceLatitude = new BigDecimal(latitude);
-        BigDecimal sourceLongitude = new BigDecimal(longitude);
+        BigDecimal sourceLatitude = new BigDecimal(request.getLatitude());
+        BigDecimal sourceLongitude = new BigDecimal(request.getLongitude());
         BigDecimal businessLatitude = new BigDecimal(dLat);
         BigDecimal businessLongitude = new BigDecimal(dLon);
         double distance = HelperUtil.getDistance(sourceLatitude, sourceLongitude, businessLatitude,
@@ -482,10 +488,25 @@ public class NearbyPlacesHelper {
         nearbyPlace.setState(ad.getChildText(CommonConstants.STATE));
         nearbyPlace.setPostalCode(ad.getChildText(ZIP_TAG));
         nearbyPlace.setAdDestinationUrl(ad.getChildText(AD_DESTINATION_URL));
+
+        nearbyPlace.setCallBackFunction(request.getCallBackFunction());
+        nearbyPlace.setCallBackUrl(request.getCallBackUrl());
+
+        String adDisplayTrackingUrl = HelperUtil.getTrackingUrl(nearbyPlace.getAdDisplayURL(),
+                request.getCallBackUrl(), request.getDartClickTrackUrl(),
+                nearbyPlace.getListingId(), nearbyPlace.getPhone(), request.getPublisher(),
+                request.getAdUnitName(), request.getAdUnitSize());
+        nearbyPlace.setAdDisplayTrackingURL(adDisplayTrackingUrl);
+
+        String callBackFn = HelperUtil.getCallBackFunctionString(request.getCallBackFunction(),
+                nearbyPlace.getListingId(), nearbyPlace.getPhone());
+        nearbyPlace.setCallBackFunction(callBackFn);
+
         return nearbyPlace;
     }
 
-    private List<NearbyPlace> getNearbyPlacesBackfill(Document doc) throws CitysearchException {
+    private List<NearbyPlace> getNearbyPlacesBackfill(NearbyPlacesRequest request, Document doc)
+            throws CitysearchException {
         log.info("NearbyPlacesHelper.getNearbyPlacesBackfill: Begin");
         List<NearbyPlace> nearbyPlaces = null;
         if (doc != null && doc.hasRootElement()) {
@@ -510,7 +531,7 @@ public class NearbyPlacesHelper {
                     }
                     nearbyPlaces = new ArrayList<NearbyPlace>();
                     for (Element elm : elmsToConvert) {
-                        nearbyPlaces.add(toBackfill(elm));
+                        nearbyPlaces.add(toBackfill(request, elm));
                     }
                 }
             }
@@ -519,7 +540,8 @@ public class NearbyPlacesHelper {
         return nearbyPlaces;
     }
 
-    private NearbyPlace toBackfill(Element ad) {
+    private NearbyPlace toBackfill(NearbyPlacesRequest request, Element ad)
+            throws CitysearchException {
         NearbyPlace nbp = new NearbyPlace();
         String category = ad.getChildText(TAGLINE_TAG);
         if (StringUtils.isNotBlank(category)) {
@@ -537,6 +559,14 @@ public class NearbyPlacesHelper {
         nbp.setOffers(ad.getChildText(CommonConstants.OFFERS));
         nbp.setAdDisplayURL(ad.getChildText(AD_DISPLAY_URL_TAG));
         nbp.setAdDestinationUrl(ad.getChildText(AD_DESTINATION_URL));
+        nbp.setListingId(ad.getChildText(LISTING_ID_TAG));
+        nbp.setPhone(ad.getChildText(PHONE_TAG));
+
+        String adDisplayTrackingUrl = HelperUtil.getTrackingUrl(nbp.getAdDisplayURL(), null,
+                request.getDartClickTrackUrl(), nbp.getListingId(), nbp.getPhone(),
+                request.getPublisher(), request.getAdUnitName(), request.getAdUnitSize());
+
+        nbp.setAdDisplayTrackingURL(adDisplayTrackingUrl);
         return nbp;
     }
 

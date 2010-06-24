@@ -60,6 +60,7 @@ public class ProfileHelper {
     private static final String CATEGORIES = "categories";
     private static final String CATEGORY = "category";
     private static final String CATEGORY_NAME = "name";
+    private static final String ID = "id";
 
     private static final String REVIEWS_URL = "reviews_url";
     private static final String WEBSITE_URL = "website_url";
@@ -72,9 +73,6 @@ public class ProfileHelper {
     private Logger log = Logger.getLogger(getClass());
     private String rootPath;
 
-    private static final String TOTAL_USER_REVIEWS = "total_user_reviews";
-    private static final String REVIEWS = "reviews";    
-	
     public ProfileHelper(String rootPath) {
         this.rootPath = rootPath;
     }
@@ -85,7 +83,7 @@ public class ProfileHelper {
      * @param request
      * @throws CitysearchException
      */
-    public void validateRequest(ProfileRequest request) throws CitysearchException {
+    private void validateRequest(ProfileRequest request) throws CitysearchException {
         List<String> errors = new ArrayList<String>();
         Properties errorProperties = PropertiesLoader.getErrorProperties();
 
@@ -192,7 +190,7 @@ public class ProfileHelper {
      * @return Profile
      * @throws CitysearchException
      */
-    public Profile parseProfileForReviews(Document doc) throws CitysearchException {
+    private Profile parseProfileForReviews(Document doc) throws CitysearchException {
         Profile profile = null;
         if (doc != null && doc.hasRootElement()) {
             Element locationElem = doc.getRootElement().getChild(LOCATION);
@@ -205,12 +203,6 @@ public class ProfileHelper {
                     profile.setProfileUrl(url.getChildText(PROFILE_URL));
                     profile.setSendToFriendUrl(url.getChildText(SEND_TO_FRIEND_URL));
                 }
-		
-		Element review = locationElem.getChild(REVIEWS);
-                if (review != null) {
-                    profile.setReviewCount(review.getChildText(TOTAL_USER_REVIEWS));
-                }  
-
                 profile.setImageUrl(getImage(locationElem.getChild(IMAGES),
                         locationElem.getChild(CATEGORIES)));
             }
@@ -358,16 +350,18 @@ public class ProfileHelper {
 
     public Profile getProfileAndHighestReview(ProfileRequest request) throws CitysearchException {
         Document responseDocument = executeQuery(request);
-        Profile profile = findProfileLatestReview(responseDocument);
+        Profile profile = findProfileLatestReview(request, responseDocument);
         return profile;
     }
 
-    public Profile findProfileLatestReview(Document doc) throws CitysearchException {
+    private Profile findProfileLatestReview(ProfileRequest request, Document doc)
+            throws CitysearchException {
         Profile profile = null;
         if (doc != null && doc.hasRootElement()) {
             Element locationElm = doc.getRootElement().getChild(LOCATION);
             if (locationElm != null) {
                 profile = new Profile();
+                profile.setListingId(locationElm.getChildText(ID));
                 profile.setAddress(getAddress(locationElm.getChild(ADDRESS)));
                 profile.setPhone(getPhone(locationElm.getChild(CONTACT_INFO)));
                 Element urlElm = locationElm.getChild(URLS);
@@ -396,8 +390,31 @@ public class ProfileHelper {
                         }
                     }
                     Element reviewElm = reviewMap.get(reviewMap.lastKey());
-                    Review review = ReviewHelper.getReviewInstance(reviewElm);
+                    Review review = ReviewHelper.getReviewInstance(null, reviewElm);
+                    review.setCallBackFunction(request.getCallBackFunction());
+                    review.setCallBackUrl(request.getCallBackUrl());
+
+                    String adDisplayTrackingUrl = HelperUtil.getTrackingUrl(review.getReviewUrl(),
+                            request.getCallBackUrl(), request.getDartClickTrackUrl(),
+                            profile.getListingId(), profile.getPhone(), request.getPublisher(),
+                            request.getAdUnitName(), request.getAdUnitSize());
+                    review.setReviewTrackingUrl(adDisplayTrackingUrl);
+
+                    String callBackFn = HelperUtil.getCallBackFunctionString(
+                            request.getCallBackFunction(), profile.getListingId(),
+                            profile.getPhone());
+                    review.setCallBackFunction(callBackFn);
+
                     profile.setReview(review);
+
+                    if (profile.getSendToFriendUrl() != null) {
+                        String sendToFriendTrackingUrl = HelperUtil.getTrackingUrl(
+                                profile.getSendToFriendUrl(), request.getCallBackUrl(),
+                                request.getDartClickTrackUrl(), profile.getListingId(),
+                                profile.getPhone(), request.getPublisher(),
+                                request.getAdUnitName(), request.getAdUnitSize());
+                        profile.setSendToFriendTrackingUrl(sendToFriendTrackingUrl);
+                    }
                 }
             }
         }
