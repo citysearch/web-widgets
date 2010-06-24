@@ -17,6 +17,20 @@ public class ProfileRequest extends AbstractRequest {
     private int nolog;
     private String callback;
 
+    public ProfileRequest() {
+        super();
+    }
+
+    public ProfileRequest(AbstractRequest request) {
+        super();
+        setPublisher(request.getPublisher());
+        setDartClickTrackUrl(request.getDartClickTrackUrl());
+        setCallBackFunction(request.getCallBackFunction());
+        setCallBackUrl(request.getCallBackUrl());
+        setAdUnitName(request.getAdUnitName());
+        setAdUnitSize(request.getAdUnitSize());
+    }
+
     public String getListingId() {
         return listingId;
     }

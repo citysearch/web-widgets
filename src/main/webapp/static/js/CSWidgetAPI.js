@@ -1,6 +1,6 @@
 ﻿// functions public to partners
 function cgLaunch (URL, name, features) {
-    window.open("http://ad.doubleclick.net/clk;225291110;48835962;h?"+URL, name, features);
+    window.open(citygrid.data.dartClickTrackUrl+URL, name, features);
 }
 
 // internal tools
@@ -22,6 +22,7 @@ var citygrid = {
             widgeturl += '&adUnitName='+data.adUnitName;
             widgeturl += '&adUnitSize='+data.adUnitSize;
             widgeturl += '&clientIP='+data.clientIP;
+            widgeturl += '&dartClickTrackUrl='+data.dartClickTrackUrl;
 
             citygrid.common.scriptInject(widgeturl);
         }
@@ -43,6 +44,7 @@ var citygrid = {
             widgeturl += '&adUnitName='+data.adUnitName;
             widgeturl += '&adUnitSize='+data.adUnitSize;
             widgeturl += '&clientIP='+data.clientIP;
+            widgeturl += '&dartClickTrackUrl='+data.dartClickTrackUrl;
 
             citygrid.common.scriptInject(widgeturl);
         },
@@ -86,6 +88,7 @@ var citygrid = {
 
         checkInput : function(data) {
 
+            // validate user data
             if (!data.what) { data.what = 'Restaurants'; }
             if (!data.where) { data.where = 'West Hollywood, CA'; }
             if (!data.publisher) { data.publisher = ''; }
@@ -98,6 +101,9 @@ var citygrid = {
             if (!data.adUnitName) { data.adUnitName = 'nearby'; }
             if (!data.adUnitSize) { data.adUnitSize = '300x250'; }
             if (!data.clientIP) { data.clientIP = ''; }
+
+            // validate dart data
+            data.dartClickTrackUrl = (window.cgDartTrackUrl) ? window.cgDartTrackUrl : '';
 
             citygrid.data = data;
             return data;

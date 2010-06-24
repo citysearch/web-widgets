@@ -14,7 +14,7 @@
                             <a href='<s:property value="callBackFunction" />'><img src='<s:property value="adImageURL" />' border="0"/></a>
                         </s:if>
                         <s:else>
-                            <a href='<s:property value="listingUrl" />' ><img src='<s:property value="adImageURL" />' border="0"/></a>
+                            <a href='<s:property value="adDisplayTrackingURL" />' ><img src='<s:property value="adImageURL" />' border="0"/></a>
                         </s:else>
                     </div>
                     <div class="ctsrch_milesFont ctsrch_reviewFont">
@@ -27,7 +27,7 @@
                             <a class="ctsrch_busNameFont" href='<s:property value="callBackFunction" />'><s:property value="name" /></a>
                         </s:if>
                         <s:else>
-                            <a href='<s:property value="listingUrl" />' ><s:property value="name" /></a>
+                            <a href='<s:property value="adDisplayTrackingURL" />' ><s:property value="name" /></a>
                         </s:else>
                     </div>
                     <s:if test="%{ratings > 2.5}">
@@ -56,17 +56,17 @@
         <s:iterator value="backfill" status="placesStatus">
             <div class="ctsrch_listing">
                 <div class="ctsrch_leftSide">
-                    <a target="_blank" href='<s:property value="adDestinationUrl" />'><img src='<s:property value="adImageURL"/>' border="0"/></a>
+                    <a href='<s:property value="adDisplayTrackingURL" />'><img src='<s:property value="adImageURL"/>' border="0"/></a>
                 </div>
                 <div class="ctsrch_rightSide">
                     <div class="ctsrch_mainLink_bf" >
-                        <a target="_blank" href='<s:property value="adDestinationUrl" />'><s:property value="category" /></a>
+                        <a href='<s:property value="adDisplayTrackingURL" />'><s:property value="category" /></a>
                     </div>
                     <div class="ctsrch_descFont" >
                         <s:property value="description" />
                     </div>
                     <div class="ctsrch_subLink_bf" >
-                        <a target="_blank" href='http://<s:property value="adDisplayURL" />'><s:property value="adDisplayURL" /></a>
+                        <a href='http://<s:property value="adDisplayTrackingURL" />'><s:property value="adDisplayURL" /></a>
                     </div>
                     <s:if test='%{offers != null && !"".equals(offers)}'>
                      <div class="ctsrch_offersFont" >
@@ -80,18 +80,18 @@
             <div class="ctsrch_listing">
                 <div class="ctsrch_leftSide">
                     <!--
-                    <a target="_blank" href='<s:property value="destinationUrl" />'><img src='<s:property value="imageURL"/>' border="0"/></a>
+                    <a href='<s:property value="destinationUrl" />'><img src='<s:property value="imageURL"/>' border="0"/></a>
                     -->
                 </div>
                 <div class="ctsrch_rightSide">
                     <div class="ctsrch_mainLink">
-                        <a target="_blank" href='<s:property value="destinationUrl" />'><s:property value="title" /></a>
+                        <a href='<s:property value="destinationUrl" />'><s:property value="title" /></a>
                     </div>
                     <div class="ctsrch_descFont">
                         <s:property value="tagLine" />
                     </div>
                     <div class="ctsrch_subLink_bf" >
-                        <a target="_blank" href='<s:property value="destinationUrl" />'>www.citysearch.com</a>
+                        <a href='<s:property value="destinationUrl" />'>www.citysearch.com</a>
                     </div>
                 </div>
             </div>

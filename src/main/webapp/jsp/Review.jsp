@@ -35,7 +35,7 @@
 		        	<s:iterator value="review.rating" id="rating"><s:if test="%{2}"><img src='<s:property value="resourceRootPath"/>/static/img/Star.png' /></s:if><s:elseif test="%{1}"><img src='<s:property value="resourceRootPath"/>/static/img/HalfStar.png' /></s:elseif><s:else><img src='<s:property value="resourceRootPath"/>/static/img/EmptyStar.png' /></s:else></s:iterator>
 		        </div>
 		        <div id="cs_title">
-		        	<a href='<s:property value="review.profileUrl"/>' target="_blank"><s:property value="review.shortBusinessName"/></a>
+		        	<a href='<s:property value="review.profileUrl"/>' ><s:property value="review.shortBusinessName"/></a>
 		        </div>
 		        <div id="cs_address">
 		        	<s:property value="review.address.street"/><br />
@@ -45,7 +45,7 @@
 		    <div id="cs_time"><s:property value="review.reviewAuthor"/> on <s:property value="review.reviewDate" /> said:</div>
 		    <div id="cs_reviews">
 		        <div id="cs_longTitle">
-		        	<a href='<s:property value="review.reviewUrl"/>' target="_blank">
+		        	<a href='<s:property value="review.reviewUrl"/>' >
 		        		<s:property value="review.shortTitle"/>
 		        	</a>
 		        </div>
@@ -63,7 +63,7 @@
 		        </div>
 		    </div>
 		    <div id="cs_share">
-		    	<a href='<s:property value="review.sendToFriendUrl"/>' target="_blank">Share this review</a>
+		    	<a href='<s:property value="review.sendToFriendUrl"/>' >Share this review</a>
 		    </div>
 		</div>
 	</div>
@@ -79,7 +79,7 @@
 		        </div>
 		    </div>
 		    <div id="cs_title_detail">
-	        	<a href='<s:property value="review.profileUrl"/>' target="_blank"><s:property value="review.shortBusinessName"/></a>
+	        	<a href='<s:property value="review.profileUrl"/>' ><s:property value="review.shortBusinessName"/></a>
 	        </div>
 	        <div id="cs_address_detail">
 	        	<s:property value="review.address.street"/><br />
@@ -88,13 +88,13 @@
 	        <div id="cs_time_detail"><s:property value="review.reviewAuthor"/> on <s:property value="review.reviewDate" /> said:</div>
 	        <div id="cs_reviews_detail">
 	        	<div id="cs_longTitle_detail">
-		        	<a href='<s:property value="review.reviewUrl"/>' target="_blank">
+		        	<a href='<s:property value="review.reviewUrl"/>' >
 		        		<s:property value="review.shortTitle"/>
 		        	</a>
 	        	</div>
 		        <div id="cs_description_detail"><s:property value="review.reviewText"/></div>
 		        <div id="cs_share_detail">
-		    		<a href='<s:property value="review.sendToFriendUrl"/>' target="_blank">Share this review</a>
+		    		<a href='<s:property value="review.sendToFriendUrl"/>' >Share this review</a>
 		    	</div>
 	    	</div>
 		</div>

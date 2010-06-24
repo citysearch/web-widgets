@@ -5,6 +5,15 @@ public class HouseAd {
     private String tagLine;
     private String destinationUrl;
     private String imageURL;
+    private String trackingUrl;
+
+    public String getTrackingUrl() {
+        return trackingUrl;
+    }
+
+    public void setTrackingUrl(String trackingUrl) {
+        this.trackingUrl = trackingUrl;
+    }
 
     public String getTitle() {
         return title;

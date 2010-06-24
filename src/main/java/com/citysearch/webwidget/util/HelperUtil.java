@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -104,8 +106,8 @@ public class HelperUtil {
      * @throws CitysearchException
      * @throws InvalidHttpResponseException
      */
-    public static Document getAPIResponse(String url, Map<String, String> headers) throws CitysearchException,
-            InvalidHttpResponseException {
+    public static Document getAPIResponse(String url, Map<String, String> headers)
+            throws CitysearchException, InvalidHttpResponseException {
         HttpURLConnection connection = null;
         Document xmlDocument = null;
         try {
@@ -271,5 +273,73 @@ public class HelperUtil {
             imageList.add(value);
         }
         return imageList;
+    }
+
+    public static String getTrackingUrl(String adDisplayURL, String callBackUrl,
+            String dartTrackingUrl, String listingId, String phone, String publisher,
+            String adUnitName, String adUnitSize) throws CitysearchException {
+
+        String urlToTrack = adDisplayURL;
+        if (callBackUrl != null && callBackUrl.trim().length() > 0) {
+            callBackUrl = callBackUrl.replace("$l", listingId);
+            callBackUrl = callBackUrl.replace("$p", phone);
+            urlToTrack = callBackUrl;
+        }
+        if (!urlToTrack.startsWith("http://")) {
+            StringBuilder strb = new StringBuilder("http://");
+            strb.append(urlToTrack);
+            urlToTrack = strb.toString();
+        }
+        try {
+
+            URL url = new URL(urlToTrack);
+            int prodDetId = 12; // Click outside Citysearch
+            String host = url.getHost();
+            if (host.indexOf("citysearch.com") != -1) {
+                prodDetId = 16;
+            }
+
+            StringBuilder strBuilder = new StringBuilder("http://pfpc.citysearch.com/pfp/ad?");
+            if (dartTrackingUrl != null) {
+                StringBuilder dartUrl = new StringBuilder(dartTrackingUrl);
+                dartUrl.append(urlToTrack);
+
+                strBuilder.append("directUrl=");
+                strBuilder.append(URLEncoder.encode(dartUrl.toString(), "UTF-8"));
+            } else {
+                strBuilder.append("directUrl=");
+                strBuilder.append(URLEncoder.encode(urlToTrack, "UTF-8"));
+            }
+            strBuilder.append("&listingId=");
+            strBuilder.append(URLEncoder.encode(listingId, "UTF-8"));
+            strBuilder.append("&publisher=");
+            strBuilder.append(URLEncoder.encode(publisher, "UTF-8"));
+            strBuilder.append("&prodDetId=");
+            strBuilder.append(prodDetId);
+            strBuilder.append("&placement=");
+            strBuilder.append(URLEncoder.encode(publisher + "_" + adUnitName + "_" + adUnitSize,
+                    "UTF-8"));
+            return strBuilder.toString();
+        } catch (MalformedURLException mue) {
+            throw new CitysearchException("HelperUtil", "getTrackingUrl", mue);
+        } catch (UnsupportedEncodingException excep) {
+            throw new CitysearchException("HelperUtil", "getTrackingUrl", excep);
+        }
+    }
+
+    public static String getCallBackFunctionString(String callBackFunction, String listingId,
+            String phone) {
+        if (callBackFunction != null && callBackFunction.trim().length() > 0) {
+            // Should produce javascript:fnName('param1','param2')
+            StringBuilder strBuilder = new StringBuilder("javascript:");
+            strBuilder.append(callBackFunction);
+            strBuilder.append("(\"");
+            strBuilder.append(listingId);
+            strBuilder.append("\",\"");
+            strBuilder.append(phone);
+            strBuilder.append("\")");
+            return strBuilder.toString();
+        }
+        return "";
     }
 }

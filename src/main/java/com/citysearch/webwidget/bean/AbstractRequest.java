@@ -14,6 +14,33 @@ public abstract class AbstractRequest {
     protected String adUnitSize;
     protected Integer displaySize;
     protected String clientIP;
+    protected String dartClickTrackUrl;
+    protected String callBackFunction;
+    protected String callBackUrl;
+
+    public String getCallBackFunction() {
+        return callBackFunction;
+    }
+
+    public void setCallBackFunction(String callBackFunction) {
+        this.callBackFunction = callBackFunction;
+    }
+
+    public String getCallBackUrl() {
+        return callBackUrl;
+    }
+
+    public void setCallBackUrl(String callBackUrl) {
+        this.callBackUrl = callBackUrl;
+    }
+
+    public String getDartClickTrackUrl() {
+        return dartClickTrackUrl;
+    }
+
+    public void setDartClickTrackUrl(String dartClickTrackUrl) {
+        this.dartClickTrackUrl = dartClickTrackUrl;
+    }
 
     public String getClientIP() {
         return clientIP;

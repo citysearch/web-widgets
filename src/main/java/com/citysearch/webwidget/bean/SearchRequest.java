@@ -15,6 +15,20 @@ public class SearchRequest extends AbstractRequest {
     private String rpp;
     private String tags;
 
+    public SearchRequest() {
+        super();
+    }
+
+    public SearchRequest(AbstractRequest request) {
+        super();
+        setPublisher(request.getPublisher());
+        setDartClickTrackUrl(request.getDartClickTrackUrl());
+        setCallBackFunction(request.getCallBackFunction());
+        setCallBackUrl(request.getCallBackUrl());
+        setAdUnitName(request.getAdUnitName());
+        setAdUnitSize(request.getAdUnitSize());
+    }
+
     public String getLatitude() {
         return latitude;
     }

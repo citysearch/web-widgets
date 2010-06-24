@@ -13,23 +13,19 @@ public class NearbyPlacesRequest extends AbstractRequest {
     private String longitude;
     private String tags;
     private String radius;
-    private String callBackFunction;
-    private String callBackUrl;
-    
-    public String getCallBackFunction() {
-        return callBackFunction;
+
+    public NearbyPlacesRequest() {
+        super();
     }
 
-    public void setCallBackFunction(String callBackFunction) {
-        this.callBackFunction = callBackFunction;
-    }
-
-    public String getCallBackUrl() {
-        return callBackUrl;
-    }
-
-    public void setCallBackUrl(String callBackUrl) {
-        this.callBackUrl = callBackUrl;
+    public NearbyPlacesRequest(AbstractRequest request) {
+        super();
+        setPublisher(request.getPublisher());
+        setDartClickTrackUrl(request.getDartClickTrackUrl());
+        setCallBackFunction(request.getCallBackFunction());
+        setCallBackUrl(request.getCallBackUrl());
+        setAdUnitName(request.getAdUnitName());
+        setAdUnitSize(request.getAdUnitSize());
     }
 
     public String getWhat() {

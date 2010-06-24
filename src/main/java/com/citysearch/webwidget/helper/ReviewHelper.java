@@ -43,10 +43,11 @@ public class ReviewHelper {
     public final static String PROPERTY_REVIEW_URL = "reviews.url";
 
     public final static Integer BUSINESS_NAME_SIZE = 30;
-    public final static Integer REVIEW_TITLE_SIZE = 45;
+    public final static Integer REVIEW_TITLE_SIZE = 30;
     public final static Integer REVIEW_TEXT_SIZE = 250;
-    public final static Integer PROS_SIZE = 40;
-    public final static Integer CONS_SIZE = 40;
+    public final static Integer REVIEW_TEXT_SIZE_50 = 50;
+    public final static Integer PROS_SIZE = 30;
+    public final static Integer CONS_SIZE = 30;
     private static final int MINIMUM_RATING = 6;
 
     private static final String ELEMENT_REVIEW_URL = "review_url";
@@ -123,7 +124,7 @@ public class ReviewHelper {
      * 
      * @throws CitysearchException
      */
-    public void validateRequest(ReviewRequest request) throws InvalidRequestParametersException,
+    private void validateRequest(ReviewRequest request) throws InvalidRequestParametersException,
             CitysearchException {
         List<String> errors = new ArrayList<String>();
         Properties errorProperties = PropertiesLoader.getErrorProperties();
@@ -182,12 +183,12 @@ public class ReviewHelper {
         if (!StringUtils.isBlank(request.getLatitude())
                 && !StringUtils.isBlank(request.getLongitude())) {
             log.info("ReviewHelper.getLatestReview:: Lat and Lon received. Find zip");
-            SearchRequest searchReq = new SearchRequest();
+            SearchRequest searchReq = new SearchRequest(request);
             searchReq.setPublisher(request.getPublisher());
             searchReq.setWhat(request.getWhat());
             searchReq.setLatitude(request.getLatitude());
             searchReq.setLongitude(request.getLongitude());
-
+            
             SearchHelper shelper = new SearchHelper(this.rootPath, request.getDisplaySize());
             String where = shelper.getClosestLocationPostalCode(searchReq);
             request.setWhere(where);
@@ -204,18 +205,17 @@ public class ReviewHelper {
         } catch (InvalidHttpResponseException ihe) {
             throw new CitysearchException(this.getClass().getName(), "getLatestReview", ihe);
         }
-        Review reviewObj = parseXML(responseDocument);
+        Review reviewObj = parseXML(request, responseDocument);
         if (reviewObj == null) {
             log.info("ReviewHelper.getLatestReview:: Null review instance ");
             throw new CitysearchException(this.getClass().getName(), "getLatestReview",
                     "No latest review found.");
         }
 
-        ProfileRequest profileRequest = new ProfileRequest();
-        profileRequest.setPublisher(request.getPublisher());
+        ProfileRequest profileRequest = new ProfileRequest(request);
         profileRequest.setClientIP(request.getClientIP());
         profileRequest.setListingId(reviewObj.getListingId());
-
+        
         ProfileHelper profHelper = new ProfileHelper(this.rootPath);
         Profile profile = profHelper.getProfile(profileRequest);
         if (profile != null) {
@@ -236,7 +236,7 @@ public class ReviewHelper {
      * @return Review
      * @throws CitysearchException
      */
-    private Review parseXML(Document doc) throws CitysearchException {
+    private Review parseXML(ReviewRequest request, Document doc) throws CitysearchException {
         Review review = null;
         if (doc != null && doc.hasRootElement()) {
             Element rootElement = doc.getRootElement();
@@ -256,7 +256,7 @@ public class ReviewHelper {
                 }
             }
             Element reviewElm = reviewMap.get(reviewMap.lastKey());
-            review = getReviewInstance(reviewElm);
+            review = getReviewInstance(request, reviewElm);
         }
         return review;
     }
@@ -269,7 +269,8 @@ public class ReviewHelper {
      * @return Review
      * @throws CitysearchException
      */
-    public static Review getReviewInstance(Element reviewElem) throws CitysearchException {
+    public static Review getReviewInstance(ReviewRequest request, Element reviewElem)
+            throws CitysearchException {
         Review review = new Review();
 
         String businessName = reviewElem.getChildText(BUSINESS_NAME);
@@ -294,6 +295,11 @@ public class ReviewHelper {
             review.setShortReviewText(StringUtils.abbreviate(reviewText, REVIEW_TEXT_SIZE));
         } else {
             review.setShortReviewText(reviewText);
+        }
+        if (reviewText != null && reviewText.trim().length() > REVIEW_TEXT_SIZE_50) {
+            review.setSmallReviewText(StringUtils.abbreviate(reviewText, REVIEW_TEXT_SIZE_50));
+        } else {
+            review.setSmallReviewText(reviewText);
         }
 
         String pros = reviewElem.getChildText(PROS);
@@ -331,7 +337,23 @@ public class ReviewHelper {
 
         DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
         review.setReviewDate(df.format(date));
+        
+        //request will be null if called by profile
+        if (request != null) {
+            review.setCallBackFunction(request.getCallBackFunction());
+            review.setCallBackUrl(request.getCallBackUrl());
 
+            // TODO: Phone from profile?
+            String adDisplayTrackingUrl = HelperUtil.getTrackingUrl(review.getReviewUrl(),
+                    request.getCallBackUrl(), request.getDartClickTrackUrl(),
+                    review.getListingId(), "", request.getPublisher(), request.getAdUnitName(),
+                    request.getAdUnitSize());
+            review.setReviewTrackingUrl(adDisplayTrackingUrl);
+
+            String callBackFn = HelperUtil.getCallBackFunctionString(request.getCallBackFunction(),
+                    review.getListingId(), "");
+            review.setCallBackFunction(callBackFn);
+        }
         return review;
     }
 
