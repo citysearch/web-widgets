@@ -54,6 +54,7 @@ div.seperator { clear: both; line-height: 1px; height: 1px;}
 .review_cs_ratings{float:left;width:71%;height:65px;padding:3px 3px 3px 6px}
 .review_cs_time{float:left;width:100%;height:15px}
 .review_cs_reviews{float:left;width:100%;height:129px}
+.review_cs_reviews_thin{float:left;width:100%;height:38px}
 .review_cs_share{float:left;height:18px;width:100%;}
 .review_cs_share a {color:#4580c5;font-weight:normal;font-family:Arial;font-size:11px;text-decoration:none}
 .review_cs_title{float:left;height:18px;width:100%;}
@@ -92,4 +93,3 @@ div.seperator { clear: both; line-height: 1px; height: 1px;}
 .ctsrch_logoFont {color:#4580C5;height:16px;padding:3px 0 0 5px;float:left;font-size:9px;font-weight:700;width:105px;padding-top:9px;}
 .ctsrch_maxStar img {margin-top:3px;height:75px;width:70px;border:solid 1px #ccc;padding:3px;}
 .ctsrch_rightSideWide{float:left;width:71%;padding-top:4px;}
-

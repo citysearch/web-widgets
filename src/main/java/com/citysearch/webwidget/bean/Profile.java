@@ -11,6 +11,7 @@ public class Profile {
     private String phone;
     private String profileUrl;
     private String sendToFriendUrl;
+    private String sendToFriendTrackingUrl;
     private String imageUrl;
     private String reviewsUrl;
     private String websiteUrl;
@@ -18,14 +19,31 @@ public class Profile {
     private String reservationUrl;
     private String mapUrl;
     private Review review;
-    private String reviewCount;
-    
-    public String getReviewCount() {
-        return reviewCount;
+    private String trackingUrl;
+    private String listingId;
+
+    public String getSendToFriendTrackingUrl() {
+        return sendToFriendTrackingUrl;
     }
 
-    public void setReviewCount(String reviewCount) {
-        this.reviewCount = reviewCount;
+    public void setSendToFriendTrackingUrl(String sendToFriendTrackingUrl) {
+        this.sendToFriendTrackingUrl = sendToFriendTrackingUrl;
+    }
+
+    public String getListingId() {
+        return listingId;
+    }
+
+    public void setListingId(String listingId) {
+        this.listingId = listingId;
+    }
+
+    public String getTrackingUrl() {
+        return trackingUrl;
+    }
+
+    public void setTrackingUrl(String trackingUrl) {
+        this.trackingUrl = trackingUrl;
     }
 
     public String getReviewsUrl() {

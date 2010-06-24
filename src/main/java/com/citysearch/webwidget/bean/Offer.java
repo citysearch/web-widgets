@@ -12,14 +12,10 @@ public class Offer{
 	private String imgUrl;
     private String listingId;
     private String listingName;
+	private String offerDesc;
     private String offerId;
-    
-    private String offerTitle;
-	private String offerDesc;	
-	private String fullOfferTitle;
-	private String fullOfferDesc;
-   
-	private String refId;
+    private String offerTtl;
+    private String refId;
     private String lat;
     private String longs;    
     private String street;
@@ -93,26 +89,14 @@ public class Offer{
 	public void setOfferId(String offerId) {
 		this.offerId = offerId;
 	}
-	public String getFullOfferTitle() {
-		return fullOfferTitle;
-	}
-	public void setFullOfferTitle(String fullOfferTitle) {
-		this.fullOfferTitle = fullOfferTitle;
-	}
-	public String getFullOfferDesc() {
-		return fullOfferDesc;
-	}
-	public void setFullOfferDesc(String fullOfferDesc) {
-		this.fullOfferDesc = fullOfferDesc;
-	}
-	public String getOfferTitle() {
-		if( offerTitle != null && offerTitle.length() > 20 )
-			offerTitle = offerTitle.substring(0, 20) + "...";
+	public String getOfferTtl() {
+		if( offerTtl != null && offerTtl.length() > 20 )
+			offerTtl = offerTtl.substring(0, 20) + "...";
 		
-		return offerTitle;
+		return offerTtl;
 	}
-	public void setOfferTitle(String offerTitle) {
-		this.offerTitle = offerTitle;
+	public void setOfferTtl(String offerTtl) {
+		this.offerTtl = offerTtl;
 	}
 	public String getRefId() {
 		return refId;
@@ -159,17 +143,15 @@ public class Offer{
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("==reviewCount==" + reviewCount );
-		sb.append("==attributionSrc===" + attributionSrc );
+		sb.append("==reviewCount==========" + reviewCount );
+		sb.append("==attributionSrc================" + attributionSrc );
 		sb.append("==csRating==" + csRating );
 		sb.append("==imgUrl==" + imgUrl );
 		sb.append("=listingId===" + listingId );
 		sb.append("=listingName===" + listingName );
-		sb.append("==offerId==" + offerId );
-		sb.append("==offerTtl==" + offerTitle );
 		sb.append("==offerDesc==" + offerDesc );
-		sb.append("==offerTtl==" + fullOfferTitle );
-		sb.append("==offerDesc==" + fullOfferDesc );		
+		sb.append("==offerId==" + offerId );
+		sb.append("==offerTtl==" + offerTtl );
 		sb.append("==refId==" + refId );
 		sb.append("==lat==" + lat );
 		sb.append("==longs==" + longs );
