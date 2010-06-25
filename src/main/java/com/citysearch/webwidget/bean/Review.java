@@ -33,7 +33,9 @@ public class Review {
     private String reviewRating;
     private String imageUrl;
     private String sendToFriendUrl;
+    private String sendToFriendTrackingUrl;
     private String profileUrl;
+    private String profileTrackingUrl;
     private Address address;
     private String phone;
     private List<Integer> rating;
@@ -42,6 +44,22 @@ public class Review {
     private String reviewTrackingUrl;
     private String callBackFunction;
     private String callBackUrl;
+
+    public String getSendToFriendTrackingUrl() {
+        return sendToFriendTrackingUrl;
+    }
+
+    public void setSendToFriendTrackingUrl(String sendToFriendTrackingUrl) {
+        this.sendToFriendTrackingUrl = sendToFriendTrackingUrl;
+    }
+
+    public String getProfileTrackingUrl() {
+        return profileTrackingUrl;
+    }
+
+    public void setProfileTrackingUrl(String profileTrackingUrl) {
+        this.profileTrackingUrl = profileTrackingUrl;
+    }
 
     public String getCallBackFunction() {
         return callBackFunction;

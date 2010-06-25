@@ -188,7 +188,7 @@ public class ReviewHelper {
             searchReq.setWhat(request.getWhat());
             searchReq.setLatitude(request.getLatitude());
             searchReq.setLongitude(request.getLongitude());
-            
+
             SearchHelper shelper = new SearchHelper(this.rootPath, request.getDisplaySize());
             String where = shelper.getClosestLocationPostalCode(searchReq);
             request.setWhere(where);
@@ -206,25 +206,6 @@ public class ReviewHelper {
             throw new CitysearchException(this.getClass().getName(), "getLatestReview", ihe);
         }
         Review reviewObj = parseXML(request, responseDocument);
-        if (reviewObj == null) {
-            log.info("ReviewHelper.getLatestReview:: Null review instance ");
-            throw new CitysearchException(this.getClass().getName(), "getLatestReview",
-                    "No latest review found.");
-        }
-
-        ProfileRequest profileRequest = new ProfileRequest(request);
-        profileRequest.setClientIP(request.getClientIP());
-        profileRequest.setListingId(reviewObj.getListingId());
-        
-        ProfileHelper profHelper = new ProfileHelper(this.rootPath);
-        Profile profile = profHelper.getProfile(profileRequest);
-        if (profile != null) {
-            reviewObj.setAddress(profile.getAddress());
-            reviewObj.setPhone(profile.getPhone());
-            reviewObj.setProfileUrl(profile.getProfileUrl());
-            reviewObj.setSendToFriendUrl(profile.getSendToFriendUrl());
-            reviewObj.setImageUrl(profile.getImageUrl());
-        }
 
         return reviewObj;
     }
@@ -256,7 +237,7 @@ public class ReviewHelper {
                 }
             }
             Element reviewElm = reviewMap.get(reviewMap.lastKey());
-            review = getReviewInstance(request, reviewElm);
+            review = getReviewInstance(request, reviewElm, this.rootPath);
         }
         return review;
     }
@@ -269,7 +250,7 @@ public class ReviewHelper {
      * @return Review
      * @throws CitysearchException
      */
-    public static Review getReviewInstance(ReviewRequest request, Element reviewElem)
+    public static Review getReviewInstance(ReviewRequest request, Element reviewElem, String path)
             throws CitysearchException {
         Review review = new Review();
 
@@ -337,21 +318,45 @@ public class ReviewHelper {
 
         DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
         review.setReviewDate(df.format(date));
-        
-        //request will be null if called by profile
+
+        // request will be null if called by profile
         if (request != null) {
             review.setCallBackFunction(request.getCallBackFunction());
             review.setCallBackUrl(request.getCallBackUrl());
 
-            // TODO: Phone from profile?
+            ProfileRequest profileRequest = new ProfileRequest(request);
+            profileRequest.setClientIP(request.getClientIP());
+            profileRequest.setListingId(review.getListingId());
+
+            ProfileHelper profHelper = new ProfileHelper(path);
+            Profile profile = profHelper.getProfile(profileRequest);
+
+            review.setAddress(profile.getAddress());
+            review.setPhone(profile.getPhone());
+            review.setProfileUrl(profile.getProfileUrl());
+            review.setSendToFriendUrl(profile.getSendToFriendUrl());
+            review.setImageUrl(profile.getImageUrl());
+
+            String sendToFriendTrackingUrl = HelperUtil.getTrackingUrl(
+                    profile.getSendToFriendUrl(), request.getCallBackUrl(),
+                    request.getDartClickTrackUrl(), review.getListingId(), profile.getPhone(),
+                    request.getPublisher(), request.getAdUnitName(), request.getAdUnitSize());
+            review.setSendToFriendTrackingUrl(sendToFriendTrackingUrl);
+
+            String profileTrackingUrl = HelperUtil.getTrackingUrl(profile.getProfileUrl(),
+                    request.getCallBackUrl(), request.getDartClickTrackUrl(),
+                    review.getListingId(), profile.getPhone(), request.getPublisher(),
+                    request.getAdUnitName(), request.getAdUnitSize());
+            review.setProfileTrackingUrl(profileTrackingUrl);
+
             String adDisplayTrackingUrl = HelperUtil.getTrackingUrl(review.getReviewUrl(),
                     request.getCallBackUrl(), request.getDartClickTrackUrl(),
-                    review.getListingId(), "", request.getPublisher(), request.getAdUnitName(),
-                    request.getAdUnitSize());
+                    review.getListingId(), profile.getPhone(), request.getPublisher(),
+                    request.getAdUnitName(), request.getAdUnitSize());
             review.setReviewTrackingUrl(adDisplayTrackingUrl);
 
             String callBackFn = HelperUtil.getCallBackFunctionString(request.getCallBackFunction(),
-                    review.getListingId(), "");
+                    review.getListingId(), profile.getPhone());
             review.setCallBackFunction(callBackFn);
         }
         return review;

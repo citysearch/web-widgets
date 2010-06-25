@@ -1,7 +1,10 @@
 package com.citysearch.webwidget.action;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
+import com.citysearch.webwidget.bean.HouseAd;
 import com.citysearch.webwidget.bean.Review;
 import com.citysearch.webwidget.bean.ReviewRequest;
 import com.citysearch.webwidget.exception.CitysearchException;
@@ -20,6 +23,15 @@ public class ReviewAction extends AbstractCitySearchAction implements ModelDrive
     private Logger log = Logger.getLogger(getClass());
     private ReviewRequest reviewRequest = new ReviewRequest();
     private Review review;
+    private List<HouseAd> houseAds;
+
+    public List<HouseAd> getHouseAds() {
+        return houseAds;
+    }
+
+    public void setHouseAds(List<HouseAd> houseAds) {
+        this.houseAds = houseAds;
+    }
 
     public ReviewRequest getReviewRequest() {
         return reviewRequest;
@@ -60,10 +72,10 @@ public class ReviewAction extends AbstractCitySearchAction implements ModelDrive
             log.info("End review action ============================ >");
         } catch (InvalidRequestParametersException ihre) {
             log.error(ihre.getDetailedMessage());
-            throw ihre;
-        } catch (CitysearchException cse) {
+            houseAds = getHouseAds(reviewRequest.getDartClickTrackUrl(), 3);
+        } catch (Exception cse) {
             log.error(cse.getMessage());
-            throw cse;
+            houseAds = getHouseAds(reviewRequest.getDartClickTrackUrl(), 3);
         }
         return Action.SUCCESS;
     }

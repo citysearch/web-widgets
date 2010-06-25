@@ -17,14 +17,14 @@
 	        		<div id="cs_longTitle_detail" >
 	        			<s:property value="offerTitle" />
 	        			<span style="float:right;padding-right:10px;">
-	        			<a target="_blank" href='<s:property value="profileUrl" />#target-couponLink' >
+	        			<a target="_blank" href='<s:property value="couponUrl" />' >
 							get offer		
 	        			</a>
 	        			</span>
 	        		</div>	
 		        	<div class="ctsrch_leftSide">
 		 	         	<div class="ctsrch_maxStar">	
-		 	         		<a target="_blank" href='<s:property value="profileUrl" />' >
+		 	         		<a href='<s:property value="profileTrackingUrl" />' >
 								<img src='<s:property value="imageUrl" />'/>								
 							</a>
 		 	         	</div>	 	         		         	 
@@ -40,7 +40,7 @@
 	                    		</div>          		
 	                    	</div>	                    	
 	         				<div class="ctsrch_starContainer">	
-	         				 	<label style="float:left;" class="ctsrch_mainLink"><a target="_blank" href='<s:property value="profileUrl" />' ><s:property value="listingName" /></a></label>
+	         				 	<label style="float:left;" class="ctsrch_mainLink"><a href='<s:property value="profileTrackingUrl" />' ><s:property value="listingName" /></a></label>
 		 	         		</div> 
 		 	         		<div style="float:left;" class="ctsrch_cityFont_Offer">
 	         					<s:property value="city" /> , <s:property value="state" />          					

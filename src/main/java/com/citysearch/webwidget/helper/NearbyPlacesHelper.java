@@ -55,7 +55,6 @@ public class NearbyPlacesHelper {
     private static final String TYPE_TAG = "type";
     private static final String DESC_TAG = "description";
     private static final String ZIP_TAG = "zip";
-    private static final String HTTP_PREFIX = "http://";
     private static final String AD_DESTINATION_URL = "ad_destination_url";
     private static final String DEFAULT_RADIUS = "25";
 

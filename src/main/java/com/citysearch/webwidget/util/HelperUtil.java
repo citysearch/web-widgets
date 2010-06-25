@@ -37,7 +37,6 @@ public class HelperUtil {
 
     private static Logger log = Logger.getLogger(HelperUtil.class);
 
-    private static final String IMAGE_ERROR = "image.properties.error";
     private static final int TOTAL_RATING = 5;
     private static final int EMPTY_STAR = 0;
     private static final int HALF_STAR = 1;

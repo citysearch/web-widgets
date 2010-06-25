@@ -1,6 +1,5 @@
 package com.citysearch.webwidget.util;
 
-import org.apache.commons.lang.StringEscapeUtils;
 
 /**
  * Contains query parameter constants for all APIs

@@ -7,11 +7,7 @@
     </div>
     <div class="ctsrch_container">
         <s:iterator value="houseAds" status="hadStatus">
-            <div class="ctsrch_leftSide">
-                <!--
-                <a href='<s:property value="destinationUrl" />'><img src='<s:property value="imageURL"/>' border="0"/></a>
-                -->
-            </div>
+            <div class="ctsrch_leftSide"></div>
             <div class="ctsrch_rightSide">
                 <div class="ctsrch_mainLink">
                     <a href='<s:property value="destinationUrl" />'><s:property value="title" /></a>
