@@ -7,13 +7,17 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 
+import com.citysearch.webwidget.bean.HouseAd;
+import com.citysearch.webwidget.bean.NearbyPlace;
+import com.citysearch.webwidget.bean.NearbyPlacesRequest;
+import com.citysearch.webwidget.bean.NearbyPlacesResponse;
 import com.citysearch.webwidget.bean.Offer;
 import com.citysearch.webwidget.bean.OffersRequest;
+import com.citysearch.webwidget.bean.OffersResponse;
 import com.citysearch.webwidget.bean.Profile;
 import com.citysearch.webwidget.bean.ProfileRequest;
 import com.citysearch.webwidget.exception.CitysearchException;
@@ -64,10 +68,10 @@ public class OffersHelper {
     private String getQueryString(OffersRequest request) throws CitysearchException {
         log.info("=========Start offersHelper getQueryString()============================ >");
         StringBuilder strBuilder = new StringBuilder();
-        strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.PUBLISHER,
-                request.getPublisher().trim()));
-        strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-
+        /*
+         * strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.PUBLISHER,
+         * request.getPublisher().trim())); strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+         */
         strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.RPP, RPP_OFFERS));
         strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
 
@@ -181,77 +185,111 @@ public class OffersHelper {
      * @throws InvalidRequestParametersException
      * @throws CitysearchException
      */
-    public List<Offer> getOffers(OffersRequest request) throws InvalidRequestParametersException,
-            CitysearchException {
-        // TODO: stop using "=====" in log. Its annoying. Just log the string you want to log
+    public OffersResponse getOffers(OffersRequest request)
+            throws InvalidRequestParametersException, CitysearchException {
         log.info("=========Start offersHelper getOffers()============================ >");
         validateRequest(request);
 
         Properties properties = PropertiesLoader.getAPIProperties();
-        // TODO: use StringBuilder for concatenation
-        String urlString = properties.getProperty(PROPERTY_OFFERS_URL) + getQueryString(request);
+        StringBuilder urlString = new StringBuilder(properties.getProperty(PROPERTY_OFFERS_URL));
+        urlString.append(getQueryString(request));
         Document responseDocument = null;
         try {
             String publisherHdr = request.getPublisher().trim();
             HashMap<String, String> hdrMap = new HashMap<String, String>();
             hdrMap.put(PUBLISHER_HEADER, publisherHdr);
-            responseDocument = HelperUtil.getAPIResponse(urlString, hdrMap);
+            responseDocument = HelperUtil.getAPIResponse(urlString.toString(), hdrMap);
         } catch (InvalidHttpResponseException ihe) {
             throw new CitysearchException(this.getClass().getName(), "getOffers", ihe);
         }
 
-        // TODO: what is need for casting here???
-        List<Offer> offersList = parseXML(responseDocument);
+        List<Offer> offersList = parseXML(request, responseDocument);
+        OffersResponse response = new OffersResponse();
+        response.setOffers(offersList);
 
-        // TODO: BUG!!! If exception is thrown here, how will the action return backfill????
-        if (offersList == null) {
-            log.info("OffersHelper.getOffers:: Null offers instance ");
-            throw new CitysearchException(this.getClass().getName(), "getOffers", "No offer found.");
-        }
-        // call for Profile API to get review count, profile url and phone#
-        Iterator<Offer> it = offersList.iterator();
-        // TODO: use for each
-        while (it.hasNext()) {
-            Offer offer = (Offer) it.next();
-            ProfileRequest profileRequest = new ProfileRequest(request);
-            profileRequest.setClientIP(request.getClientIP());
-            profileRequest.setListingId(offer.getListingId());
+        if (offersList != null && !offersList.isEmpty()) {
+            for (Offer offer : offersList) {
+                ProfileRequest profileRequest = new ProfileRequest(request);
+                profileRequest.setClientIP(request.getClientIP());
+                profileRequest.setListingId(offer.getListingId());
 
-            ProfileHelper profHelper = new ProfileHelper(this.rootPath);
-            Profile profile = profHelper.getProfile(profileRequest);
-            if (profile != null) {
-                offer.setReviewCount(HelperUtil.toInteger(profile.getReviewCount()));
-                offer.setProfileUrl(profile.getProfileUrl());
-                offer.setPhone(profile.getPhone());
+                ProfileHelper profHelper = new ProfileHelper(this.rootPath);
+                Profile profile = profHelper.getProfile(profileRequest);
+                if (profile != null) {
+                    offer.setReviewCount(HelperUtil.toInteger(profile.getReviewCount()));
+                    offer.setProfileUrl(profile.getProfileUrl());
+                    offer.setPhone(profile.getPhone());
 
-                offer.setCallBackFunction(request.getCallBackFunction());
-                offer.setCallBackUrl(request.getCallBackUrl());
+                    offer.setCallBackFunction(request.getCallBackFunction());
+                    offer.setCallBackUrl(request.getCallBackUrl());
 
-                String profileTrackingUrl = HelperUtil.getTrackingUrl(profile.getProfileUrl(),
-                        request.getCallBackUrl(), request.getDartClickTrackUrl(),
-                        offer.getListingId(), profile.getPhone(), request.getPublisher(),
-                        request.getAdUnitName(), request.getAdUnitSize());
-                offer.setProfileTrackingUrl(profileTrackingUrl);
+                    String profileTrackingUrl = HelperUtil.getTrackingUrl(profile.getProfileUrl(),
+                            request.getCallBackUrl(), request.getDartClickTrackUrl(),
+                            offer.getListingId(), profile.getPhone(), request.getPublisher(),
+                            request.getAdUnitName(), request.getAdUnitSize());
+                    offer.setProfileTrackingUrl(profileTrackingUrl);
 
-                String callBackFn = HelperUtil.getCallBackFunctionString(
-                        request.getCallBackFunction(), offer.getListingId(), profile.getPhone());
-                offer.setCallBackFunction(callBackFn);
+                    String callBackFn = HelperUtil.getCallBackFunctionString(
+                            request.getCallBackFunction(), offer.getListingId(), profile.getPhone());
+                    offer.setCallBackFunction(callBackFn);
 
-                StringBuilder couponUrl = new StringBuilder(profile.getProfileUrl());
-                couponUrl.append(OFFER_ANCHOR);
-                String couponTrackingUrl = HelperUtil.getTrackingUrl(couponUrl.toString(), null,
-                        request.getDartClickTrackUrl(), offer.getListingId(), profile.getPhone(),
-                        request.getPublisher(), request.getAdUnitName(), request.getAdUnitSize());
-                offer.setCouponUrl(couponTrackingUrl);
-            } else {
-                // TODO: Not needed. If there is a listing Id, there will always be a profile
-                offer.setReviewCount(0);
-                offer.setProfileUrl(null);
-                offer.setPhone(null);
+                    StringBuilder couponUrl = new StringBuilder(profile.getProfileUrl());
+                    couponUrl.append(OFFER_ANCHOR);
+                    String couponTrackingUrl = HelperUtil.getTrackingUrl(couponUrl.toString(),
+                            null, request.getDartClickTrackUrl(), offer.getListingId(),
+                            profile.getPhone(), request.getPublisher(), request.getAdUnitName(),
+                            request.getAdUnitSize());
+                    offer.setCouponUrl(couponTrackingUrl);
+                }
             }
         }
+
+        if (offersList != null && offersList.size() < request.getDisplaySize()) {
+            NearbyPlacesRequest nbpRequest = new NearbyPlacesRequest(request);
+            nbpRequest.setWhat(request.getWhat());
+            nbpRequest.setWhere(request.getWhere());
+            nbpRequest.setLatitude(request.getLatitude());
+            nbpRequest.setLongitude(request.getLongitude());
+            nbpRequest.setRadius(request.getRadius());
+            nbpRequest.setTags(request.getTag());
+
+            NearbyPlacesHelper nbpHelper = new NearbyPlacesHelper(this.rootPath);
+            NearbyPlacesResponse nbpResponse = nbpHelper.getNearbyPlaces(nbpRequest);
+            List<NearbyPlace> backfill = new ArrayList<NearbyPlace>();
+            response.setBackfill(backfill);
+
+            int moreRequired = request.getDisplaySize() - offersList.size();
+            if (nbpResponse.getNearbyPlaces() != null && !nbpResponse.getNearbyPlaces().isEmpty()) {
+                List<NearbyPlace> nbpPlaces = null;
+                if (nbpResponse.getNearbyPlaces().size() >= moreRequired) {
+                    nbpPlaces = nbpResponse.getNearbyPlaces().subList(0, moreRequired);
+                }
+                response.getBackfill().addAll(nbpPlaces);
+            }
+
+            if (offersList.size() < request.getDisplaySize() && nbpResponse.getBackfill() != null
+                    && !nbpResponse.getBackfill().isEmpty()) {
+                moreRequired = request.getDisplaySize() - offersList.size();
+                List<NearbyPlace> nbpPlaces = null;
+                if (nbpResponse.getBackfill().size() >= moreRequired) {
+                    nbpPlaces = nbpResponse.getBackfill().subList(0, moreRequired);
+                }
+                response.getBackfill().addAll(nbpPlaces);
+            }
+
+            if (offersList.size() < request.getDisplaySize() && nbpResponse.getHouseAds() != null
+                    && !nbpResponse.getHouseAds().isEmpty()) {
+                moreRequired = request.getDisplaySize() - offersList.size();
+                List<HouseAd> houseAds = null;
+                if (nbpResponse.getHouseAds().size() >= moreRequired) {
+                    houseAds = nbpResponse.getHouseAds().subList(0, moreRequired);
+                }
+                response.setHouseAds(houseAds);
+            }
+        }
+
         log.info("=========End offersHelper getOffers()============================ >");
-        return offersList;
+        return response;
     }
 
     /**
@@ -261,16 +299,13 @@ public class OffersHelper {
      * @return List of Offer objects
      * @throws CitysearchException
      */
-    private List<Offer> parseXML(Document doc) throws CitysearchException {
+    private List<Offer> parseXML(OffersRequest request, Document doc) throws CitysearchException {
         log.info("========================== Start OffersHelper parseXML=======================");
-        List<Element> offersElementList = null;
         List<Offer> offersList = null;
         if (doc != null && doc.hasRootElement()) {
             Element rootElement = doc.getRootElement();
-            // TODO: What is the need for casting???
-            // TODO: use local variable instance
-            offersElementList = (List<Element>) rootElement.getChildren(OFFER);
-            offersList = (List<Offer>) getOffersList(offersElementList);
+            List<Element> offersElementList = rootElement.getChildren(OFFER);
+            offersList = (List<Offer>) getOffersList(request, offersElementList);
         }
         log.info("========================== End OffersHelper parseXML=======================");
         return offersList;
@@ -284,28 +319,21 @@ public class OffersHelper {
      * @return List of Offer beans
      * @throws CitysearchException
      */
-    private List<Offer> getOffersList(List<Element> offerElemList) throws CitysearchException {
+    private List<Offer> getOffersList(OffersRequest request, List<Element> offerElemList)
+            throws CitysearchException {
         log.info("========================== Start OffersHelper getOffersList=======================");
-        // TODO: this should inside the where
-        Offer offer = null;
         List<Offer> offersLst = new ArrayList<Offer>();
         if (!offerElemList.isEmpty()) {
-            int cnt = 0;
             Iterator<Element> it = offerElemList.iterator();
-            // TODO: can be while(offersLst.size() < 2)
-            while (it.hasNext() && cnt < 2) {
+            while (offersLst.size() <= request.getDisplaySize() && it.hasNext()) {
                 Element offerElement = (Element) it.next();
-
-                // TODO: there has to be location attribute on the Offer bean.
-                // that way it will be much clear in jsp.
-                // doing city, state in the jsp is asking for trouble.
-                offer = new Offer();
+                Offer offer = new Offer();
                 offer.setCity(offerElement.getChildText(CITY));
+                offer.setState(offerElement.getChildText(STATE));
+                String location = HelperUtil.getLocationString(offer.getCity(), offer.getState());
+                offer.setLocation(location);
                 offer.setAttributionSrc(offerElement.getChildText(ATTRIBUTION_SOURCE));
-
                 String ratingVal = offerElement.getChildText(CS_RATING);
-                // TODO: where is this used???
-                double rating = NumberUtils.toDouble(ratingVal) / 2;
                 List<Integer> ratingList = HelperUtil.getRatingsList(ratingVal);
                 offer.setListingRating(ratingList);
                 offer.setReviewCount(HelperUtil.toInteger(offerElement.getChildText(REVIEW_COUNT)));
@@ -317,13 +345,10 @@ public class OffersHelper {
                 offer.setOfferDescription(offerElement.getChildText(OFFER_DESCRIPTION));
                 offer.setOfferId(offerElement.getChildText(OFFER_ID));
                 offer.setOfferTitle(offerElement.getChildText(OFFER_TITLE));
-                // TODO: whats is Ref Id?
                 offer.setRefId(offerElement.getChildText(REFERENCE_ID));
-                offer.setState(offerElement.getChildText(STATE));
                 offer.setStreet(offerElement.getChildText(STREET));
                 offer.setZip(offerElement.getChildText(ZIP));
                 offersLst.add(offer);
-                cnt = cnt + 1;
             }
         }
         log.info("========================== End OffersHelper getOffersList=======================");

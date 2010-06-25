@@ -26,6 +26,15 @@ public class Offer {
     private String callBackFunction;
     private String callBackUrl;
     private String couponUrl;
+    private String location;
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
 
     public String getCouponUrl() {
         return couponUrl;
@@ -124,9 +133,6 @@ public class Offer {
     }
 
     public String getOfferDescription() {
-        if (offerDescription != null && offerDescription.length() > 36)
-            offerDescription = offerDescription.substring(0, 36) + "...";
-
         return offerDescription;
     }
 
