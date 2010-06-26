@@ -13,10 +13,12 @@ public class Offer {
     private String imageUrl;
     private String listingId;
     private String listingName;
-    private String offerDescription;
     private String offerId;
+    private String offerDescription;
     private String offerTitle;
-    private String refId;
+    private String offerShortDescription;
+    private String offerShortTitle;
+    private String referenceId;
     private String latitude;
     private String longitude;
     private String street;
@@ -26,6 +28,7 @@ public class Offer {
     private String callBackFunction;
     private String callBackUrl;
     private String couponUrl;
+    private String distance;
     private String location;
 
     public String getLocation() {
@@ -132,28 +135,12 @@ public class Offer {
         this.listingName = listingName;
     }
 
-    public String getOfferDescription() {
-        return offerDescription;
-    }
-
-    public void setOfferDescription(String offerDescription) {
-        this.offerDescription = offerDescription;
-    }
-
     public String getOfferId() {
         return offerId;
     }
 
     public void setOfferId(String offerId) {
         this.offerId = offerId;
-    }
-
-    public String getRefId() {
-        return refId;
-    }
-
-    public void setRefId(String refId) {
-        this.refId = refId;
     }
 
     public String getLatitude() {
@@ -205,9 +192,6 @@ public class Offer {
     }
 
     public String getOfferTitle() {
-        if (offerTitle != null && offerTitle.length() > 20)
-            offerTitle = offerTitle.substring(0, 20) + "...";
-
         return offerTitle;
     }
 
@@ -215,25 +199,72 @@ public class Offer {
         this.offerTitle = offerTitle;
     }
 
+    public String getOfferDescription() {
+        return offerDescription;
+    }
+
+    public void setOfferDescription(String offerDescription) {
+        this.offerDescription = offerDescription;
+    }
+
+    public String getOfferShortDescription() {
+        if (offerShortDescription != null && offerShortDescription.length() > 36)
+            offerShortDescription = offerShortDescription.substring(0, 36) + "...";
+
+        return offerShortDescription;
+    }
+
+    public void setOfferShortDescription(String offerShortDescription) {
+        this.offerShortDescription = offerShortDescription;
+    }
+
+    public String getOfferShortTitle() {
+        if (offerShortTitle != null && offerShortTitle.length() > 20)
+            offerShortTitle = offerShortTitle.substring(0, 20) + "...";
+
+        return offerShortTitle;
+    }
+
+    public void setOfferShortTitle(String offerShortTitle) {
+        this.offerShortTitle = offerShortTitle;
+    }
+
+    public String getDistance() {
+        return distance;
+    }
+
+    public void setDistance(String distance) {
+        this.distance = distance;
+    }
+
+    public String getReferenceId() {
+        return referenceId;
+    }
+
+    public void setReferenceId(String referenceId) {
+        this.referenceId = referenceId;
+    }
+
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("==reviewCount==========" + reviewCount);
-        sb.append("==attributionSrc================" + attributionSrc);
-        sb.append("==csRating==" + listingRating);
-        sb.append("==imgUrl==" + imageUrl);
-        sb.append("=listingId===" + listingId);
-        sb.append("=listingName===" + listingName);
-        sb.append("==offerDesc==" + offerDescription);
-        sb.append("==offerId==" + offerId);
-        sb.append("==offerTtl==" + offerTitle);
-        sb.append("==refId==" + refId);
-        sb.append("==lat==" + latitude);
-        sb.append("==longs==" + longitude);
-        sb.append("==street==" + street);
-        sb.append("==city==" + city);
-        sb.append("==state==" + state);
-        sb.append("==zip==" + zip);
+        sb.append("=reviewCount=" + reviewCount);
+        sb.append("=attributionSrc=" + attributionSrc);
+        sb.append("=csRating=" + listingRating);
+        sb.append("=imgUrl=" + imageUrl);
+        sb.append("=listingId=" + listingId);
+        sb.append("=listingName=" + listingName);
+        sb.append("=offerDesc=" + offerDescription);
+        sb.append("=offerId=" + offerId);
+        sb.append("=offerTtl=" + offerTitle);
+        sb.append("=refId=" + referenceId);
+        sb.append("=lat=" + latitude);
+        sb.append("=longs=" + longitude);
+        sb.append("=street=" + street);
+        sb.append("=city=" + city);
+        sb.append("=state=" + state);
+        sb.append("=zip=" + zip);
+        sb.append("=distance=" + distance);
 
         return sb.toString();
     }

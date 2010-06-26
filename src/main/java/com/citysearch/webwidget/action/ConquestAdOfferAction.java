@@ -1,52 +1,68 @@
 package com.citysearch.webwidget.action;
 
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import com.citysearch.webwidget.bean.ConquestAdOffer;
-import com.citysearch.webwidget.bean.ConquestAdOfferRequest;
 import com.citysearch.webwidget.bean.HouseAd;
+import com.citysearch.webwidget.bean.NearbyPlace;
+import com.citysearch.webwidget.bean.Offer;
+import com.citysearch.webwidget.bean.OffersRequest;
+import com.citysearch.webwidget.bean.OffersResponse;
 import com.citysearch.webwidget.exception.CitysearchException;
 import com.citysearch.webwidget.exception.InvalidRequestParametersException;
-import com.citysearch.webwidget.helper.ConquestAdOfferHelper;
+import com.citysearch.webwidget.helper.OffersHelper;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ModelDriven;
 
 public class ConquestAdOfferAction extends AbstractCitySearchAction implements
-        ModelDriven<ConquestAdOfferRequest> {
+        ModelDriven<OffersRequest> {
 
     private Logger log = Logger.getLogger(getClass());
-    private ConquestAdOfferRequest offersRequest = new ConquestAdOfferRequest();
-    private List<ConquestAdOffer> offersList;
-    private List<HouseAd> houseAds;
+    private OffersRequest offersRequest = new OffersRequest();
+    private static final Integer DEFAULT_DISPLAY_SIZE = 1;
+    private static final String AD_UNIT_NAME = "conquestAd";
+    private OffersResponse offersResponse;
+
+    public List<Offer> getOffers() {
+        if (offersResponse == null || offersResponse.getOffers() == null) {
+            return new ArrayList<Offer>();
+        }
+        return offersResponse.getOffers();
+    }
+
+    public List<NearbyPlace> getBackfill() {
+        if (offersResponse == null || offersResponse.getBackfill() == null) {
+            return new ArrayList<NearbyPlace>();
+        }
+        return offersResponse.getBackfill();
+    }
 
     public List<HouseAd> getHouseAds() {
-        return houseAds;
+        if (offersResponse == null || offersResponse.getHouseAds() == null) {
+            return new ArrayList<HouseAd>();
+        }
+        return offersResponse.getHouseAds();
     }
 
-    public void setHouseAds(List<HouseAd> houseAds) {
-        this.houseAds = houseAds;
+    public OffersResponse getOffersResponse() {
+        return offersResponse;
     }
 
-    public List<ConquestAdOffer> getOffersList() {
-        return offersList;
+    public void setOffersResponse(OffersResponse offersResponse) {
+        this.offersResponse = offersResponse;
     }
 
-    public void setOffersList(List<ConquestAdOffer> offersList) {
-        this.offersList = offersList;
-    }
-
-    public ConquestAdOfferRequest getOffersRequest() {
+    public OffersRequest getOffersRequest() {
         return offersRequest;
     }
 
-    public void setOffersRequest(ConquestAdOfferRequest offersRequest) {
+    public void setOffersRequest(OffersRequest offersRequest) {
         this.offersRequest = offersRequest;
     }
 
-    public ConquestAdOfferRequest getModel() {
+    public OffersRequest getModel() {
         return offersRequest;
     }
 
@@ -58,38 +74,33 @@ public class ConquestAdOfferAction extends AbstractCitySearchAction implements
      * @throws CitysearchException
      */
     public String execute() throws CitysearchException {
-        log.info("=========Start offersAction execute()============================ >");
-        ConquestAdOfferHelper helper = new ConquestAdOfferHelper(getResourceRootPath());
+        log.info("Start offersAction execute()");
+        if (offersRequest.getDisplaySize() == null || offersRequest.getDisplaySize() == 0) {
+            offersRequest.setDisplaySize(DEFAULT_DISPLAY_SIZE);
+        }
+        if (offersRequest.getAdUnitName() == null
+                || offersRequest.getAdUnitName().trim().length() == 0) {
+            offersRequest.setAdUnitName(AD_UNIT_NAME);
+        }
+        OffersHelper helper = new OffersHelper(getResourceRootPath());
         try {
-            //TODO: should use the offer helper.
-            offersList = helper.getOffers(offersRequest);
-            if (offersList == null || offersList.isEmpty()) {
+            offersResponse = helper.getOffers(offersRequest);
+            if (offersResponse == null || offersResponse.getOffers().isEmpty()) {
                 log.info("Returning backfill from offer");
                 return "backfill";
             }
-            Iterator<ConquestAdOffer> it = offersList.iterator();
-            while (it.hasNext()) {
-                ConquestAdOffer offer = (ConquestAdOffer) it.next();
-                String listingUrl = null;
-                if (offer.getProfileUrl() != null) {
-                    /*
-                     * listingUrl = getTrackingUrl(offer.getProfileUrl(), CLICK_TRACKING_URL,
-                     * offer.getListingId(), offersRequest.getPublisher(),
-                     * offersRequest.getAdUnitName(),offersRequest.getAdUnitSize());
-                     */
-                } else {
-                    listingUrl = "";
-                }
-                offer.setProfileUrl(listingUrl);
-            }
         } catch (InvalidRequestParametersException ihre) {
             log.error(ihre.getDetailedMessage());
-            houseAds = getHouseAds(offersRequest.getDartClickTrackUrl(), 2);
-        } catch (CitysearchException cse) {
-            log.error(cse.getMessage());
-            houseAds = getHouseAds(offersRequest.getDartClickTrackUrl(), 2);
+            offersResponse = new OffersResponse();
+            offersResponse.setHouseAds(getHouseAds(offersRequest.getDartClickTrackUrl(),
+                    offersRequest.getDisplaySize()));
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            offersResponse = new OffersResponse();
+            offersResponse.setHouseAds(getHouseAds(offersRequest.getDartClickTrackUrl(),
+                    offersRequest.getDisplaySize()));
         }
-        log.info("=========End offersAction execute()============================ >");
+        log.info("End offersAction execute()");
         return Action.SUCCESS;
     }
 }
