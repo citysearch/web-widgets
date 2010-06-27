@@ -11,12 +11,14 @@
 	<body>
 		<div class="ctsrch_boxContainer">
 			<div class="ctsrch_container">
-	        	<s:iterator value="offers" status="stat">	 	         	
-	        		<div class="cs_offer_text" >
-	        			<s:property value="offerTitle" />
-	        		</div>
-	        		<div class="cs_offer_getoffer">
-	        			<a target="_blank" href='<s:property value="couponUrl" />' >get offer</a>
+				<s:iterator value="offers" status="stat">
+					<div class="cs_offer">	 	         	
+		        		<div class="cs_offer_text">
+		        			<s:property value="offerShortTitle" />
+		        		</div>
+		        		<div class="cs_offer_getoffer">
+		        			<a target="_blank" href='<s:property value="couponUrl" />' >Get offer</a>
+		        		</div>
 	        		</div>	
 		        	<div class="ctsrch_leftSide">
 		 	         	<div class="ctsrch_bigStar">	
@@ -25,80 +27,63 @@
 							</a>
 		 	         	</div>	 	         		         	 
 	 	         	</div>
-	 	         	<div class="ct_offer_rightSide">	
-	 	         		<div>
-	 	         		   	<div class="ctsrch_starContainer">	 	         		   	
-	                    		<div class="ctsrch_stars"> 
-                            		<s:iterator value="listingRating" status="stat"><span class='<s:if test="%{listingRating[#stat.index] == 2}">full</s:if><s:elseif test="%{listingRating[#stat.index] == 1}">half</s:elseif><s:else>empty</s:else>'> </span></s:iterator>
-                        		</div>           		                		
-	                    		<div class="ctsrch_reviewFont">                    		
-	                    			<s:property value="reviewCount" /> &nbsp; Reviews 	         			
-	                    		</div>          		
-	                    	</div>	                    	
-	         				<div class="ctsrch_mainLink">	
-	         				 	<a href='<s:property value="profileTrackingUrl" />' ><s:property value="listingName" /></a>
-		 	         		</div> 
-		 	         		<div class="ctsrch_cityFont">
-	         					<s:property value="location" />          					
-	         				</div>
-	         				<div class="ctsrch_subcategoryFont"> 	         					
-	         					<s:property value="offerDescription" />        						                   		
-	         				</div>
-	 	         		</div> 	         				       				        				
-	 	         	</div>		
-	 	         	<s:if test="%{#stat.index < (offersList.size()-1)}">
+	 	         	<div class="ctsrch_rightSide">	
+	 	         		<div class="cs_offer_listing">
+                    		<a href='<s:property value="profileTrackingUrl" />' ><s:property value="listingName" /></a>
+                    	</div>
+ 	         		   	<div class="ctsrch_starContainer">	 	         		   	
+                    		<div class="ctsrch_stars"> 
+                           		<s:iterator value="listingRating" status="stat"><span class='<s:if test="%{listingRating[#stat.index] == 2}">full</s:if><s:elseif test="%{listingRating[#stat.index] == 1}">half</s:elseif><s:else>empty</s:else>'> </span></s:iterator>
+                       		</div>           		                		
+                    		<div class="ctsrch_reviewFont">                    		
+                    			<s:property value="reviewCount" /> &nbsp; Reviews 	         			
+                    		</div>          		
+                    	</div>
+	 	         		<div class="ctsrch_cityFont">
+         					<s:property value="location" />          					
+         				</div>
+	 	         	</div>
+					<div class="cs_offer_msg"> 	         					
+       					<s:property value="offerDescription" />        						                   		
+       				</div>	 	         	
+	 	         	<s:if test="%{profile != null && profile.review != null}">
+	 	         		<div class="cs_offer_reviews">
+		                    <div class="cs_offer_review_title">
+		                        <a href='<s:property value="profile.review.reviewTrackingUrl"/>'>
+		                            <s:property value="profile.review.shortTitle"/>
+		                        </a>
+		                    </div>
+		                    <div class="cs_offer_review_desc"><s:property value="profile.review.shortReviewText"/></div>
+			                <s:if test='%{profile.sendToFriendTrackingUrl != null && !"".equals(profile.sendToFriendTrackingUrl)}'>
+				                <div class="cs_offer_review_share">
+				                    <a href='<s:property value="profile.sendToFriendTrackingUrl"/>' >Share this review</a>
+				                </div>
+			                </s:if>
+		                </div>
+		            </s:if>
+	 	         	<s:if test="%{#stat.index < (offers.size()-1)}">
 		 	        	<div class="ctsrch_lineMargin"></div>
 					</s:if>         					              
 	 	        </s:iterator>
+	 	        <s:iterator value="houseAds" status="hadStatus">
+		            <div class="ctsrch_leftSide" style="height: 67px;"></div>
+		            <div class="ctsrch_rightSide" style="height: 67px;">
+		                <div class="ctsrch_mainLink">
+		                    <a href='<s:property value="destinationUrl" />'><s:property value="title" /></a>
+		                </div>
+		                <div class="ctsrch_descFont">
+		                    <s:property value="tagLine" />
+		                </div>
+		                <div class="ctsrch_subLink_bf" >
+		                    <a href='<s:property value="destinationUrl" />'>www.citysearch.com</a>
+		                </div>
+		            </div>
+		            <s:if test="%{#hadStatus.index < (houseAds.size() - 1)}">
+		                  <div class="ctsrch_lineMargin"> </div>
+		              </s:if>
+		        </s:iterator>
 	        </div>
-	        <s:if test="%{!backfill.isEmpty() && !offers.isEmpty()}">
-              	<div class="ctsrch_lineMargin"></div>
-         	</s:if>
-	        <s:iterator value="backfill" status="placesStatus">
-	            <div class="ctsrch_leftSide">
-	                <a href='<s:property value="adDisplayTrackingURL" />'><img src='<s:property value="adImageURL"/>' border="0"/></a>
-	            </div>
-	            <div class="ctsrch_rightSide">
-	                <div class="ctsrch_mainLink_bf" >
-	                    <a href='<s:property value="adDisplayTrackingURL" />'><s:property value="category" /></a>
-	                </div>
-	                <div class="ctsrch_descFont" >
-	                    <s:property value="description" />
-	                </div>
-	                <div class="ctsrch_subLink_bf" >
-	                    <a href='http://<s:property value="adDisplayTrackingURL" />'><s:property value="adDisplayURL" /></a>
-	                </div>
-	                <s:if test='%{offers != null && !"".equals(offers)}'>
-	                 <div class="ctsrch_offersFont" >
-	                     <s:property value="offers" />
-	                 </div>
-	                </s:if>
-	            </div>
-	            <s:if test="%{#placesStatus.index < (backfill.size() - 1)}">
-	                  <div class="ctsrch_lineMargin"> </div>
-	              </s:if>
-	        </s:iterator>
-	        <s:if test="%{(!backfill.isEmpty() || !offers.isEmpty()) && !houseAds.isEmpty()}">
-	              <div class="ctsrch_lineMargin"></div>
-	         </s:if>
-	        <s:iterator value="houseAds" status="hadStatus">
-	            <div class="ctsrch_leftSide"></div>
-	            <div class="ctsrch_rightSide">
-	                <div class="ctsrch_mainLink">
-	                    <a href='<s:property value="destinationUrl" />'><s:property value="title" /></a>
-	                </div>
-	                <div class="ctsrch_descFont">
-	                    <s:property value="tagLine" />
-	                </div>
-	                <div class="ctsrch_subLink_bf" >
-	                    <a href='<s:property value="destinationUrl" />'>www.citysearch.com</a>
-	                </div>
-	            </div>
-	            <s:if test="%{#hadStatus.index < (houseAds.size() - 1)}">
-	                  <div class="ctsrch_lineMargin"> </div>
-	              </s:if>
-	        </s:iterator>
-	        <div class="ctsrch_logoFont" style="float:right;font-size:11px;padding-top:9px;padding-right:5px;">Ads by Citysearch</div>	        
+	        <div class="ctsrch_logoFont_right">Ads by Citysearch</div>
 		</div>
 	</body>
 </html>

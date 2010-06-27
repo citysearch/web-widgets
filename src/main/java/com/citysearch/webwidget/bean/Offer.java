@@ -16,8 +16,8 @@ public class Offer {
     private String offerId;
     private String offerDescription;
     private String offerTitle;
-    private String offerShortDescription;
     private String offerShortTitle;
+    private String offerShortDescription;
     private String referenceId;
     private String latitude;
     private String longitude;
@@ -30,6 +30,15 @@ public class Offer {
     private String couponUrl;
     private String distance;
     private String location;
+    private Profile profile;
+
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
+    }
 
     public String getLocation() {
         return location;

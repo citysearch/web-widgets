@@ -1,15 +1,12 @@
 package com.citysearch.webwidget.action;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
 import com.citysearch.webwidget.bean.HouseAd;
-import com.citysearch.webwidget.bean.NearbyPlace;
 import com.citysearch.webwidget.bean.Offer;
 import com.citysearch.webwidget.bean.OffersRequest;
-import com.citysearch.webwidget.bean.OffersResponse;
 import com.citysearch.webwidget.exception.CitysearchException;
 import com.citysearch.webwidget.exception.InvalidRequestParametersException;
 import com.citysearch.webwidget.helper.OffersHelper;
@@ -23,35 +20,23 @@ public class ConquestAdOfferAction extends AbstractCitySearchAction implements
     private OffersRequest offersRequest = new OffersRequest();
     private static final Integer DEFAULT_DISPLAY_SIZE = 1;
     private static final String AD_UNIT_NAME = "conquestAd";
-    private OffersResponse offersResponse;
+    private List<Offer> offers;
+    private List<HouseAd> houseAds;
 
     public List<Offer> getOffers() {
-        if (offersResponse == null || offersResponse.getOffers() == null) {
-            return new ArrayList<Offer>();
-        }
-        return offersResponse.getOffers();
+        return offers;
     }
 
-    public List<NearbyPlace> getBackfill() {
-        if (offersResponse == null || offersResponse.getBackfill() == null) {
-            return new ArrayList<NearbyPlace>();
-        }
-        return offersResponse.getBackfill();
+    public void setOffers(List<Offer> offers) {
+        this.offers = offers;
     }
 
     public List<HouseAd> getHouseAds() {
-        if (offersResponse == null || offersResponse.getHouseAds() == null) {
-            return new ArrayList<HouseAd>();
-        }
-        return offersResponse.getHouseAds();
+        return houseAds;
     }
 
-    public OffersResponse getOffersResponse() {
-        return offersResponse;
-    }
-
-    public void setOffersResponse(OffersResponse offersResponse) {
-        this.offersResponse = offersResponse;
+    public void setHouseAds(List<HouseAd> houseAds) {
+        this.houseAds = houseAds;
     }
 
     public OffersRequest getOffersRequest() {
@@ -75,6 +60,7 @@ public class ConquestAdOfferAction extends AbstractCitySearchAction implements
      */
     public String execute() throws CitysearchException {
         log.info("Start offersAction execute()");
+
         if (offersRequest.getDisplaySize() == null || offersRequest.getDisplaySize() == 0) {
             offersRequest.setDisplaySize(DEFAULT_DISPLAY_SIZE);
         }
@@ -84,21 +70,19 @@ public class ConquestAdOfferAction extends AbstractCitySearchAction implements
         }
         OffersHelper helper = new OffersHelper(getResourceRootPath());
         try {
-            offersResponse = helper.getOffers(offersRequest);
-            if (offersResponse == null || offersResponse.getOffers().isEmpty()) {
+            offers = helper.getOffers(offersRequest);
+            if (offers == null || offers.isEmpty()) {
                 log.info("Returning backfill from offer");
                 return "backfill";
             }
         } catch (InvalidRequestParametersException ihre) {
             log.error(ihre.getDetailedMessage());
-            offersResponse = new OffersResponse();
-            offersResponse.setHouseAds(getHouseAds(offersRequest.getDartClickTrackUrl(),
-                    offersRequest.getDisplaySize()));
+            houseAds = getHouseAds(offersRequest.getDartClickTrackUrl(),
+                    offersRequest.getDisplaySize());
         } catch (Exception e) {
             log.error(e.getMessage());
-            offersResponse = new OffersResponse();
-            offersResponse.setHouseAds(getHouseAds(offersRequest.getDartClickTrackUrl(),
-                    offersRequest.getDisplaySize()));
+            houseAds = getHouseAds(offersRequest.getDartClickTrackUrl(),
+                    offersRequest.getDisplaySize());
         }
         log.info("End offersAction execute()");
         return Action.SUCCESS;

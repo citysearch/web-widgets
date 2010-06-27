@@ -43,7 +43,7 @@ html>body .ctsrch_bigStar img {margin-top:2px;height:48px;width:48px;border:soli
 .ctsrch_subLink_bf a:hover {text-decoration:underline;}
 .ctsrch_offersFont {height:16px;padding-top:1px;float:left;font-family:Arial;font-size:10px;width:100%;}
 
-div.spacer { clear: both; line-height: 3px; height: 3px; }
+div.spacer { clear: both; line-height: 1px; height: 1px; }
 div.seperator { clear: both; line-height: 1px; height: 1px;}
 
 .review_cs_mainContainer{float:left;width:300px;height:250px}
@@ -52,7 +52,7 @@ div.seperator { clear: both; line-height: 1px; height: 1px;}
 .review_cs_img{float:left;width:23%;height:70px;padding:3px}
 .review_cs_img img{width:70px;height:70px;}
 .review_cs_ratings{float:left;width:71%;height:65px;padding:3px 3px 3px 6px}
-.review_cs_time{float:left;width:100%;height:15px}
+.review_cs_time{float:left;width:100%;height:13px}
 .review_cs_reviews{float:left;width:100%;height:129px}
 .review_cs_reviews_thin{float:left;width:100%;height:38px}
 .review_cs_share{float:left;height:18px;width:100%;}
@@ -61,9 +61,10 @@ div.seperator { clear: both; line-height: 1px; height: 1px;}
 .review_cs_title a {color:#4580c5;font-weight:normal;font-family:Arial;font-size:13px;text-decoration:none}
 .review_cs_address{float:left;width:100%;color:#000000;font-weight:normal;font-family:Arial;font-size:12px;text-decoration:none}
 .review_cs_time{float:left;width:100%;color:#b3b3b3;font-family:Arial;font-size:12px;}
-.review_cs_longTitle{float:left;width:100%;color:#4580c5;font-family:Arial;font-size:14px;padding-top:4px}
+.review_cs_longTitle{float:left;width:100%;color:#4580c5;font-family:Arial;font-size:12px;padding-top:4px}
 .review_cs_description{float:left;width:100%;font-family:Arial;font-size:12px;}
 .review_cs_description a {color:#4580c5;font-weight:normal;font-family:Arial;font-size:13px;text-decoration:none}
+.review_ctsrch_descFont {height:30px;padding-top:1px;float:left;font-family:Arial;font-size:11px;width:100%;}
 
 .review_cs_mainContainer_detail{float:left;width:300px;height:250px}
 .review_cs_header_detail{float:left;width:297px;border:solid 1px #000000;background-color:#8c8c8c;height:20px;color:#ffffff;font-weight:bold;font-family:Arial;font-size:13px;padding:1px 0 0 3px}
@@ -79,7 +80,7 @@ div.seperator { clear: both; line-height: 1px; height: 1px;}
 .review_cs_title_detail a {color:#4580c5;font-weight:normal;font-family:Arial;font-size:13px;text-decoration:none}
 .review_cs_address_detail{float:left;width:100%;color:#000000;font-weight:normal;font-family:Arial;font-size:12px;text-decoration:none}
 .review_cs_time_detail{float:left;width:100%;color:#b3b3b3;font-family:Arial;font-size:12px;}
-.review_cs_longTitle_detail{float:left;width:100%;color:#4580c5;font-family:Arial;font-size:14px;padding-top:4px}
+.review_cs_longTitle_detail{float:left;width:100%;color:#4580c5;font-family:Arial;font-size:12px;padding-top:4px}
 .review_cs_description_detail{float:left;width:290px;height:105px;font-family:Arial;font-size:12px;overflow: auto;}
 .review_cs_description_detail a {color:#4580c5;font-weight:normal;font-family:Arial;font-size:13px;text-decoration:none}
 .review_cs_close_detail{float:right;clear:right;height:18px;width:28%;}
@@ -87,6 +88,7 @@ div.seperator { clear: both; line-height: 1px; height: 1px;}
 
 .ctsrch_stars_hori{width:80px;}
 .ctsrch_logoFont {color:#4580C5;height:12px;padding:3px 0 0 5px;float:left;font-size:7px;font-weight:700;width:105px;padding-top:9px;}
+.ctsrch_logoFont_right {clear:left;color:#4580C5;height:12px;padding:7px 5px 0 0px;float:right;font-size:10px;font-weight:700;}
 .ctsrch_maxStar img {margin-top:3px;height:75px;width:70px;border:solid 1px #ccc;padding:3px;}
 .ctsrch_rightSideWide{float:left;width:70%;padding-top:4px;padding-right:10px}
 
@@ -101,10 +103,22 @@ div.seperator { clear: both; line-height: 1px; height: 1px;}
 .ctsrch_rightSideWide_Offer{float:right;width:68%;padding-top:4px;padding-right:10px}
 .ctsrch_reviewFont_Offer {height:16px;padding:3px 0 0 5px;float:right;font-size:10px;color:#6E6E6E;font-weight:700;width:33%;}
 
+.cs_offer_review_desc{float:left;width:100%;font-family:Arial;font-size:12px;}
+.cs_offer_review_title{float:left;width:100%;color:#4580c5;font-family:Arial;font-size:12px;padding:4px 0px 4px 0px;}
+.cs_offer_review_share{float:left;clear:left;height:15px;width:100%;font-weight:normal;font-family:Arial;font-size:12px;padding: 5px 0px 0px 0px;}
+.cs_offer_review_share a {color:#4580c5;font-weight:normal;font-family:Arial;font-size:12px;text-decoration:none;}
+.cs_offer_review_long_title{float:left;width:100%;color:#4580c5;font-family:Arial;font-size:14px;padding: 3px 0 5px 1px;}
+.cs_offer_reviews{float:left;width:100%;height:110px;padding:4px 4px 0px 4px;}
 .ct_offer_rightSide {float:left;width:65%;padding-top:4px;height:85px;}
-.cs_offer_text{float:left;width:76%;color:#4580c5;font-family:Arial;font-size:12px;padding:4px 0 0 4px}
-.cs_offer_getoffer{float:right;clear:right;width:24%;}
-.cs_offer_getoffer a {color:#4580c5;font-weight:normal;font-family:Arial;font-size:11px;text-decoration:none} 
+.cs_offer{width:100%;padding:4px 0 0 4px;height:18px;padding:4px 0 0 4px}
+.cs_offer_text{float:left;width:79%;color:#4580c5;font-family:Arial;font-size:12px;}
+.cs_offer_getoffer{float:right;width:20%;}
+.cs_offer_getoffer a {color:#4580c5;font-weight:normal;font-family:Arial;font-size:12px;text-decoration:none} 
+.cs_offer_listing {height:18px;}
+.cs_offer_listing a {font-size:13px;color:#31647C;font-weight:700;text-decoration:none;cursor:hand;}
+.cs_offer_listing a:hover {text-decoration:underline;}
+.cs_offer_location {font-size:11px;color:#000;width:100%;font-weight:700;height:18px;}
+.cs_offer_msg {float:left;clear:left;font-size:10px;color:#000;height:22px;padding:0px 0px 0px 4px;width:100%;vertical-align:middle;}
 
 .heading{font-size:10px;padding-left:40px;}
 .distance{font-size:10px;}

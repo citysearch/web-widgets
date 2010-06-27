@@ -62,14 +62,14 @@ public class ReviewAction extends AbstractCitySearchAction implements ModelDrive
      */
     public String execute() throws CitysearchException {
         ReviewHelper helper = new ReviewHelper(getResourceRootPath());
-        log.info("Start review action ============================ >");
+        log.info("Start review action");
         try {
             review = helper.getLatestReview(reviewRequest);
             if (review == null) {
                 log.info("Returning backfill from review");
                 return "backfill";
             }
-            log.info("End review action ============================ >");
+            log.info("End review action");
         } catch (InvalidRequestParametersException ihre) {
             log.error(ihre.getDetailedMessage());
             houseAds = getHouseAds(reviewRequest.getDartClickTrackUrl(), 3);

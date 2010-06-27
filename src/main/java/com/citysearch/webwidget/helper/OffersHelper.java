@@ -12,13 +12,8 @@ import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 
-import com.citysearch.webwidget.bean.HouseAd;
-import com.citysearch.webwidget.bean.NearbyPlace;
-import com.citysearch.webwidget.bean.NearbyPlacesRequest;
-import com.citysearch.webwidget.bean.NearbyPlacesResponse;
 import com.citysearch.webwidget.bean.Offer;
 import com.citysearch.webwidget.bean.OffersRequest;
-import com.citysearch.webwidget.bean.OffersResponse;
 import com.citysearch.webwidget.bean.Profile;
 import com.citysearch.webwidget.bean.ProfileRequest;
 import com.citysearch.webwidget.bean.SearchRequest;
@@ -31,6 +26,7 @@ import com.citysearch.webwidget.util.HelperUtil;
 import com.citysearch.webwidget.util.PropertiesLoader;
 
 public class OffersHelper {
+    private static final Integer OFFER_TITLE_SIZE = 36;
 
     private final static String PROPERTY_OFFERS_URL = "offers.url";
     private Logger log = Logger.getLogger(getClass());
@@ -193,8 +189,8 @@ public class OffersHelper {
      * @throws InvalidRequestParametersException
      * @throws CitysearchException
      */
-    public OffersResponse getOffers(OffersRequest request)
-            throws InvalidRequestParametersException, CitysearchException {
+    public List<Offer> getOffers(OffersRequest request) throws InvalidRequestParametersException,
+            CitysearchException {
         log.info("Start offersHelper getOffers()");
         validateRequest(request);
 
@@ -219,9 +215,6 @@ public class OffersHelper {
         }
 
         List<Offer> offersList = parseXML(request, responseDocument);
-        OffersResponse response = new OffersResponse();
-        response.setOffers(offersList);
-
         if (offersList != null && !offersList.isEmpty()) {
             for (Offer offer : offersList) {
                 ProfileRequest profileRequest = new ProfileRequest(request);
@@ -268,51 +261,18 @@ public class OffersHelper {
         }
 
         if (offersList != null && offersList.size() < request.getDisplaySize()) {
-            NearbyPlacesRequest nbpRequest = new NearbyPlacesRequest(request);
-            nbpRequest.setWhat(request.getWhat());
-            nbpRequest.setWhere(request.getWhere());
-            nbpRequest.setLatitude(request.getLatitude());
-            nbpRequest.setLongitude(request.getLongitude());
-            nbpRequest.setRadius(request.getRadius());
-            nbpRequest.setTags(request.getTag());
-
-            NearbyPlacesHelper nbpHelper = new NearbyPlacesHelper(this.rootPath);
-            NearbyPlacesResponse nbpResponse = nbpHelper.getNearbyPlaces(nbpRequest);
-            List<NearbyPlace> backfill = new ArrayList<NearbyPlace>();
-            response.setBackfill(backfill);
-
-            int moreRequired = request.getDisplaySize() - offersList.size();
-            if (nbpResponse.getNearbyPlaces() != null && !nbpResponse.getNearbyPlaces().isEmpty()) {
-                List<NearbyPlace> nbpPlaces = null;
-                if (nbpResponse.getNearbyPlaces().size() >= moreRequired) {
-                    nbpPlaces = nbpResponse.getNearbyPlaces().subList(0, moreRequired);
-                }
-                response.getBackfill().addAll(nbpPlaces);
-            }
-
-            if (offersList.size() < request.getDisplaySize() && nbpResponse.getBackfill() != null
-                    && !nbpResponse.getBackfill().isEmpty()) {
-                moreRequired = request.getDisplaySize() - offersList.size();
-                List<NearbyPlace> nbpPlaces = null;
-                if (nbpResponse.getBackfill().size() >= moreRequired) {
-                    nbpPlaces = nbpResponse.getBackfill().subList(0, moreRequired);
-                }
-                response.getBackfill().addAll(nbpPlaces);
-            }
-
-            if (offersList.size() < request.getDisplaySize() && nbpResponse.getHouseAds() != null
-                    && !nbpResponse.getHouseAds().isEmpty()) {
-                moreRequired = request.getDisplaySize() - offersList.size();
-                List<HouseAd> houseAds = null;
-                if (nbpResponse.getHouseAds().size() >= moreRequired) {
-                    houseAds = nbpResponse.getHouseAds().subList(0, moreRequired);
-                }
-                response.setHouseAds(houseAds);
+            ProfileRequest profileRequest = new ProfileRequest(request);
+            profileRequest.setClientIP(request.getClientIP());
+            ProfileHelper phelper = new ProfileHelper(this.rootPath);
+            for (Offer offer : offersList) {
+                profileRequest.setListingId(offer.getListingId());
+                Profile profile = phelper.getProfileAndHighestReview(profileRequest);
+                offer.setProfile(profile);
             }
         }
 
         log.info("End offersHelper getOffers()");
-        return response;
+        return offersList;
     }
 
     /**
@@ -368,6 +328,13 @@ public class OffersHelper {
                 offer.setOfferDescription(offerElement.getChildText(OFFER_DESCRIPTION));
                 offer.setOfferId(offerElement.getChildText(OFFER_ID));
                 offer.setOfferTitle(offerElement.getChildText(OFFER_TITLE));
+                String offerTitle = offer.getOfferTitle();
+                if (offerTitle != null && offerTitle.trim().length() > OFFER_TITLE_SIZE) {
+                    offer.setOfferShortTitle(StringUtils.abbreviate(offerTitle, OFFER_TITLE_SIZE));
+                } else {
+                    offer.setOfferShortTitle(offerTitle);
+                }
+
                 offer.setReferenceId(offerElement.getChildText(REFERENCE_ID));
                 offer.setStreet(offerElement.getChildText(STREET));
                 offer.setZip(offerElement.getChildText(ZIP));
@@ -380,7 +347,7 @@ public class OffersHelper {
 
     private void loadLatitudeAndLongitudeFromSearchAPI(OffersRequest request)
             throws CitysearchException {
-        SearchRequest sRequest = new SearchRequest();
+        SearchRequest sRequest = new SearchRequest(request);
         sRequest.setWhat(request.getWhat());
         sRequest.setWhere(request.getWhere());
         // sRequest.setTags(request.getTags());
