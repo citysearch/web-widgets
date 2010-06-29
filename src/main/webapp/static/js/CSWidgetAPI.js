@@ -100,7 +100,7 @@ var citygrid = {
             if (!data.callBackFunction) { data.callBackFunction = ''; }
             if (!data.adUnitName) { data.adUnitName = 'nearby'; }
             if (!data.adUnitSize) { data.adUnitSize = '300x250'; }
-            if (!data.clientIP) { data.clientIP = ''; }
+            if (!data.clientIP) { data.clientIP = '127.0.0.1'; }
 
             // validate dart data
             data.dartClickTrackUrl = (window.cgDartTrackUrl) ? window.cgDartTrackUrl : '';
