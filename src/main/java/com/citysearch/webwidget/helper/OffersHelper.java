@@ -308,7 +308,7 @@ public class OffersHelper {
         List<Offer> offersLst = new ArrayList<Offer>();
         if (!offerElemList.isEmpty()) {
             Iterator<Element> it = offerElemList.iterator();
-            while (offersLst.size() <= request.getDisplaySize() && it.hasNext()) {
+            while (offersLst.size() < request.getDisplaySize() && it.hasNext()) {
                 Element offerElement = (Element) it.next();
                 Offer offer = new Offer();
                 offer.setCity(offerElement.getChildText(CITY));

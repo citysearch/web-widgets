@@ -1,0 +1,67 @@
+<html>
+<head>
+    <title>Offers Ad Unit Testing Page</title>
+    <script language="JavaScript" type="text/javascript">
+		function setTimestamp(){ 			
+			var d = new Date();
+			document.getElementById("ts").value = d.getHours() + '' + d.getMinutes() + '' + d.getSeconds();
+			document.form.submit();
+		}
+	</script>   
+</head>
+<body>
+	<form action="/web-widgets/actions/conquestAdOffers" method="GET" onSubmit="setTimestamp()" >    	
+		<table border="0" width="35%">		
+			<tr>
+				<th colspan="2">Test page for most matching 2 offers</th>
+			</tr>			
+			<tr>
+	           <td><label>Publisher (Required)</label></td>
+	           <td><input type="text" name="publisher" id="publisher" value="citysearch" /></td>
+	        </tr>       
+	        <tr>
+	            <td><label>What (Required if Tag is blank)</label></td>
+	            <td><input name="what" type="text"/></td>
+	        </tr>
+	        <tr>
+	            <td><label>Where (or Lat & Lon)</label></td>
+	            <td><input name="where" type="text"/></td>
+	        </tr>
+	        <tr>
+	            <td><label>tag:</label></td>
+	            <td><input name="tag" type="text"/></td>
+	        </tr>
+	        <tr>
+	            <td><label>Latitude:</label></td>
+	            <td><input name="latitude" type="text"/></td>
+	        </tr>
+	        <tr>
+	            <td><label>Longitude:</label></td>
+	            <td><input name="longitude" type="text"/></td>
+	        </tr>          
+	        <tr>
+	            <td><label>Expires Before:</label></td>
+	            <td><input name="expiresBefore" type="text"/></td>
+	        </tr>
+	        <tr>
+	            <td><label>Customer Has Budget:</label></td>
+	            <td><input name="customerHasbudget" type="text" value="true" /></td>
+	        </tr>
+	        <tr>
+	            <td><label>Radius (Required if Lat & Lon provided)</label></td>
+	            <td><input name="radius" type="text"/></td>
+	        </tr> 
+	        <tr>
+	            <td><label>Client's IP(Required)</label></td>
+	            <td><input name="clientIP" type="text"/></td>
+	        </tr>       
+	        <tr>
+	        	<td><input type="hidden" name="ts" id="ts"/></td>
+	        </tr>        
+	        <tr>
+	            <td><input class="button" type="submit" value="Submit" /></td>
+	        </tr>
+	    </table>    
+    </form>
+</body>
+</html>

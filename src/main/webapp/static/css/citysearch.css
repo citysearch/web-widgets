@@ -129,6 +129,6 @@ div.seperator { clear: both; line-height: 1px; height: 1px;}
 .heading{font-size:10px;padding-left:40px;}
 .distance{font-size:10px;}
 .ctsrch_mainLink_conquestAd{float:left;width:60%}
-.coupon{float:right;font-size:12px;background-color:orange;padding:4px;}
-.title{font-size:11px;float:right;width:67%;padding-top:10px;font-weight:bold;}
-.description{font-size:10px;float:right;width:67%;}
+.ctsrch_offer_coupon{float:right;font-size:12px;padding:4px;}
+.ctsrch_offer_title_conquest{font-size:11px;float:left;width:100%;font-weight:bold;}
+.ctsrch_offer_description_conquest{font-size:10px;float:left;width:100%;}

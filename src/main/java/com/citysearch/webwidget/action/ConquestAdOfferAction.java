@@ -18,18 +18,16 @@ public class ConquestAdOfferAction extends AbstractCitySearchAction implements
 
     private Logger log = Logger.getLogger(getClass());
     private OffersRequest offersRequest = new OffersRequest();
-    private static final Integer DEFAULT_DISPLAY_SIZE = 1;
     private static final String AD_UNIT_NAME = "conquestAd";
-    private static final String ACTION_FORWARD_CONQUEST = "conquest";
-    private List<Offer> offers;
+    private Offer offer;
     private List<HouseAd> houseAds;
 
-    public List<Offer> getOffers() {
-        return offers;
+    public Offer getOffer() {
+        return offer;
     }
 
-    public void setOffers(List<Offer> offers) {
-        this.offers = offers;
+    public void setOffer(Offer offer) {
+        this.offer = offer;
     }
 
     public List<HouseAd> getHouseAds() {
@@ -62,7 +60,7 @@ public class ConquestAdOfferAction extends AbstractCitySearchAction implements
     public String execute() throws CitysearchException {
         log.info("Start offersAction execute()");
         if (offersRequest.getDisplaySize() == null || offersRequest.getDisplaySize() == 0) {
-            offersRequest.setDisplaySize(DEFAULT_DISPLAY_SIZE);
+            offersRequest.setDisplaySize(1);
         }
         if (offersRequest.getAdUnitName() == null
                 || offersRequest.getAdUnitName().trim().length() == 0) {
@@ -70,17 +68,18 @@ public class ConquestAdOfferAction extends AbstractCitySearchAction implements
         }
         OffersHelper helper = new OffersHelper(getResourceRootPath());
         try {
-            offers = helper.getOffers(offersRequest);
+            List<Offer> offers = helper.getOffers(offersRequest);
             if (offers == null || offers.isEmpty()) {
                 log.info("Returning backfill from offer");
                 return "backfill";
             }
+            offer = offers.get(0);
         } catch (InvalidRequestParametersException ihre) {
             log.error(ihre.getDetailedMessage());
-            houseAds = getHouseAds(offersRequest.getDartClickTrackUrl(), 3);
+            houseAds = getHouseAds(offersRequest.getDartClickTrackUrl(), 2);
         } catch (Exception e) {
             log.error(e.getMessage());
-            houseAds = getHouseAds(offersRequest.getDartClickTrackUrl(), 3);
+            houseAds = getHouseAds(offersRequest.getDartClickTrackUrl(), 2);
         }
         log.info("End offersAction execute()");
         return Action.SUCCESS;
