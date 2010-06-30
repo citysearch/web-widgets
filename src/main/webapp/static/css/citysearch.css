@@ -11,7 +11,7 @@
 .ctsrch_boxContainer .ctsrch_listing {height:68px;overflow:hidden;width:99%;}
 .ctsrch_boxContainer .ctsrch_leftSide {float:left;width:25%;text-align:center;}
 .ctsrch_boxContainer .ctsrch_rightSide {float:left;width:70%;}
-.ctsrch_boxContainer .ctsrch_lineMargin {margin:1px 0 3px -5px;height:1px;border-bottom:1px solid #d9d9d9;width:100%;}
+.ctsrch_boxContainer .ctsrch_lineMargin {margin:1px 0 3px -5px;height:1px;overflow:hidden;border-bottom:1px solid #d9d9d9;width:100%;}
 
 /* Conquest Ads 645x100 Global Styles */
 .ctsrch_wideContainer {height:98px;width:643px;background-color:#F8F1D3;font:76%/133.33% Arial,sans-serif;border:solid 1px #d9d9d9;}
@@ -23,7 +23,7 @@
 
 /* Nearby Places */
 .ctsrch_bizPhoto img {margin-top:2px;height:48px;width:48px;border:solid 1px #ccc;padding:1px;}
-.ctsrch_milesFont {font-size:10px;color:#6E6E6E;font-weight:bold;}
+.ctsrch_milesFont {margin-top:-3px;font-size:10px;color:#6E6E6E;font-weight:bold;}
 .ctsrch_mainLink {white-space:nowrap;overflow:hidden;}
 .ctsrch_mainLink a {font-size:13px;color:#31647C;font-weight:bold;text-decoration:none;cursor:hand;}
 .ctsrch_mainLink a:hover {text-decoration:underline;}
