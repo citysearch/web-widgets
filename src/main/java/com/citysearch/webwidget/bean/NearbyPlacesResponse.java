@@ -4,8 +4,17 @@ import java.util.List;
 
 public class NearbyPlacesResponse {
     private List<NearbyPlace> nearbyPlaces;
+    private List<NearbyPlace> searchResults;
     private List<NearbyPlace> backfill;
     private List<HouseAd> houseAds;
+
+    public List<NearbyPlace> getSearchResults() {
+        return searchResults;
+    }
+
+    public void setSearchResults(List<NearbyPlace> searchResults) {
+        this.searchResults = searchResults;
+    }
 
     public List<NearbyPlace> getNearbyPlaces() {
         return nearbyPlaces;

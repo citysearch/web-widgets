@@ -62,7 +62,8 @@ public class NearbyPlacesHelper {
     private Integer displaySize;
 
     // Field to cache the PFP response document.
-    private Document pfpResponseDocument = null;
+    private Document pfpWithGeoResponseDocument = null;
+    private Document pfpWithOutGeoResponseDocument = null;
 
     public NearbyPlacesHelper(String rootPath) throws CitysearchException {
         this.rootPath = rootPath;
@@ -240,32 +241,66 @@ public class NearbyPlacesHelper {
                     "Invalid Latitude and Longitude");
         }
 
-        boolean responseFromSearch = false;
         List<NearbyPlace> nearbyPlaces = getPlacesByGeoCodes(request,
                 latitudeLongitudePresentInRequest);
         if (nearbyPlaces == null || nearbyPlaces.isEmpty()) {
             log.info("NearbyPlacesHelper.getNearbyPlaces: No results with geography.");
             nearbyPlaces = getPlacesWithoutGeoCodes(request);
-            if (nearbyPlaces == null || nearbyPlaces.isEmpty()) {
-                responseFromSearch = true;
-                log.info("NearbyPlacesHelper.getNearbyPlaces: No results without geography.");
-                // Query Search API
-                SearchRequest sRequest = new SearchRequest(request);
-                sRequest.setWhat(request.getWhat());
-                sRequest.setWhere(request.getWhere());
-                sRequest.setLatitude(request.getLatitude());
-                sRequest.setLongitude(request.getLongitude());
-                sRequest.setRadius(request.getRadius());
-                sRequest.setTags(request.getTags());
-
-                SearchHelper sHelper = new SearchHelper(this.rootPath, this.displaySize);
-                nearbyPlaces = sHelper.getNearbyPlaces(sRequest);
-            }
         }
 
-        return createResponse(nearbyPlaces, request, responseFromSearch);
+        return createResponse(nearbyPlaces, request);
     }
 
+    private NearbyPlacesResponse createResponse(List<NearbyPlace> nearbyPlaces,
+            NearbyPlacesRequest request) throws CitysearchException {
+        NearbyPlacesResponse response = new NearbyPlacesResponse();
+
+        int noOfBackFillNeeded = (nearbyPlaces == null || nearbyPlaces.isEmpty()) ? this.displaySize
+                : this.displaySize - nearbyPlaces.size();
+        List<NearbyPlace> backfill = null;
+        List<HouseAd> houseAds = null;
+        List<NearbyPlace> searchResults = null;
+        // If no results from PFP or PFP results size is less than required for Conquest
+        if (noOfBackFillNeeded == this.displaySize
+                || (noOfBackFillNeeded < this.displaySize && request.getAdUnitSize().equals(
+                        CommonConstants.CONQUEST_AD_SIZE))) {
+            backfill = getNearbyPlacesBackfill(request);
+            int noOfSearchResultsNeeded = (backfill == null || backfill.isEmpty()) ? noOfBackFillNeeded
+                    : noOfBackFillNeeded - backfill.size();
+            if (noOfSearchResultsNeeded > 0) {
+                searchResults = getSearchResults(request, noOfSearchResultsNeeded);
+                int noOfHouseAdsNeeded = (searchResults == null || searchResults.isEmpty()) ? noOfSearchResultsNeeded
+                        : noOfSearchResultsNeeded - searchResults.size();
+                if (noOfHouseAdsNeeded > 0) {
+                    houseAds = HouseAdsHelper.getHouseAds(this.rootPath,
+                            request.getDartClickTrackUrl());
+                    houseAds = houseAds.subList(0, noOfHouseAdsNeeded);
+                } else if (noOfHouseAdsNeeded < 0) {
+                    searchResults = searchResults.subList(0, noOfSearchResultsNeeded);
+                }
+            } else if (noOfSearchResultsNeeded < 0) {
+                backfill = backfill.subList(0, noOfBackFillNeeded);
+            }
+        } else if (noOfBackFillNeeded < this.displaySize
+                && !request.getAdUnitSize().equals(CommonConstants.CONQUEST_AD_SIZE)) {
+            // Less than required PFP results found for Mantel read the reviews from Profile API
+            ProfileRequest profileRequest = new ProfileRequest(request);
+            profileRequest.setClientIP(request.getClientIP());
+            ProfileHelper phelper = new ProfileHelper(this.rootPath);
+            for (NearbyPlace nbp : nearbyPlaces) {
+                profileRequest.setListingId(nbp.getListingId());
+                Profile profile = phelper.getProfileAndHighestReview(profileRequest);
+                nbp.setProfile(profile);
+            }
+        }
+        response.setNearbyPlaces(nearbyPlaces);
+        response.setBackfill(backfill);
+        response.setSearchResults(searchResults);
+        response.setHouseAds(houseAds);
+        return response;
+    }
+
+    @Deprecated
     private NearbyPlacesResponse createResponse(List<NearbyPlace> nearbyPlaces,
             NearbyPlacesRequest request, boolean searchResponse) throws CitysearchException {
         NearbyPlacesResponse response = new NearbyPlacesResponse();
@@ -309,7 +344,7 @@ public class NearbyPlacesHelper {
                     response.setBackfill(backfill);
                     response.setHouseAds(houseAds);
                 } else {
-                    //If Conquest
+                    // If Conquest
                     if (this.displaySize == 2) {
                         // Add 1 backfill or 1 house ad
                         List<NearbyPlace> backfill = getNearbyPlacesBackfill(request);
@@ -324,7 +359,7 @@ public class NearbyPlacesHelper {
                         response.setBackfill(backfill);
                         response.setHouseAds(houseAds);
                     } else {
-                        //If Mantel
+                        // If Mantel
                         ProfileRequest profileRequest = new ProfileRequest(request);
                         profileRequest.setClientIP(request.getClientIP());
 
@@ -341,9 +376,33 @@ public class NearbyPlacesHelper {
         return response;
     }
 
+    private List<NearbyPlace> getSearchResults(NearbyPlacesRequest request,
+            int maxNoOfResultsRequired) throws CitysearchException {
+        SearchRequest sRequest = new SearchRequest(request);
+        sRequest.setWhat(request.getWhat());
+        sRequest.setWhere(request.getWhere());
+        sRequest.setLatitude(request.getLatitude());
+        sRequest.setLongitude(request.getLongitude());
+        sRequest.setRadius(request.getRadius());
+        sRequest.setTags(request.getTags());
+        SearchHelper sHelper = new SearchHelper(this.rootPath, maxNoOfResultsRequired);
+        return sHelper.getNearbyPlaces(sRequest);
+    }
+
     private List<NearbyPlace> getNearbyPlacesBackfill(NearbyPlacesRequest request)
             throws CitysearchException {
-        return getNearbyPlacesBackfill(request, pfpResponseDocument);
+        List<NearbyPlace> backFillFromPFPWithGeo = getNearbyPlacesBackfill(request,
+                pfpWithGeoResponseDocument);
+        List<NearbyPlace> backFillFromPFPWithOutGeo = getNearbyPlacesBackfill(request,
+                pfpWithOutGeoResponseDocument);
+        List<NearbyPlace> backfill = new ArrayList<NearbyPlace>();
+        if (backFillFromPFPWithGeo != null && !backFillFromPFPWithGeo.isEmpty()) {
+            backfill.addAll(backFillFromPFPWithGeo);
+        }
+        if (backFillFromPFPWithOutGeo != null && !backFillFromPFPWithOutGeo.isEmpty()) {
+            backfill.addAll(backFillFromPFPWithOutGeo);
+        }
+        return backfill;
     }
 
     private List<NearbyPlace> getPlacesByGeoCodes(NearbyPlacesRequest request,
@@ -356,12 +415,13 @@ public class NearbyPlacesHelper {
         log.info("NearbyPlacesHelper.getPlacesByGeoCodes: Query: " + urlStringBuilder.toString());
         // Document responseDocument = null;
         try {
-            pfpResponseDocument = HelperUtil.getAPIResponse(urlStringBuilder.toString(), null);
+            pfpWithGeoResponseDocument = HelperUtil.getAPIResponse(urlStringBuilder.toString(),
+                    null);
             log.info("NearbyPlacesHelper.getPlacesByGeoCodes: successful response");
         } catch (InvalidHttpResponseException ihe) {
             throw new CitysearchException(this.getClass().getName(), "getPlacesByGeoCodes", ihe);
         }
-        return getNearbyPlaces(request, pfpResponseDocument);
+        return getNearbyPlaces(request, pfpWithGeoResponseDocument);
     }
 
     private List<NearbyPlace> getPlacesWithoutGeoCodes(NearbyPlacesRequest request)
@@ -371,15 +431,14 @@ public class NearbyPlacesHelper {
         String urlString = properties.getProperty(PFP_URL)
                 + getQueryStringWithoutGeography(request);
         log.info("NearbyPlacesHelper.getPlacesWithoutGeoCodes: Query " + urlString);
-        Document responseDocument = null;
         try {
-            responseDocument = HelperUtil.getAPIResponse(urlString, null);
+            pfpWithOutGeoResponseDocument = HelperUtil.getAPIResponse(urlString, null);
             log.info("NearbyPlacesHelper.getPlacesWithoutGeoCodes: Successful response");
         } catch (InvalidHttpResponseException ihe) {
             throw new CitysearchException(this.getClass().getName(), "getPlacesWithoutGeoCodes",
                     ihe);
         }
-        return getNearbyPlaces(request, responseDocument);
+        return getNearbyPlaces(request, pfpWithOutGeoResponseDocument);
     }
 
     private List<NearbyPlace> getNearbyPlaces(NearbyPlacesRequest request, Document doc)

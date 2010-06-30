@@ -54,7 +54,6 @@
                 </div>
             </div>
 
-
             <s:if test="%{profile != null && profile.review != null && nearbyPlaces.size() <= 2}">
                 <!-- Full Profile eReview -->
                 <s:if test="%{nearbyPlaces.size() == 1}">
@@ -130,8 +129,64 @@
                 <div class="ctsrch_lineMargin"> </div>
             </s:if>
         </s:iterator>
-
-        <s:if test="%{(!backfill.isEmpty() || !nearbyPlaces.isEmpty()) && !houseAds.isEmpty()}">
+		
+		<s:if test="%{(!backfill.isEmpty() || !nearbyPlaces.isEmpty()) && !searchResults.isEmpty()}">
+              <div class="ctsrch_lineMargin"></div>
+        </s:if>
+        
+        <!-- Results from Search API -->
+        <s:iterator value="searchResults" status="placesStatus">
+            <div class="ctsrch_listing clearfix">
+                <div class="ctsrch_leftSide">
+                    <div class="ctsrch_bizPhoto">
+                        <s:if test="%{isValidCallbackFunction == true}">
+                            <a href='<s:property value="callBackFunction" />'><img src='<s:property value="adImageURL" />' border="0"/></a>
+                        </s:if>
+                        <s:else>
+                            <a href='<s:property value="adDisplayTrackingURL" />' ><img src='<s:property value="adImageURL" />' border="0"/></a>
+                        </s:else>
+                    </div>
+                    <div class="ctsrch_milesFont">
+                        <s:property value="distance" /> mi away
+                    </div>
+                </div>
+                <div class="ctsrch_rightSide">
+                    <div class="ctsrch_mainLink" >
+                        <s:if test="%{isValidCallbackFunction == true}">
+                            <a class="ctsrch_busNameFont" href='<s:property value="callBackFunction" />'><s:property value="name" /></a>
+                        </s:if>
+                        <s:else>
+                            <a href='<s:property value="adDisplayTrackingURL" />' ><s:property value="name" /></a>
+                        </s:else>
+                    </div>
+                    <s:if test="%{ratings > 2.5}">
+                        <div class="ctsrch_starContainer clearfix">
+                            <div class="ctsrch_stars">
+                                <s:iterator value="rating" status="stat"><span class='<s:if test="%{rating[#stat.index] == 2}">full</s:if><s:elseif test="%{rating[#stat.index] == 1}">half</s:elseif><s:else>empty</s:else>'> </span></s:iterator>
+                            </div>
+                            <s:if test="%{reviewCount > 0}">
+                                <div class="ctsrch_reviewFont">
+                                    <s:property value="reviewCount" /> Reviews
+                                </div>
+                            </s:if>
+                        </div>
+                    </s:if>
+                    <s:if test="%{isValidLocation == true}">
+                        <div class="ctsrch_cityFont">
+                            <s:property value="location" />
+                        </div>
+                    </s:if>
+                    <div class="ctsrch_subcategoryFont">
+                        <s:property value="category" />
+                    </div>
+                </div>
+            </div>
+            <s:if test="%{#placesStatus.index < (searchResults.size()-1)}">
+                <div class="ctsrch_lineMargin"> </div>
+            </s:if>
+        </s:iterator>
+        
+        <s:if test="%{(!backfill.isEmpty() || !nearbyPlaces.isEmpty() || !searchResults.isEmpty()) && !houseAds.isEmpty()}">
               <div class="ctsrch_lineMargin"></div>
         </s:if>
 

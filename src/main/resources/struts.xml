@@ -38,8 +38,6 @@
         <action name="nearbyplaces" class="com.citysearch.webwidget.action.NearbyPlacesAction">
             <result name="success">/jsp/NearbyPlaces.jsp</result>
             <result name="conquest">/jsp/NearbyPlacesConquest.jsp</result>
-            <result name="backfillAndHouseAds">/jsp/NearbyPlacesBackfill.jsp</result>
-            <result name="conquestBackfillAndHouseAds">/jsp/NearbyPlacesConquestBackfill.jsp</result>
         </action>
     </package>
 </struts>

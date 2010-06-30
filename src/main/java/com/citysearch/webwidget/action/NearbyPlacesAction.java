@@ -38,6 +38,13 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
         this.nearbyPlacesRequest = nearbyPlacesRequest;
     }
 
+    public List<NearbyPlace> getSearchResults() {
+        if (nearbyPlacesResponse == null || nearbyPlacesResponse.getSearchResults() == null) {
+            return new ArrayList<NearbyPlace>();
+        }
+        return nearbyPlacesResponse.getSearchResults();
+    }
+
     public List<NearbyPlace> getNearbyPlaces() {
         if (nearbyPlacesResponse == null || nearbyPlacesResponse.getNearbyPlaces() == null) {
             return new ArrayList<NearbyPlace>();
@@ -64,6 +71,9 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
         log.info("Begin NearbyPlacesAction");
         if (nearbyPlacesRequest.getDisplaySize() == null) {
             nearbyPlacesRequest.setDisplaySize(CommonConstants.DEFAULT_NEARBY_DISPLAY_SIZE);
+        }
+        if (nearbyPlacesRequest.getAdUnitSize() == null) {
+            nearbyPlacesRequest.setAdUnitSize(CommonConstants.MANTLE_AD_SIZE);
         }
         NearbyPlacesHelper helper = new NearbyPlacesHelper(getResourceRootPath());
         String adUnitSize = nearbyPlacesRequest.getAdUnitSize();
