@@ -10,7 +10,7 @@
 .ctsrch_boxContainer .ctsrch_container {padding:3px 10px 7px 10px;}
 .ctsrch_boxContainer .ctsrch_listing {height:68px;overflow:hidden;width:99%;}
 .ctsrch_boxContainer .ctsrch_leftSide {float:left;width:25%;text-align:center;}
-.ctsrch_boxContainer .ctsrch_rightSide {float:left;width:70%;}
+.ctsrch_boxContainer .ctsrch_rightSide {float:left;width:70%;overflow:hidden;}
 .ctsrch_boxContainer .ctsrch_lineMargin {margin:1px 0 3px -5px;height:1px;overflow:hidden;border-bottom:1px solid #d9d9d9;width:100%;}
 
 /* Conquest Ads 645x100 Global Styles */
@@ -24,7 +24,7 @@
 /* Nearby Places */
 .ctsrch_bizPhoto img {margin-top:2px;height:48px;width:48px;border:solid 1px #ccc;padding:1px;}
 .ctsrch_milesFont {margin-top:-3px;font-size:10px;color:#6E6E6E;font-weight:bold;}
-.ctsrch_mainLink {white-space:nowrap;overflow:hidden;}
+.ctsrch_mainLink {white-space:nowrap;overflow:hidden;width:100%;}
 .ctsrch_mainLink a {font-size:13px;color:#31647C;font-weight:bold;text-decoration:none;cursor:hand;}
 .ctsrch_mainLink a:hover {text-decoration:underline;}
 .ctsrch_stars {float:left;}
@@ -32,21 +32,21 @@
 .ctsrch_stars .half {display:inline-block;width:12px;height:13px;margin:0;padding:0;background:url('../img/HalfStar.png') no-repeat;}
 .ctsrch_stars .empty {display:inline-block;width:12px;height:13px;margin:0;padding:0;background:url('../img/EmptyStar.png') no-repeat;}
 .ctsrch_reviewFont {float:left;margin-left:5px;font-size:10px;color:#6E6E6E;font-weight:bold;}
-.ctsrch_cityFont {white-space:nowrap;overflow:hidden;font-weight:bold;font-size:11px;}
-.ctsrch_subcategoryFont {white-space:nowrap;overflow:hidden;font-size:10px;}
+.ctsrch_cityFont {white-space:nowrap;overflow:hidden;width:100%;font-weight:bold;font-size:11px;}
+.ctsrch_subcategoryFont {white-space:nowrap;overflow:hidden;width:100%;font-size:10px;}
 
 /* Reviews */
 .review_cs_reviews {margin:10px 0 0 5px;height:135px;overflow-y:auto;}
-.review_cs_reviews .review_cs_description{overflow:hidden;font-size:11px;}
+.review_cs_reviews .review_cs_description{overflow:hidden;width:100%;font-size:11px;}
 .review_cs_reviews_thin {margin-left:5px;}
-.review_cs_reviews_thin .review_cs_description{white-space:nowrap;overflow:hidden;font-size:11px;}
-.review_cs_longTitle{white-space:nowrap;overflow:hidden;}
+.review_cs_reviews_thin .review_cs_description{white-space:nowrap;overflow:hidden;width:100%;font-size:11px;}
+.review_cs_longTitle{white-space:nowrap;overflow:hidden;width:100%;}
 .review_cs_longTitle a {color:#4580c5;font-size:12px;}
 .review_cs_longTitle a:hover {text-decoration:underline;}
 .review_cs_share a {color:#4580c5;font-size:11px;}
 
 /* Backfills & House Ads */
-.ctsrch_descFont {white-space:nowrap;overflow:hidden;font-size:11px;}
+.ctsrch_descFont {white-space:nowrap;overflow:hidden;width:100%;font-size:11px;}
 .ctsrch_descFont_bf {font-size:11px;}
 .ctsrch_subLink_bf a {font-size:11px;color:#31647C;font-weight:bold;text-decoration:none;}
 .ctsrch_subLink_bf a:hover {text-decoration:underline;}
