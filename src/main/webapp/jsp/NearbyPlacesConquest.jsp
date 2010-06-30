@@ -5,11 +5,11 @@
     <div class="ctsrch_sponserText">
         Ads by CityGrid
     </div>
-    <div class="ctsrch_container">
+    <div class="ctsrch_container clearfix">
         <s:iterator value="nearbyPlaces" status="placesStatus">
             <div class="ctsrch_listing">
                 <div class="ctsrch_leftSide">
-                    <div class="ctsrch_bigStar">
+                    <div class="ctsrch_bizPhoto">
                         <s:if test="%{isValidCallbackFunction == true}">
                             <a href='<s:property value="callBackFunction" />'><img src='<s:property value="adImageURL" />' border="0"/></a>
                         </s:if>
@@ -17,7 +17,7 @@
                             <a href='<s:property value="adDisplayTrackingURL" />' ><img src='<s:property value="adImageURL" />' border="0"/></a>
                         </s:else>
                     </div>
-                    <div class="ctsrch_milesFont ctsrch_reviewFont">
+                    <div class="ctsrch_milesFont">
                         <s:property value="distance" /> mi away
                     </div>
                 </div>
@@ -31,7 +31,7 @@
                         </s:else>
                     </div>
                     <s:if test="%{ratings > 2.5}">
-                        <div class="ctsrch_starContainer">
+                        <div class="ctsrch_starContainer clearfix">
                             <div class="ctsrch_stars">
                                 <s:iterator value="rating" status="stat"><span class='<s:if test="%{rating[#stat.index] == 2}">full</s:if><s:elseif test="%{rating[#stat.index] == 1}">half</s:elseif><s:else>empty</s:else>'> </span></s:iterator>
                             </div>

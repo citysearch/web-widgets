@@ -5,7 +5,7 @@
     <div class="ctsrch_sponserText">
         Ads by CityGrid
     </div>
-    <div class="ctsrch_container">
+    <div class="ctsrch_container clearfix">
         <s:iterator value="backfill" status="placesStatus">
             <div class="ctsrch_listing">
                 <div class="ctsrch_leftSide">
