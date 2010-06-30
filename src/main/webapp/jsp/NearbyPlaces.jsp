@@ -70,12 +70,12 @@
                             <div class="seperator"></div>
                             <strong>Cons:</strong>&nbsp;<s:property value="profile.review.shortCons"/>
                         </div>
+                        <s:if test='%{profile.sendToFriendTrackingUrl != null && !"".equals(profile.sendToFriendTrackingUrl)}'>
+                            <div class="review_cs_share">
+                                <a href='<s:property value="profile.sendToFriendTrackingUrl"/>' >Share this review</a>
+                            </div>
+                        </s:if>
                     </div>
-                    <s:if test='%{profile.sendToFriendTrackingUrl != null && !"".equals(profile.sendToFriendTrackingUrl)}'>
-                        <div class="review_cs_share">
-                            <a href='<s:property value="profile.sendToFriendTrackingUrl"/>' >Share this review</a>
-                        </div>
-                    </s:if>
                 </s:if>
 
                 <!-- Thin Profile Review -->
@@ -106,13 +106,15 @@
         <s:iterator value="backfill" status="placesStatus">
             <div class="ctsrch_listing clearfix">
                 <div class="ctsrch_leftSide">
-                    <a href='<s:property value="adDisplayTrackingURL" />'><img src='<s:property value="adImageURL"/>' border="0"/></a>
+                    <div class="ctsrch_bizPhoto">
+                        <a href='<s:property value="adDisplayTrackingURL" />'><img src='<s:property value="adImageURL"/>' border="0"/></a>
+                    </div>
                 </div>
                 <div class="ctsrch_rightSide">
-                    <div class="ctsrch_mainLink_bf" >
+                    <div class="ctsrch_mainLink" >
                         <a href='<s:property value="adDisplayTrackingURL" />'><s:property value="category" /></a>
                     </div>
-                    <div class="ctsrch_descFont" >
+                    <div class="ctsrch_descFont_bf" >
                         <s:property value="description" />
                     </div>
                     <div class="ctsrch_subLink_bf" >
@@ -129,11 +131,11 @@
                 <div class="ctsrch_lineMargin"> </div>
             </s:if>
         </s:iterator>
-		
-		<s:if test="%{(!backfill.isEmpty() || !nearbyPlaces.isEmpty()) && !searchResults.isEmpty()}">
+
+        <s:if test="%{(!backfill.isEmpty() || !nearbyPlaces.isEmpty()) && !searchResults.isEmpty()}">
               <div class="ctsrch_lineMargin"></div>
         </s:if>
-        
+
         <!-- Results from Search API -->
         <s:iterator value="searchResults" status="placesStatus">
             <div class="ctsrch_listing clearfix">
@@ -185,7 +187,7 @@
                 <div class="ctsrch_lineMargin"> </div>
             </s:if>
         </s:iterator>
-        
+
         <s:if test="%{(!backfill.isEmpty() || !nearbyPlaces.isEmpty() || !searchResults.isEmpty()) && !houseAds.isEmpty()}">
               <div class="ctsrch_lineMargin"></div>
         </s:if>
