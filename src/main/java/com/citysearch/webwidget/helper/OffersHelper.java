@@ -52,7 +52,7 @@ public class OffersHelper {
     private static final String STREET = "street";
     private static final String ZIP = "zip";
     private static final String PUBLISHER_HEADER = "X-Publisher";
-    private static final String OFFER_ANCHOR = "#target-couponLink";
+
     private Integer displaySize;
 
     public OffersHelper(String rootPath, Integer displaySize) {
@@ -271,7 +271,6 @@ public class OffersHelper {
                     offer.setCallBackFunction(callBackFn);
 
                     StringBuilder couponUrl = new StringBuilder(profile.getProfileUrl());
-                    couponUrl.append(OFFER_ANCHOR);
                     String couponTrackingUrl = HelperUtil.getTrackingUrl(couponUrl.toString(),
                             null, request.getDartClickTrackUrl(), offer.getListingId(),
                             profile.getPhone(), request.getPublisher(), request.getAdUnitName(),

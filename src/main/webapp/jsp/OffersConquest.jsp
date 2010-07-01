@@ -1,7 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@taglib prefix="s" uri="/struts-tags" %>   
-
+<html>
+<head>
+	
+	<link type="text/css" href='<s:property value="resourceRootPath"/>/static/css/citysearch.css'  rel="stylesheet"/>
+	
+</head>
+<body>
 <div class="ctsrch_wideContainer">
 	<div class="ctsrch_sponserText">
 		Ads by Citygrid
@@ -40,7 +46,7 @@
          	<div class="ctsrch_listing">
        			<div class="ctsrch_offers_description">	
        				<div class="ctsrch_getOfferButton_div">
-		       			<a class="ctsrch_getOfferButton" href='<s:property value="offer.couponUrl" />' >
+		       			<a class="ctsrch_getOfferButton" href='<s:property value="offer.couponUrl" />#target-couponLink' >
 							Get Offer	
 		       			</a>
      				</div> 
@@ -73,3 +79,5 @@
 		</s:elseif> 
 	</div> 
 </div>
+</body>
+</html>
