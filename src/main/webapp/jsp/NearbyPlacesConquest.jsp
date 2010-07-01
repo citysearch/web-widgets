@@ -59,10 +59,10 @@
                     <a href='<s:property value="adDisplayTrackingURL" />'><img src='<s:property value="adImageURL"/>' border="0"/></a>
                 </div>
                 <div class="ctsrch_rightSide">
-                    <div class="ctsrch_mainLink_bf" >
+                    <div class="ctsrch_mainLink" >
                         <a href='<s:property value="adDisplayTrackingURL" />'><s:property value="category" /></a>
                     </div>
-                    <div class="ctsrch_descFont" >
+                    <div class="ctsrch_descFont_bf" >
                         <s:property value="description" />
                     </div>
                     <div class="ctsrch_subLink_bf" >
