@@ -136,3 +136,23 @@ div.seperator { clear: both; line-height: 1px; height: 1px;}
 .ctsrch_offer_coupon{float:right;font-size:12px;padding:4px;}
 .ctsrch_offer_title_conquest{font-size:11px;float:left;width:100%;font-weight:bold;}
 .ctsrch_offer_description_conquest{font-size:10px;float:left;width:100%;}
+
+.ctsrch_getOfferButton_div{float:left;font-size:12px;margin-top:-10px;height:20px;width:100%;}
+.ctsrch_getOfferButton {
+	background: #660000;
+	border: none;
+	color: #ffffff;
+	font-weight: bold;
+	-moz-border-radius: 5px;
+	-khtml-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px 5px;	
+	cursor: pointer;
+	font-size: 10px;
+	font-family: Arial;
+	padding: 4px 4px 4px 4px;
+	text-decoration:none;
+	cursor:hand;
+}
+.ctsrch_offers_caption{height:18px;margin-top:-12px;font-size:11px;font-weight:bold;color:#660000;}
+.ctsrch_offers_description{float:left;width:100%;padding-top:4px;}
