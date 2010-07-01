@@ -26,8 +26,8 @@ public class CitySearchServlet extends HttpServlet {
         String queryString = request.getQueryString();
         String adUnitName = request.getParameter("adUnitName");
         String adUnitSize = request.getParameter("adUnitSize");
-        int displaySize = (adUnitSize != null && adUnitSize.equals(CommonConstants.CONQUEST_AD_SIZE)) ?
-                CommonConstants.CONQUEST_DISPLAY_SIZE : CommonConstants.MANTLE_DISPLAY_SIZE;
+        int displaySize = (adUnitSize != null && adUnitSize.equals(CommonConstants.CONQUEST_AD_SIZE)) ? CommonConstants.CONQUEST_DISPLAY_SIZE
+                : CommonConstants.MANTLE_DISPLAY_SIZE;
 
         if (adUnitName != null) {
             StringBuilder strBuilder = new StringBuilder();
@@ -42,10 +42,18 @@ public class CitySearchServlet extends HttpServlet {
                 strBuilder.append("/nearbyplaces");
             } else if (adUnitName.equalsIgnoreCase(CommonConstants.AD_UNIT_NAME_REVIEW)) {
                 strBuilder.append("/review");
+            } else if (adUnitName.equalsIgnoreCase(CommonConstants.AD_UNIT_NAME_OFFERS)) {
+                if (adUnitSize != null && adUnitSize.equals(CommonConstants.CONQUEST_AD_SIZE)) {
+                    displaySize = 1;
+                    strBuilder.append("/conquestOffers");
+                } else {
+                    displaySize = CommonConstants.MANTLE_DISPLAY_SIZE;
+                    strBuilder.append("/offers");
+                }
             }
             strBuilder.append("?");
             strBuilder.append(queryString);
-            strBuilder.append("&displaySize="+displaySize);
+            strBuilder.append("&displaySize=" + displaySize);
 
             response.setContentType("text/plain");// Because we don't to render
 
@@ -71,8 +79,7 @@ public class CitySearchServlet extends HttpServlet {
                 if (connection != null) {
                     HttpConnection.closeConnection(connection);
                 }
-                if (iStream != null)
-                {
+                if (iStream != null) {
                     iStream.close();
                 }
             }

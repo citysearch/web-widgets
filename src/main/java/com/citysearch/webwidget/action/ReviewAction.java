@@ -10,6 +10,7 @@ import com.citysearch.webwidget.bean.ReviewRequest;
 import com.citysearch.webwidget.exception.CitysearchException;
 import com.citysearch.webwidget.exception.InvalidRequestParametersException;
 import com.citysearch.webwidget.helper.ReviewHelper;
+import com.citysearch.webwidget.util.CommonConstants;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ModelDriven;
 
@@ -67,6 +68,15 @@ public class ReviewAction extends AbstractCitySearchAction implements ModelDrive
             review = helper.getLatestReview(reviewRequest);
             if (review == null) {
                 log.info("Returning backfill from review");
+                getHttpRequest().setAttribute(REQUEST_ATTRIBUTE_BACKFILL, true);
+                getHttpRequest().setAttribute(REQUEST_ATTRIBUTE_ADUNIT_SIZE,
+                        CommonConstants.MANTLE_AD_SIZE);
+                getHttpRequest().setAttribute(REQUEST_ATTRIBUTE_ADUNIT_DISPLAY_SIZE,
+                        CommonConstants.MANTLE_DISPLAY_SIZE);
+                getHttpRequest().setAttribute(REQUEST_ATTRIBUTE_LATITUDE,
+                        reviewRequest.getLatitude());
+                getHttpRequest().setAttribute(REQUEST_ATTRIBUTE_LONGITUDE,
+                        reviewRequest.getLongitude());
                 return "backfill";
             }
             log.info("End review action");

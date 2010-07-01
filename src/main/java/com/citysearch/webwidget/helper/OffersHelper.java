@@ -3,9 +3,10 @@ package com.citysearch.webwidget.helper;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -52,11 +53,11 @@ public class OffersHelper {
     private static final String ZIP = "zip";
     private static final String PUBLISHER_HEADER = "X-Publisher";
     private static final String OFFER_ANCHOR = "#target-couponLink";
-    private Integer displaySize = 1;
-    private static final String CONQUEST_AD = "conquestAd";
+    private Integer displaySize;
 
-    public OffersHelper(String rootPath) {
+    public OffersHelper(String rootPath, Integer displaySize) {
         this.rootPath = rootPath;
+        this.displaySize = displaySize;
     }
 
     /**
@@ -83,21 +84,20 @@ public class OffersHelper {
             strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.WHAT,
                     request.getWhat().trim()));
         }
-        if (!StringUtils.isBlank(request.getWhere())) {
+
+        if (!StringUtils.isBlank(request.getLatitude())
+                && !StringUtils.isBlank(request.getLongitude())) {
+            strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+            strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.LATITUDE,
+                    request.getLatitude().trim()));
+
+            strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+            strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.LONGITUDE,
+                    request.getLongitude().trim()));
+        } else {
             strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
             strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.WHERE,
                     request.getWhere().trim()));
-        } else {
-            if (!StringUtils.isBlank(request.getLatitude())) {
-                strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-                strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.LATITUDE,
-                        request.getLatitude().trim()));
-            }
-            if (!StringUtils.isBlank(request.getLongitude())) {
-                strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-                strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.LONGITUDE,
-                        request.getLongitude().trim()));
-            }
         }
         if (!StringUtils.isBlank(request.getTag())) {
             strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
@@ -143,15 +143,18 @@ public class OffersHelper {
         if (StringUtils.isBlank(request.getPublisher())) {
             errors.add(errorProperties.getProperty(CommonConstants.PUBLISHER_ERROR_CODE));
         }
-        if (!StringUtils.isBlank(request.getRadius())
-                && !StringUtils.isBlank(request.getLatitude())
+
+        if (StringUtils.isBlank(request.getWhat()) && StringUtils.isBlank(request.getTag())) {
+            errors.add(errorProperties.getProperty(CommonConstants.WHAT_ERROR_CODE));
+        }
+
+        if (!StringUtils.isBlank(request.getLatitude())
                 && !StringUtils.isBlank(request.getLongitude())
                 && !StringUtils.isBlank(request.getWhere())) {
             errors.add(errorProperties.getProperty(CommonConstants.LOCATION_ERROR));
         }
-        if ((StringUtils.isBlank(request.getLatitude())
-                || StringUtils.isBlank(request.getLongitude()) || StringUtils.isBlank(request.getRadius()))
-                && (StringUtils.isBlank(request.getWhere()))) {
+        if ((StringUtils.isBlank(request.getLatitude()) || StringUtils.isBlank(request.getLongitude()))
+                && StringUtils.isBlank(request.getWhere())) {
             errors.add(errorProperties.getProperty(CommonConstants.WHERE_ERROR_CODE));
         }
         if (!StringUtils.isBlank(request.getLatitude())
@@ -168,9 +171,7 @@ public class OffersHelper {
                         request.getRadius()).intValue() < 1))) {
             errors.add(errorProperties.getProperty(CommonConstants.RADIUS_ERROR));
         }
-        if (StringUtils.isBlank(request.getWhere())) {
-            errors.add(errorProperties.getProperty(CommonConstants.ZIPCODE_ERROR));
-        }
+
         if (StringUtils.isBlank(request.getClientIP())) {
             errors.add(errorProperties.getProperty(CommonConstants.CLIENT_IP_ERROR_CODE));
         }
@@ -179,6 +180,22 @@ public class OffersHelper {
                     "validateRequest", "Invalid parameters.", errors);
         }
         log.info("End offersHelper validateRequest()");
+    }
+
+    private void loadLatitudeAndLongitudeFromSearchAPI(OffersRequest request)
+            throws CitysearchException {
+        SearchRequest sRequest = new SearchRequest(request);
+        sRequest.setWhat(request.getWhat());
+        sRequest.setTags(request.getTag());
+        sRequest.setWhere(request.getWhere());
+        sRequest.setPublisher(request.getPublisher());
+
+        SearchHelper sHelper = new SearchHelper(this.rootPath, this.displaySize);
+        String[] latLon = sHelper.getLatitudeLongitude(sRequest);
+        if (latLon.length >= 2) {
+            request.setLatitude(latLon[0]);
+            request.setLongitude(latLon[1]);
+        }
     }
 
     /**
@@ -194,12 +211,24 @@ public class OffersHelper {
         log.info("Start offersHelper getOffers()");
         validateRequest(request);
 
-        // set lat long for ConquestAD for distance calculation
-        if (request.getAdUnitName().equals(CONQUEST_AD)
-                && (StringUtils.isBlank(request.getLatitude()) || StringUtils.isBlank(request.getLongitude()))) {
+        if (StringUtils.isBlank(request.getLatitude())
+                || StringUtils.isBlank(request.getLongitude())) {
             log.info("OffersHelper.getOffers: No lat lon. Find Lat and Lon");
             loadLatitudeAndLongitudeFromSearchAPI(request);
+            if (StringUtils.isBlank(request.getRadius())) {
+                request.setRadius(String.valueOf(CommonConstants.EXTENDED_RADIUS));
+            }
         }
+        if (StringUtils.isBlank(request.getLatitude())
+                || StringUtils.isBlank(request.getLongitude())) {
+            log.info("NearbyPlacesHelper.getNearbyPlaces: No lat lon. return house ads.");
+            throw new CitysearchException(this.getClass().getName(), "getOffers",
+                    "Invalid Latitude and Longitude");
+        }
+
+        // Always return offers from customer who have budget
+        // TODO: cleanup!!
+        request.setCustomerHasbudget("true");// ????
 
         Properties properties = PropertiesLoader.getAPIProperties();
         StringBuilder urlString = new StringBuilder(properties.getProperty(PROPERTY_OFFERS_URL));
@@ -248,19 +277,12 @@ public class OffersHelper {
                             profile.getPhone(), request.getPublisher(), request.getAdUnitName(),
                             request.getAdUnitSize());
                     offer.setCouponUrl(couponTrackingUrl);
-
-                    // set distance for conquest AD
-                    if (request.getAdUnitName().equals(CONQUEST_AD)) {
-                        offer.setDistance(new Double(HelperUtil.getDistance(new BigDecimal(
-                                request.getLatitude()), new BigDecimal(request.getLongitude()),
-                                new BigDecimal(offer.getLatitude()), new BigDecimal(
-                                        offer.getLongitude()))).toString());
-                    }
                 }
             }
         }
 
-        if (offersList != null && offersList.size() < request.getDisplaySize()) {
+        if (offersList != null && !offersList.isEmpty()
+                && offersList.size() < request.getDisplaySize()) {
             ProfileRequest profileRequest = new ProfileRequest(request);
             profileRequest.setClientIP(request.getClientIP());
             ProfileHelper phelper = new ProfileHelper(this.rootPath);
@@ -307,57 +329,75 @@ public class OffersHelper {
         log.info("Start OffersHelper getOffersList");
         List<Offer> offersLst = new ArrayList<Offer>();
         if (!offerElemList.isEmpty()) {
-            Iterator<Element> it = offerElemList.iterator();
-            while (offersLst.size() < request.getDisplaySize() && it.hasNext()) {
-                Element offerElement = (Element) it.next();
-                Offer offer = new Offer();
-                offer.setCity(offerElement.getChildText(CITY));
-                offer.setState(offerElement.getChildText(STATE));
-                String location = HelperUtil.getLocationString(offer.getCity(), offer.getState());
-                offer.setLocation(location);
-                offer.setAttributionSrc(offerElement.getChildText(ATTRIBUTION_SOURCE));
-                String ratingVal = offerElement.getChildText(CS_RATING);
-                List<Integer> ratingList = HelperUtil.getRatingsList(ratingVal);
-                offer.setListingRating(ratingList);
-                offer.setReviewCount(HelperUtil.toInteger(offerElement.getChildText(REVIEW_COUNT)));
-                offer.setImageUrl(offerElement.getChildText(IMAGE_URL));
-                offer.setLatitude(offerElement.getChildText(LATITUDE));
-                offer.setListingId(offerElement.getChildText(LISTING_ID));
-                offer.setListingName(offerElement.getChildText(LISTING_NAME));
-                offer.setLongitude(offerElement.getChildText(LONGITUDE));
-                offer.setOfferDescription(offerElement.getChildText(OFFER_DESCRIPTION));
-                offer.setOfferId(offerElement.getChildText(OFFER_ID));
-                offer.setOfferTitle(offerElement.getChildText(OFFER_TITLE));
-                String offerTitle = offer.getOfferTitle();
-                if (offerTitle != null && offerTitle.trim().length() > OFFER_TITLE_SIZE) {
-                    offer.setOfferShortTitle(StringUtils.abbreviate(offerTitle, OFFER_TITLE_SIZE));
+            BigDecimal sourceLatitude = new BigDecimal(request.getLatitude());
+            BigDecimal sourceLongitude = new BigDecimal(request.getLongitude());
+            SortedMap<Double, List<Element>> elmsSortedByDistance = new TreeMap<Double, List<Element>>();
+            for (Element elm : offerElemList) {
+                BigDecimal businessLatitude = new BigDecimal(
+                        elm.getChildText(CommonConstants.LATITUDE));
+                BigDecimal businessLongitude = new BigDecimal(
+                        elm.getChildText(CommonConstants.LONGITUDE));
+                double distance = HelperUtil.getDistance(sourceLatitude, sourceLongitude,
+                        businessLatitude, businessLongitude);
+                if (elmsSortedByDistance.containsKey(distance)) {
+                    elmsSortedByDistance.get(distance).add(elm);
                 } else {
-                    offer.setOfferShortTitle(offerTitle);
+                    List<Element> elms = new ArrayList<Element>();
+                    elms.add(elm);
+                    elmsSortedByDistance.put(distance, elms);
                 }
-
-                offer.setReferenceId(offerElement.getChildText(REFERENCE_ID));
-                offer.setStreet(offerElement.getChildText(STREET));
-                offer.setZip(offerElement.getChildText(ZIP));
-                offersLst.add(offer);
+            }
+            if (!elmsSortedByDistance.isEmpty()) {
+                for (int j = 0; j < elmsSortedByDistance.size(); j++) {
+                    if (offersLst.size() >= this.displaySize) {
+                        break;
+                    }
+                    Double key = elmsSortedByDistance.firstKey();
+                    List<Element> elms = elmsSortedByDistance.remove(key);
+                    for (int idx = 0; idx < elms.size(); idx++) {
+                        if (offersLst.size() == this.displaySize) {
+                            break;
+                        }
+                        Offer offer = toOffer(elms.get(idx));
+                        offer.setDistance(String.valueOf(key));
+                        offersLst.add(offer);
+                    }
+                }
             }
         }
         log.info("End OffersHelper getOffersList");
         return offersLst;
     }
 
-    private void loadLatitudeAndLongitudeFromSearchAPI(OffersRequest request)
-            throws CitysearchException {
-        SearchRequest sRequest = new SearchRequest(request);
-        sRequest.setWhat(request.getWhat());
-        sRequest.setWhere(request.getWhere());
-        // sRequest.setTags(request.getTags());
-        sRequest.setPublisher(request.getPublisher());
-
-        SearchHelper sHelper = new SearchHelper(this.rootPath, this.displaySize);
-        String[] latLon = sHelper.getLatitudeLongitude(sRequest);
-        if (latLon.length >= 2) {
-            request.setLatitude(latLon[0]);
-            request.setLongitude(latLon[1]);
+    private Offer toOffer(Element offerElement) {
+        Offer offer = new Offer();
+        offer.setCity(offerElement.getChildText(CITY));
+        offer.setState(offerElement.getChildText(STATE));
+        String location = HelperUtil.getLocationString(offer.getCity(), offer.getState());
+        offer.setLocation(location);
+        offer.setAttributionSrc(offerElement.getChildText(ATTRIBUTION_SOURCE));
+        String ratingVal = offerElement.getChildText(CS_RATING);
+        List<Integer> ratingList = HelperUtil.getRatingsList(ratingVal);
+        offer.setListingRating(ratingList);
+        offer.setReviewCount(HelperUtil.toInteger(offerElement.getChildText(REVIEW_COUNT)));
+        offer.setImageUrl(offerElement.getChildText(IMAGE_URL));
+        offer.setLatitude(offerElement.getChildText(LATITUDE));
+        offer.setListingId(offerElement.getChildText(LISTING_ID));
+        offer.setListingName(offerElement.getChildText(LISTING_NAME));
+        offer.setLongitude(offerElement.getChildText(LONGITUDE));
+        offer.setOfferDescription(offerElement.getChildText(OFFER_DESCRIPTION));
+        offer.setOfferId(offerElement.getChildText(OFFER_ID));
+        offer.setOfferTitle(offerElement.getChildText(OFFER_TITLE));
+        String offerTitle = offer.getOfferTitle();
+        if (offerTitle != null && offerTitle.trim().length() > OFFER_TITLE_SIZE) {
+            offer.setOfferShortTitle(StringUtils.abbreviate(offerTitle, OFFER_TITLE_SIZE));
+        } else {
+            offer.setOfferShortTitle(offerTitle);
         }
+
+        offer.setReferenceId(offerElement.getChildText(REFERENCE_ID));
+        offer.setStreet(offerElement.getChildText(STREET));
+        offer.setZip(offerElement.getChildText(ZIP));
+        return offer;
     }
 }

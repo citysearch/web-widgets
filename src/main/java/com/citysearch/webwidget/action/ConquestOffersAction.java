@@ -14,13 +14,21 @@ import com.citysearch.webwidget.util.CommonConstants;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ModelDriven;
 
-public class OffersAction extends AbstractCitySearchAction implements ModelDriven<OffersRequest> {
+public class ConquestOffersAction extends AbstractCitySearchAction implements
+        ModelDriven<OffersRequest> {
+
     private Logger log = Logger.getLogger(getClass());
-    private static final Integer DEFAULT_DISPLAY_SIZE = 2;
-    private static final String AD_UNIT_NAME = "offer";
     private OffersRequest offersRequest = new OffersRequest();
-    private List<Offer> offers;
+    private Offer offer;
     private List<HouseAd> houseAds;
+
+    public Offer getOffer() {
+        return offer;
+    }
+
+    public void setOffer(Offer offer) {
+        this.offer = offer;
+    }
 
     public List<HouseAd> getHouseAds() {
         return houseAds;
@@ -28,14 +36,6 @@ public class OffersAction extends AbstractCitySearchAction implements ModelDrive
 
     public void setHouseAds(List<HouseAd> houseAds) {
         this.houseAds = houseAds;
-    }
-
-    public List<Offer> getOffers() {
-        return offers;
-    }
-
-    public void setOffers(List<Offer> offers) {
-        this.offers = offers;
     }
 
     public OffersRequest getOffersRequest() {
@@ -60,35 +60,36 @@ public class OffersAction extends AbstractCitySearchAction implements ModelDrive
     public String execute() throws CitysearchException {
         log.info("Start offersAction execute()");
         if (offersRequest.getDisplaySize() == null || offersRequest.getDisplaySize() == 0) {
-            offersRequest.setDisplaySize(DEFAULT_DISPLAY_SIZE);
+            offersRequest.setDisplaySize(1);
         }
         if (offersRequest.getAdUnitName() == null
                 || offersRequest.getAdUnitName().trim().length() == 0) {
-            offersRequest.setAdUnitName(AD_UNIT_NAME);
+            offersRequest.setAdUnitName(CommonConstants.AD_UNIT_NAME_OFFERS);
         }
         OffersHelper helper = new OffersHelper(getResourceRootPath(),
                 offersRequest.getDisplaySize());
         try {
-            offers = helper.getOffers(offersRequest);
+            List<Offer> offers = helper.getOffers(offersRequest);
             if (offers == null || offers.isEmpty()) {
                 log.info("Returning backfill from offer");
                 getHttpRequest().setAttribute(REQUEST_ATTRIBUTE_BACKFILL, true);
                 getHttpRequest().setAttribute(REQUEST_ATTRIBUTE_ADUNIT_SIZE,
-                        CommonConstants.MANTLE_AD_SIZE);
+                        CommonConstants.CONQUEST_AD_SIZE);
                 getHttpRequest().setAttribute(REQUEST_ATTRIBUTE_ADUNIT_DISPLAY_SIZE,
-                        CommonConstants.MANTLE_DISPLAY_SIZE);
+                        CommonConstants.CONQUEST_DISPLAY_SIZE);
                 getHttpRequest().setAttribute(REQUEST_ATTRIBUTE_LATITUDE,
                         offersRequest.getLatitude());
                 getHttpRequest().setAttribute(REQUEST_ATTRIBUTE_LONGITUDE,
                         offersRequest.getLongitude());
                 return "backfill";
             }
+            offer = offers.get(0);
         } catch (InvalidRequestParametersException ihre) {
             log.error(ihre.getDetailedMessage());
-            houseAds = getHouseAds(offersRequest.getDartClickTrackUrl(), 3);
+            houseAds = getHouseAds(offersRequest.getDartClickTrackUrl(), 2);
         } catch (Exception e) {
             log.error(e.getMessage());
-            houseAds = getHouseAds(offersRequest.getDartClickTrackUrl(), 3);
+            houseAds = getHouseAds(offersRequest.getDartClickTrackUrl(), 2);
         }
         log.info("End offersAction execute()");
         return Action.SUCCESS;

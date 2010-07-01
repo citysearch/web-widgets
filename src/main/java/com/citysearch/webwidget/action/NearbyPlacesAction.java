@@ -67,8 +67,24 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
     }
 
     public String execute() throws CitysearchException {
-
         log.info("Begin NearbyPlacesAction");
+
+        Object requestAttrib = getHttpRequest().getAttribute(REQUEST_ATTRIBUTE_BACKFILL);
+        boolean backfill = (requestAttrib != null && requestAttrib instanceof Boolean) ? (Boolean) requestAttrib
+                : false;
+        if (backfill) {
+            String adUnitSize = (String) getHttpRequest().getAttribute(
+                    REQUEST_ATTRIBUTE_ADUNIT_SIZE);
+            Integer displaySize = (Integer) getHttpRequest().getAttribute(
+                    REQUEST_ATTRIBUTE_ADUNIT_DISPLAY_SIZE);
+            String latitude = (String) getHttpRequest().getAttribute(REQUEST_ATTRIBUTE_LATITUDE);
+            String longitude = (String) getHttpRequest().getAttribute(REQUEST_ATTRIBUTE_LONGITUDE);
+            nearbyPlacesRequest.setAdUnitSize(adUnitSize);
+            nearbyPlacesRequest.setDisplaySize(displaySize);
+            nearbyPlacesRequest.setLatitude(latitude);
+            nearbyPlacesRequest.setLongitude(longitude);
+        }
+
         if (nearbyPlacesRequest.getDisplaySize() == null) {
             nearbyPlacesRequest.setDisplaySize(CommonConstants.DEFAULT_NEARBY_DISPLAY_SIZE);
         }

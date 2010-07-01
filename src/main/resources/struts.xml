@@ -28,10 +28,9 @@
         </action>
         
         <!-- Struts configuration for Conquest Ad Widget -->
-        <action name="conquestAdOffers" class="com.citysearch.webwidget.action.ConquestAdOfferAction">
-            <result name="success">/jsp/OfferConquest.jsp</result>
-            <result name="conquest">/jsp/NearbyPlacesConquest.jsp</result>            
-            <!--<result name="backfill" type="chain">nearbyplaces</result>-->
+        <action name="conquestOffers" class="com.citysearch.webwidget.action.ConquestOffersAction">
+            <result name="success">/jsp/OffersConquest.jsp</result>
+            <result name="backfill" type="chain">nearbyplaces</result>
         </action>
         		
         <!-- Struts configuration for Nearby Places Widget -->

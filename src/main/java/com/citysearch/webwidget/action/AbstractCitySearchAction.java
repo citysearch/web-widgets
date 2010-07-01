@@ -13,6 +13,12 @@ import com.citysearch.webwidget.exception.CitysearchException;
 import com.citysearch.webwidget.helper.HouseAdsHelper;
 
 public class AbstractCitySearchAction implements ServletRequestAware, ServletResponseAware {
+    public static final String REQUEST_ATTRIBUTE_BACKFILL = "backfill";
+    public static final String REQUEST_ATTRIBUTE_ADUNIT_SIZE = "adUnitSize";
+    public static final String REQUEST_ATTRIBUTE_ADUNIT_DISPLAY_SIZE = "adUnitDisplaySize";
+    public static final String REQUEST_ATTRIBUTE_LATITUDE = "latitude";
+    public static final String REQUEST_ATTRIBUTE_LONGITUDE = "longitude";
+
     private HttpServletRequest httpRequest;
     private HttpServletResponse httpResponse;
 
@@ -22,6 +28,14 @@ public class AbstractCitySearchAction implements ServletRequestAware, ServletRes
 
     public void setServletResponse(HttpServletResponse httpResponse) {
         this.httpResponse = httpResponse;
+    }
+
+    public HttpServletRequest getHttpRequest() {
+        return httpRequest;
+    }
+
+    public HttpServletResponse getHttpResponse() {
+        return httpResponse;
     }
 
     public String getResourceRootPath() {

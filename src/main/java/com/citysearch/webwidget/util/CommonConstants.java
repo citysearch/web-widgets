@@ -79,6 +79,7 @@ public class CommonConstants {
     
     public static final String AD_UNIT_NAME_NEARBY = "nearby";
     public static final String AD_UNIT_NAME_REVIEW = "review";
+    public static final String AD_UNIT_NAME_OFFERS = "offers";
     
     //Used by Offers
     public final static String LAT_LONG_ERROR = "latlong.error";
