@@ -240,7 +240,10 @@ public class OffersHelper {
             hdrMap.put(PUBLISHER_HEADER, publisherHdr);
             responseDocument = HelperUtil.getAPIResponse(urlString.toString(), hdrMap);
         } catch (InvalidHttpResponseException ihe) {
-            throw new CitysearchException(this.getClass().getName(), "getOffers", ihe);
+            //throw new CitysearchException(this.getClass().getName(), "getOffers", ihe);
+            //Return null and let it go to backfill
+            log.error(ihe.getMessage());
+            return null;
         }
 
         List<Offer> offersList = parseXML(request, responseDocument);
