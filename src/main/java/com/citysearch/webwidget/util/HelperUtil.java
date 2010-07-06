@@ -284,7 +284,7 @@ public class HelperUtil {
         return imageList;
     }
 
-    public static String getTrackingUrl(String adDisplayURL, String callBackUrl,
+    public static String xgetTrackingUrl(String adDisplayURL, String callBackUrl,
             String dartTrackingUrl, String listingId, String phone, String publisher,
             String adUnitName, String adUnitSize) throws CitysearchException {
 
@@ -358,5 +358,64 @@ public class HelperUtil {
             return strBuilder.toString();
         }
         return "";
+    }
+
+    public static String getTrackingUrl(String adDisplayURL, String adDestinationUrl,
+            String callBackUrl, String dartTrackingUrl, String listingId, String phone,
+            String publisher, String adUnitName, String adUnitSize) throws CitysearchException {
+        String urlToTrack = adDisplayURL;
+        // takes care of callBackUrl
+        if (callBackUrl != null && callBackUrl.trim().length() > 0) {
+            callBackUrl = callBackUrl.replace("$l", listingId);
+            callBackUrl = callBackUrl.replace("$p", phone);
+            urlToTrack = callBackUrl;
+        }
+        // adds http:// if it does not specify one
+        if (!urlToTrack.startsWith("http://")) {
+            StringBuilder strb = new StringBuilder("http://");
+            strb.append(urlToTrack);
+            urlToTrack = strb.toString();
+        }
+        try {
+            // get prod destination id
+            URL url = new URL(urlToTrack);
+            String host = url.getHost();
+            int prodDetId = 12; // Click outside Citysearch
+            if (host.indexOf("citysearch.com") != -1) {
+                prodDetId = 16;
+            }
+
+            StringBuilder strBuilder = new StringBuilder();
+            // dart tracking goes first
+            if (dartTrackingUrl != null) {
+                strBuilder.append(dartTrackingUrl);
+            }
+
+            String destinationUrl = null;
+            if (adDestinationUrl != null && adDestinationUrl.trim().length() > 0) {
+                // in house click tracker goes next
+                StringBuilder destinationUrlBuilder = new StringBuilder();
+                destinationUrlBuilder.append(adDestinationUrl);
+                destinationUrlBuilder.append("&placement=");
+                destinationUrlBuilder.append(publisher + "_" + adUnitName + "_" + adUnitSize);
+                destinationUrlBuilder.append("&directUrl=");
+                destinationUrlBuilder.append(URLEncoder.encode(urlToTrack, "UTF-8"));
+                if (prodDetId != 16) {
+                    destinationUrl = destinationUrlBuilder.toString().replaceAll("prodDetId=16",
+                            "prodDetId=" + prodDetId);
+                } else {
+                    destinationUrl = destinationUrlBuilder.toString();
+                }
+            } else {
+                destinationUrl = URLEncoder.encode(urlToTrack, "UTF-8");
+            }
+            strBuilder.append(destinationUrl);
+
+            return strBuilder.toString();
+        } catch (MalformedURLException mue) {
+            throw new CitysearchException("HelperUtil", "getTrackingUrl", mue);
+        } catch (UnsupportedEncodingException excep) {
+            throw new CitysearchException("HelperUtil", "getTrackingUrl", excep);
+        }
     }
 }

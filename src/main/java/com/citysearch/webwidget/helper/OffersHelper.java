@@ -240,8 +240,8 @@ public class OffersHelper {
             hdrMap.put(PUBLISHER_HEADER, publisherHdr);
             responseDocument = HelperUtil.getAPIResponse(urlString.toString(), hdrMap);
         } catch (InvalidHttpResponseException ihe) {
-            //throw new CitysearchException(this.getClass().getName(), "getOffers", ihe);
-            //Return null and let it go to backfill
+            // throw new CitysearchException(this.getClass().getName(), "getOffers", ihe);
+            // Return null and let it go to backfill
             log.error(ihe.getMessage());
             return null;
         }
@@ -264,7 +264,7 @@ public class OffersHelper {
                     offer.setCallBackUrl(request.getCallBackUrl());
 
                     String profileTrackingUrl = HelperUtil.getTrackingUrl(profile.getProfileUrl(),
-                            request.getCallBackUrl(), request.getDartClickTrackUrl(),
+                            null, request.getCallBackUrl(), request.getDartClickTrackUrl(),
                             offer.getListingId(), profile.getPhone(), request.getPublisher(),
                             request.getAdUnitName(), request.getAdUnitSize());
                     offer.setProfileTrackingUrl(profileTrackingUrl);
@@ -275,7 +275,7 @@ public class OffersHelper {
 
                     StringBuilder couponUrl = new StringBuilder(profile.getProfileUrl());
                     String couponTrackingUrl = HelperUtil.getTrackingUrl(couponUrl.toString(),
-                            null, request.getDartClickTrackUrl(), offer.getListingId(),
+                            null, null, request.getDartClickTrackUrl(), offer.getListingId(),
                             profile.getPhone(), request.getPublisher(), request.getAdUnitName(),
                             request.getAdUnitSize());
                     offer.setCouponUrl(couponTrackingUrl);
