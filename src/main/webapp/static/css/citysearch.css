@@ -15,14 +15,16 @@
 
 /* Conquest Ads 645x100 Global Styles */
 .ctsrch_wideContainer {height:98px;width:643px;background-color:#F8F1D3;font:76%/133.33% Arial,sans-serif;border:solid 1px #d9d9d9;}
-.ctsrch_wideContainer .ctsrch_sponserText {width:99%;text-align:right;font-size:11px;padding:1px 3px 0 0;color:#6E6E6E;}
+.ctsrch_wideContainer .ctsrch_header {}
+.ctsrch_wideContainer .ctsrch_headerText {float:left;padding:1px 0 0 20px;font-size:11px;font-weight:bold;color:#DF1400;}
+.ctsrch_wideContainer .ctsrch_sponserText {float:right;font-size:11px;padding:1px 3px 0 0;color:#6E6E6E;}
 .ctsrch_wideContainer .ctsrch_container {padding:0 20px 7px 20px;}
 .ctsrch_wideContainer .ctsrch_listing {float:left;margin:10x 0 0 13px; width:49%;}
 .ctsrch_wideContainer .ctsrch_leftSide {float:left;width:25%;text-align:center;}
 .ctsrch_wideContainer .ctsrch_rightSide {float:left;width:70%;}
 
 /* Nearby Places */
-.ctsrch_bizPhoto img {margin-top:2px;height:48px;width:48px;border:solid 1px #ccc;padding:1px;}
+.ctsrch_bizPhoto img {margin-top:2px;height:47px;width:47px;border:solid 1px #ccc;padding:2px;background-color:#fff;}
 .ctsrch_milesFont {margin-top:-3px;font-size:10px;color:#6E6E6E;font-weight:bold;}
 .ctsrch_mainLink {white-space:nowrap;overflow:hidden;width:100%;}
 .ctsrch_mainLink a {font-size:13px;color:#31647C;font-weight:bold;text-decoration:none;cursor:hand;}
@@ -44,6 +46,11 @@
 .review_cs_longTitle a {color:#4580c5;font-size:12px;}
 .review_cs_longTitle a:hover {text-decoration:underline;}
 .review_cs_share a {color:#4580c5;font-size:11px;}
+
+/* Offers */
+.ctsrch_offers_print {padding:2px 10px;color:#fff;font-size:11px;background-color:#31647c;text-decoration:none;-moz-border-radius:4px;-webkit-border-radius:4px;}
+.ctsrch_offers_title {white-space:nowrap;overflow:hidden;width:100%;font-size:11px;font-weight:bold;}
+.ctsrch_offers_desc {font-size:10px;}
 
 /* Backfills & House Ads */
 .ctsrch_descFont {white-space:nowrap;overflow:hidden;width:100%;font-size:11px;}
@@ -131,25 +138,26 @@ div.seperator { clear: both; line-height: 1px; height: 1px;}
 .distance{font-size:10px;}
 .ctsrch_mainLink_conquestAd{float:left;width:60%}
 .ctsrch_offer_coupon{float:right;font-size:12px;padding:4px;}
+
 .ctsrch_offer_title_conquest{font-size:11px;float:left;width:100%;font-weight:bold;}
 .ctsrch_offer_description_conquest{font-size:10px;float:left;width:100%;}
 
 .ctsrch_getOfferButton_div{float:left;font-size:12px;margin-top:-10px;height:20px;width:100%;}
 .ctsrch_getOfferButton {
-	background: #660000;
-	border: none;
-	color: #ffffff;
-	font-weight: bold;
-	-moz-border-radius: 5px;
-	-khtml-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border-radius: 5px 5px;	
-	cursor: pointer;
-	font-size: 10px;
-	font-family: Arial;
-	padding: 4px 4px 4px 4px;
-	text-decoration:none;
-	cursor:hand;
+    background: #660000;
+    border: none;
+    color: #ffffff;
+    font-weight: bold;
+    -moz-border-radius: 5px;
+    -khtml-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px 5px;
+    cursor: pointer;
+    font-size: 10px;
+    font-family: Arial;
+    padding: 4px 4px 4px 4px;
+    text-decoration:none;
+    cursor:hand;
 }
 .ctsrch_offers_caption{height:18px;margin-top:-12px;font-size:11px;font-weight:bold;color:#660000;}
 .ctsrch_offers_description{float:left;width:100%;padding-top:4px;}
