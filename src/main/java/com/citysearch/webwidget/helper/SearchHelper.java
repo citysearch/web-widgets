@@ -432,7 +432,7 @@ public class SearchHelper {
         nearbyPlace.setCallBackUrl(request.getCallBackUrl());
 
         String adDisplayTrackingUrl = HelperUtil.getTrackingUrl(nearbyPlace.getAdDisplayURL(),
-                request.getCallBackUrl(), request.getDartClickTrackUrl(),
+                null, request.getCallBackUrl(), request.getDartClickTrackUrl(),
                 nearbyPlace.getListingId(), nearbyPlace.getPhone(), request.getPublisher(),
                 request.getAdUnitName(), request.getAdUnitSize());
         nearbyPlace.setAdDisplayTrackingURL(adDisplayTrackingUrl);

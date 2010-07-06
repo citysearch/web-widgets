@@ -551,9 +551,9 @@ public class NearbyPlacesHelper {
         nearbyPlace.setCallBackUrl(request.getCallBackUrl());
 
         String adDisplayTrackingUrl = HelperUtil.getTrackingUrl(nearbyPlace.getAdDisplayURL(),
-                request.getCallBackUrl(), request.getDartClickTrackUrl(),
-                nearbyPlace.getListingId(), nearbyPlace.getPhone(), request.getPublisher(),
-                request.getAdUnitName(), request.getAdUnitSize());
+                nearbyPlace.getAdDestinationUrl(), request.getCallBackUrl(),
+                request.getDartClickTrackUrl(), nearbyPlace.getListingId(), nearbyPlace.getPhone(),
+                request.getPublisher(), request.getAdUnitName(), request.getAdUnitSize());
         nearbyPlace.setAdDisplayTrackingURL(adDisplayTrackingUrl);
 
         String callBackFn = HelperUtil.getCallBackFunctionString(request.getCallBackFunction(),
@@ -620,9 +620,10 @@ public class NearbyPlacesHelper {
         nbp.setListingId(ad.getChildText(LISTING_ID_TAG));
         nbp.setPhone(ad.getChildText(PHONE_TAG));
 
-        String adDisplayTrackingUrl = HelperUtil.getTrackingUrl(nbp.getAdDisplayURL(), null,
-                request.getDartClickTrackUrl(), nbp.getListingId(), nbp.getPhone(),
-                request.getPublisher(), request.getAdUnitName(), request.getAdUnitSize());
+        String adDisplayTrackingUrl = HelperUtil.getTrackingUrl(nbp.getAdDisplayURL(),
+                nbp.getAdDestinationUrl(), null, request.getDartClickTrackUrl(),
+                nbp.getListingId(), nbp.getPhone(), request.getPublisher(),
+                request.getAdUnitName(), request.getAdUnitSize());
 
         nbp.setAdDisplayTrackingURL(adDisplayTrackingUrl);
         return nbp;

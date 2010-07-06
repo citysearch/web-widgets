@@ -338,18 +338,18 @@ public class ReviewHelper {
             review.setImageUrl(profile.getImageUrl());
 
             String sendToFriendTrackingUrl = HelperUtil.getTrackingUrl(
-                    profile.getSendToFriendUrl(), request.getCallBackUrl(),
+                    profile.getSendToFriendUrl(), null, request.getCallBackUrl(),
                     request.getDartClickTrackUrl(), review.getListingId(), profile.getPhone(),
                     request.getPublisher(), request.getAdUnitName(), request.getAdUnitSize());
             review.setSendToFriendTrackingUrl(sendToFriendTrackingUrl);
 
-            String profileTrackingUrl = HelperUtil.getTrackingUrl(profile.getProfileUrl(),
+            String profileTrackingUrl = HelperUtil.getTrackingUrl(profile.getProfileUrl(), null,
                     request.getCallBackUrl(), request.getDartClickTrackUrl(),
                     review.getListingId(), profile.getPhone(), request.getPublisher(),
                     request.getAdUnitName(), request.getAdUnitSize());
             review.setProfileTrackingUrl(profileTrackingUrl);
 
-            String adDisplayTrackingUrl = HelperUtil.getTrackingUrl(review.getReviewUrl(),
+            String adDisplayTrackingUrl = HelperUtil.getTrackingUrl(review.getReviewUrl(), null,
                     request.getCallBackUrl(), request.getDartClickTrackUrl(),
                     review.getListingId(), profile.getPhone(), request.getPublisher(),
                     request.getAdUnitName(), request.getAdUnitSize());

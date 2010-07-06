@@ -402,7 +402,7 @@ public class ProfileHelper {
                     review.setCallBackUrl(request.getCallBackUrl());
 
                     String adDisplayTrackingUrl = HelperUtil.getTrackingUrl(review.getReviewUrl(),
-                            request.getCallBackUrl(), request.getDartClickTrackUrl(),
+                            null, request.getCallBackUrl(), request.getDartClickTrackUrl(),
                             profile.getListingId(), profile.getPhone(), request.getPublisher(),
                             request.getAdUnitName(), request.getAdUnitSize());
                     review.setReviewTrackingUrl(adDisplayTrackingUrl);
@@ -416,7 +416,7 @@ public class ProfileHelper {
 
                     if (profile.getSendToFriendUrl() != null) {
                         String sendToFriendTrackingUrl = HelperUtil.getTrackingUrl(
-                                profile.getSendToFriendUrl(), request.getCallBackUrl(),
+                                profile.getSendToFriendUrl(), null, request.getCallBackUrl(),
                                 request.getDartClickTrackUrl(), profile.getListingId(),
                                 profile.getPhone(), request.getPublisher(),
                                 request.getAdUnitName(), request.getAdUnitSize());
