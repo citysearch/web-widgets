@@ -15,7 +15,7 @@
                 <div class="ctsrch_leftSide">
                     <div class="ctsrch_bizPhoto">
                         <a href='<s:property value="offer.profileTrackingUrl" />' >
-                            <img src='<s:property value="offer.imageUrl" />'/>
+                            <img width="47px" height="47px" src='<s:property value="offer.imageUrl" />'/>
                         </a>
                     </div>
                     <div class="ctsrch_milesFont"><s:property value="offer.distance" /> mi away</div>

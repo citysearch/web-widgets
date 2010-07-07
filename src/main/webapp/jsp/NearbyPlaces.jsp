@@ -12,10 +12,10 @@
                 <div class="ctsrch_leftSide">
                     <div class="ctsrch_bizPhoto">
                         <s:if test="%{isValidCallbackFunction == true}">
-                            <a href='<s:property value="callBackFunction" />'><img src='<s:property value="adImageURL" />' border="0"/></a>
+                            <a href='<s:property value="callBackFunction" />'><img width="47px" height="47px" src='<s:property value="adImageURL" />' border="0"/></a>
                         </s:if>
                         <s:else>
-                            <a href='<s:property value="adDisplayTrackingURL" />' ><img src='<s:property value="adImageURL" />' border="0"/></a>
+                            <a href='<s:property value="adDisplayTrackingURL" />' ><img width="47px" height="47px" src='<s:property value="adImageURL" />' border="0"/></a>
                         </s:else>
                     </div>
                     <div class="ctsrch_milesFont">
@@ -107,7 +107,7 @@
             <div class="ctsrch_listing clearfix">
                 <div class="ctsrch_leftSide">
                     <div class="ctsrch_bizPhoto">
-                        <a href='<s:property value="adDisplayTrackingURL" />'><img src='<s:property value="adImageURL"/>' border="0"/></a>
+                        <a href='<s:property value="adDisplayTrackingURL" />'><img width="47px" height="47px" src='<s:property value="adImageURL"/>' border="0"/></a>
                     </div>
                 </div>
                 <div class="ctsrch_rightSide">
@@ -142,10 +142,10 @@
                 <div class="ctsrch_leftSide">
                     <div class="ctsrch_bizPhoto">
                         <s:if test="%{isValidCallbackFunction == true}">
-                            <a href='<s:property value="callBackFunction" />'><img src='<s:property value="adImageURL" />' border="0"/></a>
+                            <a href='<s:property value="callBackFunction" />'><img width="47px" height="47px" src='<s:property value="adImageURL" />' border="0"/></a>
                         </s:if>
                         <s:else>
-                            <a href='<s:property value="adDisplayTrackingURL" />' ><img src='<s:property value="adImageURL" />' border="0"/></a>
+                            <a href='<s:property value="adDisplayTrackingURL" />' ><img width="47px" height="47px" src='<s:property value="adImageURL" />' border="0"/></a>
                         </s:else>
                     </div>
                     <div class="ctsrch_milesFont">

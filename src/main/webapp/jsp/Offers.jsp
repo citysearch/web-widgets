@@ -23,7 +23,7 @@
                     <div class="ctsrch_leftSide">
                           <div class="ctsrch_bizPhoto">
                               <a href='<s:property value="profileTrackingUrl" />' >
-                                <img src='<s:property value="imageUrl" />'/>
+                                <img width="47px" height="47px" src='<s:property value="imageUrl" />'/>
                             </a>
                           </div>
                       </div>

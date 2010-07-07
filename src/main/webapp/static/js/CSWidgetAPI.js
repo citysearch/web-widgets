@@ -90,12 +90,12 @@ var citygrid = {
 
             // validate user data
             if (!data.what) { data.what = 'Restaurants'; }
-            if (!data.where) { data.where = 'West Hollywood, CA'; }
+            if (!data.where) { data.where = 'Los Angeles, CA'; }
             if (!data.publisher) { data.publisher = ''; }
             if (!data.latitude) { data.latitude = ''; }
             if (!data.longitude) { data.longitude = ''; }
             if (!data.tags) { data.tags = ''; }
-            if (!data.radius) { data.radius = '10'; }
+            if (!data.radius) { data.radius = '25'; }
             if (!data.callBackUrl) { data.callBackUrl = ''; }
             if (!data.callBackFunction) { data.callBackFunction = ''; }
             if (!data.adUnitName) { data.adUnitName = 'nearby'; }
