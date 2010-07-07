@@ -56,7 +56,9 @@
         <s:iterator value="backfill" status="placesStatus">
             <div class="ctsrch_listing">
                 <div class="ctsrch_leftSide">
-                    <a href='<s:property value="adDisplayTrackingURL" />'><img src='<s:property value="adImageURL"/>' border="0"/></a>
+                    <div class="ctsrch_bizPhoto">
+                        <a href='<s:property value="adDisplayTrackingURL" />'><img src='<s:property value="adImageURL"/>' border="0"/></a>
+                    </div>
                 </div>
                 <div class="ctsrch_rightSide">
                     <div class="ctsrch_mainLink" >

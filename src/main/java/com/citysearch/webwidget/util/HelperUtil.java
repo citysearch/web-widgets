@@ -31,9 +31,9 @@ import com.citysearch.webwidget.exception.InvalidHttpResponseException;
 
 /**
  * Helper class that contains generic methods used across all APIs
- * 
+ *
  * @author Aspert Benjamin
- * 
+ *
  */
 public class HelperUtil {
 
@@ -50,7 +50,7 @@ public class HelperUtil {
 
     /**
      * Helper method to build a string in name=value format. Used in building http query string.
-     * 
+     *
      * @param name
      * @param value
      * @return String
@@ -73,7 +73,7 @@ public class HelperUtil {
 
     /**
      * Converts the InputSteam to a document and returns it
-     * 
+     *
      * @param input
      * @return Document
      * @throws IOException
@@ -101,7 +101,7 @@ public class HelperUtil {
      * Connects to the url using HttpConnection. In case of error returns
      * InvalidHttpResponseException otherwise converts the response to org.jdom.Document and returns
      * it
-     * 
+     *
      * @param url
      * @return Document
      * @throws CitysearchException
@@ -139,7 +139,7 @@ public class HelperUtil {
 
     /**
      * Parses the dateStr to Date object as per the formatter format
-     * 
+     *
      * @param dateStr
      * @param formatter
      * @return Date
@@ -160,7 +160,7 @@ public class HelperUtil {
      * Calculate the ratings value and determines the rating stars to be displayed Returns what type
      * of star to be displayed in an array E.g.for 3.5 rating the array will have values {2,2,2,1,0}
      * where 2 represents full star, 1 half star and 0 empty star
-     * 
+     *
      * @param rating
      * @return
      */
@@ -191,7 +191,7 @@ public class HelperUtil {
     /**
      * This method takes the source latitude, longitude and destination latitude, longitude to
      * calculate the distance between two points and returns the distance
-     * 
+     *
      * @param sourceLat
      * @param sourceLon
      * @param destLat
@@ -282,66 +282,6 @@ public class HelperUtil {
             imageList.add(value);
         }
         return imageList;
-    }
-
-    public static String xgetTrackingUrl(String adDisplayURL, String callBackUrl,
-            String dartTrackingUrl, String listingId, String phone, String publisher,
-            String adUnitName, String adUnitSize) throws CitysearchException {
-
-        String urlToTrack = adDisplayURL;
-
-        // takes care of callBackUrl
-        if (callBackUrl != null && callBackUrl.trim().length() > 0) {
-            callBackUrl = callBackUrl.replace("$l", listingId);
-            callBackUrl = callBackUrl.replace("$p", phone);
-            urlToTrack = callBackUrl;
-        }
-
-        // adds http:// if it does not specify one
-        if (!urlToTrack.startsWith("http://")) {
-            StringBuilder strb = new StringBuilder("http://");
-            strb.append(urlToTrack);
-            urlToTrack = strb.toString();
-        }
-
-        try {
-            // get prod destination id
-            URL url = new URL(urlToTrack);
-            String host = url.getHost();
-            int prodDetId = 12; // Click outside Citysearch
-            if (host.indexOf("citysearch.com") != -1) {
-                prodDetId = 16;
-            }
-
-            StringBuilder strBuilder = new StringBuilder();
-
-            // dart tracking goes first
-            if (dartTrackingUrl != null) {
-                strBuilder.append(dartTrackingUrl);
-            }
-
-            // in house click tracker goes next
-            StringBuilder destinationUrl = new StringBuilder();
-            destinationUrl.append("http://pfpc.citysearch.com/pfp/ad?");
-            destinationUrl.append("&listingId=");
-            destinationUrl.append(listingId);
-            destinationUrl.append("&publisher=");
-            destinationUrl.append(publisher);
-            destinationUrl.append("&prodDetId=");
-            destinationUrl.append(prodDetId);
-            destinationUrl.append("&placement=");
-            destinationUrl.append(publisher + "_" + adUnitName + "_" + adUnitSize);
-            destinationUrl.append("&directUrl=");
-            destinationUrl.append(URLEncoder.encode(urlToTrack, "UTF-8"));
-
-            strBuilder.append(destinationUrl);
-
-            return strBuilder.toString();
-        } catch (MalformedURLException mue) {
-            throw new CitysearchException("HelperUtil", "getTrackingUrl", mue);
-        } catch (UnsupportedEncodingException excep) {
-            throw new CitysearchException("HelperUtil", "getTrackingUrl", excep);
-        }
     }
 
     public static String getCallBackFunctionString(String callBackFunction, String listingId,
