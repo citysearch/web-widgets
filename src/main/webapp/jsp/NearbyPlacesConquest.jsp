@@ -2,8 +2,8 @@
 <%@taglib prefix="s" uri="/struts-tags"%>
 
 <div class="ctsrch_wideContainer">
-    <div class="ctsrch_sponserText">
-        Ads by CityGrid
+    <div class="ctsrch_header clearfix">
+        <div class="ctsrch_sponserText">Ads by Citygrid</div>
     </div>
     <div class="ctsrch_container clearfix">
         <s:iterator value="nearbyPlaces" status="placesStatus">
