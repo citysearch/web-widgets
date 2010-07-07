@@ -148,11 +148,6 @@ public class OffersHelper {
             errors.add(errorProperties.getProperty(CommonConstants.WHAT_ERROR_CODE));
         }
 
-        if (!StringUtils.isBlank(request.getLatitude())
-                && !StringUtils.isBlank(request.getLongitude())
-                && !StringUtils.isBlank(request.getWhere())) {
-            errors.add(errorProperties.getProperty(CommonConstants.LOCATION_ERROR));
-        }
         if ((StringUtils.isBlank(request.getLatitude()) || StringUtils.isBlank(request.getLongitude()))
                 && StringUtils.isBlank(request.getWhere())) {
             errors.add(errorProperties.getProperty(CommonConstants.WHERE_ERROR_CODE));
