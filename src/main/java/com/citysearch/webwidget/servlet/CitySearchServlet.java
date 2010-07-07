@@ -67,6 +67,7 @@ public class CitySearchServlet extends HttpServlet {
                 String htmlString = writer.toString();
                 htmlString = StringEscapeUtils.escapeHtml(htmlString);
                 htmlString = htmlString.replaceAll("\\n", "");
+                htmlString = htmlString.replaceAll("\\r", "");
                 htmlString = "citygrid.common.loadWidget(\"" + htmlString + "\");";
 
                 response.getWriter().write(htmlString);

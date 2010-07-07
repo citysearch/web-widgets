@@ -347,7 +347,7 @@ public class HelperUtil {
                     destinationUrl = destinationUrlBuilder.toString();
                 }
             } else {
-                destinationUrl = URLEncoder.encode(urlToTrack, "UTF-8");
+                destinationUrl = urlToTrack;
             }
             strBuilder.append(destinationUrl);
 
