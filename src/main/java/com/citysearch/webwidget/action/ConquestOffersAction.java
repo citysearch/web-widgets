@@ -17,10 +17,10 @@ import com.opensymphony.xwork2.ModelDriven;
 
 public class ConquestOffersAction extends AbstractCitySearchAction implements
         ModelDriven<OffersRequest> {
-    private static final Integer MAX_OFFER_DESCRIPTION_SIZE = 125;
+    private static final Integer MAX_OFFER_DESCRIPTION_SIZE = 110;
     private static final Integer MAX_OFFER_TITLE_SIZE = 90;
     private static final Integer MAX_OFFER_LISTING_NAME_SIZE = 30;
-    
+
     private Logger log = Logger.getLogger(getClass());
     private OffersRequest offersRequest = new OffersRequest();
     private Offer offer;
@@ -57,7 +57,7 @@ public class ConquestOffersAction extends AbstractCitySearchAction implements
     /**
      * Calls the getoffers() method from offersHelper class to get the offers, review count is
      * fetched for each offer by passing its listing id to profile API
-     * 
+     *
      * @return String
      * @throws CitysearchException
      */
@@ -102,7 +102,7 @@ public class ConquestOffersAction extends AbstractCitySearchAction implements
                     offerTitle = StringUtils.abbreviate(offerTitle, MAX_OFFER_TITLE_SIZE);
                 }
                 offer.setOfferTitle(offerTitle);
-                
+
                 String listingName = offer.getListingName();
                 if (listingName != null && listingName.trim().length() > MAX_OFFER_LISTING_NAME_SIZE) {
                     listingName = StringUtils.abbreviate(listingName, MAX_OFFER_LISTING_NAME_SIZE);
