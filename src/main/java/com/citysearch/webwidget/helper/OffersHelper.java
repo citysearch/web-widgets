@@ -1,6 +1,8 @@
 package com.citysearch.webwidget.helper;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -62,7 +64,7 @@ public class OffersHelper {
 
     /**
      * Constructs the Offers API query string with all the supplied parameters
-     * 
+     *
      * @return String
      * @throws CitysearchException
      */
@@ -81,8 +83,14 @@ public class OffersHelper {
         strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
 
         if (!StringUtils.isBlank(request.getWhat())) {
-            strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.WHAT,
-                    request.getWhat().trim()));
+            // Offers API throws internal error when reading sushi+restaurant
+            String what = request.getWhat().trim();
+            try {
+                what = URLEncoder.encode(what, "UTF-8");
+            } catch (UnsupportedEncodingException excep) {
+                throw new CitysearchException("OffersHelper", "getQueryString", excep);
+            }
+            strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.WHAT, what));
         }
 
         if (!StringUtils.isBlank(request.getLatitude())
@@ -131,7 +139,7 @@ public class OffersHelper {
 
     /**
      * Validates the request. If any of the parameters are missing, throws Citysearch Exception
-     * 
+     *
      * @throws CitysearchException
      */
     public void validateRequest(OffersRequest request) throws InvalidRequestParametersException,
@@ -195,7 +203,7 @@ public class OffersHelper {
 
     /**
      * Get the offers from Offers API
-     * 
+     *
      * @param request
      * @return List of Offers
      * @throws InvalidRequestParametersException
@@ -296,7 +304,7 @@ public class OffersHelper {
 
     /**
      * Parses the offers xml. Returns List of offer objects
-     * 
+     *
      * @param doc
      * @return List of Offer objects
      * @throws CitysearchException
@@ -315,7 +323,7 @@ public class OffersHelper {
 
     /**
      * Parses the offers element list and create list of Offer objects
-     * 
+     *
      * @param List
      *            of Offer Elements
      * @return List of Offer beans
