@@ -179,9 +179,7 @@ public class OffersHelper {
         }
         if (!StringUtils.isBlank(request.getLatitude())
                 && !StringUtils.isBlank(request.getLongitude())
-                && (StringUtils.isBlank(request.getRadius())
-                        || (new Integer(request.getRadius()).intValue() > 25) || (new Integer(
-                        request.getRadius()).intValue() < 1))) {
+                && StringUtils.isBlank(request.getRadius())) {
             errors.add(errorProperties.getProperty(CommonConstants.RADIUS_ERROR));
         }
 
