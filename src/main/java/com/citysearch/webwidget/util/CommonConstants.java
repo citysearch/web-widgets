@@ -71,6 +71,7 @@ public class CommonConstants {
     public static final int BUSINESS_NAME_MAX_LENGTH = 30;
     public static final int TAGLINE_MAX_LENGTH = 30;
     public static final int EXTENDED_RADIUS = 25;
+    public static final int DEFAULT_RADIUS = 25;
 
     public static final String MANTLE_AD_SIZE = "300x250";
     public static final String CONQUEST_AD_SIZE = "645x100";

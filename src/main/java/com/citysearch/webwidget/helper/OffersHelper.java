@@ -64,7 +64,7 @@ public class OffersHelper {
 
     /**
      * Constructs the Offers API query string with all the supplied parameters
-     *
+     * 
      * @return String
      * @throws CitysearchException
      */
@@ -125,6 +125,16 @@ public class OffersHelper {
         }
         if (!StringUtils.isBlank(request.getRadius())) {
             strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+            try {
+                Float r = Float.parseFloat(request.getRadius());
+                int radius = Math.round(r);
+                radius = (radius < 1 || radius > CommonConstants.DEFAULT_RADIUS) ? CommonConstants.DEFAULT_RADIUS : radius;
+                request.setRadius(String.valueOf(radius));
+            } catch (NumberFormatException nfe) {
+                log.error("Unable to parse radius to Float: " + request.getRadius());
+                // DO not throw an exception here.
+                request.setRadius(String.valueOf(CommonConstants.DEFAULT_RADIUS));
+            }
             strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.RADIUS,
                     request.getRadius().trim()));
         }
@@ -139,7 +149,7 @@ public class OffersHelper {
 
     /**
      * Validates the request. If any of the parameters are missing, throws Citysearch Exception
-     *
+     * 
      * @throws CitysearchException
      */
     public void validateRequest(OffersRequest request) throws InvalidRequestParametersException,
@@ -203,7 +213,7 @@ public class OffersHelper {
 
     /**
      * Get the offers from Offers API
-     *
+     * 
      * @param request
      * @return List of Offers
      * @throws InvalidRequestParametersException
@@ -304,7 +314,7 @@ public class OffersHelper {
 
     /**
      * Parses the offers xml. Returns List of offer objects
-     *
+     * 
      * @param doc
      * @return List of Offer objects
      * @throws CitysearchException
@@ -323,7 +333,7 @@ public class OffersHelper {
 
     /**
      * Parses the offers element list and create list of Offer objects
-     *
+     * 
      * @param List
      *            of Offer Elements
      * @return List of Offer beans
