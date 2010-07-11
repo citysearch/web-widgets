@@ -100,6 +100,11 @@ div.seperator { clear: both; line-height: 1px; height: 1px;}
 .review_cs_close_detail{float:right;clear:right;height:18px;width:28%;}
 .review_cs_close_detail a {color:#4580c5;font-weight:normal;font-family:Arial;font-size:11px;text-decoration:none}
 
+.review_cs_additional_info {padding:3px 0px 0px 0px;float:left;width:100%;}
+.review_cs_additional_info_title {float:left;width:100%;font-weight:bold;font-family:Arial;font-size:11px;text-decoration:none}
+.review_cs_additional_info_link {padding:0px 0px 0px 5px;float:left;width:80%;font-weight:normal;font-family:Arial;font-size:11px;text-decoration:none}
+.review_cs_additional_info_link a{color:#4580c5;font-weight:normal;font-family:Arial;font-size:11px;text-decoration:none}
+
 .ctsrch_stars_hori{width:80px;}
 .ctsrch_logoFont {color:#4580C5;height:12px;padding:3px 0 0 5px;float:left;font-size:7px;font-weight:700;width:105px;padding-top:9px;}
 .ctsrch_logoFont_right {clear:left;color:#4580C5;height:12px;padding:7px 5px 0 0px;float:right;font-size:10px;font-weight:700;}

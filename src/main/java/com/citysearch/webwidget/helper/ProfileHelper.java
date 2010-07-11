@@ -163,6 +163,7 @@ public class ProfileHelper {
         validateRequest(request);
         Properties properties = PropertiesLoader.getAPIProperties();
         String urlString = properties.getProperty(PROPERTY_PROFILE_URL) + getQueryString(request);
+        log.info(urlString);
         Document responseDocument = null;
         try {
             responseDocument = HelperUtil.getAPIResponse(urlString, null);
@@ -201,11 +202,7 @@ public class ProfileHelper {
                 profile = new Profile();
                 profile.setAddress(getAddress(locationElem.getChild(ADDRESS)));
                 profile.setPhone(getPhone(locationElem.getChild(CONTACT_INFO)));
-                Element url = locationElem.getChild(URLS);
-                if (url != null) {
-                    profile.setProfileUrl(url.getChildText(PROFILE_URL));
-                    profile.setSendToFriendUrl(url.getChildText(SEND_TO_FRIEND_URL));
-                }
+                parseUrls(locationElem, profile);
                 Element review = locationElem.getChild(REVIEWS);
                 if (review != null) {
                     profile.setReviewCount(review.getChildText(TOTAL_USER_REVIEWS));
@@ -216,7 +213,20 @@ public class ProfileHelper {
         }
         return profile;
     }
-
+    
+    private void parseUrls(Element locationElm, Profile profile)
+    {
+        Element urlElm = locationElm.getChild(URLS);
+        if (urlElm != null) {
+            profile.setProfileUrl(urlElm.getChildText(PROFILE_URL));
+            profile.setSendToFriendUrl(urlElm.getChildText(SEND_TO_FRIEND_URL));
+            profile.setReviewsUrl(urlElm.getChildText(REVIEWS_URL));
+            profile.setWebsiteUrl(urlElm.getChildText(WEBSITE_URL));
+            profile.setMenuUrl(urlElm.getChildText(MENU_URL));
+            profile.setReservationUrl(urlElm.getChildText(RESERVATION_URL));
+            profile.setMapUrl(urlElm.getChildText(MAP_URL));
+        }
+    }
     /**
      * Parses the address element received in response and returns Address object
      * 
@@ -371,16 +381,8 @@ public class ProfileHelper {
                 profile.setListingId(locationElm.getChildText(ID));
                 profile.setAddress(getAddress(locationElm.getChild(ADDRESS)));
                 profile.setPhone(getPhone(locationElm.getChild(CONTACT_INFO)));
-                Element urlElm = locationElm.getChild(URLS);
-                if (urlElm != null) {
-                    profile.setProfileUrl(urlElm.getChildText(PROFILE_URL));
-                    profile.setSendToFriendUrl(urlElm.getChildText(SEND_TO_FRIEND_URL));
-                    profile.setReviewsUrl(urlElm.getChildText(REVIEWS_URL));
-                    profile.setWebsiteUrl(urlElm.getChildText(WEBSITE_URL));
-                    profile.setMenuUrl(urlElm.getChildText(MENU_URL));
-                    profile.setReservationUrl(urlElm.getChildText(RESERVATION_URL));
-                    profile.setMapUrl(urlElm.getChildText(MAP_URL));
-                }
+                parseUrls(locationElm, profile);
+                
                 profile.setImageUrl(getImage(locationElm.getChild(IMAGES),
                         locationElm.getChild(CATEGORIES)));
                 Element reviewsElm = locationElm.getChild("reviews");

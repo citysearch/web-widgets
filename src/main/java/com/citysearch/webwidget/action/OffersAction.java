@@ -59,7 +59,8 @@ public class OffersAction extends AbstractCitySearchAction implements ModelDrive
      */
     public String execute() throws CitysearchException {
         log.info("Start offersAction execute()");
-        if (offersRequest.getDisplaySize() == null || offersRequest.getDisplaySize() == 0) {
+        if (offersRequest.getDisplaySize() == null || offersRequest.getDisplaySize() == 0
+                || offersRequest.getDisplaySize() > DEFAULT_DISPLAY_SIZE) {
             offersRequest.setDisplaySize(DEFAULT_DISPLAY_SIZE);
         }
         if (offersRequest.getAdUnitName() == null

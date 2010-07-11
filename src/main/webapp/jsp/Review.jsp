@@ -33,7 +33,7 @@
                 <div class="review_cs_description">
                     <s:property value="review.shortReviewText"/>
                     <s:if test="%{review.shortReviewText != review.reviewText}">
-                        <a href="javascript:showDetail()">more</a>
+                        <a href="javascript:citygrid.review.showDetail()">read more</a>
                     </s:if>
                 </div>
                 <div class="review_cs_description">
@@ -52,7 +52,7 @@
         <div class="review_cs_content_detail">
             <div class="review_cs_ratings_detail">
                 <div class="review_cs_close_detail">
-                    <a href="javascript:hideDetail()">Close Window</a>
+                    <a href="javascript:citygrid.review.hideDetail()">Close Window</a>
                 </div>
                 <div class="ctsrch_stars">
                     <s:iterator value="review.rating" status="stat"><span class='<s:if test="%{review.rating[#stat.index] == 2}">full</s:if><s:elseif test="%{review.rating[#stat.index] == 1}">half</s:elseif><s:else>empty</s:else>'> </span></s:iterator>
