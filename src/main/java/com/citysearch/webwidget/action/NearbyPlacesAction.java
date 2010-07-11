@@ -107,7 +107,7 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
             // On any exception, want the house ads to be returned.
             // Idea is to not return a blank widget.
             log.error(e.getMessage());
-            // Log the stacktrace also
+            // Log the stacktrace also for now
             StackTraceElement[] elms = e.getStackTrace();
             for (int k = 0; k < elms.length; k++) {
                 log.error(elms[k]);

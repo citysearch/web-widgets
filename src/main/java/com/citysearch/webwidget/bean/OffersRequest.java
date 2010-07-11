@@ -1,21 +1,13 @@
 package com.citysearch.webwidget.bean;
 
 public class OffersRequest extends AbstractRequest {
-
     private String version;
     private String placement;
-
-    private String what;
-    private String where;
     private String tag;
-    private String latitude;
-    private String longitude;
     private String page;
     private String rpp;
     private String expiresBefore;
     private String customerHasbudget;
-    private String radius;
-    private String callbackFunction;
 
     public String getVersion() {
         return version;
@@ -33,44 +25,12 @@ public class OffersRequest extends AbstractRequest {
         this.placement = placement;
     }
 
-    public String getWhat() {
-        return what;
-    }
-
-    public void setWhat(String what) {
-        this.what = what;
-    }
-
-    public String getWhere() {
-        return where;
-    }
-
-    public void setWhere(String where) {
-        this.where = where;
-    }
-
     public String getTag() {
         return tag;
     }
 
     public void setTag(String tag) {
         this.tag = tag;
-    }
-
-    public String getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(String latitude) {
-        this.latitude = latitude;
-    }
-
-    public String getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(String longitude) {
-        this.longitude = longitude;
     }
 
     public String getPage() {
@@ -103,21 +63,5 @@ public class OffersRequest extends AbstractRequest {
 
     public void setCustomerHasbudget(String customerHasbudget) {
         this.customerHasbudget = customerHasbudget;
-    }
-
-    public String getRadius() {
-        return radius;
-    }
-
-    public void setRadius(String radius) {
-        this.radius = radius;
-    }
-
-    public String getCallbackFunction() {
-        return callbackFunction;
-    }
-
-    public void setCallbackFunction(String callbackFunction) {
-        this.callbackFunction = callbackFunction;
     }
 }

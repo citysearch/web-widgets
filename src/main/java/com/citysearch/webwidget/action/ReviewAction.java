@@ -64,15 +64,24 @@ public class ReviewAction extends AbstractCitySearchAction implements ModelDrive
     public String execute() throws CitysearchException {
         ReviewHelper helper = new ReviewHelper(getResourceRootPath());
         log.info("Start review action");
+        reviewRequest.setAdUnitName(CommonConstants.AD_UNIT_NAME_REVIEW);
+        if (reviewRequest.getAdUnitSize() == null
+                || reviewRequest.getAdUnitSize().trim().length() == 0) {
+            reviewRequest.setAdUnitSize(CommonConstants.MANTLE_AD_SIZE);
+            reviewRequest.setDisplaySize(CommonConstants.MANTLE_DISPLAY_SIZE);
+        }
+        if (reviewRequest.getDisplaySize() == null || reviewRequest.getDisplaySize() == 0) {
+            reviewRequest.setDisplaySize(CommonConstants.MANTLE_DISPLAY_SIZE);
+        }
         try {
             review = helper.getLatestReview(reviewRequest);
             if (review == null) {
                 log.info("Returning backfill from review");
                 getHttpRequest().setAttribute(REQUEST_ATTRIBUTE_BACKFILL, true);
                 getHttpRequest().setAttribute(REQUEST_ATTRIBUTE_ADUNIT_SIZE,
-                        CommonConstants.MANTLE_AD_SIZE);
+                        reviewRequest.getAdUnitSize());
                 getHttpRequest().setAttribute(REQUEST_ATTRIBUTE_ADUNIT_DISPLAY_SIZE,
-                        CommonConstants.MANTLE_DISPLAY_SIZE);
+                        reviewRequest.getDisplaySize());
                 getHttpRequest().setAttribute(REQUEST_ATTRIBUTE_LATITUDE,
                         reviewRequest.getLatitude());
                 getHttpRequest().setAttribute(REQUEST_ATTRIBUTE_LONGITUDE,
@@ -85,6 +94,10 @@ public class ReviewAction extends AbstractCitySearchAction implements ModelDrive
             houseAds = getHouseAds(reviewRequest.getDartClickTrackUrl(), 3);
         } catch (Exception cse) {
             log.error(cse.getMessage());
+            StackTraceElement[] elms = cse.getStackTrace();
+            for (int k = 0; k < elms.length; k++) {
+                log.error(elms[k]);
+            }
             houseAds = getHouseAds(reviewRequest.getDartClickTrackUrl(), 3);
         }
         return Action.SUCCESS;

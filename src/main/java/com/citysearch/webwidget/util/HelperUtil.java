@@ -31,9 +31,9 @@ import com.citysearch.webwidget.exception.InvalidHttpResponseException;
 
 /**
  * Helper class that contains generic methods used across all APIs
- *
+ * 
  * @author Aspert Benjamin
- *
+ * 
  */
 public class HelperUtil {
 
@@ -50,7 +50,7 @@ public class HelperUtil {
 
     /**
      * Helper method to build a string in name=value format. Used in building http query string.
-     *
+     * 
      * @param name
      * @param value
      * @return String
@@ -73,7 +73,7 @@ public class HelperUtil {
 
     /**
      * Converts the InputSteam to a document and returns it
-     *
+     * 
      * @param input
      * @return Document
      * @throws IOException
@@ -101,7 +101,7 @@ public class HelperUtil {
      * Connects to the url using HttpConnection. In case of error returns
      * InvalidHttpResponseException otherwise converts the response to org.jdom.Document and returns
      * it
-     *
+     * 
      * @param url
      * @return Document
      * @throws CitysearchException
@@ -139,7 +139,7 @@ public class HelperUtil {
 
     /**
      * Parses the dateStr to Date object as per the formatter format
-     *
+     * 
      * @param dateStr
      * @param formatter
      * @return Date
@@ -160,7 +160,7 @@ public class HelperUtil {
      * Calculate the ratings value and determines the rating stars to be displayed Returns what type
      * of star to be displayed in an array E.g.for 3.5 rating the array will have values {2,2,2,1,0}
      * where 2 represents full star, 1 half star and 0 empty star
-     *
+     * 
      * @param rating
      * @return
      */
@@ -191,7 +191,7 @@ public class HelperUtil {
     /**
      * This method takes the source latitude, longitude and destination latitude, longitude to
      * calculate the distance between two points and returns the distance
-     *
+     * 
      * @param sourceLat
      * @param sourceLon
      * @param destLat
@@ -357,5 +357,19 @@ public class HelperUtil {
         } catch (UnsupportedEncodingException excep) {
             throw new CitysearchException("HelperUtil", "getTrackingUrl", excep);
         }
+    }
+
+    public static String parseRadius(String radiusStr) {
+        try {
+            Float r = Float.parseFloat(radiusStr);
+            int radius = Math.round(r);
+            radius = (radius < 1 || radius > CommonConstants.DEFAULT_RADIUS) ? CommonConstants.DEFAULT_RADIUS
+                    : radius;
+            return String.valueOf(radius);
+        } catch (NumberFormatException nfe) {
+            log.error("Unable to parse radius to Float: " + radiusStr);
+            // DO not throw an exception here.
+        }
+        return String.valueOf(CommonConstants.DEFAULT_RADIUS);
     }
 }

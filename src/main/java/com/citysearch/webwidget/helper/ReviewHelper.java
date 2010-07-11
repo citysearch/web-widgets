@@ -84,38 +84,67 @@ public class ReviewHelper {
         Properties properties = PropertiesLoader.getAPIProperties();
         String apiKey = properties.getProperty(CommonConstants.API_KEY_PROPERTY);
         strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.API_KEY, apiKey));
-        strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-        strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.PUBLISHER,
-                request.getPublisher()));
-        strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-        strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.WHERE,
-                request.getWhere()));
-        strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-        strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.WHAT,
-                request.getWhat()));
-        strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-        strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.TAG_ID,
-                request.getTagId()));
-        strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-        strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.TAG_NAME,
-                request.getTagName()));
-        strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+
+        if (!StringUtils.isEmpty(request.getPublisher())) {
+            strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+            strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.PUBLISHER,
+                    request.getPublisher()));
+        }
+
+        if (!StringUtils.isEmpty(request.getWhere())) {
+            strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+            strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.WHERE,
+                    request.getWhere()));
+        }
+
+        if (!StringUtils.isEmpty(request.getWhat())) {
+            strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+            strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.WHAT,
+                    request.getWhat()));
+        }
+
+        if (!StringUtils.isEmpty(request.getTagId())) {
+            strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+            strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.TAG_ID,
+                    request.getTagId()));
+        }
+
+        if (!StringUtils.isEmpty(request.getTagName())) {
+            strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+            strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.TAG_NAME,
+                    request.getTagName()));
+        }
+
         if (request.isCustomerOnly()) {
+            strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
             strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.CUSTOMER_ONLY,
                     String.valueOf(request.isCustomerOnly())));
-            strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+
         }
-        strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.RATING,
-                request.getRating()));
-        strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-        strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.DAYS,
-                request.getDays()));
-        strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-        strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.MAX,
-                request.getMax()));
-        strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-        strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.PLACEMENT,
-                request.getPlacement()));
+
+        if (!StringUtils.isEmpty(request.getRating())) {
+            strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+            strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.RATING,
+                    request.getRating()));
+        }
+
+        if (!StringUtils.isEmpty(request.getDays())) {
+            strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+            strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.DAYS,
+                    request.getDays()));
+        }
+
+        if (!StringUtils.isEmpty(request.getMax())) {
+            strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+            strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.MAX,
+                    request.getMax()));
+        }
+
+        if (!StringUtils.isEmpty(request.getPlacement())) {
+            strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+            strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.PLACEMENT,
+                    request.getPlacement()));
+        }
         return strBuilder.toString();
     }
 
@@ -184,10 +213,6 @@ public class ReviewHelper {
                 && !StringUtils.isBlank(request.getLongitude())) {
             log.info("ReviewHelper.getLatestReview:: Lat and Lon received. Find zip");
             SearchRequest searchReq = new SearchRequest(request);
-            searchReq.setPublisher(request.getPublisher());
-            searchReq.setWhat(request.getWhat());
-            searchReq.setLatitude(request.getLatitude());
-            searchReq.setLongitude(request.getLongitude());
 
             SearchHelper shelper = new SearchHelper(this.rootPath, request.getDisplaySize());
             String where = shelper.getClosestLocationPostalCode(searchReq);

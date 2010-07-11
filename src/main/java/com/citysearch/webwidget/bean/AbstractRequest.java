@@ -17,7 +17,12 @@ public abstract class AbstractRequest {
     protected String dartClickTrackUrl;
     protected String callBackFunction;
     protected String callBackUrl;
-
+    protected String where;
+    protected String what;
+    protected String latitude;
+    protected String longitude;
+    protected String radius;
+    
     public String getCallBackFunction() {
         return callBackFunction;
     }
@@ -96,5 +101,45 @@ public abstract class AbstractRequest {
 
     public void setDisplaySize(Integer displaySize) {
         this.displaySize = displaySize;
+    }
+
+    public String getWhere() {
+        return where;
+    }
+
+    public void setWhere(String where) {
+        this.where = where;
+    }
+
+    public String getWhat() {
+        return what;
+    }
+
+    public void setWhat(String what) {
+        this.what = what;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getRadius() {
+        return radius;
+    }
+
+    public void setRadius(String radius) {
+        this.radius = radius;
     }
 }

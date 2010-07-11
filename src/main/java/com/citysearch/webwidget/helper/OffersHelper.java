@@ -125,23 +125,15 @@ public class OffersHelper {
         }
         if (!StringUtils.isBlank(request.getRadius())) {
             strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-            try {
-                Float r = Float.parseFloat(request.getRadius());
-                int radius = Math.round(r);
-                radius = (radius < 1 || radius > CommonConstants.DEFAULT_RADIUS) ? CommonConstants.DEFAULT_RADIUS : radius;
-                request.setRadius(String.valueOf(radius));
-            } catch (NumberFormatException nfe) {
-                log.error("Unable to parse radius to Float: " + request.getRadius());
-                // DO not throw an exception here.
-                request.setRadius(String.valueOf(CommonConstants.DEFAULT_RADIUS));
-            }
+            String radius = HelperUtil.parseRadius(request.getRadius());
+            request.setRadius(radius);
             strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.RADIUS,
-                    request.getRadius().trim()));
+                    request.getRadius()));
         }
-        if (!StringUtils.isBlank(request.getCallbackFunction())) {
+        if (!StringUtils.isBlank(request.getCallBackFunction())) {
             strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
             strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.CALLBACK,
-                    request.getCallbackFunction().trim()));
+                    request.getCallBackFunction().trim()));
         }
         log.info("Start offersHelper getQueryString() querystring is " + strBuilder);
         return strBuilder.toString();

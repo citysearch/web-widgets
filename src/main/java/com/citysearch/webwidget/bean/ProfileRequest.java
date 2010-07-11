@@ -13,7 +13,6 @@ public class ProfileRequest extends AbstractRequest {
     private boolean allResults;
     private String reviewCount;
     private String placement;
-    private String clientIP;
     private int nolog;
     private String callback;
 
@@ -77,14 +76,6 @@ public class ProfileRequest extends AbstractRequest {
 
     public void setPlacement(String placement) {
         this.placement = placement;
-    }
-
-    public String getClientIP() {
-        return clientIP;
-    }
-
-    public void setClientIP(String clientIP) {
-        this.clientIP = clientIP;
     }
 
     public int getNolog() {

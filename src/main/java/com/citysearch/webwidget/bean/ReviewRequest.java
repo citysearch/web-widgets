@@ -7,9 +7,6 @@ package com.citysearch.webwidget.bean;
  * 
  */
 public class ReviewRequest extends AbstractRequest {
-
-    private String where;
-    private String what;
     private String tagId;
     private String tagName;
     private String rating;
@@ -17,9 +14,6 @@ public class ReviewRequest extends AbstractRequest {
     private String max;
     private String placement;
     private boolean customerOnly;
-    private String latitude;
-    private String longitude;
-    private String radius;
 
     public ReviewRequest() {
         super();
@@ -35,44 +29,20 @@ public class ReviewRequest extends AbstractRequest {
         setAdUnitSize(request.getAdUnitSize());
     }
 
-    public String getTagName() {
-        return tagName;
-    }
-
-    public void setTagName(String tagName) {
-        this.tagName = tagName;
-    }
-
-    public boolean isCustomerOnly() {
-        return customerOnly;
-    }
-
-    public void setCustomerOnly(boolean customerOnly) {
-        this.customerOnly = customerOnly;
-    }
-
-    public String getWhere() {
-        return where;
-    }
-
-    public void setWhere(String where) {
-        this.where = where;
-    }
-
-    public String getWhat() {
-        return what;
-    }
-
-    public void setWhat(String what) {
-        this.what = what;
-    }
-
     public String getTagId() {
         return tagId;
     }
 
     public void setTagId(String tagId) {
         this.tagId = tagId;
+    }
+
+    public String getTagName() {
+        return tagName;
+    }
+
+    public void setTagName(String tagName) {
+        this.tagName = tagName;
     }
 
     public String getRating() {
@@ -107,28 +77,11 @@ public class ReviewRequest extends AbstractRequest {
         this.placement = placement;
     }
 
-    public String getLatitude() {
-        return latitude;
+    public boolean isCustomerOnly() {
+        return customerOnly;
     }
 
-    public void setLatitude(String latitude) {
-        this.latitude = latitude;
+    public void setCustomerOnly(boolean customerOnly) {
+        this.customerOnly = customerOnly;
     }
-
-    public String getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(String longitude) {
-        this.longitude = longitude;
-    }
-
-    public String getRadius() {
-        return radius;
-    }
-
-    public void setRadius(String radius) {
-        this.radius = radius;
-    }
-
 }
