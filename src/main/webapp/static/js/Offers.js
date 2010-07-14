@@ -31,7 +31,7 @@ var citygrid = {
             var script = document.createElement("script");
             script.setAttribute("src", url);
             script.setAttribute("type","text/javascript");
-            document.body.appendChild(script);
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(script);
         },
 
         // call by the code provided by backend
