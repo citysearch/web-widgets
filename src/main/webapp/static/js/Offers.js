@@ -5,63 +5,28 @@ function cgLaunch (URL, name, features) {
 
 // internal tools
 var citygrid = {
-
-    // nearby widget
-    nearby : {
-        createwidget : function(data) {
-            var widgeturl = citygrid.common.getHostName(data.site);
-            widgeturl += '?what='+data.what;
-            widgeturl += '&where='+data.where;
-            widgeturl += '&publisher='+data.publisher;
-            widgeturl += '&latitude='+data.latitude;
-            widgeturl += '&longitude='+data.longitude;
-            widgeturl += '&tags='+data.tags;
-            widgeturl += '&radius='+data.radius;
-            widgeturl += '&callBackFunction='+data.callBackFunction;
-            widgeturl += '&callBackUrl='+data.callBackUrl;
-            widgeturl += '&adUnitName='+data.adUnitName;
-            widgeturl += '&adUnitSize='+data.adUnitSize;
-            widgeturl += '&clientIP='+data.clientIP;
-            widgeturl += '&dartClickTrackUrl='+data.dartClickTrackUrl;
-
-            citygrid.common.scriptInject(widgeturl);
-        }
-    },
-
-    // review widget
-    review : {
-        createwidget : function(data) {
-            var widgeturl = citygrid.common.getHostName(data.site);
-            widgeturl += '?what='+data.what;
-            widgeturl += '&where='+data.where;
-            widgeturl += '&publisher='+data.publisher;
-            widgeturl += '&latitude='+data.latitude;
-            widgeturl += '&longitude='+data.longitude;
-            widgeturl += '&tags='+data.tags;
-            widgeturl += '&radius='+data.radius;
-            widgeturl += '&callBackFunction='+data.callBackFunction;
-            widgeturl += '&callBackUrl='+data.callBackUrl;
-            widgeturl += '&adUnitName='+data.adUnitName;
-            widgeturl += '&adUnitSize='+data.adUnitSize;
-            widgeturl += '&clientIP='+data.clientIP;
-            widgeturl += '&dartClickTrackUrl='+data.dartClickTrackUrl;
-
-            citygrid.common.scriptInject(widgeturl);
-        },
-
-        showDetail : function() {
-            document.getElementById('cs_mainContainer').style.display='none';
-            document.getElementById('cs_mainContainer_detail').style.display='block';
-        },
-
-        hideDetail : function() {
-            document.getElementById('cs_mainContainer').style.display='block';
-            document.getElementById('cs_mainContainer_detail').style.display='none';
-        }
-    },
-
-    // common utils functions
     common : {
+        // sends request to citygrid server
+        createwidget : function(data) {
+            var widgeturl = citygrid.common.getHostName(data.site);
+            widgeturl += '?what='+data.what;
+            widgeturl += '&where='+data.where;
+            widgeturl += '&publisher='+data.publisher;
+            widgeturl += '&latitude='+data.latitude;
+            widgeturl += '&longitude='+data.longitude;
+            widgeturl += '&tags='+data.tags;
+            widgeturl += '&radius='+data.radius;
+            widgeturl += '&callBackFunction='+data.callBackFunction;
+            widgeturl += '&callBackUrl='+data.callBackUrl;
+            widgeturl += '&adUnitName='+data.adUnitName;
+            widgeturl += '&adUnitSize='+data.adUnitSize;
+            widgeturl += '&clientIP='+data.clientIP;
+            widgeturl += '&dartClickTrackUrl='+data.dartClickTrackUrl;
+
+            citygrid.common.scriptInject(widgeturl);
+        },
+
+        // script tag injection to fetch html
         scriptInject : function(url) {
             var script = document.createElement("script");
             script.setAttribute("src", url);
@@ -69,6 +34,7 @@ var citygrid = {
             document.body.appendChild(script);
         },
 
+        // call by the code provided by backend
         loadWidget : function(widgetHTML) {
             widgetHTML = widgetHTML.replace(/&amp;/g, "&");
             widgetHTML = widgetHTML.replace(/&lt;/g, "<");
@@ -92,12 +58,12 @@ var citygrid = {
 
             // validate user data
             if (!data.what) { data.what = 'Restaurants'; }
-            if (!data.where) { data.where = 'West Hollywood, CA'; }
+            if (!data.where) { data.where = 'Los Angeles, CA'; }
             if (!data.publisher) { data.publisher = ''; }
             if (!data.latitude) { data.latitude = ''; }
             if (!data.longitude) { data.longitude = ''; }
             if (!data.tags) { data.tags = ''; }
-            if (!data.radius) { data.radius = '10'; }
+            if (!data.radius) { data.radius = '25'; }
             if (!data.callBackUrl) { data.callBackUrl = ''; }
             if (!data.callBackFunction) { data.callBackFunction = ''; }
             if (!data.adUnitSize) { data.adUnitSize = '300x250'; }
@@ -117,5 +83,5 @@ var citygrid = {
     var data = eval(scriptSrc.split("?var=")[1]);
 
     data = citygrid.common.checkInput(data);
-    citygrid.nearby.createwidget(data);
+    citygrid.common.createwidget(data);
 }());
