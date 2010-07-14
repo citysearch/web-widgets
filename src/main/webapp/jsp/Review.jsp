@@ -46,7 +46,7 @@
                     <s:property value="review.shortReviewText"/>
                     <s:if test="%{review.shortReviewText != review.reviewText}">
                         <span class="ctsrch_review_readmore">
-                           <a  href="http://www.google.com">read more</a>
+                           <a  href="<s:property value="review.reviewTrackingUrl"/>">read more</a>
                         </span>
                     </s:if>
                 </div>
