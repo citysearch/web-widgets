@@ -67,7 +67,7 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
     }
 
     public String execute() throws CitysearchException {
-        log.info("Begin NearbyPlacesAction");
+        log.info("Begin ProjectYellow.NearbyPlacesAction");
 
         Object requestAttrib = getHttpRequest().getAttribute(REQUEST_ATTRIBUTE_BACKFILL);
         boolean backfill = (requestAttrib != null && requestAttrib instanceof Boolean) ? (Boolean) requestAttrib
@@ -93,7 +93,7 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
         }
         NearbyPlacesHelper helper = new NearbyPlacesHelper(getResourceRootPath());
         String adUnitSize = nearbyPlacesRequest.getAdUnitSize();
-
+        nearbyPlacesRequest.setValidUrl(false);
         try {
             nearbyPlacesResponse = helper.getNearbyPlaces(nearbyPlacesRequest);
             log.info("End NearbyPlacesAction");

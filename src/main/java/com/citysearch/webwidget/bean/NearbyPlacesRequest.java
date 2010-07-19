@@ -8,6 +8,7 @@ package com.citysearch.webwidget.bean;
  */
 public class NearbyPlacesRequest extends AbstractRequest {
     private String tags;
+    private boolean validUrl;
 
     public NearbyPlacesRequest() {
         super();
@@ -21,6 +22,14 @@ public class NearbyPlacesRequest extends AbstractRequest {
         setCallBackUrl(request.getCallBackUrl());
         setAdUnitName(request.getAdUnitName());
         setAdUnitSize(request.getAdUnitSize());
+    }
+
+    public boolean isValidUrl() {
+        return validUrl;
+    }
+
+    public void setValidUrl(boolean validUrl) {
+        this.validUrl = validUrl;
     }
 
     public String getTags() {

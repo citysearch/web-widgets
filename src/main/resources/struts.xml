@@ -38,5 +38,10 @@
             <result name="success">/jsp/NearbyPlaces.jsp</result>
             <result name="conquest">/jsp/NearbyPlacesConquest.jsp</result>
         </action>
+        
+        <!-- Struts configuration for Nearby Places Widget for Project yellow-->
+        <action name="nearbyplaces600x83" class="com.citysearch.webwidget.action.project.yellow.NearbyPlacesAction">
+            <result name="success">/jsp/NearbyPlaces600x83.jsp</result>
+        </action>
     </package>
 </struts>

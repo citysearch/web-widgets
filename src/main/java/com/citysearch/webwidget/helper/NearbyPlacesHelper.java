@@ -135,34 +135,10 @@ public class NearbyPlacesHelper {
                 : request.getRadius();
         apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
         apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.RADIUS, radius));
-
-        return apiQueryString.toString();
-    }
-
-    private String getQueryStringWithWhere(NearbyPlacesRequest request) throws CitysearchException {
-        StringBuilder apiQueryString = new StringBuilder();
-
-        Properties properties = PropertiesLoader.getAPIProperties();
-        String apiKey = properties.getProperty(CommonConstants.API_KEY_PROPERTY);
-        apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.API_KEY, apiKey));
-        apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
-        apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.WHAT,
-                request.getWhat()));
-        apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
-        apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.WHERE,
-                request.getWhere()));
-        apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
-        apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.PUBLISHER_CODE,
-                request.getPublisher()));
-        if (!StringUtils.isBlank(request.getTags())) {
-            apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
-            apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.TAG,
-                    request.getTags()));
-        }
-        if (!StringUtils.isBlank(request.getRadius())) {
-            apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
-            apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.RADIUS,
-                    request.getRadius()));
+        
+        if (request.isValidUrl())
+        {
+            //TODO: need to set the valid url parameter when PFP is ready.
         }
         return apiQueryString.toString();
     }
@@ -189,6 +165,10 @@ public class NearbyPlacesHelper {
         apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
         apiQueryString.append(HelperUtil.constructQueryParam(APIFieldNameConstants.TAG,
                 request.getTags()));
+        if (request.isValidUrl())
+        {
+            //TODO: need to set the valid url parameter when PFP is ready.
+        }
         return apiQueryString.toString();
     }
 
@@ -559,7 +539,9 @@ public class NearbyPlacesHelper {
         String callBackFn = HelperUtil.getCallBackFunctionString(request.getCallBackFunction(),
                 nearbyPlace.getListingId(), nearbyPlace.getPhone());
         nearbyPlace.setCallBackFunction(callBackFn);
-
+        
+        //TODO: read and set business url
+        //TODO: Add tracking to bussines url and set in the bean
         return nearbyPlace;
     }
 
