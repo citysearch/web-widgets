@@ -16,6 +16,13 @@
 .ctsrch_boxContainer .ctsrch_rightSide {float:left;width:70%;overflow:hidden;}
 .ctsrch_boxContainer .ctsrch_lineMargin {margin:1px 0 3px -5px;height:1px;overflow:hidden;border-bottom:1px solid #d9d9d9;width:100%;}
 
+/* Project Yellow Styles */
+#yellow.ctsrch_wideContainer {height:83px;width:640px;padding:0 10px 0 10px;margin:10px 0 5px 0;overflow:hidden;background-color:#FFFADA;font:76%/133.33% Arial,sans-serif;border:0;}
+#yellow.ctsrch_wideContainer .ctsrch_mainLink a {font-weight:bold;color:#6666CC;text-decoration:none;}
+#yellow.ctsrch_wideContainer .ctsrch_mainLink a:hover {color:#555555;text-decoration:underline;}
+#yellow.ctsrch_wideContainer .ctsrch_leftSide {display:none;}
+#yellow.ctsrch_wideContainer .ctsrch_subcategoryFont {color:#999999;}
+
 /* Conquest Ads 645x100 Global Styles */
 .ctsrch_wideContainer {height:98px;width:643px;overflow:hidden;background-color:#F8F1D3;font:76%/133.33% Arial,sans-serif;border:solid 1px #d9d9d9;}
 .ctsrch_wideContainer .ctsrch_header {}

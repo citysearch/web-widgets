@@ -38,9 +38,11 @@
                 </div>
             </div>
             <div class="ctsrch_listing">
-                <a class="ctsrch_offers_print" href='<s:property value="offer.couponUrl" />#target-couponLink' >
-                    Print Offer
-                   </a>
+                <div class="ctsrch_offers_print">
+                    <a href='<s:property value="offer.couponUrl" />#target-couponLink' >
+                        Print Offer
+                    </a>
+                </div>
                 <div class="ctsrch_offers_title">
                     <s:property value="offer.offerTitle" />
                 </div>
