@@ -25,7 +25,7 @@ import com.citysearch.webwidget.util.APIFieldNameConstants;
 import com.citysearch.webwidget.util.CommonConstants;
 import com.citysearch.webwidget.util.HelperUtil;
 import com.citysearch.webwidget.util.PropertiesLoader;
-
+@Deprecated
 public class ConquestAdOfferHelper {
 
     private final static String PROPERTY_OFFERS_URL = "offers.url";

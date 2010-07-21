@@ -2,7 +2,6 @@ package com.citysearch.webwidget.helper;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -31,360 +30,297 @@ import com.citysearch.webwidget.util.HelperUtil;
 import com.citysearch.webwidget.util.PropertiesLoader;
 
 /**
- * This Helper class performs all the functionality related to Reviews. Validates the Review
- * request, calls the API, aprses the response, then calls the Profile API and returns the final
- * response back
+ * This Helper class performs all the functionality related to Reviews.
+ * Validates the Review request, calls the API, aprses the response, then calls
+ * the Profile API and returns the final response back
  * 
  * @author Aspert Benjamin
  * 
  */
 public class ReviewHelper {
 
-    public final static String PROPERTY_REVIEW_URL = "reviews.url";
+	public final static String PROPERTY_REVIEW_URL = "reviews.url";
 
-    public final static Integer BUSINESS_NAME_SIZE = 30;
-    public final static Integer REVIEW_TITLE_SIZE = 30;
-    public final static Integer REVIEW_TEXT_SIZE = 250;
-    public final static Integer REVIEW_TEXT_SIZE_50 = 50;
-    public final static Integer PROS_SIZE = 30;
-    public final static Integer CONS_SIZE = 30;
-    private static final int MINIMUM_RATING = 6;
+	public final static Integer BUSINESS_NAME_SIZE = 30;
+	public final static Integer REVIEW_TITLE_SIZE = 30;
+	public final static Integer REVIEW_TEXT_SIZE = 250;
+	public final static Integer REVIEW_TEXT_SIZE_50 = 50;
+	public final static Integer PROS_SIZE = 30;
+	public final static Integer CONS_SIZE = 30;
+	private static final int MINIMUM_RATING = 6;
 
-    private static final String ELEMENT_REVIEW_URL = "review_url";
-    private static final String BUSINESS_NAME = "business_name";
-    private static final String LISTING_ID = "listing_id";
-    private static final String REVIEW_ID = "review_id";
-    private static final String REVIEW_TITLE = "review_title";
-    private static final String REVIEW_TEXT = "review_text";
-    private static final String PROS = "pros";
-    private static final String CONS = "cons";
-    private static final String REVIEW_RATING = "review_rating";
-    private static final String REVIEW_DATE = "review_date";
-    private static final String REVIEW_AUTHOR = "review_author";
-    private static final String DATE_FORMAT = "reviewdate.format";
-    private static final String REVIEW_ELEMENT = "review";
+	private static final String ELEMENT_REVIEW_URL = "review_url";
+	private static final String BUSINESS_NAME = "business_name";
+	private static final String LISTING_ID = "listing_id";
+	private static final String REVIEW_ID = "review_id";
+	private static final String REVIEW_TITLE = "review_title";
+	private static final String REVIEW_TEXT = "review_text";
+	private static final String PROS = "pros";
+	private static final String CONS = "cons";
+	private static final String REVIEW_RATING = "review_rating";
+	private static final String REVIEW_DATE = "review_date";
+	private static final String REVIEW_AUTHOR = "review_author";
+	private static final String DATE_FORMAT = "reviewdate.format";
+	private static final String REVIEW_ELEMENT = "review";
 
-    private Logger log = Logger.getLogger(getClass());
-    private String rootPath;
+	private Logger log = Logger.getLogger(getClass());
+	private String rootPath;
 
-    public ReviewHelper(String rootPath) {
-        this.rootPath = rootPath;
-    }
+	public ReviewHelper(String rootPath) {
+		this.rootPath = rootPath;
+	}
 
-    /**
-     * Constructs the Reviews API query string with all the supplied parameters
-     * 
-     * @return String
-     * @throws CitysearchException
-     */
-    private String getQueryString(ReviewRequest request) throws CitysearchException {
-        // Reflection Probably???
-        StringBuilder strBuilder = new StringBuilder();
+	/**
+	 * Constructs the Reviews API query string with all the supplied parameters
+	 * 
+	 * @return String
+	 * @throws CitysearchException
+	 */
+	private String getQueryString(ReviewRequest request)
+			throws CitysearchException {
+		StringBuilder strBuilder = new StringBuilder(request.getQueryString());
+		if (!StringUtils.isEmpty(request.getPublisher())) {
+			strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+			strBuilder.append(HelperUtil.constructQueryParam(
+					APIFieldNameConstants.PUBLISHER, request.getPublisher()));
+		}
+		if (request.isCustomerOnly()) {
+			strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+			strBuilder.append(HelperUtil.constructQueryParam(
+					APIFieldNameConstants.CUSTOMER_ONLY, String.valueOf(request
+							.isCustomerOnly())));
+		}
+		if (!StringUtils.isEmpty(request.getRating())) {
+			strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+			strBuilder.append(HelperUtil.constructQueryParam(
+					APIFieldNameConstants.RATING, request.getRating()));
+		}
+		if (!StringUtils.isEmpty(request.getDays())) {
+			strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+			strBuilder.append(HelperUtil.constructQueryParam(
+					APIFieldNameConstants.DAYS, request.getDays()));
+		}
+		if (!StringUtils.isEmpty(request.getMax())) {
+			strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+			strBuilder.append(HelperUtil.constructQueryParam(
+					APIFieldNameConstants.MAX, request.getMax()));
+		}
+		if (!StringUtils.isEmpty(request.getPlacement())) {
+			strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
+			strBuilder.append(HelperUtil.constructQueryParam(
+					APIFieldNameConstants.PLACEMENT, request.getPlacement()));
+		}
+		return strBuilder.toString();
+	}
 
-        Properties properties = PropertiesLoader.getAPIProperties();
-        String apiKey = properties.getProperty(CommonConstants.API_KEY_PROPERTY);
-        strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.API_KEY, apiKey));
+	/**
+	 * Gets the review with the latest timestamp from Review API Then calls the
+	 * profile API and gets the details not available from review API like
+	 * Address,Phone,SendToFriendURL and ImageURL
+	 * 
+	 * @param request
+	 * @return Review
+	 * @throws InvalidRequestParametersException
+	 * @throws CitysearchException
+	 */
+	public Review getLatestReview(ReviewRequest request)
+			throws InvalidRequestParametersException, CitysearchException {
+		log.info("ReviewHelper.getLatestReview:: before validate");
+		request.validate();
+		log.info("ReviewHelper.getLatestReview:: after validate");
+		// If Lat and Lon is set find the nearest postal code using search API
+		// Reviews API does not support lat & lon directly
+		if (!StringUtils.isBlank(request.getLatitude())
+				&& !StringUtils.isBlank(request.getLongitude())) {
+			log
+					.info("ReviewHelper.getLatestReview:: Lat and Lon received. Find zip");
+			SearchRequest searchReq = new SearchRequest(request);
+			SearchHelper shelper = new SearchHelper(this.rootPath, request
+					.getDisplaySize());
+			String where = shelper.getClosestLocationPostalCode(searchReq);
+			request.setWhere(where);
+			log.info("ReviewHelper.getLatestReview:: After finding zip");
+		}
 
-        if (!StringUtils.isEmpty(request.getPublisher())) {
-            strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-            strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.PUBLISHER,
-                    request.getPublisher()));
-        }
+		Properties properties = PropertiesLoader.getAPIProperties();
+		String urlString = properties.getProperty(PROPERTY_REVIEW_URL)
+				+ getQueryString(request);
+		log.info("ReviewHelper.getLatestReview:: Request URL " + urlString);
+		Document responseDocument = null;
+		try {
+			responseDocument = HelperUtil.getAPIResponse(urlString, null);
+			log
+					.info("ReviewHelper.getLatestReview:: Successfull response received.");
+		} catch (InvalidHttpResponseException ihe) {
+			throw new CitysearchException(this.getClass().getName(),
+					"getLatestReview", ihe);
+		}
+		Review reviewObj = parseXML(request, responseDocument);
+		return reviewObj;
+	}
 
-        if (!StringUtils.isEmpty(request.getWhere())) {
-            strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-            strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.WHERE,
-                    request.getWhere()));
-        }
+	/**
+	 * Parses the Reviews xml. Returns Review object with values from api
+	 * 
+	 * @param doc
+	 * @return Review
+	 * @throws CitysearchException
+	 */
+	private Review parseXML(ReviewRequest request, Document doc)
+			throws CitysearchException {
+		Review review = null;
+		if (doc != null && doc.hasRootElement()) {
+			Element rootElement = doc.getRootElement();
+			List<Element> reviewsList = rootElement.getChildren(REVIEW_ELEMENT);
+			SimpleDateFormat formatter = new SimpleDateFormat(PropertiesLoader
+					.getAPIProperties().getProperty(DATE_FORMAT));
+			SortedMap<Date, Element> reviewMap = new TreeMap<Date, Element>();
+			for (int i = 0; i < reviewsList.size(); i++) {
+				Element reviewElem = reviewsList.get(i);
+				String rating = reviewElem.getChildText(REVIEW_RATING);
+				if (NumberUtils.toInt(rating) >= MINIMUM_RATING) {
+					String dateStr = reviewElem.getChildText(REVIEW_DATE);
+					Date date = HelperUtil.parseDate(dateStr, formatter);
+					if (date != null) {
+						reviewMap.put(date, reviewElem);
+					}
+				}
+			}
+			Element reviewElm = reviewMap.get(reviewMap.lastKey());
+			review = getReviewInstance(request, reviewElm, this.rootPath);
+		}
+		return review;
+	}
 
-        if (!StringUtils.isEmpty(request.getWhat())) {
-            strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-            strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.WHAT,
-                    request.getWhat()));
-        }
+	/**
+	 * Parses the review element and set the required values in the Review bean
+	 * 
+	 * @param review
+	 * @param reviewsElem
+	 * @return Review
+	 * @throws CitysearchException
+	 */
+	public static Review getReviewInstance(ReviewRequest request,
+			Element reviewElem, String path) throws CitysearchException {
+		Review review = new Review();
 
-        if (!StringUtils.isEmpty(request.getTagId())) {
-            strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-            strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.TAG_ID,
-                    request.getTagId()));
-        }
+		String businessName = reviewElem.getChildText(BUSINESS_NAME);
+		review.setBusinessName(businessName);
+		if (businessName != null
+				&& businessName.trim().length() > BUSINESS_NAME_SIZE) {
+			review.setShortBusinessName(StringUtils.abbreviate(businessName,
+					BUSINESS_NAME_SIZE));
+		} else {
+			review.setShortBusinessName(businessName);
+		}
 
-        if (!StringUtils.isEmpty(request.getTagName())) {
-            strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-            strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.TAG_NAME,
-                    request.getTagName()));
-        }
+		String reviewTitle = reviewElem.getChildText(REVIEW_TITLE);
+		review.setReviewTitle(reviewTitle);
+		if (reviewTitle != null
+				&& reviewTitle.trim().length() > REVIEW_TITLE_SIZE) {
+			review.setShortTitle(StringUtils.abbreviate(reviewTitle,
+					REVIEW_TITLE_SIZE));
+		} else {
+			review.setShortTitle(reviewTitle);
+		}
 
-        if (request.isCustomerOnly()) {
-            strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-            strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.CUSTOMER_ONLY,
-                    String.valueOf(request.isCustomerOnly())));
+		String reviewText = reviewElem.getChildText(REVIEW_TEXT);
+		review.setReviewText(reviewText);
+		if (reviewText != null && reviewText.trim().length() > REVIEW_TEXT_SIZE) {
+			review.setShortReviewText(StringUtils.abbreviate(reviewText,
+					REVIEW_TEXT_SIZE));
+		} else {
+			review.setShortReviewText(reviewText);
+		}
+		if (reviewText != null
+				&& reviewText.trim().length() > REVIEW_TEXT_SIZE_50) {
+			review.setSmallReviewText(StringUtils.abbreviate(reviewText,
+					REVIEW_TEXT_SIZE_50));
+		} else {
+			review.setSmallReviewText(reviewText);
+		}
 
-        }
+		String pros = reviewElem.getChildText(PROS);
+		review.setPros(pros);
+		if (pros != null && pros.trim().length() > PROS_SIZE) {
+			review.setShortPros(StringUtils.abbreviate(pros, PROS_SIZE));
+		} else {
+			review.setShortPros(pros);
+		}
 
-        if (!StringUtils.isEmpty(request.getRating())) {
-            strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-            strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.RATING,
-                    request.getRating()));
-        }
+		String cons = reviewElem.getChildText(CONS);
+		review.setCons(cons);
+		if (cons != null && cons.trim().length() > CONS_SIZE) {
+			review.setShortCons(StringUtils.abbreviate(cons, CONS_SIZE));
+		} else {
+			review.setShortCons(cons);
+		}
 
-        if (!StringUtils.isEmpty(request.getDays())) {
-            strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-            strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.DAYS,
-                    request.getDays()));
-        }
+		review.setListingId(reviewElem.getChildText(LISTING_ID));
+		review.setReviewAuthor(reviewElem.getChildText(REVIEW_AUTHOR));
+		String ratingVal = reviewElem.getChildText(REVIEW_RATING);
+		double rating = NumberUtils.toDouble(ratingVal) / 2;
+		review.setRating(HelperUtil.getRatingsList(ratingVal));
+		review.setReviewRating(String.valueOf(rating));
+		review.setReviewId(reviewElem.getChildText(REVIEW_ID));
+		review.setReviewUrl(reviewElem.getChildText(ELEMENT_REVIEW_URL));
 
-        if (!StringUtils.isEmpty(request.getMax())) {
-            strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-            strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.MAX,
-                    request.getMax()));
-        }
+		String rDateStr = reviewElem.getChildText(REVIEW_DATE);
+		SimpleDateFormat formatter = new SimpleDateFormat(PropertiesLoader
+				.getAPIProperties().getProperty(DATE_FORMAT));
+		Date date = HelperUtil.parseDate(rDateStr, formatter);
+		long now = Calendar.getInstance().getTimeInMillis();
+		review.setTimeSinceReviewString(DurationFormatUtils
+				.formatDurationWords(now - date.getTime(), true, true));
 
-        if (!StringUtils.isEmpty(request.getPlacement())) {
-            strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-            strBuilder.append(HelperUtil.constructQueryParam(APIFieldNameConstants.PLACEMENT,
-                    request.getPlacement()));
-        }
-        return strBuilder.toString();
-    }
+		DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+		review.setReviewDate(df.format(date));
 
-    /**
-     * Validates the request. If any of the parameters are missing, throws Citysearch Exception
-     * 
-     * @throws CitysearchException
-     */
-    private void validateRequest(ReviewRequest request) throws InvalidRequestParametersException,
-            CitysearchException {
-        List<String> errors = new ArrayList<String>();
-        Properties errorProperties = PropertiesLoader.getErrorProperties();
+		// request will be null if called by profile
+		if (request != null) {
+			review.setCallBackFunction(request.getCallBackFunction());
+			review.setCallBackUrl(request.getCallBackUrl());
 
-        if (StringUtils.isBlank(request.getPublisher())) {
-            errors.add(errorProperties.getProperty(CommonConstants.PUBLISHER_ERROR_CODE));
-        }
-        if (StringUtils.isBlank(request.getLatitude())
-                && StringUtils.isBlank(request.getLongitude())
-                && StringUtils.isBlank(request.getWhere())) {
-            errors.add(errorProperties.getProperty(CommonConstants.WHERE_ERROR_CODE));
-        }
+			ProfileRequest profileRequest = new ProfileRequest(request);
+			profileRequest.setClientIP(request.getClientIP());
+			profileRequest.setListingId(review.getListingId());
 
-        if (!StringUtils.isBlank(request.getLatitude())
-                && StringUtils.isBlank(request.getLongitude())) {
-            errors.add(errorProperties.getProperty(CommonConstants.LONGITUDE_ERROR));
-        } else if (StringUtils.isBlank(request.getLatitude())
-                && !StringUtils.isBlank(request.getLongitude())) {
-            errors.add(errorProperties.getProperty(CommonConstants.LATITUDE_ERROR));
-        }
+			ProfileHelper profHelper = new ProfileHelper(path);
+			Profile profile = profHelper.getProfile(profileRequest);
 
-        if (!StringUtils.isBlank(request.getLatitude())
-                && !StringUtils.isBlank(request.getLongitude())
-                && StringUtils.isBlank(request.getRadius())) {
-            errors.add(errorProperties.getProperty(CommonConstants.RADIUS_ERROR));
-        }
-        if (!StringUtils.isBlank(request.getLatitude())
-                && !StringUtils.isBlank(request.getLongitude())
-                && StringUtils.isBlank(request.getWhat())) {
-            errors.add(errorProperties.getProperty(CommonConstants.WHAT_ERROR_CODE));
-        }
-        if (StringUtils.isBlank(request.getClientIP())) {
-            errors.add(errorProperties.getProperty(CommonConstants.CLIENT_IP_ERROR_CODE));
-        }
-        if (!errors.isEmpty()) {
-            throw new InvalidRequestParametersException(this.getClass().getName(),
-                    "validateRequest", "Invalid parameters.", errors);
-        }
-    }
+			review.setAddress(profile.getAddress());
+			review.setPhone(profile.getPhone());
+			review.setProfileUrl(profile.getProfileUrl());
+			review.setSendToFriendUrl(profile.getSendToFriendUrl());
+			review.setImageUrl(profile.getImageUrl());
 
-    /**
-     * Gets the review with the latest timestamp from Review API Then calls the profile API and gets
-     * the details not available from review API like Address,Phone,SendToFriendURL and ImageURL
-     * 
-     * @param request
-     * @return Review
-     * @throws InvalidRequestParametersException
-     * @throws CitysearchException
-     */
-    public Review getLatestReview(ReviewRequest request) throws InvalidRequestParametersException,
-            CitysearchException {
-        log.info("ReviewHelper.getLatestReview:: before validate");
-        validateRequest(request);
-        log.info("ReviewHelper.getLatestReview:: after validate");
-        // If Lat and Lon is set find the nearest postal code using search API
-        if (!StringUtils.isBlank(request.getLatitude())
-                && !StringUtils.isBlank(request.getLongitude())) {
-            log.info("ReviewHelper.getLatestReview:: Lat and Lon received. Find zip");
-            SearchRequest searchReq = new SearchRequest(request);
+			String sendToFriendTrackingUrl = HelperUtil.getTrackingUrl(profile
+					.getSendToFriendUrl(), null, request.getCallBackUrl(),
+					request.getDartClickTrackUrl(), review.getListingId(),
+					profile.getPhone(), request.getPublisher(), request
+							.getAdUnitName(), request.getAdUnitSize());
+			review.setSendToFriendTrackingUrl(sendToFriendTrackingUrl);
 
-            SearchHelper shelper = new SearchHelper(this.rootPath, request.getDisplaySize());
-            String where = shelper.getClosestLocationPostalCode(searchReq);
-            request.setWhere(where);
-            log.info("ReviewHelper.getLatestReview:: After finding zip");
-        }
+			String profileTrackingUrl = HelperUtil.getTrackingUrl(profile
+					.getProfileUrl(), null, request.getCallBackUrl(), request
+					.getDartClickTrackUrl(), review.getListingId(), profile
+					.getPhone(), request.getPublisher(), request
+					.getAdUnitName(), request.getAdUnitSize());
+			review.setProfileTrackingUrl(profileTrackingUrl);
 
-        Properties properties = PropertiesLoader.getAPIProperties();
-        String urlString = properties.getProperty(PROPERTY_REVIEW_URL) + getQueryString(request);
-        log.info("ReviewHelper.getLatestReview:: Request URL " + urlString);
-        Document responseDocument = null;
-        try {
-            responseDocument = HelperUtil.getAPIResponse(urlString, null);
-            log.info("ReviewHelper.getLatestReview:: Successfull response received.");
-        } catch (InvalidHttpResponseException ihe) {
-            throw new CitysearchException(this.getClass().getName(), "getLatestReview", ihe);
-        }
-        Review reviewObj = parseXML(request, responseDocument);
+			String adDisplayTrackingUrl = HelperUtil.getTrackingUrl(review
+					.getReviewUrl(), null, request.getCallBackUrl(), request
+					.getDartClickTrackUrl(), review.getListingId(), profile
+					.getPhone(), request.getPublisher(), request
+					.getAdUnitName(), request.getAdUnitSize());
+			review.setReviewTrackingUrl(adDisplayTrackingUrl);
 
-        return reviewObj;
-    }
-
-    /**
-     * Parses the Reviews xml. Returns Review object with values from api
-     * 
-     * @param doc
-     * @return Review
-     * @throws CitysearchException
-     */
-    private Review parseXML(ReviewRequest request, Document doc) throws CitysearchException {
-        Review review = null;
-        if (doc != null && doc.hasRootElement()) {
-            Element rootElement = doc.getRootElement();
-            List<Element> reviewsList = rootElement.getChildren(REVIEW_ELEMENT);
-            SimpleDateFormat formatter = new SimpleDateFormat(PropertiesLoader.getAPIProperties()
-                    .getProperty(DATE_FORMAT));
-            SortedMap<Date, Element> reviewMap = new TreeMap<Date, Element>();
-            for (int i = 0; i < reviewsList.size(); i++) {
-                Element reviewElem = reviewsList.get(i);
-                String rating = reviewElem.getChildText(REVIEW_RATING);
-                if (NumberUtils.toInt(rating) >= MINIMUM_RATING) {
-                    String dateStr = reviewElem.getChildText(REVIEW_DATE);
-                    Date date = HelperUtil.parseDate(dateStr, formatter);
-                    if (date != null) {
-                        reviewMap.put(date, reviewElem);
-                    }
-                }
-            }
-            Element reviewElm = reviewMap.get(reviewMap.lastKey());
-            review = getReviewInstance(request, reviewElm, this.rootPath);
-        }
-        return review;
-    }
-
-    /**
-     * Parses the review element and set the required values in the Review bean
-     * 
-     * @param review
-     * @param reviewsElem
-     * @return Review
-     * @throws CitysearchException
-     */
-    public static Review getReviewInstance(ReviewRequest request, Element reviewElem, String path)
-            throws CitysearchException {
-        Review review = new Review();
-
-        String businessName = reviewElem.getChildText(BUSINESS_NAME);
-        review.setBusinessName(businessName);
-        if (businessName != null && businessName.trim().length() > BUSINESS_NAME_SIZE) {
-            review.setShortBusinessName(StringUtils.abbreviate(businessName, BUSINESS_NAME_SIZE));
-        } else {
-            review.setShortBusinessName(businessName);
-        }
-
-        String reviewTitle = reviewElem.getChildText(REVIEW_TITLE);
-        review.setReviewTitle(reviewTitle);
-        if (reviewTitle != null && reviewTitle.trim().length() > REVIEW_TITLE_SIZE) {
-            review.setShortTitle(StringUtils.abbreviate(reviewTitle, REVIEW_TITLE_SIZE));
-        } else {
-            review.setShortTitle(reviewTitle);
-        }
-
-        String reviewText = reviewElem.getChildText(REVIEW_TEXT);
-        review.setReviewText(reviewText);
-        if (reviewText != null && reviewText.trim().length() > REVIEW_TEXT_SIZE) {
-            review.setShortReviewText(StringUtils.abbreviate(reviewText, REVIEW_TEXT_SIZE));
-        } else {
-            review.setShortReviewText(reviewText);
-        }
-        if (reviewText != null && reviewText.trim().length() > REVIEW_TEXT_SIZE_50) {
-            review.setSmallReviewText(StringUtils.abbreviate(reviewText, REVIEW_TEXT_SIZE_50));
-        } else {
-            review.setSmallReviewText(reviewText);
-        }
-
-        String pros = reviewElem.getChildText(PROS);
-        review.setPros(pros);
-        if (pros != null && pros.trim().length() > PROS_SIZE) {
-            review.setShortPros(StringUtils.abbreviate(pros, PROS_SIZE));
-        } else {
-            review.setShortPros(pros);
-        }
-
-        String cons = reviewElem.getChildText(CONS);
-        review.setCons(cons);
-        if (cons != null && cons.trim().length() > CONS_SIZE) {
-            review.setShortCons(StringUtils.abbreviate(cons, CONS_SIZE));
-        } else {
-            review.setShortCons(cons);
-        }
-
-        review.setListingId(reviewElem.getChildText(LISTING_ID));
-        review.setReviewAuthor(reviewElem.getChildText(REVIEW_AUTHOR));
-        String ratingVal = reviewElem.getChildText(REVIEW_RATING);
-        double rating = NumberUtils.toDouble(ratingVal) / 2;
-        review.setRating(HelperUtil.getRatingsList(ratingVal));
-        review.setReviewRating(String.valueOf(rating));
-        review.setReviewId(reviewElem.getChildText(REVIEW_ID));
-        review.setReviewUrl(reviewElem.getChildText(ELEMENT_REVIEW_URL));
-
-        String rDateStr = reviewElem.getChildText(REVIEW_DATE);
-        SimpleDateFormat formatter = new SimpleDateFormat(PropertiesLoader.getAPIProperties()
-                .getProperty(DATE_FORMAT));
-        Date date = HelperUtil.parseDate(rDateStr, formatter);
-        long now = Calendar.getInstance().getTimeInMillis();
-        review.setTimeSinceReviewString(DurationFormatUtils.formatDurationWords(now
-                - date.getTime(), true, true));
-
-        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
-        review.setReviewDate(df.format(date));
-
-        // request will be null if called by profile
-        if (request != null) {
-            review.setCallBackFunction(request.getCallBackFunction());
-            review.setCallBackUrl(request.getCallBackUrl());
-
-            ProfileRequest profileRequest = new ProfileRequest(request);
-            profileRequest.setClientIP(request.getClientIP());
-            profileRequest.setListingId(review.getListingId());
-
-            ProfileHelper profHelper = new ProfileHelper(path);
-            Profile profile = profHelper.getProfile(profileRequest);
-
-            review.setAddress(profile.getAddress());
-            review.setPhone(profile.getPhone());
-            review.setProfileUrl(profile.getProfileUrl());
-            review.setSendToFriendUrl(profile.getSendToFriendUrl());
-            review.setImageUrl(profile.getImageUrl());
-
-            String sendToFriendTrackingUrl = HelperUtil.getTrackingUrl(
-                    profile.getSendToFriendUrl(), null, request.getCallBackUrl(),
-                    request.getDartClickTrackUrl(), review.getListingId(), profile.getPhone(),
-                    request.getPublisher(), request.getAdUnitName(), request.getAdUnitSize());
-            review.setSendToFriendTrackingUrl(sendToFriendTrackingUrl);
-
-            String profileTrackingUrl = HelperUtil.getTrackingUrl(profile.getProfileUrl(), null,
-                    request.getCallBackUrl(), request.getDartClickTrackUrl(),
-                    review.getListingId(), profile.getPhone(), request.getPublisher(),
-                    request.getAdUnitName(), request.getAdUnitSize());
-            review.setProfileTrackingUrl(profileTrackingUrl);
-
-            String adDisplayTrackingUrl = HelperUtil.getTrackingUrl(review.getReviewUrl(), null,
-                    request.getCallBackUrl(), request.getDartClickTrackUrl(),
-                    review.getListingId(), profile.getPhone(), request.getPublisher(),
-                    request.getAdUnitName(), request.getAdUnitSize());
-            review.setReviewTrackingUrl(adDisplayTrackingUrl);
-
-            String callBackFn = HelperUtil.getCallBackFunctionString(request.getCallBackFunction(),
-                    review.getListingId(), profile.getPhone());
-            review.setCallBackFunction(callBackFn);
-        }
-        return review;
-    }
+			String callBackFn = HelperUtil.getCallBackFunctionString(request
+					.getCallBackFunction(), review.getListingId(), profile
+					.getPhone());
+			review.setCallBackFunction(callBackFn);
+		}
+		return review;
+	}
 
 }

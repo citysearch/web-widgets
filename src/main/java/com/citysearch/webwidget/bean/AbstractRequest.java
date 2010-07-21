@@ -1,5 +1,19 @@
 package com.citysearch.webwidget.bean;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
+import com.citysearch.webwidget.exception.CitysearchException;
+import com.citysearch.webwidget.exception.InvalidRequestParametersException;
+import com.citysearch.webwidget.util.APIFieldNameConstants;
+import com.citysearch.webwidget.util.CommonConstants;
+import com.citysearch.webwidget.util.HelperUtil;
+import com.citysearch.webwidget.util.PropertiesLoader;
+
 /**
  * The abstract class that contains the common Request field across APIs
  * 
@@ -7,139 +21,229 @@ package com.citysearch.webwidget.bean;
  * 
  */
 public abstract class AbstractRequest {
-    protected String publisher;
-    protected boolean customerOnly;
-    protected String format;
-    protected String adUnitName;
-    protected String adUnitSize;
-    protected Integer displaySize;
-    protected String clientIP;
-    protected String dartClickTrackUrl;
-    protected String callBackFunction;
-    protected String callBackUrl;
-    protected String where;
-    protected String what;
-    protected String latitude;
-    protected String longitude;
-    protected String radius;
-    
-    public String getCallBackFunction() {
-        return callBackFunction;
-    }
+	private Logger log = Logger.getLogger(getClass());
 
-    public void setCallBackFunction(String callBackFunction) {
-        this.callBackFunction = callBackFunction;
-    }
+	protected String publisher;
+	protected boolean customerOnly;
+	protected String format;
+	protected String adUnitName;
+	protected String adUnitSize;
+	protected Integer displaySize;
+	protected String clientIP;
+	protected String dartClickTrackUrl;
+	protected String callBackFunction;
+	protected String callBackUrl;
+	protected String where;
+	protected String what;
+	protected String latitude;
+	protected String longitude;
+	protected String radius;
 
-    public String getCallBackUrl() {
-        return callBackUrl;
-    }
+	public String getCallBackFunction() {
+		return callBackFunction;
+	}
 
-    public void setCallBackUrl(String callBackUrl) {
-        this.callBackUrl = callBackUrl;
-    }
+	public void setCallBackFunction(String callBackFunction) {
+		this.callBackFunction = callBackFunction;
+	}
 
-    public String getDartClickTrackUrl() {
-        return dartClickTrackUrl;
-    }
+	public String getCallBackUrl() {
+		return callBackUrl;
+	}
 
-    public void setDartClickTrackUrl(String dartClickTrackUrl) {
-        this.dartClickTrackUrl = dartClickTrackUrl;
-    }
+	public void setCallBackUrl(String callBackUrl) {
+		this.callBackUrl = callBackUrl;
+	}
 
-    public String getClientIP() {
-        return clientIP;
-    }
+	public String getDartClickTrackUrl() {
+		return dartClickTrackUrl;
+	}
 
-    public void setClientIP(String clientIP) {
-        this.clientIP = clientIP;
-    }
+	public void setDartClickTrackUrl(String dartClickTrackUrl) {
+		this.dartClickTrackUrl = dartClickTrackUrl;
+	}
 
-    public String getPublisher() {
-        return publisher;
-    }
+	public String getClientIP() {
+		return clientIP;
+	}
 
-    public void setPublisher(String publisher) {
-        this.publisher = publisher;
-    }
+	public void setClientIP(String clientIP) {
+		this.clientIP = clientIP;
+	}
 
-    public boolean isCustomerOnly() {
-        return customerOnly;
-    }
+	public String getPublisher() {
+		return publisher;
+	}
 
-    public void setCustomerOnly(boolean customerOnly) {
-        this.customerOnly = customerOnly;
-    }
+	public void setPublisher(String publisher) {
+		this.publisher = publisher;
+	}
 
-    public String getFormat() {
-        return format;
-    }
+	public boolean isCustomerOnly() {
+		return customerOnly;
+	}
 
-    public void setFormat(String format) {
-        this.format = format;
-    }
+	public void setCustomerOnly(boolean customerOnly) {
+		this.customerOnly = customerOnly;
+	}
 
-    public String getAdUnitName() {
-        return adUnitName;
-    }
+	public String getFormat() {
+		return format;
+	}
 
-    public void setAdUnitName(String adUnitName) {
-        this.adUnitName = adUnitName;
-    }
+	public void setFormat(String format) {
+		this.format = format;
+	}
 
-    public String getAdUnitSize() {
-        return adUnitSize;
-    }
+	public String getAdUnitName() {
+		return adUnitName;
+	}
 
-    public void setAdUnitSize(String adUnitSize) {
-        this.adUnitSize = adUnitSize;
-    }
+	public void setAdUnitName(String adUnitName) {
+		this.adUnitName = adUnitName;
+	}
 
-    public Integer getDisplaySize() {
-        return displaySize;
-    }
+	public String getAdUnitSize() {
+		return adUnitSize;
+	}
 
-    public void setDisplaySize(Integer displaySize) {
-        this.displaySize = displaySize;
-    }
+	public void setAdUnitSize(String adUnitSize) {
+		this.adUnitSize = adUnitSize;
+	}
 
-    public String getWhere() {
-        return where;
-    }
+	public Integer getDisplaySize() {
+		return displaySize;
+	}
 
-    public void setWhere(String where) {
-        this.where = where;
-    }
+	public void setDisplaySize(Integer displaySize) {
+		this.displaySize = displaySize;
+	}
 
-    public String getWhat() {
-        return what;
-    }
+	public String getWhere() {
+		return where;
+	}
 
-    public void setWhat(String what) {
-        this.what = what;
-    }
+	public void setWhere(String where) {
+		this.where = where;
+	}
 
-    public String getLatitude() {
-        return latitude;
-    }
+	public String getWhat() {
+		return what;
+	}
 
-    public void setLatitude(String latitude) {
-        this.latitude = latitude;
-    }
+	public void setWhat(String what) {
+		this.what = what;
+	}
 
-    public String getLongitude() {
-        return longitude;
-    }
+	public String getLatitude() {
+		return latitude;
+	}
 
-    public void setLongitude(String longitude) {
-        this.longitude = longitude;
-    }
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
+	}
 
-    public String getRadius() {
-        return radius;
-    }
+	public String getLongitude() {
+		return longitude;
+	}
 
-    public void setRadius(String radius) {
-        this.radius = radius;
-    }
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
+	}
+
+	public String getRadius() {
+		return radius;
+	}
+
+	public void setRadius(String radius) {
+		this.radius = radius;
+	}
+
+	/**
+	 * Method to validate required parameters for a request.
+	 * 
+	 * @throws CitysearchException
+	 *             , InvalidRequestParametersException
+	 */
+	public void validate() throws InvalidRequestParametersException,
+			CitysearchException {
+		log.info("Start AbstractRequest validate()");
+		List<String> errors = new ArrayList<String>();
+		Properties errorProperties = PropertiesLoader.getErrorProperties();
+
+		if (StringUtils.isBlank(getPublisher())) {
+			errors.add(errorProperties
+					.getProperty(CommonConstants.PUBLISHER_ERROR_CODE));
+		}
+
+		if (StringUtils.isBlank(getWhat())) {
+			errors.add(errorProperties
+					.getProperty(CommonConstants.WHAT_ERROR_CODE));
+		}
+
+		if ((StringUtils.isBlank(getLatitude()) || StringUtils
+				.isBlank(getLongitude()))
+				&& StringUtils.isBlank(getWhere())) {
+			errors.add(errorProperties
+					.getProperty(CommonConstants.WHERE_ERROR_CODE));
+		}
+		if (!StringUtils.isBlank(getLatitude())
+				&& StringUtils.isBlank(getLongitude())) {
+			errors.add(errorProperties
+					.getProperty(CommonConstants.LONGITUDE_ERROR));
+		} else if (StringUtils.isBlank(getLatitude())
+				&& !StringUtils.isBlank(getLongitude())) {
+			errors.add(errorProperties
+					.getProperty(CommonConstants.LATITUDE_ERROR));
+		}
+
+		if (StringUtils.isBlank(getClientIP())) {
+			errors.add(errorProperties
+					.getProperty(CommonConstants.CLIENT_IP_ERROR_CODE));
+		}
+		if (!errors.isEmpty()) {
+			throw new InvalidRequestParametersException(this.getClass()
+					.getName(), "AbstractRequest.validate()",
+					"Invalid parameters.", errors);
+		}
+		log.info("End AbstractRequest validate()");
+	}
+
+	public String getQueryString() throws CitysearchException {
+		StringBuilder apiQueryString = new StringBuilder();
+		// Don't add the publisher param here. Because Some API's requires
+		// publishercode and some requires publisher.
+		// Let the helper handle it.
+		Properties properties = PropertiesLoader.getAPIProperties();
+		String apiKey = properties
+				.getProperty(CommonConstants.API_KEY_PROPERTY);
+		apiQueryString.append(HelperUtil.constructQueryParam(
+				APIFieldNameConstants.API_KEY, apiKey));
+
+		apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
+		apiQueryString.append(HelperUtil.constructQueryParam(
+				APIFieldNameConstants.WHAT, getWhat()));
+
+		if (!StringUtils.isBlank(getLatitude())
+				&& !StringUtils.isBlank(getLongitude())) {
+			apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
+			apiQueryString.append(HelperUtil.constructQueryParam(
+					APIFieldNameConstants.LATITUDE, getLatitude()));
+
+			apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
+			apiQueryString.append(HelperUtil.constructQueryParam(
+					APIFieldNameConstants.LONGITUDE, getLongitude()));
+
+			String radius = (StringUtils.isBlank(getRadius())) ? String
+					.valueOf(CommonConstants.DEFAULT_RADIUS) : getRadius();
+			apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
+			apiQueryString.append(HelperUtil.constructQueryParam(
+					APIFieldNameConstants.RADIUS, radius));
+		} else {
+			apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
+			apiQueryString.append(HelperUtil.constructQueryParam(
+					APIFieldNameConstants.WHERE, getWhere()));
+		}
+		return apiQueryString.toString();
+	}
 }

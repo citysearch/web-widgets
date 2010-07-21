@@ -34,6 +34,7 @@ public class CommonConstants {
     public static final String CITY = "city";
     public static final String STATE = "state";
     public static final String POSTALCODE = "postalcode";
+    public static final String DISTANCE = "distance";
     public static final String SEARCHRESPONSE = "searchResponse";
     public static final String SEARCH_API_QUERIED = "searchAPIQueried";
     public static final String RATING = "rating";
@@ -48,7 +49,7 @@ public class CommonConstants {
     public static final String IMAGE_URL = "imageURL";
     public static final String REVIEW_API_TYPE = "review";
     public static final String OFFERS = "offers";
-
+    
     public final static String API_KEY_PROPERTY = "apikey";
 
     public final static String API_KEY_ERROR_CODE = "apikey.errmsg";
