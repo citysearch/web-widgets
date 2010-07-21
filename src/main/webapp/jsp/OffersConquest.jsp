@@ -18,7 +18,9 @@
                             <img width="47px" height="47px" src='<s:property value="offer.imageUrl" />'/>
                         </a>
                     </div>
-                    <div class="ctsrch_milesFont"><s:property value="offer.distance" /> mi away</div>
+                    <s:if test="%{offer.distance != null}">
+                    	<div class="ctsrch_milesFont"><s:property value="offer.distance" /> mi away</div>
+                    </s:if>
                 </div>
                 <div class="ctsrch_rightSide">
                     <div class="ctsrch_mainLink">
