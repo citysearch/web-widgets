@@ -1,9 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@taglib prefix="s" uri="/struts-tags"%>
-<noscript><img src='<s:property value="oneByOneTrackingUrl"/>' border="0" alt="" /></noscript>
 <div class="ctsrch_boxContainer">
     <div class="ctsrch_header">
         <div class="ctsrch_headerText">More to Try</div>
+        <img src='<s:property value="oneByOneTrackingUrl"/>' width="1px" height="1px" border="0" alt="" />
     </div>
     <div class="ctsrch_container">
         <!-- Nearby Places -->
@@ -19,9 +19,9 @@
                         </s:else>
                     </div>
                     <s:if test="%{distance != -1}">
-	                    <div class="ctsrch_milesFont">
-	                        <s:property value="distance" /> mi away
-	                    </div>
+                        <div class="ctsrch_milesFont">
+                            <s:property value="distance" /> mi away
+                        </div>
                     </s:if>
                 </div>
                 <div class="ctsrch_rightSide">
