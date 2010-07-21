@@ -2,25 +2,30 @@
     pageEncoding="ISO-8859-1"%>
 <%@taglib prefix="s" uri="/struts-tags" %>
 
-<div class="ctsrch_wideContainer">
-    <div class="ctsrch_header clearfix">
-        <div class="ctsrch_sponserText">Ads by Citygrid</div>
-        <s:if test="%{offer != null}">
-            <div class="ctsrch_headerText">Special Offers Nearby</div>
-        </s:if>
-    </div>
-    <div class="ctsrch_container clearfix">
-        <s:if test="%{offer != null}">
+<s:if test="%{offer != null}">
+    <!-- Offers -->
+    <div class="ctsrch_wideContainer ctsrch_offers">
+        <div class="ctsrch_container clearfix">
+            <div class="ctsrch_offers_details">
+                <div class="ctsrch_offers_title">
+                    <s:property value="offer.offerTitle" />
+                </div>
+                <div class="ctsrch_offers_desc">
+                    <s:property value="offer.offerDescription" />
+                </div>
+                <div class="ctsrch_offers_print">
+                    <a href='<s:property value="offer.couponUrl" />#target-couponLink' >
+                        Get Offer
+                    </a>
+                </div>
+            </div>
             <div class="ctsrch_listing">
                 <div class="ctsrch_leftSide">
                     <div class="ctsrch_bizPhoto">
                         <a href='<s:property value="offer.profileTrackingUrl" />' >
-                            <img width="47px" height="47px" src='<s:property value="offer.imageUrl" />'/>
+                            <img src='<s:property value="offer.imageUrl" />'/>
                         </a>
                     </div>
-                    <s:if test="%{offer.distance != null}">
-                    	<div class="ctsrch_milesFont"><s:property value="offer.distance" /> mi away</div>
-                    </s:if>
                 </div>
                 <div class="ctsrch_rightSide">
                     <div class="ctsrch_mainLink">
@@ -34,26 +39,30 @@
                             <s:property value="offer.reviewCount" /> Reviews
                         </div>
                     </div>
+                    <div class="ctsrch_phone">
+                        <s:property value="offer.phone" />
+                    </div>
                     <div class="ctsrch_cityFont">
-                        <s:property value="offer.location" />
+                        <s:property value="offer.location" /> <s:property value="offer.zip" />
                     </div>
                 </div>
             </div>
-            <div class="ctsrch_listing">
-                <div class="ctsrch_offers_print">
-                    <a href='<s:property value="offer.couponUrl" />#target-couponLink' >
-                        Print Offer
-                    </a>
-                </div>
-                <div class="ctsrch_offers_title">
-                    <s:property value="offer.offerTitle" />
-                </div>
-                <div class="ctsrch_offers_desc">
-                    <s:property value="offer.offerDescription" />
-                </div>
-            </div>
-        </s:if>
-        <s:elseif test="%{!houseAds.isEmpty()}">
+        </div>
+        <div class="ctsrch_header clearfix">
+            <div class="ctsrch_sponserText">Ads by Citygrid</div>
+        </div>
+    </div>
+</s:if>
+<s:elseif test="%{!houseAds.isEmpty()}">
+    <!-- House Ads -->
+    <div class="ctsrch_wideContainer">
+        <div class="ctsrch_header clearfix">
+            <div class="ctsrch_sponserText">Ads by Citygrid</div>
+            <s:if test="%{offer != null}">
+                <div class="ctsrch_headerText">Special Offers Nearby</div>
+            </s:if>
+        </div>
+        <div class="ctsrch_container clearfix">
             <s:iterator value="houseAds" status="hadStatus">
                 <div class="ctsrch_listing">
                     <div class="ctsrch_leftSide"></div>
@@ -70,6 +79,6 @@
                     </div>
                 </div>
             </s:iterator>
-        </s:elseif>
+        </div>
     </div>
-</div>
+</s:elseif>
