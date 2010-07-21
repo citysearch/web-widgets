@@ -31,9 +31,9 @@ import com.citysearch.webwidget.exception.InvalidHttpResponseException;
 
 /**
  * Helper class that contains generic methods used across all APIs
- * 
+ *
  * @author Aspert Benjamin
- * 
+ *
  */
 public class HelperUtil {
 
@@ -50,7 +50,7 @@ public class HelperUtil {
 
     /**
      * Helper method to build a string in name=value format. Used in building http query string.
-     * 
+     *
      * @param name
      * @param value
      * @return String
@@ -73,7 +73,7 @@ public class HelperUtil {
 
     /**
      * Converts the InputSteam to a document and returns it
-     * 
+     *
      * @param input
      * @return Document
      * @throws IOException
@@ -101,7 +101,7 @@ public class HelperUtil {
      * Connects to the url using HttpConnection. In case of error returns
      * InvalidHttpResponseException otherwise converts the response to org.jdom.Document and returns
      * it
-     * 
+     *
      * @param url
      * @return Document
      * @throws CitysearchException
@@ -139,7 +139,7 @@ public class HelperUtil {
 
     /**
      * Parses the dateStr to Date object as per the formatter format
-     * 
+     *
      * @param dateStr
      * @param formatter
      * @return Date
@@ -160,7 +160,7 @@ public class HelperUtil {
      * Calculate the ratings value and determines the rating stars to be displayed Returns what type
      * of star to be displayed in an array E.g.for 3.5 rating the array will have values {2,2,2,1,0}
      * where 2 represents full star, 1 half star and 0 empty star
-     * 
+     *
      * @param rating
      * @return
      */
@@ -191,7 +191,7 @@ public class HelperUtil {
     /**
      * This method takes the source latitude, longitude and destination latitude, longitude to
      * calculate the distance between two points and returns the distance
-     * 
+     *
      * @param sourceLat
      * @param sourceLon
      * @param destLat
@@ -371,5 +371,24 @@ public class HelperUtil {
             // DO not throw an exception here.
         }
         return String.valueOf(CommonConstants.DEFAULT_RADIUS);
+    }
+
+    /**
+     * Parses a plain 3101231234 into (310) 123-1234
+     */
+    public static String parsePhone(String phoneStr) {
+        String areaCode = phoneStr.substring(0, 3);
+        String prefix = phoneStr.substring(3, 6);
+        String number = phoneStr.substring(6, 10);
+
+        StringBuilder strBuilder = new StringBuilder();
+        strBuilder.append('(');
+        strBuilder.append(areaCode);
+        strBuilder.append(") ");
+        strBuilder.append(prefix);
+        strBuilder.append('-');
+        strBuilder.append(number);
+
+        return strBuilder.toString();
     }
 }
