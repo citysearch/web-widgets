@@ -8,7 +8,7 @@
 
 /* Mantle Ads 300x250 Global Styles */
 .ctsrch_boxContainer {height:248px;width:298px;overflow:hidden;font:76%/133.33% Arial,sans-serif;border:solid 1px #d9d9d9;}
-.ctsrch_boxContainer .ctsrch_header {height:25px;background:#abbd65;width:100%;background:url('../img/blue_header.jpg') repeat-x;}
+.ctsrch_boxContainer .ctsrch_header {height:25px;background:#abbd65;width:100%;background:#308ebd url(../img/bg_sprites_repeat_x.png) repeat-x 0 -704px;}
 .ctsrch_boxContainer .ctsrch_headerText {font-size:18px;padding:4px 4px 4px 6px;color:#fff;}
 .ctsrch_boxContainer .ctsrch_container {padding:3px 10px 7px 10px;}
 .ctsrch_boxContainer .ctsrch_listing {height:68px;overflow:hidden;width:99%;}
@@ -28,7 +28,7 @@
 
 /* Tall Ads 300x500 Global Styles */
 .ctsrch_tallContainer {max-height:498px;width:298px;overflow:hidden;font:76%/133.33% Arial,sans-serif;border:solid 1px #d9d9d9;}
-.ctsrch_tallContainer .ctsrch_header {height:25px;background:#abbd65;width:100%;background:url('../img/blue_header.jpg') repeat-x;}
+.ctsrch_tallContainer .ctsrch_header {height:25px;background:#abbd65;width:100%;background:#308ebd url(../img/bg_sprites_repeat_x.png) repeat-x 0 -704px;}
 .ctsrch_tallContainer .ctsrch_headerText {font-size:18px;padding:4px 4px 4px 6px;color:#fff;}
 .ctsrch_tallContainer .ctsrch_container {padding:3px 10px 7px 10px;}
 .ctsrch_tallContainer .ctsrch_listing {overflow:hidden;width:99%;}
