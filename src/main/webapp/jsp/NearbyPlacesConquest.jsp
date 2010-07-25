@@ -4,6 +4,7 @@
 <div class="ctsrch_wideContainer">
     <div class="ctsrch_header clearfix">
         <div class="ctsrch_sponserText">Ads by Citygrid</div>
+        <img src='<s:property value="oneByOneTrackingUrl"/>' style="float: left;" width="1px" height="1px" border="0" alt="" />
     </div>
     <div class="ctsrch_container clearfix">
         <s:iterator value="nearbyPlaces" status="placesStatus">
