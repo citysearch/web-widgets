@@ -160,11 +160,7 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
 		nearbyPlacesRequest.setValidUrl(false);
 		try {
 			nearbyPlacesResponse = helper.getNearbyPlaces(nearbyPlacesRequest);
-			if (nearbyPlacesRequest.getAdUnitSize() != null
-					&& nearbyPlacesRequest.getAdUnitSize().equals(
-							CommonConstants.MANTLE_AD_SIZE)) {
-				set1x1TrackingPixel(nearbyPlacesRequest.getAdUnitSize());
-			}
+			set1x1TrackingPixel(nearbyPlacesRequest.getAdUnitSize());
 			log.info("End NearbyPlacesAction");
 		} catch (InvalidRequestParametersException ihre) {
 			log.error(ihre.getDetailedMessage());
