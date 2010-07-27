@@ -74,7 +74,7 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
 	}
 
 	public String execute() throws CitysearchException {
-		log.info("Begin ProjectYellow.NearbyPlacesAction");
+		log.info("Begin NearbyPlacesAction");
 		//TODO: Remove the following three lines
 		log.error("*********************************************************************************");
 		log.error("NearbyPlacesAction -- DART URL: " + nearbyPlacesRequest.getDartClickTrackUrl());
