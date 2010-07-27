@@ -19,9 +19,34 @@ public class AbstractCitySearchAction implements ServletRequestAware,
 	public static final String REQUEST_ATTRIBUTE_ADUNIT_DISPLAY_SIZE = "adUnitDisplaySize";
 	public static final String REQUEST_ATTRIBUTE_LATITUDE = "latitude";
 	public static final String REQUEST_ATTRIBUTE_LONGITUDE = "longitude";
+	public static final String REQUEST_ATTRIBUTE_BACKFILL_FOR = "backfillFor";
 
 	private HttpServletRequest httpRequest;
 	private HttpServletResponse httpResponse;
+	private String oneByOneTrackingUrl;
+	// 1x1 tracking for the adunit that was actually requested.
+	// Used only when the nearby is a backfill.
+	// If backfill, render the nearby 1x1 tracking and the tracking for the
+	// actual adunit that was requested. The way we can track the nearby
+	// backfill impression for adunits other than nearby.
+	private String oneByOneTrackingUrlForOriginal;
+
+	public String getOneByOneTrackingUrl() {
+		return oneByOneTrackingUrl;
+	}
+
+	public void setOneByOneTrackingUrl(String oneByOneTrackingUrl) {
+		this.oneByOneTrackingUrl = oneByOneTrackingUrl;
+	}
+
+	public String getOneByOneTrackingUrlForOriginal() {
+		return oneByOneTrackingUrlForOriginal;
+	}
+
+	public void setOneByOneTrackingUrlForOriginal(
+			String oneByOneTrackingUrlForOriginal) {
+		this.oneByOneTrackingUrlForOriginal = oneByOneTrackingUrlForOriginal;
+	}
 
 	public void setServletRequest(HttpServletRequest httpRequest) {
 		this.httpRequest = httpRequest;

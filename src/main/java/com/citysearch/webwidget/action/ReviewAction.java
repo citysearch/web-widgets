@@ -15,91 +15,97 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ModelDriven;
 
 /**
- * This class processes the Reviews request, and gets the Reviews Response in the execute() method
+ * This class processes the Reviews request, and gets the Reviews Response in
+ * the execute() method
  * 
  * @author Aspert Benjamin
  * 
  */
-public class ReviewAction extends AbstractCitySearchAction implements ModelDriven<ReviewRequest> {
-    private Logger log = Logger.getLogger(getClass());
-    private ReviewRequest reviewRequest = new ReviewRequest();
-    private Review review;
-    private List<HouseAd> houseAds;
+public class ReviewAction extends AbstractCitySearchAction implements
+		ModelDriven<ReviewRequest> {
+	private Logger log = Logger.getLogger(getClass());
+	private ReviewRequest reviewRequest = new ReviewRequest();
+	private Review review;
+	private List<HouseAd> houseAds;
 
-    public List<HouseAd> getHouseAds() {
-        return houseAds;
-    }
+	public List<HouseAd> getHouseAds() {
+		return houseAds;
+	}
 
-    public void setHouseAds(List<HouseAd> houseAds) {
-        this.houseAds = houseAds;
-    }
+	public void setHouseAds(List<HouseAd> houseAds) {
+		this.houseAds = houseAds;
+	}
 
-    public ReviewRequest getReviewRequest() {
-        return reviewRequest;
-    }
+	public ReviewRequest getReviewRequest() {
+		return reviewRequest;
+	}
 
-    public void setReviewRequest(ReviewRequest reviewRequest) {
-        this.reviewRequest = reviewRequest;
-    }
+	public void setReviewRequest(ReviewRequest reviewRequest) {
+		this.reviewRequest = reviewRequest;
+	}
 
-    public Review getReview() {
-        return review;
-    }
+	public Review getReview() {
+		return review;
+	}
 
-    public void setReview(Review review) {
-        this.review = review;
-    }
+	public void setReview(Review review) {
+		this.review = review;
+	}
 
-    public ReviewRequest getModel() {
-        return reviewRequest;
-    }
+	public ReviewRequest getModel() {
+		return reviewRequest;
+	}
 
-    /**
-     * Calls the getLatestReview() method from ReviewHelper class to get the latest Review Returns
-     * the Response status
-     * 
-     * @return String
-     * @throws CitysearchException
-     */
-    public String execute() throws CitysearchException {
-        ReviewHelper helper = new ReviewHelper(getResourceRootPath());
-        log.info("Start review action");
-        reviewRequest.setAdUnitName(CommonConstants.AD_UNIT_NAME_REVIEW);
-        if (reviewRequest.getAdUnitSize() == null
-                || reviewRequest.getAdUnitSize().trim().length() == 0) {
-            reviewRequest.setAdUnitSize(CommonConstants.MANTLE_AD_SIZE);
-            reviewRequest.setDisplaySize(CommonConstants.MANTLE_DISPLAY_SIZE);
-        }
-        if (reviewRequest.getDisplaySize() == null || reviewRequest.getDisplaySize() == 0) {
-            reviewRequest.setDisplaySize(CommonConstants.MANTLE_DISPLAY_SIZE);
-        }
-        try {
-            review = helper.getLatestReview(reviewRequest);
-            if (review == null) {
-                log.info("Returning backfill from review");
-                getHttpRequest().setAttribute(REQUEST_ATTRIBUTE_BACKFILL, true);
-                getHttpRequest().setAttribute(REQUEST_ATTRIBUTE_ADUNIT_SIZE,
-                        reviewRequest.getAdUnitSize());
-                getHttpRequest().setAttribute(REQUEST_ATTRIBUTE_ADUNIT_DISPLAY_SIZE,
-                        reviewRequest.getDisplaySize());
-                getHttpRequest().setAttribute(REQUEST_ATTRIBUTE_LATITUDE,
-                        reviewRequest.getLatitude());
-                getHttpRequest().setAttribute(REQUEST_ATTRIBUTE_LONGITUDE,
-                        reviewRequest.getLongitude());
-                return "backfill";
-            }
-            log.info("End review action");
-        } catch (InvalidRequestParametersException ihre) {
-            log.error(ihre.getDetailedMessage());
-            houseAds = getHouseAds(reviewRequest.getDartClickTrackUrl(), 3);
-        } catch (Exception cse) {
-            log.error(cse.getMessage());
-            StackTraceElement[] elms = cse.getStackTrace();
-            for (int k = 0; k < elms.length; k++) {
-                log.error(elms[k]);
-            }
-            houseAds = getHouseAds(reviewRequest.getDartClickTrackUrl(), 3);
-        }
-        return Action.SUCCESS;
-    }
+	/**
+	 * Calls the getLatestReview() method from ReviewHelper class to get the
+	 * latest Review Returns the Response status
+	 * 
+	 * @return String
+	 * @throws CitysearchException
+	 */
+	public String execute() throws CitysearchException {
+		ReviewHelper helper = new ReviewHelper(getResourceRootPath());
+		log.info("Start review action");
+		reviewRequest.setAdUnitName(CommonConstants.AD_UNIT_NAME_REVIEW);
+		if (reviewRequest.getAdUnitSize() == null
+				|| reviewRequest.getAdUnitSize().trim().length() == 0) {
+			reviewRequest.setAdUnitSize(CommonConstants.MANTLE_AD_SIZE);
+			reviewRequest.setDisplaySize(CommonConstants.MANTLE_DISPLAY_SIZE);
+		}
+		if (reviewRequest.getDisplaySize() == null
+				|| reviewRequest.getDisplaySize() == 0) {
+			reviewRequest.setDisplaySize(CommonConstants.MANTLE_DISPLAY_SIZE);
+		}
+		try {
+			review = helper.getLatestReview(reviewRequest);
+			if (review == null) {
+				log.info("Returning backfill from review");
+				getHttpRequest().setAttribute(REQUEST_ATTRIBUTE_BACKFILL, true);
+				getHttpRequest().setAttribute(REQUEST_ATTRIBUTE_ADUNIT_SIZE,
+						reviewRequest.getAdUnitSize());
+				getHttpRequest().setAttribute(
+						REQUEST_ATTRIBUTE_ADUNIT_DISPLAY_SIZE,
+						reviewRequest.getDisplaySize());
+				getHttpRequest().setAttribute(REQUEST_ATTRIBUTE_LATITUDE,
+						reviewRequest.getLatitude());
+				getHttpRequest().setAttribute(REQUEST_ATTRIBUTE_LONGITUDE,
+						reviewRequest.getLongitude());
+				getHttpRequest().setAttribute(REQUEST_ATTRIBUTE_BACKFILL_FOR,
+						CommonConstants.AD_UNIT_NAME_REVIEW);
+				return "backfill";
+			}
+			log.info("End review action");
+		} catch (InvalidRequestParametersException ihre) {
+			log.error(ihre.getDetailedMessage());
+			houseAds = getHouseAds(reviewRequest.getDartClickTrackUrl(), 3);
+		} catch (Exception cse) {
+			log.error(cse.getMessage());
+			StackTraceElement[] elms = cse.getStackTrace();
+			for (int k = 0; k < elms.length; k++) {
+				log.error(elms[k]);
+			}
+			houseAds = getHouseAds(reviewRequest.getDartClickTrackUrl(), 3);
+		}
+		return Action.SUCCESS;
+	}
 }

@@ -13,6 +13,7 @@ import com.citysearch.webwidget.bean.NearbyPlacesResponse;
 import com.citysearch.webwidget.exception.CitysearchException;
 import com.citysearch.webwidget.exception.InvalidRequestParametersException;
 import com.citysearch.webwidget.helper.NearbyPlacesHelper;
+import com.citysearch.webwidget.util.CommonConstants;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ModelDriven;
 
@@ -66,8 +67,11 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
     }
 
     public String execute() throws CitysearchException {
-        log.info("Begin NearbyPlacesAction");
-
+        log.info("Begin Project yellow NearbyPlacesAction");
+        
+        //Publisher is Yelp for project yellow always. 
+        nearbyPlacesRequest.setPublisher(CommonConstants.PUBLISHER_PROJECT_YELLOW);
+        
         Object requestAttrib = getHttpRequest().getAttribute(REQUEST_ATTRIBUTE_BACKFILL);
         boolean backfill = (requestAttrib != null && requestAttrib instanceof Boolean) ? (Boolean) requestAttrib
                 : false;

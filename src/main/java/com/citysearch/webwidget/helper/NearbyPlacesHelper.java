@@ -498,13 +498,22 @@ public class NearbyPlacesHelper {
 		nbp.setAdDestinationUrl(ad.getChildText(AD_DESTINATION_URL));
 		nbp.setListingId(ad.getChildText(LISTING_ID_TAG));
 		nbp.setPhone(ad.getChildText(PHONE_TAG));
-
+		
+		//TODO: Remove the following three lines
+		log.error("*********************************************************************************");
+		log.error("NearbyPlacesAction.toBackfill -- DART URL: " + request.getDartClickTrackUrl());
+		log.error("*********************************************************************************");
+		
 		String adDisplayTrackingUrl = HelperUtil.getTrackingUrl(nbp
 				.getAdDisplayURL(), nbp.getAdDestinationUrl(), null, request
 				.getDartClickTrackUrl(), nbp.getListingId(), nbp.getPhone(),
 				request.getPublisher(), request.getAdUnitName(), request
 						.getAdUnitSize());
-
+		
+		log.error("*********************************************************************************");
+		log.error("NearbyPlacesAction.toBackfill -- AD Display Tracking URL: " + adDisplayTrackingUrl);
+		log.error("*********************************************************************************");
+		
 		nbp.setAdDisplayTrackingURL(adDisplayTrackingUrl);
 		return nbp;
 	}

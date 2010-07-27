@@ -50,6 +50,7 @@
         </div>
         <div class="ctsrch_header clearfix">
             <div class="ctsrch_sponserText">Ads by Citygrid</div>
+            <img src='<s:property value="oneByOneTrackingUrl"/>' style="float: left;" width="1px" height="1px" border="0" alt="" />
         </div>
     </div>
 </s:if>
@@ -58,6 +59,7 @@
     <div class="ctsrch_wideContainer">
         <div class="ctsrch_header clearfix">
             <div class="ctsrch_sponserText">Ads by Citygrid</div>
+            <img src='<s:property value="oneByOneTrackingUrl"/>' style="float: left;" width="1px" height="1px" border="0" alt="" />
             <s:if test="%{offer != null}">
                 <div class="ctsrch_headerText">Special Offers Nearby</div>
             </s:if>
