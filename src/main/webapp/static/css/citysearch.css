@@ -87,8 +87,8 @@
 .ctsrch_subLink_bf a:hover {text-decoration:underline;}
 
 /* Project Yellow Styles */
-#yellow.ctsrch_wideContainer {height:83px;width:640px;padding:0 10px 0 10px;margin:10px 0 5px 0;overflow:hidden;background-color:#FFFADA;font:76%/133.33% Arial,sans-serif;border:0;}
-#yellow.ctsrch_wideContainer .ctsrch_mainLink a {font-weight:bold;color:#6666CC;text-decoration:none;}
-#yellow.ctsrch_wideContainer .ctsrch_mainLink a:hover {color:#555555;text-decoration:underline;}
-#yellow.ctsrch_wideContainer .ctsrch_leftSide {display:none;}
-#yellow.ctsrch_wideContainer .ctsrch_subcategoryFont {color:#999999;}
+.ctsrch_yelp {height:83px;width:640px;padding:0 10px 0 10px;margin:10px 0 5px 0;overflow:hidden;background-color:#FFFADA;font:76%/133.33% Arial,sans-serif;border:0;}
+.ctsrch_yelp .ctsrch_mainLink a {font-weight:bold;color:#6666CC;text-decoration:none;}
+.ctsrch_yelp .ctsrch_mainLink a:hover {color:#555555;text-decoration:underline;}
+.ctsrch_yelp .ctsrch_leftSide {display:none;}
+.ctsrch_yelp .ctsrch_subcategoryFont {color:#999999;}
