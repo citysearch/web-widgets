@@ -3,7 +3,7 @@
 
 <div class="ctsrch_wideContainer">
     <div class="ctsrch_header clearfix">
-        <div class="ctsrch_sponserText">Ads by Citygrid</div>
+        <div class="ctsrch_sponserText">Ads by CityGrid</div>
         <img src='<s:property value="oneByOneTrackingUrl"/>' style="float: left;" width="1px" height="1px" border="0" alt="" />
         <img src='<s:property value="oneByOneTrackingUrlForOriginal"/>' style="float: left;" width="1px" height="1px" border="0" alt="" />
     </div>
@@ -20,9 +20,9 @@
                         </s:else>
                     </div>
                     <s:if test="%{distance != -1}">
-	                    <div class="ctsrch_milesFont">
-	                        <s:property value="distance" /> mi away
-	                    </div>
+                        <div class="ctsrch_milesFont">
+                            <s:property value="distance" /> mi away
+                        </div>
                     </s:if>
                 </div>
                 <div class="ctsrch_rightSide">

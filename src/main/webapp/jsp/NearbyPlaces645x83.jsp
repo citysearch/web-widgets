@@ -3,7 +3,7 @@
 
 <div class="ctsrch_wideContainer ctsrch_yelp">
     <div class="ctsrch_header clearfix">
-        <div class="ctsrch_sponserText">Ads by Citygrid</div>
+        <div class="ctsrch_sponserText">Ads by CityGrid</div>
         <img src='<s:property value="oneByOneTrackingUrl"/>' style="float: left;" width="1px" height="1px" border="0" alt="" />
     </div>
     <div class="ctsrch_container clearfix">
@@ -27,7 +27,7 @@
                     <s:property value="category" />
                 </div>
                 <div class="ctsrch_subLink_bf" >
-                    <a href='http://<s:property value="adDisplayTrackingURL" />'><s:property value="adDisplayURL" /></a>
+                    <a href='<s:property value="adDisplayTrackingURL" />'><s:property value="adDisplayURL" /></a>
                 </div>
             </div>
         </s:iterator>
