@@ -75,7 +75,7 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
 
 	public String execute() throws CitysearchException {
 		log.info("Begin NearbyPlacesAction");
-		
+
 		Object requestAttrib = getHttpRequest().getAttribute(
 				REQUEST_ATTRIBUTE_BACKFILL);
 		backfill = (requestAttrib != null && requestAttrib instanceof Boolean) ? (Boolean) requestAttrib
@@ -93,6 +93,8 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
 			backfillFor = (String) getHttpRequest().getAttribute(
 					REQUEST_ATTRIBUTE_BACKFILL_FOR);
 			nearbyPlacesRequest.setAdUnitSize(adUnitSize);
+			nearbyPlacesRequest
+					.setAdUnitName(CommonConstants.AD_UNIT_NAME_NEARBY);
 			nearbyPlacesRequest.setDisplaySize(displaySize);
 			nearbyPlacesRequest.setLatitude(latitude);
 			nearbyPlacesRequest.setLongitude(longitude);

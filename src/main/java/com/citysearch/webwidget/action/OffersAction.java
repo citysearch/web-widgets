@@ -22,7 +22,7 @@ public class OffersAction extends AbstractCitySearchAction implements
 	private OffersRequest offersRequest = new OffersRequest();
 	private List<Offer> offers;
 	private List<HouseAd> houseAds;
-	
+
 	public List<HouseAd> getHouseAds() {
 		return houseAds;
 	}
@@ -86,7 +86,8 @@ public class OffersAction extends AbstractCitySearchAction implements
 						offersRequest.getLatitude());
 				getHttpRequest().setAttribute(REQUEST_ATTRIBUTE_LONGITUDE,
 						offersRequest.getLongitude());
-				getHttpRequest().setAttribute(REQUEST_ATTRIBUTE_BACKFILL_FOR, CommonConstants.AD_UNIT_NAME_OFFERS);
+				getHttpRequest().setAttribute(REQUEST_ATTRIBUTE_BACKFILL_FOR,
+						CommonConstants.AD_UNIT_NAME_OFFERS);
 				return "backfill";
 			}
 		} catch (InvalidRequestParametersException ihre) {

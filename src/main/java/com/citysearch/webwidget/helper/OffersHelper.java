@@ -179,24 +179,7 @@ public class OffersHelper {
         log.info("Start offersHelper getOffers()");
 
         request.validate();
-
-        if (StringUtils.isBlank(request.getLatitude())
-                || StringUtils.isBlank(request.getLongitude())) {
-            log.info("OffersHelper.getOffers: No lat lon. Find Lat and Lon");
-            loadLatitudeAndLongitudeFromSearchAPI(request);
-            if (StringUtils.isBlank(request.getRadius())) {
-                request.setRadius(String
-                        .valueOf(CommonConstants.EXTENDED_RADIUS));
-            }
-        }
-        if (StringUtils.isBlank(request.getLatitude())
-                || StringUtils.isBlank(request.getLongitude())) {
-            log
-                    .info("NearbyPlacesHelper.getNearbyPlaces: No lat lon. return house ads.");
-            throw new CitysearchException(this.getClass().getName(),
-                    "getOffers", "Invalid Latitude and Longitude");
-        }
-
+        
         // Always return offers from customer who have budget
         // TODO: cleanup!!
         request.setCustomerHasbudget("true");// ????
