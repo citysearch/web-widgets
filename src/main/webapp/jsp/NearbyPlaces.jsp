@@ -4,6 +4,7 @@
     <div class="ctsrch_header">
         <div class="ctsrch_headerText">More to Try</div>
         <img src='<s:property value="oneByOneTrackingUrl"/>' style="float: left;" width="1px" height="1px" border="0" alt="" />
+        <img src='<s:property value="oneByOneTrackingUrlForOriginal"/>' style="float: left;" width="1px" height="1px" border="0" alt="" />
     </div>
     <div class="ctsrch_container">
         <!-- Nearby Places -->
