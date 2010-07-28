@@ -26,6 +26,9 @@
                 <div class="ctsrch_subcategoryFont">
                     <s:property value="category" />
                 </div>
+                <div class="ctsrch_subLink_bf" >
+                    <a href='http://<s:property value="adDisplayTrackingURL" />'><s:property value="adDisplayURL" /></a>
+                </div>
             </div>
         </s:iterator>
 

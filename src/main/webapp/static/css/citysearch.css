@@ -91,4 +91,5 @@
 .ctsrch_yelp .ctsrch_mainLink a {font-weight:bold;color:#6666CC;text-decoration:none;}
 .ctsrch_yelp .ctsrch_mainLink a:hover {color:#555555;text-decoration:underline;}
 .ctsrch_yelp .ctsrch_leftSide {display:none;}
-.ctsrch_yelp .ctsrch_subcategoryFont {color:#999999;}
+.ctsrch_yelp .ctsrch_subcategoryFont {color:#555555;}
+.ctsrch_yelp .ctsrch_subLink_bf a {color:#999999;font-weight:normal;}

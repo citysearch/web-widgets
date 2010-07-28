@@ -26,22 +26,22 @@
             <result name="success">/jsp/Offers.jsp</result>
             <result name="backfill" type="chain">nearbyplaces</result>
         </action>
-        
+
         <!-- Struts configuration for Conquest Ad Widget -->
         <action name="conquestOffers" class="com.citysearch.webwidget.action.ConquestOffersAction">
             <result name="success">/jsp/OffersConquest.jsp</result>
             <result name="backfill" type="chain">nearbyplaces</result>
         </action>
-        		
+
         <!-- Struts configuration for Nearby Places Widget -->
         <action name="nearbyplaces" class="com.citysearch.webwidget.action.NearbyPlacesAction">
             <result name="success">/jsp/NearbyPlaces.jsp</result>
             <result name="conquest">/jsp/NearbyPlacesConquest.jsp</result>
         </action>
-        
+
         <!-- Struts configuration for Nearby Places Widget for Project yellow-->
         <action name="nearbyplacesyellow" class="com.citysearch.webwidget.action.project.yellow.NearbyPlacesAction">
-            <result name="success">/jsp/NearbyPlaces600x83.jsp</result>
+            <result name="success">/jsp/NearbyPlaces645x83.jsp</result>
         </action>
     </package>
 </struts>
