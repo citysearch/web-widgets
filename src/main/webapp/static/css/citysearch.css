@@ -68,6 +68,7 @@
 .ctsrch_review_share a:hover {text-decoration:underline;}
 
 /* Offers */
+.ctsrch_offers {border:3px solid #52b8e9;background-color:#FFFFFF;}
 .ctsrch_offers .ctsrch_container {padding:12px 20px 0;}
 .ctsrch_offers .ctsrch_offers_details {float:left;width:49%;}
 .ctsrch_offers .ctsrch_offers_title {white-space:nowrap;overflow:hidden;width:100%;font-size:14px;font-weight:bold;}
@@ -75,7 +76,7 @@
 .ctsrch_offers .ctsrch_offers_print {float:right;margin-top:5px;}
 .ctsrch_offers .ctsrch_offers_print a {color:#fff;padding:4px 15px;font-size:11px;font-weight:bold;text-shadow:1px 1px 2px #c63;white-space:nowrap;text-decoration:none;text-align:center;background:#ff7917 url(../img/bg_sprites_repeat_x.png) repeat-x 0 -804px;}
 .ctsrch_offers .ctsrch_offers_print a:hover {color:#fff;background-position:0 -854px;background-color:#ff530a;}
-.ctsrch_offers .ctsrch_listing {margin-left:2%;padding-left:1%;border-left:1px solid #D9D9D9;width:46%;}
+.ctsrch_offers .ctsrch_listing {margin-left:2%;padding-left:1%;border-left:1px solid #52b8e9;width:46%;}
 .ctsrch_offers .ctsrch_leftSide {width:40%;}
 .ctsrch_offers .ctsrch_rightSide {width:59%;}
 .ctsrch_offers .ctsrch_bizPhoto img {height:57px;width:94px;border:0;padding:0;}
