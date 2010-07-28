@@ -27,10 +27,6 @@ public class CitySearchServlet extends HttpServlet {
 		String adUnitName = request.getParameter("adUnitName");
 		String adUnitSize = request.getParameter("adUnitSize");
 		String publisher = request.getParameter("publisher");
-		//TODO: Remove the following three lines
-		LOGGER.error("*********************************************************************************");
-		LOGGER.error("CitySearchServlet.doGet -- DART URL: " + request.getParameter("dartClickTrackUrl"));
-		LOGGER.error("*********************************************************************************");
 		
 		int displaySize = (adUnitSize != null && adUnitSize
 				.equals(CommonConstants.CONQUEST_AD_SIZE)) ? CommonConstants.CONQUEST_DISPLAY_SIZE
