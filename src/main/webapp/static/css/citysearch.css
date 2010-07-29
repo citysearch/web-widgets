@@ -7,7 +7,7 @@
 .clearfix {display:block;}
 
 /* Mantle Ads 300x250 Global Styles */
-.ctsrch_boxContainer {height:248px;width:298px;overflow:hidden;font:76%/133.33% Arial,sans-serif;border:solid 1px #d9d9d9;}
+.ctsrch_boxContainer {height:248px;width:298px;overflow:hidden;font:76%/125% Arial,sans-serif;border:solid 1px #d9d9d9;}
 .ctsrch_boxContainer .ctsrch_header {height:25px;background:#abbd65;width:100%;background:#308ebd url(../img/bg_sprites_repeat_x.png) repeat-x 0 -704px;}
 .ctsrch_boxContainer .ctsrch_headerText {font-size:18px;padding:4px 4px 4px 6px;color:#fff;}
 .ctsrch_boxContainer .ctsrch_container {padding:3px 10px 7px 10px;}
@@ -17,7 +17,7 @@
 .ctsrch_boxContainer .ctsrch_lineMargin {margin:1px 0 3px -5px;height:1px;overflow:hidden;border-bottom:1px solid #d9d9d9;width:100%;}
 
 /* Conquest Ads 645x100 Global Styles */
-.ctsrch_wideContainer {height:98px;width:643px;overflow:hidden;font:76%/133.33% Arial,sans-serif;border:1px solid #d9d9d9;background-color:#F8F1D3;}
+.ctsrch_wideContainer {height:98px;width:643px;overflow:hidden;font:76%/125% Arial,sans-serif;border:1px solid #d9d9d9;background-color:#F8F1D3;}
 .ctsrch_wideContainer .ctsrch_header {}
 .ctsrch_wideContainer .ctsrch_headerText {float:left;padding:1px 0 0 20px;font-size:11px;font-weight:bold;color:#DF1400;}
 .ctsrch_wideContainer .ctsrch_sponserText {float:right;font-size:11px;padding:1px 3px 0 0;color:#6E6E6E;}
@@ -27,7 +27,7 @@
 .ctsrch_wideContainer .ctsrch_rightSide {float:left;width:70%;}
 
 /* Tall Ads 300x500 Global Styles */
-.ctsrch_tallContainer {max-height:498px;width:298px;overflow:hidden;font:76%/133.33% Arial,sans-serif;border:solid 1px #d9d9d9;}
+.ctsrch_tallContainer {max-height:498px;width:298px;overflow:hidden;font:76%/125% Arial,sans-serif;border:solid 1px #d9d9d9;}
 .ctsrch_tallContainer .ctsrch_header {height:25px;background:#abbd65;width:100%;background:#308ebd url(../img/bg_sprites_repeat_x.png) repeat-x 0 -704px;}
 .ctsrch_tallContainer .ctsrch_headerText {font-size:18px;padding:4px 4px 4px 6px;color:#fff;}
 .ctsrch_tallContainer .ctsrch_container {padding:3px 10px 7px 10px;}
@@ -88,9 +88,8 @@
 .ctsrch_subLink_bf a:hover {text-decoration:underline;}
 
 /* Project Yellow Styles */
-.ctsrch_yelp {height:83px;width:640px;padding:0 10px 0 10px;margin:10px 0 5px 0;overflow:hidden;background-color:#FFFADA;font:76%/133.33% Arial,sans-serif;border:0;}
+.ctsrch_yelp {height:83px;width:640px;padding:0 10px 0 10px;margin:10px 0 5px 0;background-color:#FFFADA;border:0;}
 .ctsrch_yelp .ctsrch_mainLink a {font-weight:bold;color:#6666CC;text-decoration:none;}
 .ctsrch_yelp .ctsrch_mainLink a:hover {color:#555555;text-decoration:underline;}
-.ctsrch_yelp .ctsrch_leftSide {display:none;}
 .ctsrch_yelp .ctsrch_subcategoryFont {color:#555555;}
 .ctsrch_yelp .ctsrch_subLink_bf a {color:#999999;font-weight:normal;}
