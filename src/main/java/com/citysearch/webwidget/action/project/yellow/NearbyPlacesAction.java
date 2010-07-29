@@ -90,7 +90,8 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
             nearbyPlacesRequest.setLatitude(latitude);
             nearbyPlacesRequest.setLongitude(longitude);
         }
-
+        
+        nearbyPlacesRequest.setAdUnitName(CommonConstants.AD_UNIT_NAME_NEARBY);
         nearbyPlacesRequest.setDisplaySize(DEFAULT_DISPLAY_SIZE);
         nearbyPlacesRequest.setAdUnitSize(ADUNIT_SIZE);
 

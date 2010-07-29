@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+<script language="JavaScript" type="text/javascript">
+		function setTimestamp()
+		{
+			var d = new Date();
+			document.getElementById("ts").value = d.getHours() + '' + d.getMinutes() + '' + d.getSeconds();
+			document.form.submit();
+		}
+	</script>
+</head>
+<body>
+	<form action="../actions/nearbyplacesyellow" method="get" onSubmit="setTimestamp()">
+		<table border="0" width="35%">
+			<tr>
+				<th colspan="2">Test page for Nearby Places</th>
+			</tr>
+			<tr>
+				<td><label>What (or tags)</label></td>
+				<td><input type="text" name="what" id="what" /></td>
+			</tr>
+			<tr>
+				<td><label>Where (or Lat&Lon)</label></td>
+				<td><input type="text" name="where" id="where" /></td>
+			</tr>
+			<tr>
+				<td><label>Latitude (or where)</label></td>
+				<td><input type="text" name="latitude" id="latitude" /></td>
+			</tr>
+			<tr>
+				<td><label>Longitude (or where)</label></td>
+				<td><input type="text" name="longitude" id="longitude" /></td>
+			</tr>
+			<tr>
+				<td><label>Publisher (Required)</label></td>
+				<td><input type="text" name="publisher" id="publisher" value="yelp"/></td>
+			</tr>
+			<tr>
+				<td><label>Client IP (Required)</label></td>
+				<td><input type="text" name="clientIP" id="clientIP" value="127.0.01"/></td>
+			</tr>
+			<tr>
+				<td><label>Tags (or what)</label></td>
+				<td><input type="text" name="tags" id="tags" /></td>
+			</tr>
+			<tr>
+				<td><label>Callback Function</label></td>
+				<td><input type="text" name="callBackFunction" id="callBackFunction" /></td>
+			</tr>
+			<tr>
+				<td><label>Callback Url</label></td>
+				<td><input type="text" name="callBackUrl" id="callBackUrl" /></td>
+			</tr>
+			<tr>
+				<td><label>Radius</label></td>
+				<td><input type="text" name="radius" id="radius" /></td>
+			</tr>
+			<tr>
+				<td><label>Ad Unit Size</label></td>
+				<td><input type="text" name="adUnitSize" id="adUnitSize" /></td>
+			</tr>
+			<tr>
+				<td><label>Display Size</label></td>
+				<td><input type="text" name="displaySize" id="displaySize" /></td>
+			</tr>
+		</table>
+		<input type="hidden" name="ts" id="ts"/>
+		<input type="hidden" name="dartClickTrackUrl" id="dartClickTrackUrl" value="http://ad.doubleclick.com"/>
+		<input type="submit" value="Go" />
+	</form>
+</body>
+</html>
