@@ -81,10 +81,14 @@ public class NearbyPlacesHelper {
 			throws CitysearchException {
 		StringBuilder apiQueryString = new StringBuilder(request
 				.getQueryString());
-		// PFP requires publishercode and not publisher
+		// PFP requires publishercode and not publisher???
 		apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
+		/*
+		 * apiQueryString.append(HelperUtil.constructQueryParam(
+		 * APIFieldNameConstants.PUBLISHER_CODE, request.getPublisher()));
+		 */
 		apiQueryString.append(HelperUtil.constructQueryParam(
-				APIFieldNameConstants.PUBLISHER_CODE, request.getPublisher()));
+				APIFieldNameConstants.PUBLISHER, request.getPublisher()));
 		return apiQueryString.toString();
 	}
 
@@ -107,8 +111,12 @@ public class NearbyPlacesHelper {
 		apiQueryString.append(HelperUtil.constructQueryParam(
 				APIFieldNameConstants.WHAT, request.getWhat()));
 		apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
+		/*
+		 * apiQueryString.append(HelperUtil.constructQueryParam(
+		 * APIFieldNameConstants.PUBLISHER_CODE, request.getPublisher()));
+		 */
 		apiQueryString.append(HelperUtil.constructQueryParam(
-				APIFieldNameConstants.PUBLISHER_CODE, request.getPublisher()));
+				APIFieldNameConstants.PUBLISHER, request.getPublisher()));
 		return apiQueryString.toString();
 	}
 
