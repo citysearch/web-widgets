@@ -71,6 +71,9 @@ var citygrid = {
             data.adUnitName = (window.cgAdUnitName) ? window.cgAdUnitName : data.adUnitName;
             data.dartClickTrackUrl = (window.cgDartTrackUrl) ? window.cgDartTrackUrl : '';
 
+            // exceptions
+            if (data.publisher == 'insiderpages') { data.publisher = 'insider_pages'; }
+
             citygrid.data = data;
             return data;
         }
