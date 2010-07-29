@@ -35,8 +35,11 @@ import com.citysearch.webwidget.util.PropertiesLoader;
  * 
  * SAMPLE PFP Url's:
  * 
- * http://pfp.citysearch.com/pfp?api_key=gunyay6vkqnvc2geyfedbdt3&what=sushi&where=Pasadena%2C+CA&publishercode=insiderpages
- * http://pfp.citysearch.com/pfp/location?api_key=gunyay6vkqnvc2geyfedbdt3&what=sushi&lat=34.15982&lon=-118.139102&radius=25&publishercode=acme
+ * http://pfp.citysearch.com/pfp?api_key=gunyay6vkqnvc2geyfedbdt3&what=sushi&
+ * where=Pasadena%2C+CA&publishercode=insiderpages
+ * http://pfp.citysearch.com/pfp/
+ * location?api_key=gunyay6vkqnvc2geyfedbdt3&what=sushi
+ * &lat=34.15982&lon=-118.139102&radius=25&publishercode=acme
  * 
  * @author Aspert Benjamin
  * 
@@ -156,8 +159,12 @@ public class NearbyPlacesHelper {
 					.isEmpty()) ? noOfBackFillNeeded : noOfBackFillNeeded
 					- backfill.size();
 			if (noOfSearchResultsNeeded > 0) {
-				searchResults = getSearchResults(request,
-						noOfSearchResultsNeeded);
+				if (request.getPublisher() != null
+						&& !request.getPublisher().equals(
+								CommonConstants.PUBLISHER_PROJECT_YELLOW)) {
+					searchResults = getSearchResults(request,
+							noOfSearchResultsNeeded);
+				}
 				int noOfHouseAdsNeeded = (searchResults == null || searchResults
 						.isEmpty()) ? noOfSearchResultsNeeded
 						: noOfSearchResultsNeeded - searchResults.size();
@@ -498,13 +505,13 @@ public class NearbyPlacesHelper {
 		nbp.setAdDestinationUrl(ad.getChildText(AD_DESTINATION_URL));
 		nbp.setListingId(ad.getChildText(LISTING_ID_TAG));
 		nbp.setPhone(ad.getChildText(PHONE_TAG));
-		
+
 		String adDisplayTrackingUrl = HelperUtil.getTrackingUrl(nbp
 				.getAdDisplayURL(), nbp.getAdDestinationUrl(), null, request
 				.getDartClickTrackUrl(), nbp.getListingId(), nbp.getPhone(),
 				request.getPublisher(), request.getAdUnitName(), request
 						.getAdUnitSize());
-		
+
 		nbp.setAdDisplayTrackingURL(adDisplayTrackingUrl);
 		return nbp;
 	}
