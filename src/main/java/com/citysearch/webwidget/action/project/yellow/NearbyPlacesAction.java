@@ -94,7 +94,8 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
         nearbyPlacesRequest.setAdUnitName(CommonConstants.AD_UNIT_NAME_NEARBY);
         nearbyPlacesRequest.setDisplaySize(DEFAULT_DISPLAY_SIZE);
         nearbyPlacesRequest.setAdUnitSize(ADUNIT_SIZE);
-
+        nearbyPlacesRequest.setIncludeSearch(false);
+        
         NearbyPlacesHelper helper = new NearbyPlacesHelper(
                 getResourceRootPath());
         // Important for project yellow

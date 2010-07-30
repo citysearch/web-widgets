@@ -99,13 +99,17 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
 			nearbyPlacesRequest.setLatitude(latitude);
 			nearbyPlacesRequest.setLongitude(longitude);
 		}
-
+		nearbyPlacesRequest.setIncludeSearch(true);
 		if (nearbyPlacesRequest.getDisplaySize() == null) {
 			nearbyPlacesRequest
 					.setDisplaySize(CommonConstants.DEFAULT_NEARBY_DISPLAY_SIZE);
 		}
 		if (nearbyPlacesRequest.getAdUnitSize() == null) {
 			nearbyPlacesRequest.setAdUnitSize(CommonConstants.MANTLE_AD_SIZE);
+		} else if (nearbyPlacesRequest.getAdUnitSize().equals(
+				CommonConstants.CONQUEST_AD_SIZE)) {
+			// Don't query search for conquest
+			nearbyPlacesRequest.setIncludeSearch(false);
 		}
 		NearbyPlacesHelper helper = new NearbyPlacesHelper(
 				getResourceRootPath());

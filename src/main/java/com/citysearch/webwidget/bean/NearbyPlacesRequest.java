@@ -7,36 +7,45 @@ package com.citysearch.webwidget.bean;
  * 
  */
 public class NearbyPlacesRequest extends AbstractRequest {
-    private String tags;
-    private boolean validUrl;
+	private String tags;
+	private boolean validUrl;
+	private boolean includeSearch;
 
-    public NearbyPlacesRequest() {
-        super();
-    }
+	public NearbyPlacesRequest() {
+		super();
+	}
 
-    public NearbyPlacesRequest(AbstractRequest request) {
-        super();
-        setPublisher(request.getPublisher());
-        setDartClickTrackUrl(request.getDartClickTrackUrl());
-        setCallBackFunction(request.getCallBackFunction());
-        setCallBackUrl(request.getCallBackUrl());
-        setAdUnitName(request.getAdUnitName());
-        setAdUnitSize(request.getAdUnitSize());
-    }
+	public NearbyPlacesRequest(AbstractRequest request) {
+		super();
+		setPublisher(request.getPublisher());
+		setDartClickTrackUrl(request.getDartClickTrackUrl());
+		setCallBackFunction(request.getCallBackFunction());
+		setCallBackUrl(request.getCallBackUrl());
+		setAdUnitName(request.getAdUnitName());
+		setAdUnitSize(request.getAdUnitSize());
+	}
 
-    public boolean isValidUrl() {
-        return validUrl;
-    }
+	public boolean isIncludeSearch() {
+		return includeSearch;
+	}
 
-    public void setValidUrl(boolean validUrl) {
-        this.validUrl = validUrl;
-    }
+	public void setIncludeSearch(boolean includeSearch) {
+		this.includeSearch = includeSearch;
+	}
 
-    public String getTags() {
-        return tags;
-    }
+	public boolean isValidUrl() {
+		return validUrl;
+	}
 
-    public void setTags(String tags) {
-        this.tags = tags;
-    }
+	public void setValidUrl(boolean validUrl) {
+		this.validUrl = validUrl;
+	}
+
+	public String getTags() {
+		return tags;
+	}
+
+	public void setTags(String tags) {
+		this.tags = tags;
+	}
 }

@@ -167,9 +167,7 @@ public class NearbyPlacesHelper {
 					.isEmpty()) ? noOfBackFillNeeded : noOfBackFillNeeded
 					- backfill.size();
 			if (noOfSearchResultsNeeded > 0) {
-				if (request.getPublisher() != null
-						&& !request.getPublisher().equals(
-								CommonConstants.PUBLISHER_PROJECT_YELLOW)) {
+				if (request.isIncludeSearch()) {
 					searchResults = getSearchResults(request,
 							noOfSearchResultsNeeded);
 				}
