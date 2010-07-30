@@ -121,7 +121,7 @@
                         <s:property value="description" />
                     </div>
                     <div class="ctsrch_subLink_bf" >
-                        <a href='http://<s:property value="adDisplayTrackingURL" />'><s:property value="adDisplayURL" /></a>
+                        <a href='<s:property value="adDisplayTrackingURL" />'><s:property value="adDisplayURL" /></a>
                     </div>
                     <s:if test='%{offers != null && !"".equals(offers)}'>
                         <div class="ctsrch_offersFont" >
