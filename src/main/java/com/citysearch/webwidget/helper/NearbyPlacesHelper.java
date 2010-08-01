@@ -151,6 +151,9 @@ public class NearbyPlacesHelper {
 			NearbyPlacesRequest request) throws CitysearchException {
 		NearbyPlacesResponse response = new NearbyPlacesResponse();
 		
+		//TODO: remove
+		nearbyPlaces = nearbyPlaces.subList(0, 1);
+		
 		int noOfBackFillNeeded = (nearbyPlaces == null || nearbyPlaces
 				.isEmpty()) ? this.displaySize : this.displaySize
 				- nearbyPlaces.size();
@@ -204,6 +207,7 @@ public class NearbyPlacesHelper {
 				// review is in context with the PFP response, use
 				// the tracking url from PFP and the review url from review to
 				// build the internal tracking url for the review.
+				/*
 				if (profile.getReview() != null
 						&& profile.getReview().getReviewUrl() != null) {
 					String reviewTrackingUrl = HelperUtil.getTrackingUrl(
@@ -217,6 +221,18 @@ public class NearbyPlacesHelper {
 					profile.getReview().setReviewTrackingUrl(reviewTrackingUrl);
 				}
 
+				if (profile.getSendToFriendUrl() != null) {
+					String sendToFriendTrackingUrl = HelperUtil.getTrackingUrl(
+							profile.getSendToFriendUrl(), nbp
+									.getAdDestinationUrl(), request
+									.getCallBackUrl(), request
+									.getDartClickTrackUrl(),
+							nbp.getListingId(), nbp.getPhone(), request
+									.getPublisher(), request.getAdUnitName(),
+							request.getAdUnitSize());
+					profile.setSendToFriendTrackingUrl(sendToFriendTrackingUrl);
+				}
+				*/
 				nbp.setProfile(profile);
 			}
 		}
