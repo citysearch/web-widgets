@@ -150,7 +150,7 @@ public class NearbyPlacesHelper {
 	private NearbyPlacesResponse createResponse(List<NearbyPlace> nearbyPlaces,
 			NearbyPlacesRequest request) throws CitysearchException {
 		NearbyPlacesResponse response = new NearbyPlacesResponse();
-
+		
 		int noOfBackFillNeeded = (nearbyPlaces == null || nearbyPlaces
 				.isEmpty()) ? this.displaySize : this.displaySize
 				- nearbyPlaces.size();
@@ -197,6 +197,26 @@ public class NearbyPlacesHelper {
 				profileRequest.setListingId(nbp.getListingId());
 				Profile profile = phelper
 						.getProfileAndHighestReview(profileRequest);
+				// Adding internal tracking to review
+				// By default review api does not return a tracking url in the
+				// response
+				// Since we already have the tracking url from PFP and the
+				// review is in context with the PFP response, use
+				// the tracking url from PFP and the review url from review to
+				// build the internal tracking url for the review.
+				if (profile.getReview() != null
+						&& profile.getReview().getReviewUrl() != null) {
+					String reviewTrackingUrl = HelperUtil.getTrackingUrl(
+							profile.getReview().getReviewUrl(), nbp
+									.getAdDestinationUrl(), request
+									.getCallBackUrl(), request
+									.getDartClickTrackUrl(),
+							nbp.getListingId(), nbp.getPhone(), request
+									.getPublisher(), request.getAdUnitName(),
+							request.getAdUnitSize());
+					profile.getReview().setReviewTrackingUrl(reviewTrackingUrl);
+				}
+
 				nbp.setProfile(profile);
 			}
 		}
