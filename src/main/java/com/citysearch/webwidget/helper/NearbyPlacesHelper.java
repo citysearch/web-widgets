@@ -151,9 +151,6 @@ public class NearbyPlacesHelper {
 			NearbyPlacesRequest request) throws CitysearchException {
 		NearbyPlacesResponse response = new NearbyPlacesResponse();
 		
-		//TODO: remove
-		nearbyPlaces = nearbyPlaces.subList(0, 1);
-		
 		int noOfBackFillNeeded = (nearbyPlaces == null || nearbyPlaces
 				.isEmpty()) ? this.displaySize : this.displaySize
 				- nearbyPlaces.size();
