@@ -459,7 +459,13 @@ public class NearbyPlacesHelper {
 		nearbyPlace.setAdImageURL(ad.getChildText(AD_IMAGE_URL_TAG));
 		nearbyPlace.setPhone(ad.getChildText(PHONE_TAG));
 		nearbyPlace.setOffers(ad.getChildText(CommonConstants.OFFERS));
-		nearbyPlace.setDescription(ad.getChildText(DESC_TAG));
+		
+		String description = ad.getChildText(DESC_TAG);
+		description = HelperUtil.getAbbreviatedString(description,
+				CommonConstants.DESCRIPTION_MAX_LENGTH_PROP,
+				CommonConstants.DESCRIPTION_MAX_LENGTH);
+		nearbyPlace.setDescription(description);
+		
 		nearbyPlace.setStreet(ad.getChildText(CommonConstants.STREET));
 		nearbyPlace.setCity(ad.getChildText(CommonConstants.CITY));
 		nearbyPlace.setState(ad.getChildText(CommonConstants.STATE));
@@ -533,12 +539,17 @@ public class NearbyPlacesHelper {
 			nbp.setCategory(category);
 		}
 		nbp.setAdImageURL(ad.getChildText(AD_IMAGE_URL_TAG));
+		
 		String description = ad.getChildText(DESC_TAG);
 		if (StringUtils.isNotBlank(description)) {
 			description = description.replaceAll("<b>", "");
 			description = description.replaceAll("</b>", "");
+			description = HelperUtil.getAbbreviatedString(description,
+					CommonConstants.DESCRIPTION_MAX_LENGTH_PROP,
+					CommonConstants.DESCRIPTION_MAX_LENGTH);
 			nbp.setDescription(description);
 		}
+		
 		nbp.setOffers(ad.getChildText(CommonConstants.OFFERS));
 		nbp.setAdDisplayURL(ad.getChildText(AD_DISPLAY_URL_TAG));
 		nbp.setAdDestinationUrl(ad.getChildText(AD_DESTINATION_URL));

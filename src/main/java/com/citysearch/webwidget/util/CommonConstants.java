@@ -69,6 +69,8 @@ public class CommonConstants {
 
     public static final String BUSINESS_NAME_MAX_LENGTH_PROP = "name.length";
     public static final String TAGLINE_MAX_LENGTH_PROP = "tagline.length";
+    public static final String DESCRIPTION_MAX_LENGTH_PROP = "description.length";
+    public static final int DESCRIPTION_MAX_LENGTH = 70;
     public static final int BUSINESS_NAME_MAX_LENGTH = 30;
     public static final int TAGLINE_MAX_LENGTH = 30;
     public static final int EXTENDED_RADIUS = 25;
