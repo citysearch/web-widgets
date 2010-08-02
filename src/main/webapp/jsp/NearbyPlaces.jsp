@@ -62,9 +62,7 @@
                 <s:if test="%{nearbyPlaces.size() == 1}">
                     <div class="ctsrch_review_double">
                         <div class="ctsrch_review_longTitle">
-                            <a href='<s:property value="profile.review.reviewTrackingUrl"/>'>
-                                <s:property value="profile.review.shortTitle"/>
-                            </a>
+                            <s:property value="profile.review.shortTitle"/>
                         </div>
                         <div class="ctsrch_review_description"><s:property value="profile.review.shortReviewText"/></div>
                         <div class="ctsrch_review_description">
@@ -73,11 +71,6 @@
                             <div class="seperator"></div>
                             <strong>Cons:</strong>&nbsp;<s:property value="profile.review.shortCons"/>
                         </div>
-                        <s:if test='%{profile.sendToFriendTrackingUrl != null && !"".equals(profile.sendToFriendTrackingUrl)}'>
-                            <div class="ctsrch_review_share">
-                                <a href='<s:property value="profile.sendToFriendTrackingUrl"/>' >Share this review</a>
-                            </div>
-                        </s:if>
                     </div>
                 </s:if>
 
@@ -85,9 +78,7 @@
                 <s:elseif test="%{nearbyPlaces.size() == 2}">
                     <div class="ctsrch_review_single">
                         <div class="ctsrch_review_longTitle">
-                            <a href='<s:property value="profile.review.reviewTrackingUrl"/>' >
-                                <s:property value="profile.review.shortTitle"/>
-                            </a>
+                            <s:property value="profile.review.shortTitle"/>
                         </div>
                         <div class="ctsrch_review_description">
                             <s:property value="profile.review.smallReviewText"/>
