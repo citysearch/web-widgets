@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <HomeAds>
     <ad>
-        <title>Citysearch Mobile Apps</title>
-        <tagLine>For iPad, iPhone, Android &amp; more.</tagLine>
-        <url>http://www.citysearch.com/mobile-application</url>
-        <imageURL></imageURL>
-    </ad>
-    <ad>
-        <title>Advertise with Citysearch</title>
-        <tagLine>Advertise with us today! Learn How.</tagLine>
+        <title>Advertise with CityGrid today! Learn How.</title>
+        <tagLine></tagLine>
         <url>http://www.citysearch.com/aboutcitysearch/advertise_with_us</url>
         <imageURL></imageURL>
     </ad>
     <ad>
-        <title>Love the editor lists? </title>
-        <tagLine>You can create your own! </tagLine>
-        <url>http://my.citysearch.com/members/userlist/create</url>
+        <title>CityGrid for publishers</title>
+        <tagLine></tagLine>
+        <url>http://developer.citygridmedia.com</url>
+        <imageURL></imageURL>
+    </ad>
+    <ad>
+        <title>cityseries iPad App</title>
+        <tagLine></tagLine>
+        <url>http://www.citysearch.com/mobile/ipad-app</url>
         <imageURL></imageURL>
     </ad>
 </HomeAds>
