@@ -20,10 +20,12 @@ public class PropertiesLoader {
 	private static final String ERROR_PROPERTIES_FILE = "/error.properties";
 	private static final String APPLICATION_PROPERTIES_FILE = "/application.properties";
 	private static final String TRACKING_PROPERTIES_FILE = "/onebyonetracking.properties";
+	private static final String FIELD_PROPERTIES_FILE = "/field.properties";
 	private static Properties errorProperties;
 	private static Properties apiProperties;
 	private static Properties applicationProperties;
-
+	private static Properties fieldProperties;
+	
 	/**
 	 * Takes the file name as input and reads the properties from the file.
 	 * Returns the Properties object that contains parameters as key,value pairs
@@ -95,5 +97,12 @@ public class PropertiesLoader {
 
 	public static Properties getTrackingProperties() throws CitysearchException {
 		return getProperties(TRACKING_PROPERTIES_FILE);
+	}
+	
+	public static Properties getFieldProperties() throws CitysearchException {
+		if (fieldProperties == null) {
+			fieldProperties = getProperties(FIELD_PROPERTIES_FILE);
+		}
+		return fieldProperties;
 	}
 }
