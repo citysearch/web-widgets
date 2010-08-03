@@ -88,7 +88,7 @@
 .ctsrch_subLink_bf a:hover {text-decoration:underline;}
 
 /* Project Yellow Styles */
-.ctsrch_yelp {height:83px;width:640px;padding:0 10px 0 10px;margin:10px 0 5px 0;background-color:#FFFADA;border:0;}
+.ctsrch_yelp {height:80px;width:640px;padding:0 10px 0 10px;margin:10px 0 5px 0;background-color:#FFFADA;border:0;}
 .ctsrch_yelp .ctsrch_mainLink a {font-weight:bold;color:#6666CC;text-decoration:none;}
 .ctsrch_yelp .ctsrch_mainLink a:hover {color:#555555;text-decoration:underline;}
 .ctsrch_yelp .ctsrch_subcategoryFont {color:#555555;}

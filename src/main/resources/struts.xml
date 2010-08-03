@@ -41,7 +41,7 @@
 
         <!-- Struts configuration for Nearby Places Widget for Project yellow-->
         <action name="nearbyplacesyellow" class="com.citysearch.webwidget.action.project.yellow.NearbyPlacesAction">
-            <result name="success">/jsp/NearbyPlaces645x83.jsp</result>
+            <result name="success">/jsp/project_yellow/NearbyPlaces660x80.jsp</result>
         </action>
     </package>
 </struts>

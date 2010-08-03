@@ -23,7 +23,7 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
     private Logger log = Logger.getLogger(getClass());
 
     private static final Integer DEFAULT_DISPLAY_SIZE = 2;
-    private static final String ADUNIT_SIZE = "645x83";
+    private static final String ADUNIT_SIZE = "660x80";
     private NearbyPlacesRequest nearbyPlacesRequest = new NearbyPlacesRequest();
     private NearbyPlacesResponse nearbyPlacesResponse;
 
@@ -90,12 +90,12 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
             nearbyPlacesRequest.setLatitude(latitude);
             nearbyPlacesRequest.setLongitude(longitude);
         }
-        
+
         nearbyPlacesRequest.setAdUnitName(CommonConstants.AD_UNIT_NAME_NEARBY);
         nearbyPlacesRequest.setDisplaySize(DEFAULT_DISPLAY_SIZE);
         nearbyPlacesRequest.setAdUnitSize(ADUNIT_SIZE);
         nearbyPlacesRequest.setIncludeSearch(false);
-        
+
         NearbyPlacesHelper helper = new NearbyPlacesHelper(
                 getResourceRootPath());
         // Important for project yellow
