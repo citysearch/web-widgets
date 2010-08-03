@@ -281,6 +281,20 @@ public class HelperUtil {
 		return StringUtils.trimToEmpty(abbreviatedString);
 	}
 
+	public static String getAbbreviatedString(String stringToAbbreviate,
+			String propertyName) throws CitysearchException {
+		Properties prop = PropertiesLoader.getFieldProperties();
+		if (prop.containsKey(propertyName)) {
+			String value = prop.getProperty(propertyName);
+			if (StringUtils.isNotBlank(value)) {
+				int length = NumberUtils.toInt(value);
+				stringToAbbreviate = StringUtils.abbreviate(stringToAbbreviate,
+						length);
+			}
+		}
+		return stringToAbbreviate;
+	}
+
 	public static List<String> getImages(String contextPath)
 			throws CitysearchException {
 		List<String> imageList = new ArrayList<String>();
