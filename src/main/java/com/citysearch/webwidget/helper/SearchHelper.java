@@ -430,11 +430,15 @@ public class SearchHelper {
 					.getChildText(CommonConstants.POSTALCODE));
 			nearbyPlace.setLocation(addr);
 		}
+		
+		String adUnitIdentifier = request.getAdUnitIdentifier();
+
+		StringBuilder nameLengthProp = new StringBuilder(adUnitIdentifier);
+		nameLengthProp.append(".");
+		nameLengthProp.append(CommonConstants.NEARBY_NAME_LENGTH);
 
 		String name = location.getChildText(CommonConstants.NAME);
-		name = HelperUtil.getAbbreviatedString(name,
-				CommonConstants.BUSINESS_NAME_MAX_LENGTH_PROP,
-				CommonConstants.BUSINESS_NAME_MAX_LENGTH);
+		name = HelperUtil.getAbbreviatedString(name, nameLengthProp.toString());
 		nearbyPlace.setName(name);
 
 		String rating = location.getChildText(REVIEW_RATING_TAG);
@@ -458,11 +462,13 @@ public class SearchHelper {
 		nearbyPlace.setDistance(distance);
 
 		nearbyPlace.setListingId(location.getAttributeValue(LISTING_ID_TAG));
-
-		String category = HelperUtil.getAbbreviatedString(location
-				.getChildText(TAGLINE_TAG),
-				CommonConstants.TAGLINE_MAX_LENGTH_PROP,
-				CommonConstants.BUSINESS_NAME_MAX_LENGTH);
+		
+		StringBuilder tagLengthProp = new StringBuilder(adUnitIdentifier);
+		tagLengthProp.append(".");
+		tagLengthProp.append(CommonConstants.NEARBY_TAGLINE_LENGTH);
+		String category = location.getChildText(TAGLINE_TAG);
+		category = HelperUtil.getAbbreviatedString(category, tagLengthProp
+				.toString());
 		nearbyPlace.setCategory(category);
 
 		nearbyPlace.setAdDisplayURL(location.getChildText(AD_DISPLAY_URL_TAG));

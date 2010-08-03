@@ -246,4 +246,13 @@ public abstract class AbstractRequest {
 		}
 		return apiQueryString.toString();
 	}
+	
+	public String getAdUnitIdentifier()
+	{
+		StringBuilder str = new StringBuilder();
+		str.append(adUnitName);
+		str.append(".");
+		str.append(adUnitSize);
+		return str.toString().toUpperCase();
+	}
 }

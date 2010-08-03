@@ -150,7 +150,7 @@ public class NearbyPlacesHelper {
 	private NearbyPlacesResponse createResponse(List<NearbyPlace> nearbyPlaces,
 			NearbyPlacesRequest request) throws CitysearchException {
 		NearbyPlacesResponse response = new NearbyPlacesResponse();
-		
+
 		int noOfBackFillNeeded = (nearbyPlaces == null || nearbyPlaces
 				.isEmpty()) ? this.displaySize : this.displaySize
 				- nearbyPlaces.size();
@@ -205,31 +205,26 @@ public class NearbyPlacesHelper {
 				// the tracking url from PFP and the review url from review to
 				// build the internal tracking url for the review.
 				/*
-				if (profile.getReview() != null
-						&& profile.getReview().getReviewUrl() != null) {
-					String reviewTrackingUrl = HelperUtil.getTrackingUrl(
-							profile.getReview().getReviewUrl(), nbp
-									.getAdDestinationUrl(), request
-									.getCallBackUrl(), request
-									.getDartClickTrackUrl(),
-							nbp.getListingId(), nbp.getPhone(), request
-									.getPublisher(), request.getAdUnitName(),
-							request.getAdUnitSize());
-					profile.getReview().setReviewTrackingUrl(reviewTrackingUrl);
-				}
-
-				if (profile.getSendToFriendUrl() != null) {
-					String sendToFriendTrackingUrl = HelperUtil.getTrackingUrl(
-							profile.getSendToFriendUrl(), nbp
-									.getAdDestinationUrl(), request
-									.getCallBackUrl(), request
-									.getDartClickTrackUrl(),
-							nbp.getListingId(), nbp.getPhone(), request
-									.getPublisher(), request.getAdUnitName(),
-							request.getAdUnitSize());
-					profile.setSendToFriendTrackingUrl(sendToFriendTrackingUrl);
-				}
-				*/
+				 * if (profile.getReview() != null &&
+				 * profile.getReview().getReviewUrl() != null) { String
+				 * reviewTrackingUrl = HelperUtil.getTrackingUrl(
+				 * profile.getReview().getReviewUrl(), nbp
+				 * .getAdDestinationUrl(), request .getCallBackUrl(), request
+				 * .getDartClickTrackUrl(), nbp.getListingId(), nbp.getPhone(),
+				 * request .getPublisher(), request.getAdUnitName(),
+				 * request.getAdUnitSize());
+				 * profile.getReview().setReviewTrackingUrl(reviewTrackingUrl);
+				 * }
+				 * 
+				 * if (profile.getSendToFriendUrl() != null) { String
+				 * sendToFriendTrackingUrl = HelperUtil.getTrackingUrl(
+				 * profile.getSendToFriendUrl(), nbp .getAdDestinationUrl(),
+				 * request .getCallBackUrl(), request .getDartClickTrackUrl(),
+				 * nbp.getListingId(), nbp.getPhone(), request .getPublisher(),
+				 * request.getAdUnitName(), request.getAdUnitSize());
+				 * profile.setSendToFriendTrackingUrl(sendToFriendTrackingUrl);
+				 * }
+				 */
 				nbp.setProfile(profile);
 			}
 		}
@@ -419,10 +414,14 @@ public class NearbyPlacesHelper {
 			throws CitysearchException {
 		NearbyPlace nearbyPlace = new NearbyPlace();
 
+		String adUnitIdentifier = request.getAdUnitIdentifier();
+
+		StringBuilder nameLengthProp = new StringBuilder(adUnitIdentifier);
+		nameLengthProp.append(".");
+		nameLengthProp.append(CommonConstants.NEARBY_NAME_LENGTH);
+
 		String name = ad.getChildText(CommonConstants.NAME);
-		name = HelperUtil.getAbbreviatedString(name,
-				CommonConstants.BUSINESS_NAME_MAX_LENGTH_PROP,
-				CommonConstants.BUSINESS_NAME_MAX_LENGTH);
+		name = HelperUtil.getAbbreviatedString(name, nameLengthProp.toString());
 		nearbyPlace.setName(name);
 
 		String location = HelperUtil.getLocationString(ad
@@ -448,10 +447,12 @@ public class NearbyPlacesHelper {
 			nearbyPlace.setDistance(-1);
 		}
 
+		StringBuilder tagLengthProp = new StringBuilder(adUnitIdentifier);
+		tagLengthProp.append(".");
+		tagLengthProp.append(CommonConstants.NEARBY_TAGLINE_LENGTH);
 		String category = ad.getChildText(TAGLINE_TAG);
-		category = HelperUtil.getAbbreviatedString(category,
-				CommonConstants.TAGLINE_MAX_LENGTH_PROP,
-				CommonConstants.BUSINESS_NAME_MAX_LENGTH);
+		category = HelperUtil.getAbbreviatedString(category, tagLengthProp
+				.toString());
 		nearbyPlace.setCategory(category);
 
 		nearbyPlace.setListingId(ad.getChildText(LISTING_ID_TAG));
@@ -459,13 +460,15 @@ public class NearbyPlacesHelper {
 		nearbyPlace.setAdImageURL(ad.getChildText(AD_IMAGE_URL_TAG));
 		nearbyPlace.setPhone(ad.getChildText(PHONE_TAG));
 		nearbyPlace.setOffers(ad.getChildText(CommonConstants.OFFERS));
-		
+
+		StringBuilder descLengthProp = new StringBuilder(adUnitIdentifier);
+		descLengthProp.append(".");
+		descLengthProp.append(CommonConstants.NEARBY_DESCRIPTION_LENGTH);
 		String description = ad.getChildText(DESC_TAG);
 		description = HelperUtil.getAbbreviatedString(description,
-				CommonConstants.DESCRIPTION_MAX_LENGTH_PROP,
-				CommonConstants.DESCRIPTION_MAX_LENGTH);
+				descLengthProp.toString());
 		nearbyPlace.setDescription(description);
-		
+
 		nearbyPlace.setStreet(ad.getChildText(CommonConstants.STREET));
 		nearbyPlace.setCity(ad.getChildText(CommonConstants.CITY));
 		nearbyPlace.setState(ad.getChildText(CommonConstants.STATE));
@@ -532,24 +535,36 @@ public class NearbyPlacesHelper {
 	private NearbyPlace toBackfill(NearbyPlacesRequest request, Element ad)
 			throws CitysearchException {
 		NearbyPlace nbp = new NearbyPlace();
+		String adUnitIdentifier = request.getAdUnitIdentifier();
+		
 		String category = ad.getChildText(TAGLINE_TAG);
 		if (StringUtils.isNotBlank(category)) {
 			category = category.replaceAll("<b>", "");
 			category = category.replaceAll("</b>", "");
+			
+			StringBuilder tagLengthProp = new StringBuilder(adUnitIdentifier);
+			tagLengthProp.append(".");
+			tagLengthProp.append(CommonConstants.NEARBY_TAGLINE_LENGTH);
+			category = HelperUtil.getAbbreviatedString(category, tagLengthProp
+					.toString());
+		
 			nbp.setCategory(category);
 		}
 		nbp.setAdImageURL(ad.getChildText(AD_IMAGE_URL_TAG));
-		
+
 		String description = ad.getChildText(DESC_TAG);
 		if (StringUtils.isNotBlank(description)) {
 			description = description.replaceAll("<b>", "");
 			description = description.replaceAll("</b>", "");
+			
+			StringBuilder descLengthProp = new StringBuilder(adUnitIdentifier);
+			descLengthProp.append(".");
+			descLengthProp.append(CommonConstants.NEARBY_DESCRIPTION_LENGTH);
 			description = HelperUtil.getAbbreviatedString(description,
-					CommonConstants.DESCRIPTION_MAX_LENGTH_PROP,
-					CommonConstants.DESCRIPTION_MAX_LENGTH);
+					descLengthProp.toString());
 			nbp.setDescription(description);
 		}
-		
+
 		nbp.setOffers(ad.getChildText(CommonConstants.OFFERS));
 		nbp.setAdDisplayURL(ad.getChildText(AD_DISPLAY_URL_TAG));
 		nbp.setAdDestinationUrl(ad.getChildText(AD_DESTINATION_URL));
