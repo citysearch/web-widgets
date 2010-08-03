@@ -160,8 +160,8 @@ public class NearbyPlacesHelper {
 		// If no results from PFP or PFP results size is less than required for
 		// Conquest
 		if (noOfBackFillNeeded == this.displaySize
-				|| (noOfBackFillNeeded > 0 && request.getAdUnitSize().equals(
-						CommonConstants.CONQUEST_AD_SIZE))) {
+				|| (noOfBackFillNeeded > 0 && !request.getAdUnitSize().equals(
+						CommonConstants.MANTLE_AD_SIZE))) {
 			backfill = getNearbyPlacesBackfill(request);
 			int noOfSearchResultsNeeded = (backfill == null || backfill
 					.isEmpty()) ? noOfBackFillNeeded : noOfBackFillNeeded
@@ -186,8 +186,8 @@ public class NearbyPlacesHelper {
 				backfill = backfill.subList(0, noOfBackFillNeeded);
 			}
 		} else if (noOfBackFillNeeded > 0
-				&& !request.getAdUnitSize().equals(
-						CommonConstants.CONQUEST_AD_SIZE)) {
+				&& request.getAdUnitSize().equals(
+						CommonConstants.MANTLE_AD_SIZE)) {
 			// Less than required PFP results found for Mantel read the reviews
 			// from Profile API
 			ProfileRequest profileRequest = new ProfileRequest(request);
