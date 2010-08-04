@@ -67,7 +67,8 @@ var citygrid = {
             if (!data.adUnitSize) { data.adUnitSize = '300x250'; }
             if (!data.clientIP) { data.clientIP = '127.0.0.1'; }
 
-            // import dart data
+            // import creative dart data
+            data.what = (window.cgWhat) ? window.cgWhat : data.what;
             data.adUnitName = (window.cgAdUnitName) ? window.cgAdUnitName : data.adUnitName;
             data.dartClickTrackUrl = (window.cgDartTrackUrl) ? window.cgDartTrackUrl : '';
 
