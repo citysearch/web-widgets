@@ -111,7 +111,7 @@
                     <div class="ctsrch_descFont_bf" >
                         <s:property value="description" />
                     </div>
-                    <div class="ctsrch_subLink_bf" >
+                    <div class="ctsrch_displayUrl" >
                         <a href='<s:property value="adDisplayTrackingURL" />'><s:property value="adDisplayURL" /></a>
                     </div>
                     <s:if test='%{offers != null && !"".equals(offers)}'>
@@ -201,7 +201,7 @@
                     <div class="ctsrch_descFont">
                         <s:property value="tagLine" />
                     </div>
-                    <div class="ctsrch_subLink_bf" >
+                    <div class="ctsrch_displayUrl" >
                         <a href='<s:property value="destinationUrl" />'>www.citysearch.com</a>
                     </div>
                 </div>

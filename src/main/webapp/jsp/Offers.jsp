@@ -74,7 +74,7 @@
                         <div class="ctsrch_descFont">
                             <s:property value="tagLine" />
                         </div>
-                        <div class="ctsrch_subLink_bf" >
+                        <div class="ctsrch_displayUrl" >
                             <a href='<s:property value="destinationUrl" />'>www.citysearch.com</a>
                         </div>
                     </div>

@@ -18,15 +18,10 @@
                         <a href='<s:property value="adDisplayTrackingURL" />' ><s:property value="name" /></a>
                     </s:else>
                 </div>
-                <s:if test="%{isValidLocation == true}">
-                    <div class="ctsrch_cityFont">
-                        <s:property value="location" />
-                    </div>
-                </s:if>
                 <div class="ctsrch_subcategoryFont">
                     <s:property value="category" />
                 </div>
-                <div class="ctsrch_subLink_bf" >
+                <div class="ctsrch_displayUrl" >
                     <a href='<s:property value="adDisplayTrackingURL" />'><s:property value="adDisplayURL" /></a>
                 </div>
             </div>
@@ -41,7 +36,7 @@
                 <div class="ctsrch_descFont_bf" >
                     <s:property value="description" />
                 </div>
-                <div class="ctsrch_subLink_bf" >
+                <div class="ctsrch_displayUrl" >
                     <a href='<s:property value="adDisplayTrackingURL" />'><s:property value="adDisplayURL" /></a>
                 </div>
                 <s:if test='%{offers != null && !"".equals(offers)}'>
@@ -83,7 +78,7 @@
                 <div class="ctsrch_descFont">
                     <s:property value="tagLine" />
                 </div>
-                <div class="ctsrch_subLink_bf" >
+                <div class="ctsrch_displayUrl" >
                     <a href='<s:property value="destinationUrl" />'>www.citysearch.com</a>
                 </div>
             </div>
