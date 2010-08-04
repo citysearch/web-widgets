@@ -49,7 +49,7 @@
             </div>
         </div>
         <div class="ctsrch_header clearfix">
-            <div class="ctsrch_sponserText">Ads by Citygrid</div>
+            <div class="ctsrch_sponserText">Ads by CityGrid</div>
             <img src='<s:property value="oneByOneTrackingUrl"/>' style="float: left;" width="1px" height="1px" border="0" alt="" />
         </div>
     </div>
