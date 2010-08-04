@@ -71,6 +71,7 @@ public class NearbyPlacesHelper {
 
 	// Field to cache the PFP response document.
 	private Document pfpWithGeoResponseDocument = null;
+	
 	private Document pfpWithOutGeoResponseDocument = null;
 
 	public NearbyPlacesHelper(String rootPath) throws CitysearchException {
@@ -138,12 +139,13 @@ public class NearbyPlacesHelper {
 		}
 		log.info("NearbyPlacesHelper.getNearbyPlaces: After validate");
 		List<NearbyPlace> nearbyPlaces = getPlacesByGeographicInfo(request);
+		/* Not Needed.
 		if (nearbyPlaces == null || nearbyPlaces.isEmpty()) {
 			log
 					.info("NearbyPlacesHelper.getNearbyPlaces: No results with geography.");
 			nearbyPlaces = getPlacesWithoutGeographicInfo(request);
 		}
-
+		*/
 		return createResponse(nearbyPlaces, request);
 	}
 
@@ -247,16 +249,18 @@ public class NearbyPlacesHelper {
 			NearbyPlacesRequest request) throws CitysearchException {
 		List<NearbyPlace> backFillFromPFPWithGeo = getNearbyPlacesBackfill(
 				request, pfpWithGeoResponseDocument);
-		List<NearbyPlace> backFillFromPFPWithOutGeo = getNearbyPlacesBackfill(
-				request, pfpWithOutGeoResponseDocument);
 		List<NearbyPlace> backfill = new ArrayList<NearbyPlace>();
 		if (backFillFromPFPWithGeo != null && !backFillFromPFPWithGeo.isEmpty()) {
 			backfill.addAll(backFillFromPFPWithGeo);
 		}
+		/* 
+		List<NearbyPlace> backFillFromPFPWithOutGeo = getNearbyPlacesBackfill(
+				request, pfpWithOutGeoResponseDocument);
 		if (backFillFromPFPWithOutGeo != null
 				&& !backFillFromPFPWithOutGeo.isEmpty()) {
 			backfill.addAll(backFillFromPFPWithOutGeo);
 		}
+		*/
 		return backfill;
 	}
 
@@ -290,7 +294,8 @@ public class NearbyPlacesHelper {
 			return getTopReviewedPlaces(request, pfpWithGeoResponseDocument);
 		}
 	}
-
+	
+	@Deprecated
 	private List<NearbyPlace> getPlacesWithoutGeographicInfo(
 			NearbyPlacesRequest request) throws CitysearchException {
 		log.info("NearbyPlacesHelper.getPlacesWithoutGeoCodes: Begin");
