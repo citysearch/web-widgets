@@ -13,7 +13,7 @@
 .ctsrch_boxContainer .ctsrch_container {padding:3px 10px 7px 10px;}
 .ctsrch_boxContainer .ctsrch_listing {height:68px;overflow:hidden;width:99%;}
 .ctsrch_boxContainer .ctsrch_leftSide {float:left;width:25%;text-align:center;}
-.ctsrch_boxContainer .ctsrch_rightSide {float:left;width:70%;overflow:hidden;}
+.ctsrch_boxContainer .ctsrch_rightSide {float:left;width:74%;overflow:hidden;}
 .ctsrch_boxContainer .ctsrch_lineMargin {margin:1px 0 3px -5px;height:1px;overflow:hidden;border-bottom:1px solid #d9d9d9;width:100%;}
 
 /* Conquest Ads 645x100 Global Styles */
@@ -21,10 +21,10 @@
 .ctsrch_wideContainer .ctsrch_header {}
 .ctsrch_wideContainer .ctsrch_headerText {float:left;padding:1px 0 0 20px;font-size:11px;font-weight:bold;color:#DF1400;}
 .ctsrch_wideContainer .ctsrch_sponserText {float:right;font-size:11px;padding:1px 3px 0 0;color:#6E6E6E;}
-.ctsrch_wideContainer .ctsrch_container {padding:0 20px 7px 20px;}
-.ctsrch_wideContainer .ctsrch_listing {float:left;margin:10x 0 0 13px; width:49%;}
+.ctsrch_wideContainer .ctsrch_container {padding:0 10px 7px 20px;}
+.ctsrch_wideContainer .ctsrch_listing {float:left;margin:10x 0 0 13px; width:48.5%;padding-right:1%;}
 .ctsrch_wideContainer .ctsrch_leftSide {float:left;width:25%;text-align:center;}
-.ctsrch_wideContainer .ctsrch_rightSide {float:left;width:70%;}
+.ctsrch_wideContainer .ctsrch_rightSide {float:left;width:74%;}
 
 /* Tall Ads 300x500 Global Styles */
 .ctsrch_tallContainer {max-height:498px;width:298px;overflow:hidden;font:76%/125% Arial,sans-serif;border:solid 1px #d9d9d9;}
@@ -49,6 +49,11 @@
 .ctsrch_reviewFont {float:left;margin-left:5px;font-size:10px;color:#006699;font-weight:bold;}
 .ctsrch_cityFont, .ctsrch_phone {white-space:nowrap;overflow:hidden;width:100%;font-weight:bold;font-size:11px;}
 .ctsrch_subcategoryFont {white-space:nowrap;overflow:hidden;width:100%;font-size:10px;}
+.ctsrch_descFont {white-space:nowrap;overflow:hidden;width:100%;font-size:11px;}
+.ctsrch_descFont_bf {font-size:11px;}
+.ctsrch_displayUrl {white-space:nowrap;overflow:hidden;width:100%;}
+.ctsrch_displayUrl a {font-size:11px;color:#31647C;font-weight:bold;text-decoration:none;}
+.ctsrch_displayUrl a:hover {text-decoration:underline;}
 
 /* Reviews */
 .ctsrch_review_full {margin-top:5px;}
@@ -81,15 +86,9 @@
 .ctsrch_offers .ctsrch_rightSide {width:59%;}
 .ctsrch_offers .ctsrch_bizPhoto img {height:57px;width:94px;border:0;padding:0;}
 
-/* Backfills & House Ads */
-.ctsrch_descFont {white-space:nowrap;overflow:hidden;width:100%;font-size:11px;}
-.ctsrch_descFont_bf {font-size:11px;}
-.ctsrch_subLink_bf a {font-size:11px;color:#31647C;font-weight:bold;text-decoration:none;}
-.ctsrch_subLink_bf a:hover {text-decoration:underline;}
-
 /* Project Yellow Styles */
 .ctsrch_yelp {height:80px;width:640px;padding:0 10px 0 10px;margin:10px 0 5px 0;background-color:#FFFADA;border:0;}
 .ctsrch_yelp .ctsrch_mainLink a {font-weight:bold;color:#6666CC;text-decoration:none;}
 .ctsrch_yelp .ctsrch_mainLink a:hover {color:#555555;text-decoration:underline;}
 .ctsrch_yelp .ctsrch_subcategoryFont {color:#555555;}
-.ctsrch_yelp .ctsrch_subLink_bf a {color:#999999;font-weight:normal;}
+.ctsrch_yelp .ctsrch_displayUrl a {color:#999999;font-weight:normal;}
