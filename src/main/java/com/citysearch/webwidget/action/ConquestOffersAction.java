@@ -18,8 +18,8 @@ import com.opensymphony.xwork2.ModelDriven;
 
 public class ConquestOffersAction extends AbstractCitySearchAction implements
         ModelDriven<OffersRequest> {
-    private static final Integer MAX_OFFER_DESCRIPTION_SIZE = 110;
-    private static final Integer MAX_OFFER_TITLE_SIZE = 44;
+    private static final Integer MAX_OFFER_DESCRIPTION_SIZE = 105;
+    private static final Integer MAX_OFFER_TITLE_SIZE = 40;
     private static final Integer MAX_OFFER_LISTING_NAME_SIZE = 30;
 
     private Logger log = Logger.getLogger(getClass());
