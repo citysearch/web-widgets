@@ -57,7 +57,7 @@
                 </div>
             </div>
 
-            <s:if test="%{profile != null && profile.review != null && nearbyPlaces.size() <= 2}">
+            <s:if test="%{nearbyPlaces.size() <= 2}">
                 <!-- Full Profile eReview -->
                 <s:if test="%{nearbyPlaces.size() == 1}">
                     <div class="ctsrch_review_double">

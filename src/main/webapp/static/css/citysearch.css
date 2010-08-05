@@ -58,7 +58,7 @@
 /* Reviews */
 .ctsrch_review_full {margin-top:5px;}
 .ctsrch_review_double {margin:10px 0 0 5px;height:135px;overflow-y:auto;}
-.ctsrch_review_single {margin-top:5px;}
+.ctsrch_review_single {margin-top:5px;height:29px;}
 .ctsrch_review_description{overflow:hidden;width:100%;font-size:11px;}
 .ctsrch_review_single .ctsrch_review_description{white-space:nowrap;}
 .ctsrch_review_time {color:#8d8d8d;}
