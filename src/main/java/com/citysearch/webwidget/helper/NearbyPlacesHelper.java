@@ -152,7 +152,7 @@ public class NearbyPlacesHelper {
 	private NearbyPlacesResponse createResponse(List<NearbyPlace> nearbyPlaces,
 			NearbyPlacesRequest request) throws CitysearchException {
 		NearbyPlacesResponse response = new NearbyPlacesResponse();
-
+		
 		int noOfBackFillNeeded = (nearbyPlaces == null || nearbyPlaces
 				.isEmpty()) ? this.displaySize : this.displaySize
 				- nearbyPlaces.size();
@@ -199,34 +199,6 @@ public class NearbyPlacesHelper {
 				profileRequest.setListingId(nbp.getListingId());
 				Profile profile = phelper
 						.getProfileAndHighestReview(profileRequest);
-				// Adding internal tracking to review
-				// By default review api does not return a tracking url in the
-				// response
-				// Since we already have the tracking url from PFP and the
-				// review is in context with the PFP response, use
-				// the tracking url from PFP and the review url from review to
-				// build the internal tracking url for the review.
-				/*
-				 * if (profile.getReview() != null &&
-				 * profile.getReview().getReviewUrl() != null) { String
-				 * reviewTrackingUrl = HelperUtil.getTrackingUrl(
-				 * profile.getReview().getReviewUrl(), nbp
-				 * .getAdDestinationUrl(), request .getCallBackUrl(), request
-				 * .getDartClickTrackUrl(), nbp.getListingId(), nbp.getPhone(),
-				 * request .getPublisher(), request.getAdUnitName(),
-				 * request.getAdUnitSize());
-				 * profile.getReview().setReviewTrackingUrl(reviewTrackingUrl);
-				 * }
-				 * 
-				 * if (profile.getSendToFriendUrl() != null) { String
-				 * sendToFriendTrackingUrl = HelperUtil.getTrackingUrl(
-				 * profile.getSendToFriendUrl(), nbp .getAdDestinationUrl(),
-				 * request .getCallBackUrl(), request .getDartClickTrackUrl(),
-				 * nbp.getListingId(), nbp.getPhone(), request .getPublisher(),
-				 * request.getAdUnitName(), request.getAdUnitSize());
-				 * profile.setSendToFriendTrackingUrl(sendToFriendTrackingUrl);
-				 * }
-				 */
 				nbp.setProfile(profile);
 			}
 		}
@@ -423,7 +395,7 @@ public class NearbyPlacesHelper {
 
 		StringBuilder nameLengthProp = new StringBuilder(adUnitIdentifier);
 		nameLengthProp.append(".");
-		nameLengthProp.append(CommonConstants.NEARBY_NAME_LENGTH);
+		nameLengthProp.append(CommonConstants.NAME_LENGTH);
 
 		String name = ad.getChildText(CommonConstants.NAME);
 		name = HelperUtil.getAbbreviatedString(name, nameLengthProp.toString());
@@ -454,7 +426,7 @@ public class NearbyPlacesHelper {
 
 		StringBuilder tagLengthProp = new StringBuilder(adUnitIdentifier);
 		tagLengthProp.append(".");
-		tagLengthProp.append(CommonConstants.NEARBY_TAGLINE_LENGTH);
+		tagLengthProp.append(CommonConstants.TAGLINE_LENGTH);
 		String category = ad.getChildText(TAGLINE_TAG);
 		category = HelperUtil.getAbbreviatedString(category, tagLengthProp
 				.toString());
@@ -468,7 +440,7 @@ public class NearbyPlacesHelper {
 
 		StringBuilder descLengthProp = new StringBuilder(adUnitIdentifier);
 		descLengthProp.append(".");
-		descLengthProp.append(CommonConstants.NEARBY_DESCRIPTION_LENGTH);
+		descLengthProp.append(CommonConstants.DESCRIPTION_LENGTH);
 		String description = ad.getChildText(DESC_TAG);
 		description = HelperUtil.getAbbreviatedString(description,
 				descLengthProp.toString());
@@ -549,7 +521,7 @@ public class NearbyPlacesHelper {
 			
 			StringBuilder tagLengthProp = new StringBuilder(adUnitIdentifier);
 			tagLengthProp.append(".");
-			tagLengthProp.append(CommonConstants.NEARBY_TAGLINE_LENGTH);
+			tagLengthProp.append(CommonConstants.TAGLINE_LENGTH);
 			category = HelperUtil.getAbbreviatedString(category, tagLengthProp
 					.toString());
 		
@@ -564,7 +536,7 @@ public class NearbyPlacesHelper {
 			
 			StringBuilder descLengthProp = new StringBuilder(adUnitIdentifier);
 			descLengthProp.append(".");
-			descLengthProp.append(CommonConstants.NEARBY_DESCRIPTION_LENGTH);
+			descLengthProp.append(CommonConstants.DESCRIPTION_LENGTH);
 			description = HelperUtil.getAbbreviatedString(description,
 					descLengthProp.toString());
 			nbp.setDescription(description);

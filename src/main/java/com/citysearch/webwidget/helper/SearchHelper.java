@@ -435,7 +435,7 @@ public class SearchHelper {
 
 		StringBuilder nameLengthProp = new StringBuilder(adUnitIdentifier);
 		nameLengthProp.append(".");
-		nameLengthProp.append(CommonConstants.NEARBY_NAME_LENGTH);
+		nameLengthProp.append(CommonConstants.NAME_LENGTH);
 
 		String name = location.getChildText(CommonConstants.NAME);
 		name = HelperUtil.getAbbreviatedString(name, nameLengthProp.toString());
@@ -465,7 +465,7 @@ public class SearchHelper {
 		
 		StringBuilder tagLengthProp = new StringBuilder(adUnitIdentifier);
 		tagLengthProp.append(".");
-		tagLengthProp.append(CommonConstants.NEARBY_TAGLINE_LENGTH);
+		tagLengthProp.append(CommonConstants.TAGLINE_LENGTH);
 		String category = location.getChildText(TAGLINE_TAG);
 		category = HelperUtil.getAbbreviatedString(category, tagLengthProp
 				.toString());

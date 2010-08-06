@@ -41,12 +41,6 @@ public class ReviewHelper {
 
 	public final static String PROPERTY_REVIEW_URL = "reviews.url";
 
-	public final static Integer BUSINESS_NAME_SIZE = 30;
-	public final static Integer REVIEW_TITLE_SIZE = 30;
-	public final static Integer REVIEW_TEXT_SIZE = 250;
-	public final static Integer REVIEW_TEXT_SIZE_50 = 50;
-	public final static Integer PROS_SIZE = 30;
-	public final static Integer CONS_SIZE = 30;
 	private static final int MINIMUM_RATING = 6;
 
 	private static final String ELEMENT_REVIEW_URL = "review_url";
@@ -187,7 +181,8 @@ public class ReviewHelper {
 				}
 			}
 			Element reviewElm = reviewMap.get(reviewMap.lastKey());
-			review = getReviewInstance(request, reviewElm, this.rootPath);
+			review = getReviewInstance(request, reviewElm, this.rootPath,
+					request.getAdUnitIdentifier());
 		}
 		return review;
 	}
@@ -201,61 +196,60 @@ public class ReviewHelper {
 	 * @throws CitysearchException
 	 */
 	public static Review getReviewInstance(ReviewRequest request,
-			Element reviewElem, String path) throws CitysearchException {
+			Element reviewElem, String path, String adUnitIdentifier)
+			throws CitysearchException {
 		Review review = new Review();
 
 		String businessName = reviewElem.getChildText(BUSINESS_NAME);
 		review.setBusinessName(businessName);
-		if (businessName != null
-				&& businessName.trim().length() > BUSINESS_NAME_SIZE) {
-			review.setShortBusinessName(StringUtils.abbreviate(businessName,
-					BUSINESS_NAME_SIZE));
-		} else {
-			review.setShortBusinessName(businessName);
-		}
+		StringBuilder nameLengthProp = new StringBuilder(adUnitIdentifier);
+		nameLengthProp.append(".");
+		nameLengthProp.append(CommonConstants.NAME_LENGTH);
+		businessName = HelperUtil.getAbbreviatedString(businessName,
+				nameLengthProp.toString());
+		review.setShortBusinessName(businessName);
 
 		String reviewTitle = reviewElem.getChildText(REVIEW_TITLE);
 		review.setReviewTitle(reviewTitle);
-		if (reviewTitle != null
-				&& reviewTitle.trim().length() > REVIEW_TITLE_SIZE) {
-			review.setShortTitle(StringUtils.abbreviate(reviewTitle,
-					REVIEW_TITLE_SIZE));
-		} else {
-			review.setShortTitle(reviewTitle);
-		}
+		StringBuilder titleLengthProp = new StringBuilder(adUnitIdentifier);
+		titleLengthProp.append(".");
+		titleLengthProp.append(CommonConstants.REVIEW_TITLE_LENGTH);
+		reviewTitle = HelperUtil.getAbbreviatedString(reviewTitle,
+				titleLengthProp.toString());
+		review.setShortTitle(reviewTitle);
 
 		String reviewText = reviewElem.getChildText(REVIEW_TEXT);
 		review.setReviewText(reviewText);
-		if (reviewText != null && reviewText.trim().length() > REVIEW_TEXT_SIZE) {
-			review.setShortReviewText(StringUtils.abbreviate(reviewText,
-					REVIEW_TEXT_SIZE));
-		} else {
-			review.setShortReviewText(reviewText);
-		}
-		if (reviewText != null
-				&& reviewText.trim().length() > REVIEW_TEXT_SIZE_50) {
-			review.setSmallReviewText(StringUtils.abbreviate(reviewText,
-					REVIEW_TEXT_SIZE_50));
-		} else {
-			review.setSmallReviewText(reviewText);
-		}
+		StringBuilder textLengthProp = new StringBuilder(adUnitIdentifier);
+		textLengthProp.append(".");
+		textLengthProp.append(CommonConstants.REVIEW_TEXT_LENGTH);
+		reviewText = HelperUtil.getAbbreviatedString(reviewText, textLengthProp
+				.toString());
+		review.setShortReviewText(reviewText);
+
+		textLengthProp = new StringBuilder(adUnitIdentifier);
+		textLengthProp.append(".");
+		textLengthProp.append(CommonConstants.REVIEW_TEXT_SMALL_LENGTH);
+		reviewText = HelperUtil.getAbbreviatedString(reviewText, textLengthProp
+				.toString());
+		review.setSmallReviewText(reviewText);
 
 		String pros = reviewElem.getChildText(PROS);
 		review.setPros(pros);
-		if (pros != null && pros.trim().length() > PROS_SIZE) {
-			review.setShortPros(StringUtils.abbreviate(pros, PROS_SIZE));
-		} else {
-			review.setShortPros(pros);
-		}
+		StringBuilder prosLengthProp = new StringBuilder(adUnitIdentifier);
+		prosLengthProp.append(".");
+		prosLengthProp.append(CommonConstants.REVIEW_PROS_LENGTH);
+		pros = HelperUtil.getAbbreviatedString(pros, prosLengthProp.toString());
+		review.setShortPros(pros);
 
 		String cons = reviewElem.getChildText(CONS);
 		review.setCons(cons);
-		if (cons != null && cons.trim().length() > CONS_SIZE) {
-			review.setShortCons(StringUtils.abbreviate(cons, CONS_SIZE));
-		} else {
-			review.setShortCons(cons);
-		}
-
+		StringBuilder consLengthProp = new StringBuilder(adUnitIdentifier);
+		consLengthProp.append(".");
+		consLengthProp.append(CommonConstants.REVIEW_CONS_LENGTH);
+		cons = HelperUtil.getAbbreviatedString(cons, consLengthProp.toString());
+		review.setShortCons(cons);
+		
 		review.setListingId(reviewElem.getChildText(LISTING_ID));
 		review.setReviewAuthor(reviewElem.getChildText(REVIEW_AUTHOR));
 		String ratingVal = reviewElem.getChildText(REVIEW_RATING);

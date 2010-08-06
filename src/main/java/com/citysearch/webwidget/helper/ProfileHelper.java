@@ -395,7 +395,7 @@ public class ProfileHelper {
 					}
 					Element reviewElm = reviewMap.get(reviewMap.lastKey());
 					Review review = ReviewHelper.getReviewInstance(null,
-							reviewElm, this.rootPath);
+							reviewElm, this.rootPath, request.getAdUnitIdentifier());
 					review.setCallBackFunction(request.getCallBackFunction());
 					review.setCallBackUrl(request.getCallBackUrl());
 

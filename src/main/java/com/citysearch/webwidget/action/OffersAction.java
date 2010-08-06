@@ -61,15 +61,13 @@ public class OffersAction extends AbstractCitySearchAction implements
 	 */
 	public String execute() throws CitysearchException {
 		log.info("Start offersAction execute()");
+		offersRequest.setAdUnitName(AD_UNIT_NAME);
 		if (offersRequest.getDisplaySize() == null
 				|| offersRequest.getDisplaySize() == 0
 				|| offersRequest.getDisplaySize() > DEFAULT_DISPLAY_SIZE) {
 			offersRequest.setDisplaySize(DEFAULT_DISPLAY_SIZE);
 		}
-		if (offersRequest.getAdUnitName() == null
-				|| offersRequest.getAdUnitName().trim().length() == 0) {
-			offersRequest.setAdUnitName(AD_UNIT_NAME);
-		}
+		
 		OffersHelper helper = new OffersHelper(getResourceRootPath(),
 				offersRequest.getDisplaySize());
 		try {

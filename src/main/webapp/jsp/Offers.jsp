@@ -14,7 +14,7 @@
                 <s:iterator value="offers" status="stat">
                     <div class="cs_offer">
                         <div class="cs_offer_text">
-                            <s:property value="offerShortTitle" />
+                            <s:property value="offerTitle" />
                         </div>
                         <div class="cs_offer_getoffer">
                             <a target="_blank" href='<s:property value="couponUrl" />' >Get offer</a>
