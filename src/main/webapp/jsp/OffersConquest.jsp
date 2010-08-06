@@ -76,7 +76,7 @@
                             <s:property value="tagLine" />
                         </div>
                         <div class="ctsrch_displayUrl" >
-                            <a href='<s:property value="destinationUrl" />'>www.citysearch.com</a>
+                            <a href='<s:property value="destinationUrl" />'><s:property value="displayUrl" /></a>
                         </div>
                     </div>
                 </div>

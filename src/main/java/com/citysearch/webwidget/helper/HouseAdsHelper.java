@@ -68,8 +68,10 @@ public class HouseAdsHelper {
                         StringBuilder destUrl = new StringBuilder(dartTrackUrl);
                         destUrl.append(url);
                         ad.setDestinationUrl(destUrl.toString());
+                        ad.setDisplayUrl(url);
                     } else {
                         ad.setDestinationUrl(url);
+                        ad.setDisplayUrl(url);
                     }
 
                     ad.setImageURL(imageURL);

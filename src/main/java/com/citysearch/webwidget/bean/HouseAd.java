@@ -6,6 +6,7 @@ public class HouseAd {
     private String destinationUrl;
     private String imageURL;
     private String trackingUrl;
+    private String displayUrl;
 
     public String getTrackingUrl() {
         return trackingUrl;
@@ -45,6 +46,14 @@ public class HouseAd {
 
     public void setImageURL(String imageURL) {
         this.imageURL = imageURL;
+    }
+
+    public void setDisplayUrl(String displayUrl) {
+        this.displayUrl = displayUrl;
+    }
+
+    public String getDisplayUrl() {
+        return displayUrl;
     }
 
 }
