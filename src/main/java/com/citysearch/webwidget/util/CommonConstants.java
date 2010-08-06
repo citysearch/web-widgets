@@ -67,9 +67,15 @@ public class CommonConstants {
     public static final String IMAGES_PROPERTIES_FILE = "images.properties";
     public static final String IMAGE_ERROR = "image.properties.error";
     
-    public static final String NEARBY_DESCRIPTION_LENGTH = "description.length";
-    public static final String NEARBY_NAME_LENGTH = "name.length";
-    public static final String NEARBY_TAGLINE_LENGTH = "tagline.length";
+    public static final String DESCRIPTION_LENGTH = "description.length";
+    public static final String NAME_LENGTH = "name.length";
+    public static final String TAGLINE_LENGTH = "tagline.length";
+    public static final String TITLE_LENGTH = "title.length";
+    public static final String REVIEW_TITLE_LENGTH = "review.title.length";
+    public static final String REVIEW_TEXT_LENGTH = "review.text.length";
+    public static final String REVIEW_TEXT_SMALL_LENGTH = "review.text.small.length";
+    public static final String REVIEW_PROS_LENGTH = "review.pros.length";
+    public static final String REVIEW_CONS_LENGTH = "review.cons.length";
     
     public static final int EXTENDED_RADIUS = 25;
     public static final int DEFAULT_RADIUS = 25;
