@@ -14,30 +14,31 @@ import com.citysearch.webwidget.exception.CitysearchException;
 import com.citysearch.webwidget.util.HelperUtil;
 
 public class HouseAdsHelper {
-    private static List<HouseAd> houseAds;
 
     public static List<HouseAd> getHouseAds(String path, String dartTrackUrl)
             throws CitysearchException {
+
+        List<HouseAd> houseAds = null;
         InputStream inputStream = null;
-        if (houseAds == null) {
-            inputStream = HouseAdsHelper.class.getClassLoader().getResourceAsStream(
-                    "/HouseAdsConfig.xml");
-            Document document;
+
+        inputStream = HouseAdsHelper.class.getClassLoader().getResourceAsStream(
+                "/HouseAdsConfig.xml");
+        Document document;
+        try {
+            document = HelperUtil.buildFromStream(inputStream);
+        } catch (IOException ioe) {
+            throw new CitysearchException("HouseAdsHelper", "getHouseAds", ioe);
+        } finally {
             try {
-                document = HelperUtil.buildFromStream(inputStream);
+                if (inputStream != null) {
+                    inputStream.close();
+                }
             } catch (IOException ioe) {
                 throw new CitysearchException("HouseAdsHelper", "getHouseAds", ioe);
-            } finally {
-                try {
-                    if (inputStream != null) {
-                        inputStream.close();
-                    }
-                } catch (IOException ioe) {
-                    throw new CitysearchException("HouseAdsHelper", "getHouseAds", ioe);
-                }
             }
-            houseAds = buildHouseAds(document, path, dartTrackUrl);
         }
+        houseAds = buildHouseAds(document, path, dartTrackUrl);
+
         return houseAds;
     }
 
