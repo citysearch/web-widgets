@@ -55,7 +55,7 @@ var citygrid = {
         checkInput : function(data) {
             // validate user data
             if (!data.what) { data.what = 'Restaurants'; }
-            if (!data.where) { data.where = 'Los Angeles, CA'; }
+            if (!data.where) { data.where = ''; }
             if (!data.publisher) { data.publisher = ''; }
             if (!data.latitude) { data.latitude = ''; }
             if (!data.longitude) { data.longitude = ''; }
@@ -69,6 +69,7 @@ var citygrid = {
 
             // import creative dart data
             data.what = (window.cgWhat) ? window.cgWhat : data.what;
+            data.where = (window.cgWhere) ? window.cgWhere : data.where;
             data.adUnitName = (window.cgAdUnitName) ? window.cgAdUnitName : data.adUnitName;
             data.dartClickTrackUrl = (window.cgDartTrackUrl) ? window.cgDartTrackUrl : '';
 
