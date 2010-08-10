@@ -138,8 +138,11 @@ public class NearbyPlacesHelper {
 				|| request.getPublisher().equalsIgnoreCase(
 						CommonConstants.PUBLISHER_CITYSEARCH)) {
 			return findConquestNearbyPlaces(request);
+		} else {
+			throw new CitysearchException(this.getClass().getName(),
+					"getNearbyPlaces", "Unknow publisher "
+							+ request.getPublisher());
 		}
-		return null;
 	}
 
 	private NearbyPlacesResponse findInsiderPagesNearbyPlaces(
