@@ -564,7 +564,7 @@ public class NearbyPlacesHelper {
 			category = category.replaceAll("</b>", "");
 
 			StringBuilder tagLengthProp = new StringBuilder(adUnitIdentifier);
-			tagLengthProp.append(".");
+			tagLengthProp.append(".backfill.");
 			tagLengthProp.append(CommonConstants.TAGLINE_LENGTH);
 			category = HelperUtil.getAbbreviatedString(category, tagLengthProp
 					.toString());
