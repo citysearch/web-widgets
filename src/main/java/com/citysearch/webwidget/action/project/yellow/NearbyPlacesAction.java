@@ -2,6 +2,7 @@ package com.citysearch.webwidget.action.project.yellow;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
@@ -15,6 +16,7 @@ import com.citysearch.webwidget.exception.InvalidRequestParametersException;
 import com.citysearch.webwidget.helper.NearbyPlacesHelper;
 import com.citysearch.webwidget.util.CommonConstants;
 import com.citysearch.webwidget.util.OneByOneTrackingUtil;
+import com.citysearch.webwidget.util.PropertiesLoader;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ModelDriven;
 
@@ -22,6 +24,7 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
 		ModelDriven<NearbyPlacesRequest> {
 	private Logger log = Logger.getLogger(getClass());
 
+	private static final String RETURN_HOUSEADS_PROPERTY = "projectyellow.return.houseads";
 	private static final Integer DEFAULT_DISPLAY_SIZE = 2;
 	private static final String ADUNIT_SIZE = "660x80";
 	private NearbyPlacesRequest nearbyPlacesRequest = new NearbyPlacesRequest();
@@ -107,6 +110,15 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
 		}
 		set1x1TrackingPixel(nearbyPlacesRequest.getAdUnitName(),
 				nearbyPlacesRequest.getAdUnitSize());
+
+		// For project yellow make the return of house ads configurable.
+		// We still want to return the tracking pixel but not the actual ad.
+		Properties appProperties = PropertiesLoader.getApplicationProperties();
+		if (appProperties.containsKey(RETURN_HOUSEADS_PROPERTY)
+				&& Boolean.getBoolean((String) appProperties
+						.get(RETURN_HOUSEADS_PROPERTY))) {
+			nearbyPlacesResponse.setHouseAds(null);
+		}
 		return Action.SUCCESS;
 	}
 
