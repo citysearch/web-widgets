@@ -71,6 +71,7 @@ public class CommonConstants {
     public static final String NAME_LENGTH = "name.length";
     public static final String TAGLINE_LENGTH = "tagline.length";
     public static final String TITLE_LENGTH = "title.length";
+    public static final String DISPLAY_URL_LENGTH = "displayurl.length";
     public static final String REVIEW_TITLE_LENGTH = "review.title.length";
     public static final String REVIEW_TEXT_LENGTH = "review.text.length";
     public static final String REVIEW_TEXT_SMALL_LENGTH = "review.text.small.length";

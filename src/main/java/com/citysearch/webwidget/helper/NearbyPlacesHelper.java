@@ -512,6 +512,14 @@ public class NearbyPlacesHelper {
 				.getPhone());
 		nearbyPlace.setCallBackFunction(callBackFn);
 
+		StringBuilder displayUrlLengthProp = new StringBuilder(adUnitIdentifier);
+		displayUrlLengthProp.append(".");
+		displayUrlLengthProp.append(CommonConstants.DISPLAY_URL_LENGTH);
+		String adDisplayUrl = nearbyPlace.getAdDisplayURL();
+		adDisplayUrl = HelperUtil.getTruncatedString(adDisplayUrl,
+				displayUrlLengthProp.toString());
+		nearbyPlace.setAdDisplayURL(adDisplayUrl);
+
 		return nearbyPlace;
 	}
 
@@ -599,6 +607,15 @@ public class NearbyPlacesHelper {
 						.getAdUnitSize());
 
 		nbp.setAdDisplayTrackingURL(adDisplayTrackingUrl);
+
+		StringBuilder displayUrlLengthProp = new StringBuilder(adUnitIdentifier);
+		displayUrlLengthProp.append(".");
+		displayUrlLengthProp.append(CommonConstants.DISPLAY_URL_LENGTH);
+		String adDisplayUrl = nbp.getAdDisplayURL();
+		adDisplayUrl = HelperUtil.getTruncatedString(adDisplayUrl,
+				displayUrlLengthProp.toString());
+		nbp.setAdDisplayURL(adDisplayUrl);
+
 		return nbp;
 	}
 

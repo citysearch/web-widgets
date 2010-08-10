@@ -295,6 +295,20 @@ public class HelperUtil {
 		return stringToAbbreviate;
 	}
 
+	public static String getTruncatedString(String stringTotruncate,
+			String propertyName) throws CitysearchException {
+		Properties prop = PropertiesLoader.getFieldProperties();
+		if (prop.containsKey(propertyName)) {
+			String value = prop.getProperty(propertyName);
+			if (StringUtils.isNotBlank(value)) {
+				int length = NumberUtils.toInt(value);
+				stringTotruncate = StringUtils.substring(stringTotruncate, 0,
+						length);
+			}
+		}
+		return stringTotruncate;
+	}
+
 	public static List<String> getImages(String contextPath)
 			throws CitysearchException {
 		List<String> imageList = new ArrayList<String>();
