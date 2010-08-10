@@ -66,10 +66,12 @@
                         </div>
                         <div class="ctsrch_review_description"><s:property value="profile.review.shortReviewText"/></div>
                         <div class="ctsrch_review_description">
-                            <div class="spacer"></div>
-                            <strong>Pros:</strong>&nbsp;<s:property value="profile.review.shortPros"/>
-                            <div class="seperator"></div>
-                            <strong>Cons:</strong>&nbsp;<s:property value="profile.review.shortCons"/>
+                            <s:if test="%{profile.review.shortPros != ''}">
+                                <strong>Pros:</strong>&nbsp;<s:property value="profile.review.shortPros"/>
+                            </s:if>
+                            <s:if test="%{profile.review.shortCons != ''}">
+                                <strong>Cons:</strong>&nbsp;<s:property value="profile.review.shortCons"/>
+                            </s:if>
                         </div>
                     </div>
                 </s:if>
