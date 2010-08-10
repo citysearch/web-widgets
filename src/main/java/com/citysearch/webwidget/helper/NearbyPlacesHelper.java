@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Random;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
@@ -70,37 +72,25 @@ public class NearbyPlacesHelper {
 	private Integer displaySize;
 
 	// Field to cache the PFP response document.
-	private Document pfpWithGeoResponseDocument = null;
-	
-	private Document pfpWithOutGeoResponseDocument = null;
+	private Document pfpLocationResponse = null;
+
+	private Document pfpResponse = null;
 
 	public NearbyPlacesHelper(String rootPath) throws CitysearchException {
 		this.rootPath = rootPath;
 	}
 
-	private String getPFPQuery(NearbyPlacesRequest request)
+	private String getPFPLocationQuery(NearbyPlacesRequest request)
 			throws CitysearchException {
 		StringBuilder apiQueryString = new StringBuilder(request
 				.getQueryString());
-		// PFP requires publishercode and not publisher???
 		apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
-		/*
-		 * apiQueryString.append(HelperUtil.constructQueryParam(
-		 * APIFieldNameConstants.PUBLISHER_CODE, request.getPublisher()));
-		 */
 		apiQueryString.append(HelperUtil.constructQueryParam(
 				APIFieldNameConstants.PUBLISHER, request.getPublisher()));
 		return apiQueryString.toString();
 	}
 
-	/**
-	 * Constructs and returns PFP Query String without geography parameters
-	 * 
-	 * @param request
-	 * @return String
-	 * @throws CitysearchException
-	 */
-	private String getPFPQueryStringWithoutGeography(NearbyPlacesRequest request)
+	public String getPFPQuery(NearbyPlacesRequest request)
 			throws CitysearchException {
 		StringBuilder apiQueryString = new StringBuilder();
 		Properties properties = PropertiesLoader.getAPIProperties();
@@ -108,14 +98,16 @@ public class NearbyPlacesHelper {
 				.getProperty(CommonConstants.API_KEY_PROPERTY);
 		apiQueryString.append(HelperUtil.constructQueryParam(
 				APIFieldNameConstants.API_KEY, apiKey));
+
 		apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
 		apiQueryString.append(HelperUtil.constructQueryParam(
 				APIFieldNameConstants.WHAT, request.getWhat()));
+
 		apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
-		/*
-		 * apiQueryString.append(HelperUtil.constructQueryParam(
-		 * APIFieldNameConstants.PUBLISHER_CODE, request.getPublisher()));
-		 */
+		apiQueryString.append(HelperUtil.constructQueryParam(
+				APIFieldNameConstants.WHERE, request.getWhere()));
+
+		apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
 		apiQueryString.append(HelperUtil.constructQueryParam(
 				APIFieldNameConstants.PUBLISHER, request.getPublisher()));
 		return apiQueryString.toString();
@@ -138,68 +130,140 @@ public class NearbyPlacesHelper {
 			this.displaySize = CommonConstants.DEFAULT_NEARBY_DISPLAY_SIZE;
 		}
 		log.info("NearbyPlacesHelper.getNearbyPlaces: After validate");
-		List<NearbyPlace> nearbyPlaces = getPlacesByGeographicInfo(request);
-		/* Not Needed.
-		if (nearbyPlaces == null || nearbyPlaces.isEmpty()) {
-			log
-					.info("NearbyPlacesHelper.getNearbyPlaces: No results with geography.");
-			nearbyPlaces = getPlacesWithoutGeographicInfo(request);
+		if (request.getPublisher().equalsIgnoreCase(
+				CommonConstants.PUBLISHER_INSIDERPAGES)) {
+			return findInsiderPagesNearbyPlaces(request);
+		} else if (request.getPublisher().equalsIgnoreCase(
+				CommonConstants.PUBLISHER_PROJECT_YELLOW)
+				|| request.getPublisher().equalsIgnoreCase(
+						CommonConstants.PUBLISHER_CITYSEARCH)) {
+			return findConquestNearbyPlaces(request);
 		}
-		*/
-		return createResponse(nearbyPlaces, request);
+		return null;
 	}
 
-	private NearbyPlacesResponse createResponse(List<NearbyPlace> nearbyPlaces,
+	private NearbyPlacesResponse findInsiderPagesNearbyPlaces(
 			NearbyPlacesRequest request) throws CitysearchException {
 		NearbyPlacesResponse response = new NearbyPlacesResponse();
-		
-		int noOfBackFillNeeded = (nearbyPlaces == null || nearbyPlaces
-				.isEmpty()) ? this.displaySize : this.displaySize
-				- nearbyPlaces.size();
+
+		List<NearbyPlace> nearbyPlaces = null;
+
+		if (!StringUtils.isBlank(request.getLatitude())
+				&& !StringUtils.isBlank(request.getLongitude())) {
+			nearbyPlaces = getAdsFromPFPLocation(request);
+		}
 		List<NearbyPlace> backfill = null;
 		List<HouseAd> houseAds = null;
 		List<NearbyPlace> searchResults = null;
-		// If no results from PFP or PFP results size is less than required for
-		// Conquest
-		if (noOfBackFillNeeded == this.displaySize
-				|| (noOfBackFillNeeded > 0 && !request.getAdUnitSize().equals(
-						CommonConstants.MANTLE_AD_SIZE))) {
-			backfill = getNearbyPlacesBackfill(request);
-			int noOfSearchResultsNeeded = (backfill == null || backfill
-					.isEmpty()) ? noOfBackFillNeeded : noOfBackFillNeeded
-					- backfill.size();
-			if (noOfSearchResultsNeeded > 0) {
-				if (request.isIncludeSearch()) {
+		int noOfAdsNeeded = (nearbyPlaces == null || nearbyPlaces.isEmpty()) ? this.displaySize
+				: this.displaySize - nearbyPlaces.size();
+		if (noOfAdsNeeded > 0) {
+			nearbyPlaces = (nearbyPlaces == null) ? new ArrayList<NearbyPlace>()
+					: nearbyPlaces;
+			if (!StringUtils.isBlank(request.getWhere())) {
+				Set<String> listingIds = new TreeSet<String>();
+				for (NearbyPlace nbp : nearbyPlaces)
+					listingIds.add(nbp.getListingId());
+				List<NearbyPlace> pfpResults = getAdsFromPFP(request,
+						listingIds);
+				if (pfpResults != null && !pfpResults.isEmpty()) {
+					pfpResults = (pfpResults.size() > noOfAdsNeeded) ? pfpResults
+							.subList(0, noOfAdsNeeded)
+							: pfpResults;
+					nearbyPlaces.addAll(pfpResults);
+				}
+			}
+			int noOfBackFillNeeded = (nearbyPlaces == null || nearbyPlaces
+					.isEmpty()) ? this.displaySize : this.displaySize
+					- nearbyPlaces.size();
+			if (noOfBackFillNeeded == this.displaySize) {
+				backfill = getNearbyPlacesBackfill(request);
+				int noOfSearchResultsNeeded = (backfill == null || backfill
+						.isEmpty()) ? noOfBackFillNeeded : noOfBackFillNeeded
+						- backfill.size();
+				if (noOfSearchResultsNeeded > 0) {
 					searchResults = getSearchResults(request,
 							noOfSearchResultsNeeded);
+					int noOfHouseAdsNeeded = (searchResults == null || searchResults
+							.isEmpty()) ? noOfSearchResultsNeeded
+							: noOfSearchResultsNeeded - searchResults.size();
+					if (noOfHouseAdsNeeded > 0) {
+						houseAds = HouseAdsHelper.getHouseAds(this.rootPath,
+								request.getDartClickTrackUrl());
+						houseAds = houseAds.subList(0, noOfHouseAdsNeeded);
+					} else if (noOfHouseAdsNeeded < 0) {
+						searchResults = searchResults.subList(0,
+								noOfSearchResultsNeeded);
+					}
+				} else if (noOfSearchResultsNeeded < 0) {
+					backfill = backfill.subList(0, noOfBackFillNeeded);
 				}
-				int noOfHouseAdsNeeded = (searchResults == null || searchResults
-						.isEmpty()) ? noOfSearchResultsNeeded
-						: noOfSearchResultsNeeded - searchResults.size();
+			} else if (nearbyPlaces != null && !nearbyPlaces.isEmpty()
+					&& nearbyPlaces.size() < this.displaySize) {
+				ProfileRequest profileRequest = new ProfileRequest(request);
+				profileRequest.setClientIP(request.getClientIP());
+				ProfileHelper phelper = new ProfileHelper(this.rootPath);
+				for (NearbyPlace nbp : nearbyPlaces) {
+					profileRequest.setListingId(nbp.getListingId());
+					Profile profile = phelper
+							.getProfileAndHighestReview(profileRequest);
+					nbp.setProfile(profile);
+				}
+			}
+		}
+		response.setNearbyPlaces(nearbyPlaces);
+		response.setBackfill(backfill);
+		response.setSearchResults(searchResults);
+		response.setHouseAds(houseAds);
+		return response;
+	}
+
+	private NearbyPlacesResponse findConquestNearbyPlaces(
+			NearbyPlacesRequest request) throws CitysearchException {
+		NearbyPlacesResponse response = new NearbyPlacesResponse();
+
+		List<NearbyPlace> nearbyPlaces = null;
+
+		if (!StringUtils.isBlank(request.getLatitude())
+				&& !StringUtils.isBlank(request.getLongitude())) {
+			nearbyPlaces = getAdsFromPFPLocation(request);
+		}
+		List<NearbyPlace> backfill = null;
+		List<HouseAd> houseAds = null;
+		List<NearbyPlace> searchResults = null;
+		int noOfAdsNeeded = (nearbyPlaces == null || nearbyPlaces.isEmpty()) ? this.displaySize
+				: this.displaySize - nearbyPlaces.size();
+		if (noOfAdsNeeded > 0) {
+			nearbyPlaces = (nearbyPlaces == null) ? new ArrayList<NearbyPlace>()
+					: nearbyPlaces;
+			if (!StringUtils.isBlank(request.getWhere())) {
+				Set<String> listingIds = new TreeSet<String>();
+				for (NearbyPlace nbp : nearbyPlaces)
+					listingIds.add(nbp.getListingId());
+				List<NearbyPlace> pfpResults = getAdsFromPFP(request,
+						listingIds);
+				if (pfpResults != null && !pfpResults.isEmpty()) {
+					pfpResults = (pfpResults.size() > noOfAdsNeeded) ? pfpResults
+							.subList(0, noOfAdsNeeded)
+							: pfpResults;
+					nearbyPlaces.addAll(pfpResults);
+				}
+			}
+			int noOfBackFillNeeded = (nearbyPlaces == null || nearbyPlaces
+					.isEmpty()) ? this.displaySize : this.displaySize
+					- nearbyPlaces.size();
+			if (noOfBackFillNeeded > 0) {
+				backfill = getNearbyPlacesBackfill(request);
+				int noOfHouseAdsNeeded = (backfill == null || backfill
+						.isEmpty()) ? noOfBackFillNeeded : noOfBackFillNeeded
+						- backfill.size();
 				if (noOfHouseAdsNeeded > 0) {
 					houseAds = HouseAdsHelper.getHouseAds(this.rootPath,
 							request.getDartClickTrackUrl());
 					houseAds = houseAds.subList(0, noOfHouseAdsNeeded);
 				} else if (noOfHouseAdsNeeded < 0) {
-					searchResults = searchResults.subList(0,
-							noOfSearchResultsNeeded);
+					backfill = backfill.subList(0, noOfBackFillNeeded);
 				}
-			} else if (noOfSearchResultsNeeded < 0) {
-				backfill = backfill.subList(0, noOfBackFillNeeded);
-			}
-		} else if (noOfBackFillNeeded > 0
-				&& request.getAdUnitSize().equals(
-						CommonConstants.MANTLE_AD_SIZE)) {
-			// Less than required PFP results found for Mantel read the reviews
-			// from Profile API
-			ProfileRequest profileRequest = new ProfileRequest(request);
-			profileRequest.setClientIP(request.getClientIP());
-			ProfileHelper phelper = new ProfileHelper(this.rootPath);
-			for (NearbyPlace nbp : nearbyPlaces) {
-				profileRequest.setListingId(nbp.getListingId());
-				Profile profile = phelper
-						.getProfileAndHighestReview(profileRequest);
-				nbp.setProfile(profile);
 			}
 		}
 		response.setNearbyPlaces(nearbyPlaces);
@@ -219,77 +283,54 @@ public class NearbyPlacesHelper {
 
 	private List<NearbyPlace> getNearbyPlacesBackfill(
 			NearbyPlacesRequest request) throws CitysearchException {
-		List<NearbyPlace> backFillFromPFPWithGeo = getNearbyPlacesBackfill(
-				request, pfpWithGeoResponseDocument);
-		List<NearbyPlace> backfill = new ArrayList<NearbyPlace>();
-		if (backFillFromPFPWithGeo != null && !backFillFromPFPWithGeo.isEmpty()) {
-			backfill.addAll(backFillFromPFPWithGeo);
-		}
-		/* 
-		List<NearbyPlace> backFillFromPFPWithOutGeo = getNearbyPlacesBackfill(
-				request, pfpWithOutGeoResponseDocument);
-		if (backFillFromPFPWithOutGeo != null
-				&& !backFillFromPFPWithOutGeo.isEmpty()) {
-			backfill.addAll(backFillFromPFPWithOutGeo);
-		}
-		*/
-		return backfill;
+		List<NearbyPlace> backFillFromPFP = getNearbyPlacesBackfill(request,
+				pfpResponse);
+		return backFillFromPFP;
 	}
 
-	private List<NearbyPlace> getPlacesByGeographicInfo(
-			NearbyPlacesRequest request) throws CitysearchException {
-		log.info("NearbyPlacesHelper.getPlacesByGeoCodes: Begin");
+	private List<NearbyPlace> getAdsFromPFPLocation(NearbyPlacesRequest request)
+			throws CitysearchException {
+		log.info("NearbyPlacesHelper.getAdsFromPFPLocation: Begin");
 		Properties properties = PropertiesLoader.getAPIProperties();
 		StringBuilder urlStringBuilder = new StringBuilder(properties
 				.getProperty(PFP_LOCATION_URL));
-		if (StringUtils.isBlank(request.getLatitude())
-				|| StringUtils.isBlank(request.getLongitude())) {
-			urlStringBuilder = new StringBuilder(properties
-					.getProperty(PFP_URL));
-		}
-		urlStringBuilder.append(getPFPQuery(request));
-		log.info("NearbyPlacesHelper.getPlacesByGeoCodes: Query: "
+		urlStringBuilder.append(getPFPLocationQuery(request));
+		log.info("NearbyPlacesHelper.getAdsFromPFPLocation: Query: "
 				+ urlStringBuilder.toString());
 		try {
-			pfpWithGeoResponseDocument = HelperUtil.getAPIResponse(
-					urlStringBuilder.toString(), null);
+			pfpLocationResponse = HelperUtil.getAPIResponse(urlStringBuilder
+					.toString(), null);
 			log
-					.info("NearbyPlacesHelper.getPlacesByGeoCodes: successful response");
+					.info("NearbyPlacesHelper.getAdsFromPFPLocation: successful response");
 		} catch (InvalidHttpResponseException ihe) {
 			throw new CitysearchException(this.getClass().getName(),
-					"getPlacesByGeoCodes", ihe);
+					"getAdsFromPFPLocation", ihe);
 		}
-		if (!StringUtils.isBlank(request.getLatitude())
-				&& !StringUtils.isBlank(request.getLongitude())) {
-			return getClosestPlaces(request, pfpWithGeoResponseDocument);
-		} else {
-			return getTopReviewedPlaces(request, pfpWithGeoResponseDocument);
-		}
+		return getClosestPlaces(request, pfpLocationResponse);
 	}
-	
-	@Deprecated
-	private List<NearbyPlace> getPlacesWithoutGeographicInfo(
-			NearbyPlacesRequest request) throws CitysearchException {
-		log.info("NearbyPlacesHelper.getPlacesWithoutGeoCodes: Begin");
+
+	private List<NearbyPlace> getAdsFromPFP(NearbyPlacesRequest request,
+			Set<String> listingsToIgnore) throws CitysearchException {
+		log.info("getAdsFromPFP: Begin");
 		Properties properties = PropertiesLoader.getAPIProperties();
-		String urlString = properties.getProperty(PFP_URL)
-				+ getPFPQueryStringWithoutGeography(request);
-		log.info("NearbyPlacesHelper.getPlacesWithoutGeoCodes: Query "
-				+ urlString);
+		StringBuilder urlStringBuilder = new StringBuilder(properties
+				.getProperty(PFP_URL));
+		urlStringBuilder.append(getPFPQuery(request));
+		log.info("getAdsFromPFP: Query: " + urlStringBuilder.toString());
 		try {
-			pfpWithOutGeoResponseDocument = HelperUtil.getAPIResponse(
-					urlString, null);
-			log
-					.info("NearbyPlacesHelper.getPlacesWithoutGeoCodes: Successful response");
+			pfpResponse = HelperUtil.getAPIResponse(
+					urlStringBuilder.toString(), null);
+			log.info("getAdsFromPFP: successful response");
 		} catch (InvalidHttpResponseException ihe) {
 			throw new CitysearchException(this.getClass().getName(),
-					"getPlacesWithoutGeoCodes", ihe);
+					"getAdsFromPFP", ihe);
 		}
-		return getTopReviewedPlaces(request, pfpWithOutGeoResponseDocument);
+		return getTopReviewedPlaces(request, pfpResponse, listingsToIgnore);
 	}
 
 	private List<NearbyPlace> getTopReviewedPlaces(NearbyPlacesRequest request,
-			Document doc) throws CitysearchException {
+			Document doc, Set<String> listingsToIgnore)
+			throws CitysearchException {
 		log.info("NearbyPlacesHelper.getTopReviewedPlaces: Begin");
 		List<NearbyPlace> nearbyPlaces = null;
 		if (doc != null && doc.hasRootElement()) {
@@ -300,7 +341,10 @@ public class NearbyPlacesHelper {
 				for (Element elm : children) {
 					String adType = StringUtils
 							.trim(elm.getChildText(TYPE_TAG));
-					if (adType != null && adType.equalsIgnoreCase(AD_TYPE_PFP)) {
+					String listingId = StringUtils.trim(elm
+							.getChildText(LISTING_ID_TAG));
+					if (adType != null && adType.equalsIgnoreCase(AD_TYPE_PFP)
+							&& !listingsToIgnore.contains(listingId)) {
 						String rating = elm.getChildText(REVIEW_RATING_TAG);
 						double ratings = HelperUtil.getRatingValue(rating);
 						if (elmsSortedByRating.containsKey(ratings)) {
@@ -513,18 +557,18 @@ public class NearbyPlacesHelper {
 			throws CitysearchException {
 		NearbyPlace nbp = new NearbyPlace();
 		String adUnitIdentifier = request.getAdUnitIdentifier();
-		
+
 		String category = ad.getChildText(TAGLINE_TAG);
 		if (StringUtils.isNotBlank(category)) {
 			category = category.replaceAll("<b>", "");
 			category = category.replaceAll("</b>", "");
-			
+
 			StringBuilder tagLengthProp = new StringBuilder(adUnitIdentifier);
 			tagLengthProp.append(".");
 			tagLengthProp.append(CommonConstants.TAGLINE_LENGTH);
 			category = HelperUtil.getAbbreviatedString(category, tagLengthProp
 					.toString());
-		
+
 			nbp.setCategory(category);
 		}
 		nbp.setAdImageURL(ad.getChildText(AD_IMAGE_URL_TAG));
@@ -533,7 +577,7 @@ public class NearbyPlacesHelper {
 		if (StringUtils.isNotBlank(description)) {
 			description = description.replaceAll("<b>", "");
 			description = description.replaceAll("</b>", "");
-			
+
 			StringBuilder descLengthProp = new StringBuilder(adUnitIdentifier);
 			descLengthProp.append(".");
 			descLengthProp.append(CommonConstants.DESCRIPTION_LENGTH);

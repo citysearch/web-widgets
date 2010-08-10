@@ -89,6 +89,8 @@ public class CommonConstants {
     public static final String AD_UNIT_NAME_REVIEW = "review";
     public static final String AD_UNIT_NAME_OFFERS = "offers";
     public static final String PUBLISHER_PROJECT_YELLOW = "yelp";
+    public final static String PUBLISHER_CITYSEARCH = "citysearch";
+    public final static String PUBLISHER_INSIDERPAGES = "insider_pages";
     
     //Used by Offers
     public final static String LAT_LONG_ERROR = "latlong.error";
