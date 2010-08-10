@@ -115,7 +115,7 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
 		// We still want to return the tracking pixel but not the actual ad.
 		Properties appProperties = PropertiesLoader.getApplicationProperties();
 		if (appProperties.containsKey(RETURN_HOUSEADS_PROPERTY)
-				&& Boolean.getBoolean((String) appProperties
+				&& !Boolean.getBoolean((String) appProperties
 						.get(RETURN_HOUSEADS_PROPERTY))) {
 			nearbyPlacesResponse.setHouseAds(null);
 		}
