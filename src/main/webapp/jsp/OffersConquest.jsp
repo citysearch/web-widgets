@@ -14,7 +14,7 @@
                     <s:property value="offer.offerDescription" />
                 </div>
                 <div class="ctsrch_offers_print">
-                    <a href='<s:property value="offer.couponUrl" />#target-couponLink' >
+                    <a href='<s:property value="offer.couponUrl" />' >
                         Get Offer
                     </a>
                 </div>
