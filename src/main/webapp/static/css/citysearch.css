@@ -87,7 +87,7 @@
 .ctsrch_offers .ctsrch_bizPhoto img {height:57px;width:94px;border:0;padding:0;}
 
 /* Project Yellow Styles */
-.ctsrch_yelp {height:80px;width:640px;padding:0 10px 0 10px;margin:10px 0 5px 0;background-color:#FFFADA;border:0;}
+.ctsrch_yelp {height:80px;width:640px;font-size:1em;padding:0 10px 0 10px;margin:10px 0 5px 0;background-color:#FFFADA;border:0;}
 .ctsrch_yelp .ctsrch_mainLink a {font-weight:bold;color:#6666CC;text-decoration:none;}
 .ctsrch_yelp .ctsrch_mainLink a:hover {color:#555555;text-decoration:underline;}
 .ctsrch_yelp .ctsrch_subcategoryFont {color:#555555;}
