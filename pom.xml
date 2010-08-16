@@ -137,5 +137,17 @@
 				<server>myserver</server> <path>/web-widgets</path> </configuration>
 				</plugin>
 		</plugins>
+		<filters>
+			<filter>build.properties</filter>
+		</filters>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<excludes>
+					<exclude>**/*.xml</exclude>
+				</excludes>
+			</resource>
+		</resources>
 	</build>
 </project>
