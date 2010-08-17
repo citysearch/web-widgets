@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Content Ads Testing Page</title>
+    <style type="text/css">
+        .clearfix:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
+        .clearfix { display: inline-block; }
+        .clearfix { display: block; }
+
+        .leftPanel { float: left; width: 400px; }
+        .rightPanel { float: left; }
+        .section { margin-bottom: 15px; }
+
+        label { float: left; font-weight: bold; width: 100px; color: #626669; }
+        label .requiredField { font-size: 1.1em; color: #DF1400; }
+        input { float: left; width: 250px; }
+        input.checkbox { width: auto; margin-right: 5px; }
+        input.submit { width: auto; }
+    </style>
+</head>
+
+<body>
+    <h1>Content Ads Testing Page</h1>
+
+    <div class="leftPanel">
+        <form action="javascript:refreshForm()">
+            <div class="section">
+                <div class="clearfix">
+                    <label>Emulate:</label>
+                    <select id="emulate">
+                        <option value="">---</option>
+                        <option disabled="disabled">2010.08.17</option>
+                        <option value="citysearch-2010.08.17">Citysearch</option>
+                        <option value="insider-2010.08.17">Insider Pages</option>
+                        <option value="yelp-2010.08.17">Yelp</option>
+                    </select>
+                </div>
+            </div>
+            <div class="section">
+                <div class="clearfix">
+                    <label>Site:</label>
+                    <select id="site">
+                        <option value="prod">Prod</option>
+                        <option value="qa">QA</option>
+                        <option value="dev">Dev</option>
+                    </select>
+                </div>
+                <div class="clearfix">
+                    <label>dart tag:</label>
+                    <select id="dartTag">
+                        <option disabled="disabled">Production Tags</option>
+                        <option value="5480.iac.grd/citygrid;sz=300x250">5480.iac.grd/citygrid;sz=300x250</option>
+                        <option value="5480.iac.grd/citygrid;sz=645x100">5480.iac.grd/citygrid;sz=645x100</option>
+                        <option value="5480.iac.grd/citysearch;sz=645x100">5480.iac.grd/citysearch;sz=645x100</option>
+                        <option value="5480.iac.grd/yelp;sz=645x100">5480.iac.grd/yelp;sz=645x100</option>
+                        <option value="5480.iac.grd/yelp;sz=660x80">5480.iac.grd/yelp;sz=660x80</option>
+                        <option disabled="disabled">QA Tags</option>
+                        <option value="5480cs.testsite/citygrid;sz=300x250">5480cs.testsite/citygrid;sz=300x250</option>
+                        <option value="5480cs.testsite/citygrid;sz=645x100">5480cs.testsite/citygrid;sz=645x100</option>
+                        <option value="5480cs.testsite/yelp;sz=645x100">5480cs.testsite/yelp;sz=645x100</option>
+                        <option value="5480cs.testsite/yelp;sz=660x80">5480cs.testsite/yelp;sz=660x80</option>
+                        <option disabled="disabled">Dev Tags</option>
+                        <option value="5480.iac.citysearchdev/citygrid;sz=300x250">5480.iac.citysearchdev/citygrid;sz=300x250</option>
+                        <option value="5480.iac.citysearchdev/citygrid;sz=645x100">5480.iac.citysearchdev/citygrid;sz=645x100</option>
+                    </select>
+                </div>
+                <div class="clearfix">
+                    <label>publisher:</label>
+                    <input id="publisher" type="text" value="citysearch" />
+                </div>
+                <div class="clearfix">
+                    <label>adUnitSize:</label>
+                    <input id="adUnitSize" type="text" value="645x100" />
+                </div>
+                <div class="clearfix">
+                    <label>adUnitName:</label>
+                    <input id="adUnitName" type="text" value="nearby" />
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="clearfix">
+                    <label>what:</label>
+                    <input id="what" type="text" value="bars" />
+                </div>
+                <div class="clearfix">
+                    <label>where:</label>
+                    <input id="where" type="text" value="Los Angeles, CA" />
+                </div>
+                <div class="clearfix">
+                    <label>latitude:</label>
+                    <input id="latitude" type="text" value="34.0470" />
+                </div>
+                <div class="clearfix">
+                    <label>longitude:</label>
+                    <input id="longitude" type="text" value="-118.4487" />
+                </div>
+                <div class="clearfix">
+                    <label>radius:</label>
+                    <input id="radius" type="text" value="25" />
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="clearfix">
+                    <label>clientIP:</label>
+                    <input id="clientIP" type="text" value="75.200.154.76" />
+                </div>
+                <div class="clearfix">
+                    <label>callBackUrl:</label>
+                    <input id="callBackUrl" type="text" value="" />
+                </div>
+            </div>
+
+            <div class="clearfix">
+                <input type="submit" value="Submit" />
+            </div>
+        </form>
+    </div>
+    <div class="rightPanel">
+         <iframe id="myiframe" src="" frameborder="0" marginheight="0" marginwidth="0" vspace="0" hspace="0" style="height: 500px; width: 700px">
+         </iframe>
+    </div>
+
+    <script type="text/javascript">
+        var refreshForm = function() {
+            window.cg = {
+                target: 'cgAdUnit',
+                adUnitName: document.getElementById('adUnitName').value,
+                adUnitSize: document.getElementById('adUnitSize').value,
+                what: document.getElementById('what').value,
+                where: document.getElementById('where').value,
+                publisher: document.getElementById('publisher').value,
+                callBackUrl: document.getElementById('callBackUrl').value,
+                latitude: document.getElementById('latitude').value,
+                longitude: document.getElementById('longitude').value,
+                radius: document.getElementById('radius').value,
+                clientIP: document.getElementById('clientIP').value,
+                site: document.getElementById('site').value,
+                dartTag: document.getElementById('dartTag').value
+            };
+
+            var emulate = document.getElementById('emulate').value;
+            if (emulate == '')
+                document.getElementById('myiframe').src="data/default.html";
+            else if (emulate == 'citysearch-2010.08.17')
+                document.getElementById('myiframe').src="data/citysearch-2010.08.17.html";
+            else if (emulate == 'insider-2010.08.17')
+                document.getElementById('myiframe').src="data/insider-2010.08.17.html";
+            else if (emulate == 'yelp-2010.08.17')
+                document.getElementById('myiframe').src="data/yelp-2010.08.17.html";
+        };
+    </script>
+</body>
+</html>
