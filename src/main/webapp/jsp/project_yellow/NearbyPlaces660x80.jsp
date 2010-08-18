@@ -19,7 +19,7 @@
                             <a href='<s:property value="adDisplayTrackingURL" />' ><s:property value="name" /></a>
                         </s:else>
                     </div>
-                    <div class="ctsrch_subcategoryFont">
+                    <div class="ctsrch_tagLine">
                         <s:property value="category" />
                     </div>
                     <div class="ctsrch_displayUrl" >
@@ -34,7 +34,7 @@
                     <div class="ctsrch_mainLink" >
                         <a href='<s:property value="adDisplayTrackingURL" />'><s:property value="category" /></a>
                     </div>
-                    <div class="ctsrch_descFont_bf" >
+                    <div class="ctsrch_tagLine" >
                         <s:property value="description" />
                     </div>
                     <div class="ctsrch_displayUrl" >
@@ -64,7 +64,7 @@
                             <s:property value="location" />
                         </div>
                     </s:if>
-                    <div class="ctsrch_subcategoryFont">
+                    <div class="ctsrch_tagLine">
                         <s:property value="category" />
                     </div>
                 </div>
@@ -76,7 +76,7 @@
                     <div class="ctsrch_mainLink">
                         <a href='<s:property value="destinationUrl" />'><s:property value="title" /></a>
                     </div>
-                    <div class="ctsrch_descFont">
+                    <div class="ctsrch_tagLine">
                         <s:property value="tagLine" />
                     </div>
                     <div class="ctsrch_displayUrl" >

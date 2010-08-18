@@ -12,7 +12,7 @@
                 <div class="ctsrch_mainLink">
                     <a href='<s:property value="destinationUrl" />'><s:property value="title" /></a>
                 </div>
-                <div class="ctsrch_descFont">
+                <div class="ctsrch_tagLine">
                     <s:property value="tagLine" />
                 </div>
                 <div class="ctsrch_displayUrl" >
