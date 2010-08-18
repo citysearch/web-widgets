@@ -28,15 +28,7 @@ import com.citysearch.webwidget.util.PropertiesLoader;
 public class AbstractProxy {
 	private static Logger log = Logger.getLogger(AbstractProxy.class);
 	
-	/**
-	 * Helper method to build a string in name=value format. Used in building
-	 * http query string.
-	 * 
-	 * @param name
-	 * @param value
-	 * @return String
-	 * @throws CitysearchException
-	 */
+	
 	protected String constructQueryParam(String name, String value)
 			throws CitysearchException {
 		StringBuilder apiQueryString = new StringBuilder();

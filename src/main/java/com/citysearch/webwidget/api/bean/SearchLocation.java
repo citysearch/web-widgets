@@ -154,5 +154,4 @@ public class SearchLocation {
 	public void setPostalCode(String postalCode) {
 		this.postalCode = postalCode;
 	}
-
 }

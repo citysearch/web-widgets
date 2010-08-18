@@ -27,7 +27,6 @@ public abstract class AbstractOffersFacade {
 	private final static String PROPERTY_CITYSEARCH_COUPON_URL = "citysearch.coupon.url";
 	protected String contextPath;
 	protected int displaySize;
-
 	protected AbstractOffersFacade(String contextPath, int displaySize) {
 		this.contextPath = contextPath;
 		this.displaySize = displaySize;

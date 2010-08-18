@@ -10,7 +10,6 @@ import com.citysearch.webwidget.facade.helper.ReviewHelper;
 
 public class AbstractReviewFacade {
 	private Logger log = Logger.getLogger(getClass());
-
 	protected String contextPath;
 	protected int displaySize;
 

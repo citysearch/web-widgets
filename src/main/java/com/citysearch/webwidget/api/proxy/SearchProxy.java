@@ -26,7 +26,6 @@ import com.citysearch.webwidget.util.PropertiesLoader;
 public class SearchProxy extends AbstractProxy {
 	public final static String PROPERTY_SEARCH_URL = "search.url";
 	private static final String LOCATION_TAG = "location";
-
 	private Logger log = Logger.getLogger(getClass());
 
 	private static final String ADDRESS_TAG = "address";

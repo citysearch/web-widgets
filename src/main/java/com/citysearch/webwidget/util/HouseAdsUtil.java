@@ -15,7 +15,6 @@ import com.citysearch.webwidget.exception.CitysearchException;
 public class HouseAdsUtil {
 	public static List<HouseAd> getHouseAds(String path, String dartTrackUrl)
 			throws CitysearchException {
-
 		List<HouseAd> houseAds = null;
 		InputStream inputStream = null;
 

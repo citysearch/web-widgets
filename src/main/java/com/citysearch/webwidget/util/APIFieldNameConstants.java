@@ -1,6 +1,5 @@
 package com.citysearch.webwidget.util;
 
-
 /**
  * Contains query parameter constants for all APIs
  *

@@ -146,5 +146,4 @@ public class LocationProfile {
 	public void setReview(ReviewResponse review) {
 		this.review = review;
 	}
-
 }

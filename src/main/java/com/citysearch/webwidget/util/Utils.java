@@ -21,7 +21,6 @@ import com.citysearch.webwidget.exception.CitysearchException;
 
 public class Utils {
 	private static Logger log = Logger.getLogger(Utils.class);
-
 	private static final int TOTAL_RATING = 5;
 	private static final int EMPTY_STAR = 0;
 	private static final int HALF_STAR = 1;

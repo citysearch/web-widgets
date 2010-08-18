@@ -7,6 +7,7 @@ import org.apache.commons.lang.StringUtils;
 import com.citysearch.webwidget.exception.CitysearchException;
 
 public class OneByOneTrackingUtil {
+	
 	private static Properties trackingProperties;
 
 	private static String getPropertyKey(String adunitName, String adunitSize,

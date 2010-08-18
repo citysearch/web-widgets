@@ -1,5 +1,4 @@
 package com.citysearch.webwidget.util;
-
 /**
  * Contains common constants used in multiple places
  * 

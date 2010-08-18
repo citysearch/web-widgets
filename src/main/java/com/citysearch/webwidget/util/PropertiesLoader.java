@@ -7,7 +7,6 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 
 import com.citysearch.webwidget.exception.CitysearchException;
-
 /**
  * This class loads properties from property files.
  * 

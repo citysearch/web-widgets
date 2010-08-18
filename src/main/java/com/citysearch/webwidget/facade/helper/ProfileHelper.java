@@ -38,7 +38,6 @@ public class ProfileHelper {
 		address.setState(location.getState());
 		address.setPostalCode(location.getPostalCode());
 		profile.setAddress(address);
-
 		return profile;
 	}
 

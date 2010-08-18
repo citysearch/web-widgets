@@ -176,7 +176,6 @@ public class NearbyPlacesHelper {
 		adDisplayUrl = Utils.getTruncatedString(adDisplayUrl,
 				displayUrlLengthProp.toString());
 		nearbyPlace.setAdDisplayURL(adDisplayUrl);
-
 		return nearbyPlace;
 	}
 }

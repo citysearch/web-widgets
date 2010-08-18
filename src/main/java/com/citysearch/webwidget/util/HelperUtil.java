@@ -28,7 +28,6 @@ import org.jdom.input.SAXBuilder;
 
 import com.citysearch.webwidget.exception.CitysearchException;
 import com.citysearch.webwidget.exception.InvalidHttpResponseException;
-
 /**
  * Helper class that contains generic methods used across all APIs
  * 

@@ -14,7 +14,6 @@ import com.citysearch.webwidget.util.PropertiesLoader;
 
 public class RequestBean {
 	private Logger log = Logger.getLogger(getClass());
-
 	protected String publisher;
 	protected boolean customerOnly;
 	protected String adUnitName;

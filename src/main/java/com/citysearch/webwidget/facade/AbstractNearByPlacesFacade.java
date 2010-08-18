@@ -19,7 +19,6 @@ import com.citysearch.webwidget.facade.helper.SearchHelper;
 
 public abstract class AbstractNearByPlacesFacade {
 	private Logger log = Logger.getLogger(getClass());
-
 	protected String contextPath;
 	protected int displaySize;
 	protected PFPProxy pfpProxy;

@@ -27,5 +27,4 @@ public class PFPResponse {
 	public void setBackfill(List<PFPAd> backfill) {
 		this.backfill = backfill;
 	}
-
 }

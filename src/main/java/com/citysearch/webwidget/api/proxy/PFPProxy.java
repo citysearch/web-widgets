@@ -24,7 +24,6 @@ import com.citysearch.webwidget.util.PropertiesLoader;
 
 public class PFPProxy extends AbstractProxy {
 	private Logger log = Logger.getLogger(getClass());
-
 	private final static String PFP_LOCATION_URL = "pfplocation.url";
 	private final static String PFP_URL = "pfp.url";
 	private static final String AD_TAG = "ad";

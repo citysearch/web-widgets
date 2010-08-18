@@ -18,7 +18,6 @@ import com.citysearch.webwidget.util.HouseAdsUtil;
 
 public class ConquestNearByPlacesFacade extends AbstractNearByPlacesFacade {
 	private Logger log = Logger.getLogger(getClass());
-
 	protected ConquestNearByPlacesFacade(String contextPath, int displaySize) {
 		super(contextPath, displaySize);
 	}

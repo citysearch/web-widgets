@@ -145,5 +145,4 @@ public class PFPAd {
 	public void setAdDestinationUrl(String adDestinationUrl) {
 		this.adDestinationUrl = adDestinationUrl;
 	}
-
 }

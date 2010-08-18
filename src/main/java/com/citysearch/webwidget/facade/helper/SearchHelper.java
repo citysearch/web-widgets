@@ -21,7 +21,6 @@ public class SearchHelper {
 	private Logger log = Logger.getLogger(getClass());
 	private String rootPath;
 	private Integer displaySize;
-
 	public SearchHelper(String rootPath, Integer displaySize) {
 		this.rootPath = rootPath;
 		this.displaySize = displaySize;

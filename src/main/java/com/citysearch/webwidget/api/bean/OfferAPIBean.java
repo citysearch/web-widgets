@@ -1,6 +1,5 @@
 package com.citysearch.webwidget.api.bean;
 
-
 public class OfferAPIBean {
 	private String attributionSrc;
 	private String rating;

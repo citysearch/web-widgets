@@ -36,5 +36,4 @@ public class SearchResponse {
 	public void setLocations(List<SearchLocation> locations) {
 		this.locations = locations;
 	}
-
 }

@@ -30,7 +30,6 @@ import com.citysearch.webwidget.util.PropertiesLoader;
 
 public class ProfileProxy extends AbstractProxy {
 	private Logger log = Logger.getLogger(getClass());
-
 	private final static String PROPERTY_PROFILE_URL = "profile.url";
 	private static final String LSITING_ID_ERR_MSG = "listingid.errmsg";
 	protected static final String LOCATION = "location";

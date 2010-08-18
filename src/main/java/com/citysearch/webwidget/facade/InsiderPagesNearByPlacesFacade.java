@@ -20,7 +20,6 @@ import com.citysearch.webwidget.util.HouseAdsUtil;
 
 public class InsiderPagesNearByPlacesFacade extends AbstractNearByPlacesFacade {
 	private Logger log = Logger.getLogger(getClass());
-
 	protected InsiderPagesNearByPlacesFacade(String contextPath, int displaySize) {
 		super(contextPath, displaySize);
 	}

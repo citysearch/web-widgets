@@ -174,5 +174,4 @@ public class ReviewResponse {
 	public void setSendToFriendUrl(String sendToFriendUrl) {
 		this.sendToFriendUrl = sendToFriendUrl;
 	}
-
 }

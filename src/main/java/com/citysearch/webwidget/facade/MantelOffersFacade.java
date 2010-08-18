@@ -11,7 +11,6 @@ import com.citysearch.webwidget.exception.InvalidRequestParametersException;
 
 public class MantelOffersFacade extends AbstractOffersFacade {
 	private Logger log = Logger.getLogger(getClass());
-
 	protected MantelOffersFacade(String contextPath, int displaySize) {
 		super(contextPath, displaySize);
 	}

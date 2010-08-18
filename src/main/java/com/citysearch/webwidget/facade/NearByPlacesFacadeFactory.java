@@ -4,6 +4,7 @@ import com.citysearch.webwidget.exception.CitysearchException;
 import com.citysearch.webwidget.util.CommonConstants;
 
 public class NearByPlacesFacadeFactory {
+	
 	public static AbstractNearByPlacesFacade getFacade(String publisher,
 			String contextPath, int displaySize) throws CitysearchException {
 		if (publisher == null) {

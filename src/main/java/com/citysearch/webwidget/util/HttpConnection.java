@@ -8,7 +8,6 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import com.citysearch.webwidget.exception.CitysearchException;
-
 /**
  * This class contains the functionality related to Http connection like getting the connecton and
  * closing the connection

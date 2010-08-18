@@ -22,7 +22,6 @@ import com.citysearch.webwidget.util.Utils;
 
 public class ReviewHelper {
 	private Logger log = Logger.getLogger(getClass());
-
 	private static final String DATE_FORMAT = "reviewdate.format";
 	private static final int MINIMUM_RATING = 6;
 

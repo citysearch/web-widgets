@@ -11,7 +11,6 @@ import com.citysearch.webwidget.exception.InvalidRequestParametersException;
 
 public class ConquestOffersFacade extends AbstractOffersFacade {
 	private Logger log = Logger.getLogger(getClass());
-
 	protected ConquestOffersFacade(String contextPath, int displaySize) {
 		super(contextPath, displaySize);
 	}

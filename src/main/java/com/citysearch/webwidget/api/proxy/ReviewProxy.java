@@ -25,7 +25,6 @@ import com.citysearch.webwidget.util.PropertiesLoader;
 
 public class ReviewProxy extends AbstractProxy {
 	public final static String PROPERTY_REVIEW_URL = "reviews.url";
-
 	private Logger log = Logger.getLogger(getClass());
 
 	private static final String ELEMENT_REVIEW_URL = "review_url";

@@ -29,7 +29,6 @@ import com.citysearch.webwidget.util.PropertiesLoader;
 public class OfferProxy extends AbstractProxy {
 	private final static String PROPERTY_OFFERS_URL = "offers.url";
 	private Logger log = Logger.getLogger(getClass());
-
 	private static final String OFFER = "offer";
 	private static final String RPP_OFFERS = "2";
 	private static final String CITY = "city";
