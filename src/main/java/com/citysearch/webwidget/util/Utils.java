@@ -1,4 +1,4 @@
-package com.citysearch.webwidget.facade.util;
+package com.citysearch.webwidget.util;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
@@ -18,8 +18,6 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 
 import com.citysearch.webwidget.exception.CitysearchException;
-import com.citysearch.webwidget.util.CommonConstants;
-import com.citysearch.webwidget.util.PropertiesLoader;
 
 public class Utils {
 	private static Logger log = Logger.getLogger(Utils.class);

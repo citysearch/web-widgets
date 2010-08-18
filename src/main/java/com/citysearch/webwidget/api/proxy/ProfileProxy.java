@@ -169,7 +169,8 @@ public class ProfileProxy extends AbstractProxy {
 	 * @return imageurl
 	 * @throws CitysearchException
 	 */
-	private String getStockImage(Element categories) throws CitysearchException {
+	private String getStockImage(Element categories, String contextPath)
+			throws CitysearchException {
 		if (imageMap == null) {
 			getImageMap();
 		}
@@ -188,7 +189,12 @@ public class ProfileProxy extends AbstractProxy {
 						List<String> imageList = imageMap.get(name);
 						int listSize = imageList.size();
 						int imgIndex = randomizer.nextInt(listSize);
-						imageURL = imageList.get(imgIndex);
+						StringBuilder imageUrlBuilder = new StringBuilder();
+						if (!StringUtils.isBlank(contextPath)) {
+							imageUrlBuilder.append(contextPath);
+						}
+						imageUrlBuilder.append(imageList.get(imgIndex));
+						imageURL = imageUrlBuilder.toString();
 						break;
 					}
 				}
@@ -205,8 +211,8 @@ public class ProfileProxy extends AbstractProxy {
 	 * @return String
 	 * @throws CitysearchException
 	 */
-	private String getImage(Element images, Element categories)
-			throws CitysearchException {
+	private String getImage(Element images, Element categories,
+			String contextPath) throws CitysearchException {
 		String imageurl = null;
 		if (images != null) {
 			List<Element> imageList = images.getChildren(IMAGE);
@@ -223,13 +229,13 @@ public class ProfileProxy extends AbstractProxy {
 		}
 
 		if (StringUtils.isBlank(imageurl)) {
-			imageurl = getStockImage(categories);
+			imageurl = getStockImage(categories, contextPath);
 		}
 
 		return imageurl;
 	}
 
-	private LocationProfile parseToProfile(Document document)
+	private LocationProfile parseToProfile(Document document, String contextPath)
 			throws CitysearchException {
 		LocationProfile response = null;
 		if (document != null && document.hasRootElement()) {
@@ -270,19 +276,19 @@ public class ProfileProxy extends AbstractProxy {
 							.getChildText(TOTAL_USER_REVIEWS));
 				}
 				response.setImageUrl(getImage(locationElem.getChild(IMAGES),
-						locationElem.getChild(CATEGORIES)));
+						locationElem.getChild(CATEGORIES), contextPath));
 			}
 		}
 		return response;
 	}
 
-	private LocationProfile parseToLatestReview(Document document)
-			throws CitysearchException {
+	private LocationProfile parseToLatestReview(Document document,
+			String contextPath) throws CitysearchException {
 		LocationProfile response = null;
 		if (document != null && document.hasRootElement()) {
 			Element locationElm = document.getRootElement().getChild(LOCATION);
 			if (locationElm != null) {
-				response = parseToProfile(document);
+				response = parseToProfile(document, contextPath);
 				response.setListingId(locationElm.getChildText(ID));
 				Element reviewsElm = locationElm.getChild("reviews");
 				List<Element> reviews = reviewsElm.getChildren("review");
@@ -308,7 +314,7 @@ public class ProfileProxy extends AbstractProxy {
 		return response;
 	}
 
-	public LocationProfile getProfile(RequestBean request)
+	public LocationProfile getProfile(RequestBean request, String contextPath)
 			throws InvalidRequestParametersException, CitysearchException {
 		validateRequest(request);
 		Properties properties = PropertiesLoader.getAPIProperties();
@@ -322,11 +328,12 @@ public class ProfileProxy extends AbstractProxy {
 			throw new CitysearchException(this.getClass().getName(),
 					"getProfile", ihe);
 		}
-		return parseToProfile(responseDocument);
+		return parseToProfile(responseDocument, contextPath);
 	}
 
-	public LocationProfile getProfileAndLatestReview(RequestBean request)
-			throws InvalidRequestParametersException, CitysearchException {
+	public LocationProfile getProfileAndLatestReview(RequestBean request,
+			String contextPath) throws InvalidRequestParametersException,
+			CitysearchException {
 		validateRequest(request);
 		Properties properties = PropertiesLoader.getAPIProperties();
 		String urlString = properties.getProperty(PROPERTY_PROFILE_URL)
@@ -339,6 +346,6 @@ public class ProfileProxy extends AbstractProxy {
 			throw new CitysearchException(this.getClass().getName(),
 					"getProfileAndLatestReview", ihe);
 		}
-		return parseToLatestReview(responseDocument);
+		return parseToLatestReview(responseDocument, contextPath);
 	}
 }

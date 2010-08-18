@@ -34,7 +34,7 @@ public class OffersHelper {
     private final static String PROPERTY_OFFERS_URL = "offers.url";
     private final static String PROPERTY_CITYSEARCH_COUPON_URL = "citysearch.coupon.url";
     private Logger log = Logger.getLogger(getClass());
-    private String rootPath;
+    private String rootPath; 
 
     private static final String OFFER = "offer";
     private static final String RPP_OFFERS = "2";

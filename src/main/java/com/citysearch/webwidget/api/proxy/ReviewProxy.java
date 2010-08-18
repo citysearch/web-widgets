@@ -8,6 +8,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -74,7 +75,7 @@ public class ReviewProxy extends AbstractProxy {
 		return strBuilder.toString();
 	}
 
-	private ReviewResponse parseXML(Document document)
+	private ReviewResponse parseXML(Document document, int minimumRating)
 			throws CitysearchException {
 		ReviewResponse review = null;
 		if (document != null && document.hasRootElement()) {
@@ -85,10 +86,13 @@ public class ReviewProxy extends AbstractProxy {
 			SortedMap<Date, Element> reviewMap = new TreeMap<Date, Element>();
 			for (int i = 0; i < reviewsList.size(); i++) {
 				Element reviewElem = reviewsList.get(i);
-				String dateStr = reviewElem.getChildText(REVIEW_DATE);
-				Date date = HelperUtil.parseDate(dateStr, formatter);
-				if (date != null) {
-					reviewMap.put(date, reviewElem);
+				String rating = reviewElem.getChildText(REVIEW_RATING);
+				if (NumberUtils.toInt(rating) >= minimumRating) {
+					String dateStr = reviewElem.getChildText(REVIEW_DATE);
+					Date date = HelperUtil.parseDate(dateStr, formatter);
+					if (date != null) {
+						reviewMap.put(date, reviewElem);
+					}
 				}
 			}
 			Element reviewElm = reviewMap.get(reviewMap.lastKey());
@@ -114,7 +118,7 @@ public class ReviewProxy extends AbstractProxy {
 		return review;
 	}
 
-	public ReviewResponse getLatestReview(RequestBean request)
+	public ReviewResponse getLatestReview(RequestBean request, int minimumRating)
 			throws InvalidRequestParametersException, CitysearchException {
 		log.info("ReviewProxy.getLatestReview:: before validate");
 		request.validate();
@@ -143,7 +147,7 @@ public class ReviewProxy extends AbstractProxy {
 			throw new CitysearchException(this.getClass().getName(),
 					"getLatestReview", ihe);
 		}
-		ReviewResponse review = parseXML(responseDocument);
+		ReviewResponse review = parseXML(responseDocument, minimumRating);
 		return review;
 	}
 }

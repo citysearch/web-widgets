@@ -1,8 +1,11 @@
 package com.citysearch.webwidget.api.proxy;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
@@ -17,6 +20,7 @@ import com.citysearch.webwidget.exception.CitysearchException;
 import com.citysearch.webwidget.exception.InvalidHttpResponseException;
 import com.citysearch.webwidget.exception.InvalidRequestParametersException;
 import com.citysearch.webwidget.util.CommonConstants;
+import com.citysearch.webwidget.util.HelperUtil;
 import com.citysearch.webwidget.util.PropertiesLoader;
 
 public class SearchProxy extends AbstractProxy {
@@ -34,18 +38,64 @@ public class SearchProxy extends AbstractProxy {
 	private static final String AD_IMAGE_URL_TAG = "image";
 	private static final String REVIEW_RATING_TAG = "rating";
 
-	private SearchResponse parse(Document document) {
+	private SearchResponse parseLocations(Document doc,
+			BigDecimal sourceLatitude, BigDecimal sourceLongitude,
+			int requiredNoOfLocations) throws CitysearchException {
+		log.info("SearchProxy.parseLocations: Begin");
 		SearchResponse response = new SearchResponse();
-		if (document != null && document.hasRootElement()) {
-			Element rootElement = document.getRootElement();
+		List<SearchLocation> locations = null;
+		if (doc != null && doc.hasRootElement()) {
+			SortedMap<Double, List<Element>> elmsSortedByDistance = new TreeMap<Double, List<Element>>();
+			Element rootElement = doc.getRootElement();
 			List<Element> children = rootElement.getChildren(LOCATION_TAG);
 			if (children != null && !children.isEmpty()) {
+				int childrenSize = children.size();
 				for (Element elm : children) {
-					SearchLocation searchLoc = toSearchLocation(elm);
-					response.getLocations().add(searchLoc);
+					BigDecimal businessLatitude = new BigDecimal(elm
+							.getChildText(CommonConstants.LATITUDE));
+					BigDecimal businessLongitude = new BigDecimal(elm
+							.getChildText(CommonConstants.LONGITUDE));
+					double distance = HelperUtil.getDistance(sourceLatitude,
+							sourceLongitude, businessLatitude,
+							businessLongitude);
+					if (childrenSize <= requiredNoOfLocations) {
+						// Since we are rounding the distance to the 10th,
+						// There might be
+						// multiple listings with the same distance.
+						if (elmsSortedByDistance.containsKey(distance)) {
+							elmsSortedByDistance.get(distance).add(elm);
+						} else {
+							List<Element> elms = new ArrayList<Element>();
+							elms.add(elm);
+							elmsSortedByDistance.put(distance, elms);
+						}
+					}
+				}
+				if (!elmsSortedByDistance.isEmpty()) {
+					List<Element> elmsToConvert = new ArrayList<Element>();
+					for (int j = 0; j < elmsSortedByDistance.size(); j++) {
+						if (elmsToConvert.size() >= requiredNoOfLocations) {
+							break;
+						}
+						Double key = elmsSortedByDistance.firstKey();
+						List<Element> elms = elmsSortedByDistance.remove(key);
+						for (int idx = 0; idx < elms.size(); idx++) {
+							if (elmsToConvert.size() == requiredNoOfLocations) {
+								break;
+							}
+							elmsToConvert.add(elms.get(idx));
+						}
+					}
+
+					locations = new ArrayList<SearchLocation>();
+					for (Element elm : elmsToConvert) {
+						locations.add(toSearchLocation(elm));
+					}
+					response.setLocations(locations);
 				}
 			}
 		}
+		log.info("SearchProxy.parseLocations: End");
 		return response;
 	}
 
@@ -191,8 +241,8 @@ public class SearchProxy extends AbstractProxy {
 		return latLonValues;
 	}
 
-	public SearchResponse getLocations(RequestBean request)
-			throws CitysearchException {
+	public SearchResponse getLocations(RequestBean request,
+			int requiredNumberOfLocations) throws CitysearchException {
 		log.info("SearchProxy.getNearbyPlaces: Begin");
 		request.validate();
 		Properties properties = PropertiesLoader.getAPIProperties();
@@ -209,17 +259,25 @@ public class SearchProxy extends AbstractProxy {
 			throw new CitysearchException(this.getClass().getName(),
 					"getListings", ihe);
 		}
-		SearchResponse response = parse(responseDocument);
 
+		BigDecimal sourceLatitude = null;
+		BigDecimal sourceLongitude = null;
 		if (StringUtils.isBlank(request.getLatitude())
 				|| StringUtils.isBlank(request.getLongitude())) {
+			// Search API has to return these values. If not, its a API bug.
 			String[] latlon = getLatitudeAndLongitude(responseDocument);
-			response.setLatitude(new BigDecimal(latlon[0]));
-			response.setLongitude(new BigDecimal(latlon[1]));
+			sourceLatitude = new BigDecimal(latlon[0]);
+			sourceLongitude = new BigDecimal(latlon[1]);
 		} else {
-			response.setLatitude(new BigDecimal(request.getLatitude()));
-			response.setLongitude(new BigDecimal(request.getLongitude()));
+			sourceLatitude = new BigDecimal(request.getLatitude());
+			sourceLongitude = new BigDecimal(request.getLongitude());
 		}
+
+		SearchResponse response = parseLocations(responseDocument,
+				sourceLatitude, sourceLongitude, requiredNumberOfLocations);
+		response.setLatitude(sourceLatitude);
+		response.setLongitude(sourceLongitude);
+
 		log.info("SearchProxy.getListings: End");
 		return response;
 	}

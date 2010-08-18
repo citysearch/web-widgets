@@ -1,4 +1,4 @@
-package com.citysearch.webwidget.facade.util;
+package com.citysearch.webwidget.util;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,7 +11,6 @@ import org.jdom.Element;
 
 import com.citysearch.webwidget.bean.HouseAd;
 import com.citysearch.webwidget.exception.CitysearchException;
-import com.citysearch.webwidget.util.HelperUtil;
 
 public class HouseAdsUtil {
 	public static List<HouseAd> getHouseAds(String path, String dartTrackUrl)
