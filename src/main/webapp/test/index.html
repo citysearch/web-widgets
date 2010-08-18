@@ -3,19 +3,23 @@
 <head>
     <title>Content Ads Testing Page</title>
     <style type="text/css">
-        .clearfix:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
-        .clearfix { display: inline-block; }
-        .clearfix { display: block; }
+        body {font-family: Arial,sans-serif;}
 
-        .leftPanel { float: left; width: 400px; }
-        .rightPanel { float: left; }
-        .section { margin-bottom: 15px; }
+        h1 {font-size:24px;}
 
-        label { float: left; font-weight: bold; width: 100px; color: #626669; }
-        label .requiredField { font-size: 1.1em; color: #DF1400; }
-        input { float: left; width: 250px; }
-        input.checkbox { width: auto; margin-right: 5px; }
-        input.submit { width: auto; }
+        .clearfix:after {content:".";display:block;height:0;clear:both;visibility:hidden;}
+        .clearfix {display:inline-block;}
+        .clearfix {display:block;}
+
+        .leftPanel {float:left;width:400px;}
+        .rightPanel {float:left;}
+        .section {margin-bottom:15px;}
+
+        label {float:left;font-size:12px;font-weight:bold;width:80px;color:#626669;}
+        label .requiredField {font-size:1.1em;color:#DF1400;}
+        input {float:left;width:250px;}
+        input.checkbox {width:auto;margin-right:5px;}
+        input.submit {margin-left:80px;width:auto;}
     </style>
 </head>
 
@@ -26,7 +30,7 @@
         <form action="javascript:refreshForm()">
             <div class="section">
                 <div class="clearfix">
-                    <label>Emulate:</label>
+                    <label>emulate:</label>
                     <select id="emulate">
                         <option value="">---</option>
                         <option disabled="disabled">2010.08.17</option>
@@ -38,7 +42,7 @@
             </div>
             <div class="section">
                 <div class="clearfix">
-                    <label>Site:</label>
+                    <label>site:</label>
                     <select id="site">
                         <option value="prod">Prod</option>
                         <option value="qa">QA</option>
@@ -113,7 +117,7 @@
             </div>
 
             <div class="clearfix">
-                <input type="submit" value="Submit" />
+                <input type="submit" class="submit" value="Submit" />
             </div>
         </form>
     </div>
