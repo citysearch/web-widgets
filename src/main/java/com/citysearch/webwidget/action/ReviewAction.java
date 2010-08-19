@@ -5,11 +5,12 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.citysearch.webwidget.bean.HouseAd;
+import com.citysearch.webwidget.bean.RequestBean;
 import com.citysearch.webwidget.bean.Review;
-import com.citysearch.webwidget.bean.ReviewRequest;
 import com.citysearch.webwidget.exception.CitysearchException;
 import com.citysearch.webwidget.exception.InvalidRequestParametersException;
-import com.citysearch.webwidget.helper.ReviewHelper;
+import com.citysearch.webwidget.facade.AbstractReviewFacade;
+import com.citysearch.webwidget.facade.ReviewFacadeFactory;
 import com.citysearch.webwidget.util.CommonConstants;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ModelDriven;
@@ -22,9 +23,9 @@ import com.opensymphony.xwork2.ModelDriven;
  * 
  */
 public class ReviewAction extends AbstractCitySearchAction implements
-		ModelDriven<ReviewRequest> {
+		ModelDriven<RequestBean> {
 	private Logger log = Logger.getLogger(getClass());
-	private ReviewRequest reviewRequest = new ReviewRequest();
+	private RequestBean reviewRequest = new RequestBean();
 	private Review review;
 	private List<HouseAd> houseAds;
 
@@ -36,11 +37,11 @@ public class ReviewAction extends AbstractCitySearchAction implements
 		this.houseAds = houseAds;
 	}
 
-	public ReviewRequest getReviewRequest() {
+	public RequestBean getReviewRequest() {
 		return reviewRequest;
 	}
 
-	public void setReviewRequest(ReviewRequest reviewRequest) {
+	public void setReviewRequest(RequestBean reviewRequest) {
 		this.reviewRequest = reviewRequest;
 	}
 
@@ -52,7 +53,7 @@ public class ReviewAction extends AbstractCitySearchAction implements
 		this.review = review;
 	}
 
-	public ReviewRequest getModel() {
+	public RequestBean getModel() {
 		return reviewRequest;
 	}
 
@@ -64,7 +65,6 @@ public class ReviewAction extends AbstractCitySearchAction implements
 	 * @throws CitysearchException
 	 */
 	public String execute() throws CitysearchException {
-		ReviewHelper helper = new ReviewHelper(getResourceRootPath());
 		log.info("Start review action");
 		reviewRequest.setAdUnitName(CommonConstants.AD_UNIT_NAME_REVIEW);
 		if (reviewRequest.getAdUnitSize() == null
@@ -77,7 +77,11 @@ public class ReviewAction extends AbstractCitySearchAction implements
 			reviewRequest.setDisplaySize(CommonConstants.MANTLE_DISPLAY_SIZE);
 		}
 		try {
-			review = helper.getLatestReview(reviewRequest);
+			AbstractReviewFacade facade = ReviewFacadeFactory.getFacade(
+					reviewRequest.getPublisher(), getResourceRootPath(),
+					reviewRequest.getDisplaySize());
+			review = facade.getLatestReview(reviewRequest);
+
 			if (review == null) {
 				log.info("Returning backfill from review");
 				getHttpRequest().setAttribute(REQUEST_ATTRIBUTE_BACKFILL, true);

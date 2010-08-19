@@ -10,7 +10,7 @@ import org.apache.struts2.interceptor.ServletResponseAware;
 
 import com.citysearch.webwidget.bean.HouseAd;
 import com.citysearch.webwidget.exception.CitysearchException;
-import com.citysearch.webwidget.helper.HouseAdsHelper;
+import com.citysearch.webwidget.util.HouseAdsUtil;
 
 public class AbstractCitySearchAction implements ServletRequestAware,
 		ServletResponseAware {
@@ -77,7 +77,7 @@ public class AbstractCitySearchAction implements ServletRequestAware,
 
 	public List<HouseAd> getHouseAds(String dartTrackingUrl, int size)
 			throws CitysearchException {
-		List<HouseAd> houseAds = HouseAdsHelper.getHouseAds(
+		List<HouseAd> houseAds = HouseAdsUtil.getHouseAds(
 				getResourceRootPath(), dartTrackingUrl);
 		houseAds = houseAds.subList(0, size);
 		return houseAds;
