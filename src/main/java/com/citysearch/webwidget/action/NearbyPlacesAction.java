@@ -7,37 +7,38 @@ import org.apache.log4j.Logger;
 
 import com.citysearch.webwidget.bean.HouseAd;
 import com.citysearch.webwidget.bean.NearbyPlace;
-import com.citysearch.webwidget.bean.NearbyPlacesRequest;
 import com.citysearch.webwidget.bean.NearbyPlacesResponse;
+import com.citysearch.webwidget.bean.RequestBean;
 import com.citysearch.webwidget.exception.CitysearchException;
 import com.citysearch.webwidget.exception.InvalidRequestParametersException;
-import com.citysearch.webwidget.helper.NearbyPlacesHelper;
+import com.citysearch.webwidget.facade.AbstractNearByPlacesFacade;
+import com.citysearch.webwidget.facade.NearByPlacesFacadeFactory;
 import com.citysearch.webwidget.util.CommonConstants;
 import com.citysearch.webwidget.util.OneByOneTrackingUtil;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ModelDriven;
 
 public class NearbyPlacesAction extends AbstractCitySearchAction implements
-		ModelDriven<NearbyPlacesRequest> {
+		ModelDriven<RequestBean> {
 
 	private Logger log = Logger.getLogger(getClass());
 
 	private static final String ACTION_FORWARD_CONQUEST = "conquest";
 
-	private NearbyPlacesRequest nearbyPlacesRequest = new NearbyPlacesRequest();
+	private RequestBean nearbyPlacesRequest = new RequestBean();
 	private NearbyPlacesResponse nearbyPlacesResponse;
 
 	private boolean backfill;
 
-	public NearbyPlacesRequest getModel() {
+	public RequestBean getModel() {
 		return nearbyPlacesRequest;
 	}
 
-	public NearbyPlacesRequest getNearbyPlacesRequest() {
+	public RequestBean getNearbyPlacesRequest() {
 		return nearbyPlacesRequest;
 	}
 
-	public void setNearbyPlacesRequest(NearbyPlacesRequest nearbyPlacesRequest) {
+	public void setNearbyPlacesRequest(RequestBean nearbyPlacesRequest) {
 		this.nearbyPlacesRequest = nearbyPlacesRequest;
 	}
 
@@ -99,24 +100,22 @@ public class NearbyPlacesAction extends AbstractCitySearchAction implements
 			nearbyPlacesRequest.setLatitude(latitude);
 			nearbyPlacesRequest.setLongitude(longitude);
 		}
-		nearbyPlacesRequest.setIncludeSearch(true);
 		if (nearbyPlacesRequest.getDisplaySize() == null) {
 			nearbyPlacesRequest
 					.setDisplaySize(CommonConstants.DEFAULT_NEARBY_DISPLAY_SIZE);
 		}
 		if (nearbyPlacesRequest.getAdUnitSize() == null) {
 			nearbyPlacesRequest.setAdUnitSize(CommonConstants.MANTLE_AD_SIZE);
-		} else if (nearbyPlacesRequest.getAdUnitSize().equals(
-				CommonConstants.CONQUEST_AD_SIZE)) {
-			// Don't query search for conquest
-			nearbyPlacesRequest.setIncludeSearch(false);
 		}
-		NearbyPlacesHelper helper = new NearbyPlacesHelper(
-				getResourceRootPath());
+
 		String adUnitSize = nearbyPlacesRequest.getAdUnitSize();
-		nearbyPlacesRequest.setValidUrl(false);
+
 		try {
-			nearbyPlacesResponse = helper.getNearbyPlaces(nearbyPlacesRequest);
+			AbstractNearByPlacesFacade facade = NearByPlacesFacadeFactory
+					.getFacade(nearbyPlacesRequest.getPublisher(),
+							getResourceRootPath(), nearbyPlacesRequest
+									.getDisplaySize());
+			nearbyPlacesResponse = facade.getNearbyPlaces(nearbyPlacesRequest);
 		} catch (InvalidRequestParametersException ihre) {
 			log.error(ihre.getDetailedMessage());
 			nearbyPlacesResponse = new NearbyPlacesResponse();

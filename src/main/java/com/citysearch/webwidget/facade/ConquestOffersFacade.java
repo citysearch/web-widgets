@@ -14,9 +14,4 @@ public class ConquestOffersFacade extends AbstractOffersFacade {
 	protected ConquestOffersFacade(String contextPath, int displaySize) {
 		super(contextPath, displaySize);
 	}
-
-	public List<Offer> getOffers(RequestBean request)
-			throws InvalidRequestParametersException, CitysearchException {
-		return super.getOffers(request);
-	}
 }

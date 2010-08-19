@@ -18,7 +18,7 @@ public class AbstractReviewFacade {
 		this.displaySize = displaySize;
 	}
 
-	protected Review getLatestReview(RequestBean request)
+	public Review getLatestReview(RequestBean request)
 			throws InvalidRequestParametersException, CitysearchException {
 		ReviewHelper helper = new ReviewHelper(contextPath);
 		return helper.getLatestReview(request);

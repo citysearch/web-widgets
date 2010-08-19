@@ -6,20 +6,21 @@ import org.apache.log4j.Logger;
 
 import com.citysearch.webwidget.bean.HouseAd;
 import com.citysearch.webwidget.bean.Offer;
-import com.citysearch.webwidget.bean.OffersRequest;
+import com.citysearch.webwidget.bean.RequestBean;
 import com.citysearch.webwidget.exception.CitysearchException;
 import com.citysearch.webwidget.exception.InvalidRequestParametersException;
-import com.citysearch.webwidget.helper.OffersHelper;
+import com.citysearch.webwidget.facade.AbstractOffersFacade;
+import com.citysearch.webwidget.facade.OffersFacadeFactory;
 import com.citysearch.webwidget.util.CommonConstants;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ModelDriven;
 
 public class OffersAction extends AbstractCitySearchAction implements
-		ModelDriven<OffersRequest> {
+		ModelDriven<RequestBean> {
 	private Logger log = Logger.getLogger(getClass());
 	private static final Integer DEFAULT_DISPLAY_SIZE = 2;
 	private static final String AD_UNIT_NAME = "offer";
-	private OffersRequest offersRequest = new OffersRequest();
+	private RequestBean offersRequest = new RequestBean();
 	private List<Offer> offers;
 	private List<HouseAd> houseAds;
 
@@ -39,15 +40,15 @@ public class OffersAction extends AbstractCitySearchAction implements
 		this.offers = offers;
 	}
 
-	public OffersRequest getOffersRequest() {
+	public RequestBean getOffersRequest() {
 		return offersRequest;
 	}
 
-	public void setOffersRequest(OffersRequest offersRequest) {
+	public void setOffersRequest(RequestBean offersRequest) {
 		this.offersRequest = offersRequest;
 	}
 
-	public OffersRequest getModel() {
+	public RequestBean getModel() {
 		return offersRequest;
 	}
 
@@ -67,11 +68,12 @@ public class OffersAction extends AbstractCitySearchAction implements
 				|| offersRequest.getDisplaySize() > DEFAULT_DISPLAY_SIZE) {
 			offersRequest.setDisplaySize(DEFAULT_DISPLAY_SIZE);
 		}
-		
-		OffersHelper helper = new OffersHelper(getResourceRootPath(),
-				offersRequest.getDisplaySize());
+
 		try {
-			offers = helper.getOffers(offersRequest);
+			AbstractOffersFacade facade = OffersFacadeFactory.getFacade(
+					offersRequest.getPublisher(), getResourceRootPath(),
+					offersRequest.getDisplaySize());
+			offers = facade.getOffers(offersRequest);
 			if (offers == null || offers.isEmpty()) {
 				log.info("Returning backfill from offer");
 				getHttpRequest().setAttribute(REQUEST_ATTRIBUTE_BACKFILL, true);
