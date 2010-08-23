@@ -18,7 +18,6 @@ import com.citysearch.webwidget.exception.CitysearchException;
 import com.citysearch.webwidget.exception.InvalidRequestParametersException;
 import com.citysearch.webwidget.facade.helper.ProfileHelper;
 import com.citysearch.webwidget.util.CommonConstants;
-import com.citysearch.webwidget.util.HelperUtil;
 import com.citysearch.webwidget.util.PropertiesLoader;
 import com.citysearch.webwidget.util.Utils;
 
@@ -27,6 +26,7 @@ public abstract class AbstractOffersFacade {
 	private final static String PROPERTY_CITYSEARCH_COUPON_URL = "citysearch.coupon.url";
 	protected String contextPath;
 	protected int displaySize;
+
 	protected AbstractOffersFacade(String contextPath, int displaySize) {
 		this.contextPath = contextPath;
 		this.displaySize = displaySize;
@@ -35,7 +35,7 @@ public abstract class AbstractOffersFacade {
 	protected List<Offer> addDefaultImages(List<Offer> offers, String path)
 			throws CitysearchException {
 		if (offers != null && !offers.isEmpty()) {
-			List<String> imageList = HelperUtil.getImages(path);
+			List<String> imageList = Utils.getImages(path);
 			if (imageList != null && !imageList.isEmpty()) {
 				ArrayList<Integer> indexList = new ArrayList<Integer>(3);
 				Random randomizer = new Random();
@@ -70,7 +70,7 @@ public abstract class AbstractOffersFacade {
 					.getLatitude());
 			BigDecimal businessLongitude = new BigDecimal(offerApiBean
 					.getLongitude());
-			double distance = HelperUtil.getDistance(sourceLatitude,
+			double distance = Utils.getDistance(sourceLatitude,
 					sourceLongitude, businessLatitude, businessLongitude);
 			offer.setDistance(String.valueOf(distance));
 		} else {
@@ -98,8 +98,8 @@ public abstract class AbstractOffersFacade {
 		StringBuilder titleLengthProp = new StringBuilder(adUnitIdentifier);
 		titleLengthProp.append(".");
 		titleLengthProp.append(CommonConstants.TITLE_LENGTH);
-		offerTitle = HelperUtil.getAbbreviatedString(offerTitle,
-				titleLengthProp.toString());
+		offerTitle = Utils.getAbbreviatedString(offerTitle, titleLengthProp
+				.toString());
 		offer.setOfferTitle(offerTitle);
 		offer.setOfferShortTitle(offerTitle);
 
@@ -107,7 +107,7 @@ public abstract class AbstractOffersFacade {
 		StringBuilder descLengthProp = new StringBuilder(adUnitIdentifier);
 		descLengthProp.append(".");
 		descLengthProp.append(CommonConstants.DESCRIPTION_LENGTH);
-		offerdesc = HelperUtil.getAbbreviatedString(offerdesc, descLengthProp
+		offerdesc = Utils.getAbbreviatedString(offerdesc, descLengthProp
 				.toString());
 		offer.setOfferDescription(offerdesc);
 
@@ -115,7 +115,7 @@ public abstract class AbstractOffersFacade {
 		StringBuilder nameLengthProp = new StringBuilder(adUnitIdentifier);
 		nameLengthProp.append(".");
 		nameLengthProp.append(CommonConstants.NAME_LENGTH);
-		name = HelperUtil.getAbbreviatedString(name, nameLengthProp.toString());
+		name = Utils.getAbbreviatedString(name, nameLengthProp.toString());
 		offer.setListingName(name);
 
 		offer.setReferenceId(offerApiBean.getReferenceId());
@@ -155,42 +155,40 @@ public abstract class AbstractOffersFacade {
 				request.setListingId(offer.getListingId());
 				Profile profile = profileHelper.getProfile(request);
 				if (profile != null) {
-					offer.setReviewCount(HelperUtil.toInteger(profile
+					offer.setReviewCount(Utils.toInteger(profile
 							.getReviewCount()));
 					offer.setProfileUrl(profile.getProfileUrl());
-					offer.setPhone(HelperUtil.parsePhone(profile.getPhone()));
+					offer.setPhone(Utils.parsePhone(profile.getPhone()));
 
 					offer.setCallBackFunction(request.getCallBackFunction());
 					offer.setCallBackUrl(request.getCallBackUrl());
 
-					String profileTrackingUrl = HelperUtil.getTrackingUrl(
-							profile.getProfileUrl(), null, request
-									.getCallBackUrl(), request
-									.getDartClickTrackUrl(), offer
+					String profileTrackingUrl = Utils.getTrackingUrl(profile
+							.getProfileUrl(), null, request.getCallBackUrl(),
+							request.getDartClickTrackUrl(), offer
 									.getListingId(), profile.getPhone(),
 							request.getPublisher(), request.getAdUnitName(),
 							request.getAdUnitSize());
 					offer.setProfileTrackingUrl(profileTrackingUrl);
 
-					String callBackFn = HelperUtil.getCallBackFunctionString(
-							request.getCallBackFunction(),
-							offer.getListingId(), profile.getPhone());
+					String callBackFn = Utils.getCallBackFunctionString(request
+							.getCallBackFunction(), offer.getListingId(),
+							profile.getPhone());
 					offer.setCallBackFunction(callBackFn);
 
 					StringBuilder couponUrl = new StringBuilder(properties
 							.getProperty(PROPERTY_CITYSEARCH_COUPON_URL));
-					couponUrl.append(HelperUtil.constructQueryParam(
+					couponUrl.append(Utils.constructQueryParam(
 							CommonConstants.LISTING_ID, offer.getListingId()));
 					couponUrl.append(CommonConstants.SYMBOL_AMPERSAND);
-					couponUrl.append(HelperUtil.constructQueryParam("offerId",
-							offer.getOfferId()));
+					couponUrl.append(Utils.constructQueryParam("offerId", offer
+							.getOfferId()));
 
-					String couponTrackingUrl = HelperUtil.getTrackingUrl(
-							couponUrl.toString(), null, null, request
-									.getDartClickTrackUrl(), offer
-									.getListingId(), profile.getPhone(),
-							request.getPublisher(), request.getAdUnitName(),
-							request.getAdUnitSize());
+					String couponTrackingUrl = Utils.getTrackingUrl(couponUrl
+							.toString(), null, null, request
+							.getDartClickTrackUrl(), offer.getListingId(),
+							profile.getPhone(), request.getPublisher(), request
+									.getAdUnitName(), request.getAdUnitSize());
 					offer.setCouponUrl(couponTrackingUrl);
 				}
 			}

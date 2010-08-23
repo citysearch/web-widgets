@@ -1,6 +1,6 @@
-package com.citysearch.webwidget.api.bean;
+package com.citysearch.webwidget.bean;
 
-public class GrouponOffer {
+public class GrouponDeal {
 	private String id;
 	private String dealUrl;
 	private String title;
@@ -26,6 +26,8 @@ public class GrouponOffer {
 	private String value;
 	private String discountAmount;
 	private String discountPercent;
+
+	private Profile profile;
 
 	public String getId() {
 		return id;
@@ -226,4 +228,13 @@ public class GrouponOffer {
 	public void setDiscountPercent(String discountPercent) {
 		this.discountPercent = discountPercent;
 	}
+
+	public Profile getProfile() {
+		return profile;
+	}
+
+	public void setProfile(Profile profile) {
+		this.profile = profile;
+	}
+
 }

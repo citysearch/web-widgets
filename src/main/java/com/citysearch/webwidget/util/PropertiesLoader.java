@@ -65,6 +65,7 @@ public class PropertiesLoader {
 	 * @return Properties
 	 * @throws CitysearchException
 	 */
+	@Deprecated
 	public static Properties getErrorProperties() throws CitysearchException {
 		if (errorProperties == null) {
 			errorProperties = getProperties(ERROR_PROPERTIES_FILE);

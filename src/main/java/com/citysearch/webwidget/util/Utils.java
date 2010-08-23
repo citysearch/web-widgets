@@ -1,5 +1,7 @@
 package com.citysearch.webwidget.util;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
@@ -16,6 +18,9 @@ import java.util.Properties;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
+import org.jdom.Document;
+import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
 
 import com.citysearch.webwidget.exception.CitysearchException;
 
@@ -29,6 +34,41 @@ public class Utils {
 	private static final int RADIUS = 6371;
 	private static final String COMMA = ",";
 	private static final String SPACE = " ";
+
+	public static String constructQueryParam(String name, String value)
+			throws CitysearchException {
+		StringBuilder apiQueryString = new StringBuilder();
+		if (StringUtils.isNotBlank(value)) {
+			apiQueryString.append(name);
+			apiQueryString.append("=");
+			try {
+				value = URLEncoder.encode(value, "UTF-8");
+				apiQueryString.append(value);
+			} catch (UnsupportedEncodingException excep) {
+				throw new CitysearchException("Utils", "constructQueryParam",
+						excep);
+			}
+		}
+		return apiQueryString.toString();
+	}
+
+	public static Document buildFromStream(InputStream input)
+			throws IOException, CitysearchException {
+		Document document = null;
+		try {
+			if (input != null) {
+				SAXBuilder builder = new SAXBuilder();
+				document = builder.build(input);
+			}
+		} catch (JDOMException jde) {
+			throw new CitysearchException("Utils", "buildFromStream", jde);
+		} catch (IOException ioe) {
+			throw new CitysearchException("Utils", "buildFromStream", ioe);
+		} finally {
+			input.close();
+		}
+		return document;
+	}
 
 	/**
 	 * Parses the dateStr to Date object as per the formatter format
