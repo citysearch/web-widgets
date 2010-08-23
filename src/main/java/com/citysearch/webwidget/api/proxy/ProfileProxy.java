@@ -25,8 +25,8 @@ import com.citysearch.webwidget.exception.InvalidHttpResponseException;
 import com.citysearch.webwidget.exception.InvalidRequestParametersException;
 import com.citysearch.webwidget.util.APIFieldNameConstants;
 import com.citysearch.webwidget.util.CommonConstants;
-import com.citysearch.webwidget.util.HelperUtil;
 import com.citysearch.webwidget.util.PropertiesLoader;
+import com.citysearch.webwidget.util.Utils;
 
 public class ProfileProxy extends AbstractProxy {
 	private Logger log = Logger.getLogger(getClass());
@@ -68,18 +68,14 @@ public class ProfileProxy extends AbstractProxy {
 	private void validateRequest(RequestBean request)
 			throws CitysearchException {
 		List<String> errors = new ArrayList<String>();
-		Properties errorProperties = PropertiesLoader.getErrorProperties();
-
 		if (StringUtils.isBlank(request.getPublisher())) {
-			errors.add(errorProperties
-					.getProperty(CommonConstants.PUBLISHER_ERROR_CODE));
+			errors.add("Publisher is required.");
 		}
 		if (StringUtils.isBlank(request.getListingId())) {
-			errors.add(errorProperties.getProperty(LSITING_ID_ERR_MSG));
+			errors.add("Listing is required.");
 		}
 		if (StringUtils.isBlank(request.getClientIP())) {
-			errors.add(errorProperties
-					.getProperty(CommonConstants.CLIENT_IP_ERROR_CODE));
+			errors.add("Client IP is required.");
 		}
 		if (!errors.isEmpty()) {
 			throw new InvalidRequestParametersException(this.getClass()
@@ -102,17 +98,17 @@ public class ProfileProxy extends AbstractProxy {
 		Properties properties = PropertiesLoader.getAPIProperties();
 		String apiKey = properties
 				.getProperty(CommonConstants.API_KEY_PROPERTY);
-		strBuilder.append(HelperUtil.constructQueryParam(
-				APIFieldNameConstants.API_KEY, apiKey));
+		strBuilder.append(constructQueryParam(APIFieldNameConstants.API_KEY,
+				apiKey));
 		strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-		strBuilder.append(HelperUtil.constructQueryParam(
-				APIFieldNameConstants.PUBLISHER, request.getPublisher()));
+		strBuilder.append(constructQueryParam(APIFieldNameConstants.PUBLISHER,
+				request.getPublisher()));
 		strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-		strBuilder.append(HelperUtil.constructQueryParam(
-				APIFieldNameConstants.LISTING_ID, request.getListingId()));
+		strBuilder.append(constructQueryParam(APIFieldNameConstants.LISTING_ID,
+				request.getListingId()));
 		strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-		strBuilder.append(HelperUtil.constructQueryParam(
-				APIFieldNameConstants.CLIENT_IP, request.getClientIP()));
+		strBuilder.append(constructQueryParam(APIFieldNameConstants.CLIENT_IP,
+				request.getClientIP()));
 		return strBuilder.toString();
 	}
 
@@ -298,7 +294,7 @@ public class ProfileProxy extends AbstractProxy {
 									DATE_FORMAT));
 					for (Element reviewElm : reviews) {
 						String dateStr = reviewElm.getChildText("review_date");
-						Date date = HelperUtil.parseDate(dateStr, formatter);
+						Date date = Utils.parseDate(dateStr, formatter);
 						if (date != null) {
 							reviewMap.put(date, reviewElm);
 						}

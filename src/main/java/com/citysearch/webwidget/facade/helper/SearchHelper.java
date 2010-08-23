@@ -14,13 +14,13 @@ import com.citysearch.webwidget.bean.NearbyPlace;
 import com.citysearch.webwidget.bean.RequestBean;
 import com.citysearch.webwidget.exception.CitysearchException;
 import com.citysearch.webwidget.util.CommonConstants;
-import com.citysearch.webwidget.util.HelperUtil;
 import com.citysearch.webwidget.util.Utils;
 
 public class SearchHelper {
 	private Logger log = Logger.getLogger(getClass());
 	private String rootPath;
 	private Integer displaySize;
+
 	public SearchHelper(String rootPath, Integer displaySize) {
 		this.rootPath = rootPath;
 		this.displaySize = displaySize;
@@ -84,17 +84,17 @@ public class SearchHelper {
 		nameLengthProp.append(CommonConstants.NAME_LENGTH);
 
 		String name = location.getName();
-		name = HelperUtil.getAbbreviatedString(name, nameLengthProp.toString());
+		name = Utils.getAbbreviatedString(name, nameLengthProp.toString());
 		nearbyPlace.setName(name);
 
 		String rating = location.getRating();
-		List<Integer> ratingList = HelperUtil.getRatingsList(rating);
-		double ratings = HelperUtil.getRatingValue(rating);
+		List<Integer> ratingList = Utils.getRatingsList(rating);
+		double ratings = Utils.getRatingValue(rating);
 		nearbyPlace.setRating(ratingList);
 		nearbyPlace.setRatings(ratings);
 
 		String reviewCount = location.getReviewCount();
-		int userReviewCount = HelperUtil.toInteger(reviewCount);
+		int userReviewCount = Utils.toInteger(reviewCount);
 		nearbyPlace.setReviewCount(userReviewCount);
 
 		// Do not use the distance element here. Because the distance element is
@@ -103,7 +103,7 @@ public class SearchHelper {
 		String dLon = location.getLongitude();
 		BigDecimal destLat = new BigDecimal(dLat);
 		BigDecimal destLon = new BigDecimal(dLon);
-		double distance = HelperUtil.getDistance(sourceLat, sourceLon, destLat,
+		double distance = Utils.getDistance(sourceLat, sourceLon, destLat,
 				destLon);
 		nearbyPlace.setDistance(distance);
 
@@ -113,7 +113,7 @@ public class SearchHelper {
 		tagLengthProp.append(".");
 		tagLengthProp.append(CommonConstants.TAGLINE_LENGTH);
 		String category = location.getCategory();
-		category = HelperUtil.getAbbreviatedString(category, tagLengthProp
+		category = Utils.getAbbreviatedString(category, tagLengthProp
 				.toString());
 		nearbyPlace.setCategory(category);
 
@@ -125,14 +125,14 @@ public class SearchHelper {
 		nearbyPlace.setCallBackFunction(request.getCallBackFunction());
 		nearbyPlace.setCallBackUrl(request.getCallBackUrl());
 
-		String adDisplayTrackingUrl = HelperUtil.getTrackingUrl(nearbyPlace
+		String adDisplayTrackingUrl = Utils.getTrackingUrl(nearbyPlace
 				.getAdDisplayURL(), null, request.getCallBackUrl(), request
 				.getDartClickTrackUrl(), nearbyPlace.getListingId(),
 				nearbyPlace.getPhone(), request.getPublisher(), request
 						.getAdUnitName(), request.getAdUnitSize());
 		nearbyPlace.setAdDisplayTrackingURL(adDisplayTrackingUrl);
 
-		String callBackFn = HelperUtil.getCallBackFunctionString(request
+		String callBackFn = Utils.getCallBackFunctionString(request
 				.getCallBackFunction(), nearbyPlace.getListingId(), nearbyPlace
 				.getPhone());
 		nearbyPlace.setCallBackFunction(callBackFn);

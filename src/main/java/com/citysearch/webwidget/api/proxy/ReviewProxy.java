@@ -20,8 +20,8 @@ import com.citysearch.webwidget.exception.InvalidHttpResponseException;
 import com.citysearch.webwidget.exception.InvalidRequestParametersException;
 import com.citysearch.webwidget.util.APIFieldNameConstants;
 import com.citysearch.webwidget.util.CommonConstants;
-import com.citysearch.webwidget.util.HelperUtil;
 import com.citysearch.webwidget.util.PropertiesLoader;
+import com.citysearch.webwidget.util.Utils;
 
 public class ReviewProxy extends AbstractProxy {
 	public final static String PROPERTY_REVIEW_URL = "reviews.url";
@@ -47,28 +47,28 @@ public class ReviewProxy extends AbstractProxy {
 				.getQueryString(request));
 		if (request.isCustomerOnly()) {
 			strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-			strBuilder.append(HelperUtil.constructQueryParam(
+			strBuilder.append(constructQueryParam(
 					APIFieldNameConstants.CUSTOMER_ONLY, String.valueOf(request
 							.isCustomerOnly())));
 		}
 		if (!StringUtils.isEmpty(request.getRating())) {
 			strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-			strBuilder.append(HelperUtil.constructQueryParam(
-					APIFieldNameConstants.RATING, request.getRating()));
+			strBuilder.append(constructQueryParam(APIFieldNameConstants.RATING,
+					request.getRating()));
 		}
 		if (!StringUtils.isEmpty(request.getDays())) {
 			strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-			strBuilder.append(HelperUtil.constructQueryParam(
-					APIFieldNameConstants.DAYS, request.getDays()));
+			strBuilder.append(constructQueryParam(APIFieldNameConstants.DAYS,
+					request.getDays()));
 		}
 		if (!StringUtils.isEmpty(request.getMax())) {
 			strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-			strBuilder.append(HelperUtil.constructQueryParam(
-					APIFieldNameConstants.MAX, request.getMax()));
+			strBuilder.append(constructQueryParam(APIFieldNameConstants.MAX,
+					request.getMax()));
 		}
 		if (!StringUtils.isEmpty(request.getPlacement())) {
 			strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-			strBuilder.append(HelperUtil.constructQueryParam(
+			strBuilder.append(constructQueryParam(
 					APIFieldNameConstants.PLACEMENT, request.getPlacement()));
 		}
 		return strBuilder.toString();
@@ -88,7 +88,7 @@ public class ReviewProxy extends AbstractProxy {
 				String rating = reviewElem.getChildText(REVIEW_RATING);
 				if (NumberUtils.toInt(rating) >= minimumRating) {
 					String dateStr = reviewElem.getChildText(REVIEW_DATE);
-					Date date = HelperUtil.parseDate(dateStr, formatter);
+					Date date = Utils.parseDate(dateStr, formatter);
 					if (date != null) {
 						reviewMap.put(date, reviewElem);
 					}
@@ -139,7 +139,7 @@ public class ReviewProxy extends AbstractProxy {
 		log.info("ReviewProxy.getLatestReview:: Request URL " + urlString);
 		Document responseDocument = null;
 		try {
-			responseDocument = HelperUtil.getAPIResponse(urlString, null);
+			responseDocument = getAPIResponse(urlString, null);
 			log
 					.info("ReviewProxy.getLatestReview:: Successfull response received.");
 		} catch (InvalidHttpResponseException ihe) {

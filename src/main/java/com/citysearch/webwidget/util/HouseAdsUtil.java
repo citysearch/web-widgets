@@ -18,11 +18,11 @@ public class HouseAdsUtil {
 		List<HouseAd> houseAds = null;
 		InputStream inputStream = null;
 
-		inputStream = HouseAdsUtil.class.getClassLoader()
-				.getResourceAsStream("/HouseAdsConfig.xml");
+		inputStream = HouseAdsUtil.class.getClassLoader().getResourceAsStream(
+				"/HouseAdsConfig.xml");
 		Document document;
 		try {
-			document = HelperUtil.buildFromStream(inputStream);
+			document = Utils.buildFromStream(inputStream);
 		} catch (IOException ioe) {
 			throw new CitysearchException("HouseAdsHelper", "getHouseAds", ioe);
 		} finally {

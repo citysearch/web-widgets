@@ -23,8 +23,8 @@ import com.citysearch.webwidget.exception.InvalidHttpResponseException;
 import com.citysearch.webwidget.exception.InvalidRequestParametersException;
 import com.citysearch.webwidget.util.APIFieldNameConstants;
 import com.citysearch.webwidget.util.CommonConstants;
-import com.citysearch.webwidget.util.HelperUtil;
 import com.citysearch.webwidget.util.PropertiesLoader;
+import com.citysearch.webwidget.util.Utils;
 
 public class OfferProxy extends AbstractProxy {
 	private final static String PROPERTY_OFFERS_URL = "offers.url";
@@ -54,12 +54,12 @@ public class OfferProxy extends AbstractProxy {
 		log.info("Start OfferProxy getQueryString()");
 		StringBuilder strBuilder = new StringBuilder();
 
-		strBuilder.append(HelperUtil.constructQueryParam(
-				APIFieldNameConstants.RPP, RPP_OFFERS));
+		strBuilder.append(constructQueryParam(APIFieldNameConstants.RPP,
+				RPP_OFFERS));
 		strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
 
-		strBuilder.append(HelperUtil.constructQueryParam(
-				APIFieldNameConstants.CLIENT_IP, request.getClientIP()));
+		strBuilder.append(constructQueryParam(APIFieldNameConstants.CLIENT_IP,
+				request.getClientIP()));
 		strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
 
 		if (!StringUtils.isBlank(request.getWhat())) {
@@ -71,53 +71,53 @@ public class OfferProxy extends AbstractProxy {
 				throw new CitysearchException("OffersHelper", "getQueryString",
 						excep);
 			}
-			strBuilder.append(HelperUtil.constructQueryParam(
-					APIFieldNameConstants.WHAT, what));
+			strBuilder.append(constructQueryParam(APIFieldNameConstants.WHAT,
+					what));
 		}
 
 		if (!StringUtils.isBlank(request.getLatitude())
 				&& !StringUtils.isBlank(request.getLongitude())) {
 			strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-			strBuilder.append(HelperUtil.constructQueryParam(
+			strBuilder.append(constructQueryParam(
 					APIFieldNameConstants.LATITUDE, request.getLatitude()
 							.trim()));
 
 			strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-			strBuilder.append(HelperUtil.constructQueryParam(
+			strBuilder.append(constructQueryParam(
 					APIFieldNameConstants.LONGITUDE, request.getLongitude()
 							.trim()));
 		} else {
 			strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-			strBuilder.append(HelperUtil.constructQueryParam(
-					APIFieldNameConstants.WHERE, request.getWhere().trim()));
+			strBuilder.append(constructQueryParam(APIFieldNameConstants.WHERE,
+					request.getWhere().trim()));
 		}
 		if (!StringUtils.isBlank(request.getTag())) {
 			strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-			strBuilder.append(HelperUtil.constructQueryParam(
-					APIFieldNameConstants.TAG, request.getTag().trim()));
+			strBuilder.append(constructQueryParam(APIFieldNameConstants.TAG,
+					request.getTag().trim()));
 		}
 		if (!StringUtils.isBlank(request.getExpiresBefore())) {
 			strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-			strBuilder.append(HelperUtil.constructQueryParam(
+			strBuilder.append(constructQueryParam(
 					APIFieldNameConstants.EXPIRES_BEFORE, request
 							.getExpiresBefore().trim()));
 		}
 		if (!StringUtils.isBlank(request.getCustomerHasbudget())) {
 			strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-			strBuilder.append(HelperUtil.constructQueryParam(
+			strBuilder.append(constructQueryParam(
 					APIFieldNameConstants.CUSTOMER_HASBUDGET, String
 							.valueOf(request.getCustomerHasbudget().trim())));
 		}
 		if (!StringUtils.isBlank(request.getRadius())) {
 			strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-			String radius = HelperUtil.parseRadius(request.getRadius());
+			String radius = Utils.parseRadius(request.getRadius());
 			request.setRadius(radius);
-			strBuilder.append(HelperUtil.constructQueryParam(
-					APIFieldNameConstants.RADIUS, request.getRadius()));
+			strBuilder.append(constructQueryParam(APIFieldNameConstants.RADIUS,
+					request.getRadius()));
 		}
 		if (!StringUtils.isBlank(request.getCallBackFunction())) {
 			strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-			strBuilder.append(HelperUtil.constructQueryParam(
+			strBuilder.append(constructQueryParam(
 					APIFieldNameConstants.CALLBACK, request
 							.getCallBackFunction().trim()));
 		}
@@ -182,7 +182,7 @@ public class OfferProxy extends AbstractProxy {
 						.getChildText(CommonConstants.LATITUDE));
 				BigDecimal businessLongitude = new BigDecimal(elm
 						.getChildText(CommonConstants.LONGITUDE));
-				double distance = HelperUtil.getDistance(sourceLatitude,
+				double distance = Utils.getDistance(sourceLatitude,
 						sourceLongitude, businessLatitude, businessLongitude);
 				if (elmsSortedByDistance.containsKey(distance)) {
 					elmsSortedByDistance.get(distance).add(elm);

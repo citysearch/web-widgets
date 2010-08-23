@@ -19,8 +19,8 @@ import com.citysearch.webwidget.exception.CitysearchException;
 import com.citysearch.webwidget.exception.InvalidHttpResponseException;
 import com.citysearch.webwidget.exception.InvalidRequestParametersException;
 import com.citysearch.webwidget.util.CommonConstants;
-import com.citysearch.webwidget.util.HelperUtil;
 import com.citysearch.webwidget.util.PropertiesLoader;
+import com.citysearch.webwidget.util.Utils;
 
 public class PFPProxy extends AbstractProxy {
 	private Logger log = Logger.getLogger(getClass());
@@ -182,7 +182,7 @@ public class PFPProxy extends AbstractProxy {
 					if (adType != null && adType.equalsIgnoreCase(AD_TYPE_PFP)
 							&& !listingsToIgnore.contains(listingId)) {
 						String rating = elm.getChildText(REVIEW_RATING_TAG);
-						double ratings = HelperUtil.getRatingValue(rating);
+						double ratings = Utils.getRatingValue(rating);
 						if (elmsSortedByRating.containsKey(ratings)) {
 							elmsSortedByRating.get(ratings).add(elm);
 						} else {

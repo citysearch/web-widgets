@@ -9,7 +9,6 @@ import org.apache.log4j.Logger;
 
 import com.citysearch.webwidget.exception.CitysearchException;
 import com.citysearch.webwidget.exception.InvalidRequestParametersException;
-import com.citysearch.webwidget.util.CommonConstants;
 import com.citysearch.webwidget.util.PropertiesLoader;
 
 public class RequestBean {
@@ -280,37 +279,31 @@ public class RequestBean {
 			CitysearchException {
 		log.info("Start RequestBean validate()");
 		List<String> errors = new ArrayList<String>();
-		Properties errorProperties = PropertiesLoader.getErrorProperties();
 
 		if (StringUtils.isBlank(getPublisher())) {
-			errors.add(errorProperties
-					.getProperty(CommonConstants.PUBLISHER_ERROR_CODE));
+			errors.add("Publisher code is required.");
 		}
 
 		if (StringUtils.isBlank(getWhat())) {
-			errors.add(errorProperties
-					.getProperty(CommonConstants.WHAT_ERROR_CODE));
+			errors.add("What is required.");
 		}
 
 		if ((StringUtils.isBlank(getLatitude()) || StringUtils
 				.isBlank(getLongitude()))
 				&& StringUtils.isBlank(getWhere())) {
-			errors.add(errorProperties
-					.getProperty(CommonConstants.WHERE_ERROR_CODE));
+			errors
+					.add("Where is required if latitude & longitude is not provided.");
 		}
 		if (!StringUtils.isBlank(getLatitude())
 				&& StringUtils.isBlank(getLongitude())) {
-			errors.add(errorProperties
-					.getProperty(CommonConstants.LONGITUDE_ERROR));
+			errors.add("Invalid longitude.");
 		} else if (StringUtils.isBlank(getLatitude())
 				&& !StringUtils.isBlank(getLongitude())) {
-			errors.add(errorProperties
-					.getProperty(CommonConstants.LATITUDE_ERROR));
+			errors.add("Invalid latitude.");
 		}
 
 		if (StringUtils.isBlank(getClientIP())) {
-			errors.add(errorProperties
-					.getProperty(CommonConstants.CLIENT_IP_ERROR_CODE));
+			errors.add("Client IP is required.");
 		}
 		if (!errors.isEmpty()) {
 			throw new InvalidRequestParametersException(this.getClass()

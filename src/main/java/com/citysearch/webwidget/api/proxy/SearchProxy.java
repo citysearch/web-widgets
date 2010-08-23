@@ -20,8 +20,8 @@ import com.citysearch.webwidget.exception.CitysearchException;
 import com.citysearch.webwidget.exception.InvalidHttpResponseException;
 import com.citysearch.webwidget.exception.InvalidRequestParametersException;
 import com.citysearch.webwidget.util.CommonConstants;
-import com.citysearch.webwidget.util.HelperUtil;
 import com.citysearch.webwidget.util.PropertiesLoader;
+import com.citysearch.webwidget.util.Utils;
 
 public class SearchProxy extends AbstractProxy {
 	public final static String PROPERTY_SEARCH_URL = "search.url";
@@ -54,7 +54,7 @@ public class SearchProxy extends AbstractProxy {
 							.getChildText(CommonConstants.LATITUDE));
 					BigDecimal businessLongitude = new BigDecimal(elm
 							.getChildText(CommonConstants.LONGITUDE));
-					double distance = HelperUtil.getDistance(sourceLatitude,
+					double distance = Utils.getDistance(sourceLatitude,
 							sourceLongitude, businessLatitude,
 							businessLongitude);
 					if (childrenSize <= requiredNoOfLocations) {
