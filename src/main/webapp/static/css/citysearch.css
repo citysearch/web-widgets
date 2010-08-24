@@ -24,7 +24,7 @@
 .ctsrch_wideContainer .ctsrch_sponserText {float:right;font-size:11px;padding:1px 3px 0 0;color:#6E6E6E;}
 .ctsrch_wideContainer .ctsrch_container {padding:0 10px 16px 20px;}
 .ctsrch_wideContainer .ctsrch_listing {float:left;margin:10x 0 0 13px; width:48.5%;padding-right:1%;}
-.ctsrch_wideContainer .ctsrch_leftSide {float:left;width:25%;text-align:center;}
+.ctsrch_wideContainer .ctsrch_leftSide {float:left;width:25%;text-align:center;padding-top:2px;}
 .ctsrch_wideContainer .ctsrch_rightSide {float:left;width:74%;}
 
 /* Tall Ads 300x500 Global Styles */
