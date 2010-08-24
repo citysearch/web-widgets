@@ -27,7 +27,7 @@ public class CitySearchServlet extends HttpServlet {
 		String adUnitName = request.getParameter("adUnitName");
 		String adUnitSize = request.getParameter("adUnitSize");
 		String publisher = request.getParameter("publisher");
-		
+
 		int displaySize = (adUnitSize != null && adUnitSize
 				.equals(CommonConstants.CONQUEST_AD_SIZE)) ? CommonConstants.CONQUEST_DISPLAY_SIZE
 				: CommonConstants.MANTLE_DISPLAY_SIZE;
@@ -63,6 +63,9 @@ public class CitySearchServlet extends HttpServlet {
 					displaySize = CommonConstants.MANTLE_DISPLAY_SIZE;
 					strBuilder.append("/offers");
 				}
+			} else if (adUnitName
+					.equalsIgnoreCase(CommonConstants.AD_UNIT_NAME_DEALS)) {
+				strBuilder.append("/deals");
 			}
 			strBuilder.append("?");
 			strBuilder.append(queryString);

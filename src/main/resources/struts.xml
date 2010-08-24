@@ -26,6 +26,11 @@
             <result name="success">/jsp/Offers.jsp</result>
             <result name="backfill" type="chain">nearbyplaces</result>
         </action>
+        <!-- Struts configuration for Offers Widget when its used as a backfill-->
+        <action name="offersbackfill" class="com.citysearch.webwidget.action.OffersBackfillAction">
+            <result name="success">/jsp/Offers.jsp</result>
+            <result name="backfill" type="chain">nearbyplaces</result>
+        </action>
 
         <!-- Struts configuration for Conquest Ad Widget -->
         <action name="conquestOffers" class="com.citysearch.webwidget.action.ConquestOffersAction">
@@ -42,6 +47,12 @@
         <!-- Struts configuration for Nearby Places Widget for Project yellow-->
         <action name="nearbyplacesyellow" class="com.citysearch.webwidget.action.project.yellow.NearbyPlacesAction">
             <result name="success">/jsp/project_yellow/NearbyPlaces660x80.jsp</result>
+        </action>
+        
+        <!-- Struts configuration for Nearby Deals-->
+        <action name="deals" class="com.citysearch.webwidget.action.DealsAction">
+            <result name="success">/jsp/NearbyDeals.jsp</result>
+            <result name="backfill" type="chain">offersbackfill</result>
         </action>
     </package>
 </struts>
