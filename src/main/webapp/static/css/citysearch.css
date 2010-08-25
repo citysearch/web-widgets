@@ -8,7 +8,7 @@
 
 /* Mantle Ads 300x250 Global Styles */
 .ctsrch_boxContainer {height:248px;width:298px;overflow:hidden;font:14px/1.2 Arial,sans-serif;border:solid 1px #d9d9d9;}
-.ctsrch_boxContainer .ctsrch_header {height:25px;background:#abbd65;width:100%;background:#308ebd url(../img/bg_sprites_repeat_x.png) repeat-x 0 -704px;}
+.ctsrch_boxContainer .ctsrch_header {height:25px;width:100%;background:#308ebd url(../img/bg_sprites_repeat_x.png) repeat-x 0 -704px;}
 .ctsrch_boxContainer .ctsrch_headerText {font-size:16px;padding:4px 4px 4px 6px;color:#fff;}
 .ctsrch_boxContainer .ctsrch_container {padding:3px 10px 7px 10px;}
 .ctsrch_boxContainer .ctsrch_listing {height:68px;overflow:hidden;width:99%;}
@@ -84,6 +84,18 @@
 .ctsrch_offers .ctsrch_leftSide {width:40%;}
 .ctsrch_offers .ctsrch_rightSide {width:59%;}
 .ctsrch_offers .ctsrch_bizPhoto img {height:57px;width:94px;border:0;padding:0;}
+
+/* Groupon */
+.ctsrch_groupon {height:230px;width:280px;border:solid 10px #0144a7;}
+.ctsrch_groupon .ctsrch_header {height:40px;background:#fbfbfb url(../img/groupon_header.png) no-repeat;}
+.ctsrch_groupon .ctsrch_headerText {padding:6px 0 0 120px;color:#313131;}
+.ctsrch_groupon_top {color:#0c826f;}
+.ctsrch_groupon_top .ctsrch_groupon_value {padding-right:3px;font-size:25px;font-weight:bold;color:#3fa1f9;}
+.ctsrch_groupon_top .ctsrch_groupon_price {padding-left:3px;font-size:25px;font-weight:bold;color:#cb1313;}
+.ctsrch_groupon .ctsrch_leftSide {width:33%;}
+.ctsrch_groupon .ctsrch_rightSide {width:66%;}
+.ctsrch_groupon .ctsrch_bizPhoto img {width:74px;height:58px;}
+.ctsrch_groupon .ctsrch_groupon_viewIt {width:72px;height:20px;background:#fff url(../img/groupon_viewit.png) no-repeat;}
 
 /* Project Yellow Styles */
 .ctsrch_yelp {width:640px;padding:0 10px 0 10px;margin:10px 0 5px 0;background-color:#FFFADA;border:0;}
