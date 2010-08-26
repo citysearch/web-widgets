@@ -1,11 +1,10 @@
 package com.citysearch.webwidget.action;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import com.citysearch.webwidget.bean.GrouponDeal;
+import com.citysearch.webwidget.bean.DealsResponse;
 import com.citysearch.webwidget.bean.HouseAd;
 import com.citysearch.webwidget.bean.RequestBean;
 import com.citysearch.webwidget.exception.CitysearchException;
@@ -20,7 +19,7 @@ public class DealsAction extends AbstractCitySearchAction implements ModelDriven
     private Logger log = Logger.getLogger(getClass());
 
     private RequestBean dealsRequest = new RequestBean();
-    private List<GrouponDeal> deals;
+    private DealsResponse dealsResponse;
     private List<HouseAd> houseAds;
 
     public List<HouseAd> getHouseAds() {
@@ -31,15 +30,12 @@ public class DealsAction extends AbstractCitySearchAction implements ModelDriven
         this.houseAds = houseAds;
     }
 
-    public List<GrouponDeal> getDeals() {
-        if (deals == null) {
-            return new ArrayList<GrouponDeal>();
-        }
-        return deals;
+    public DealsResponse getDealsResponse() {
+        return dealsResponse;
     }
 
-    public void setDeals(List<GrouponDeal> deals) {
-        this.deals = deals;
+    public void setDealsResponse(DealsResponse dealsResponse) {
+        this.dealsResponse = dealsResponse;
     }
 
     public RequestBean getModel() {
@@ -55,23 +51,21 @@ public class DealsAction extends AbstractCitySearchAction implements ModelDriven
     }
 
     public String execute() throws CitysearchException {
+        // Return only one deal always
+        dealsRequest.setDisplaySize(1);
         try {
             AbstractGrouponOffersFacade facade = GrouponOffersFacadeFactory.getFacade(
                     dealsRequest.getPublisher(), dealsRequest.getDisplaySize(),
                     getResourceRootPath());
-            deals = facade.getDeals(dealsRequest);
-
-            if (deals == null || deals.isEmpty()) {
-                log.info("Returning backfill from Deals");
+            dealsResponse = facade.getDeals(dealsRequest);
+            if (dealsResponse.getGrouponDeal() == null
+                    && dealsResponse.getCitySearchOffer() == null) {
+                log.info("Returning backfill from DealsAction");
                 getHttpRequest().setAttribute(REQUEST_ATTRIBUTE_BACKFILL, true);
                 getHttpRequest().setAttribute(REQUEST_ATTRIBUTE_ADUNIT_SIZE,
-                        dealsRequest.getAdUnitSize());
+                        CommonConstants.MANTLE_AD_SIZE);
                 getHttpRequest().setAttribute(REQUEST_ATTRIBUTE_ADUNIT_DISPLAY_SIZE,
-                        dealsRequest.getDisplaySize());
-                getHttpRequest().setAttribute(REQUEST_ATTRIBUTE_LATITUDE,
-                        dealsRequest.getLatitude());
-                getHttpRequest().setAttribute(REQUEST_ATTRIBUTE_LONGITUDE,
-                        dealsRequest.getLongitude());
+                        CommonConstants.MANTLE_DISPLAY_SIZE);
                 getHttpRequest().setAttribute(REQUEST_ATTRIBUTE_BACKFILL_FOR,
                         CommonConstants.AD_UNIT_NAME_DEALS);
                 return "backfill";
@@ -79,9 +73,11 @@ public class DealsAction extends AbstractCitySearchAction implements ModelDriven
         } catch (InvalidRequestParametersException ihre) {
             log.error(ihre.getDetailedMessage());
             houseAds = getHouseAds(dealsRequest.getDartClickTrackUrl(), 3);
+            return "houseads";
         } catch (Exception e) {
             log.error(e.getMessage());
             houseAds = getHouseAds(dealsRequest.getDartClickTrackUrl(), 3);
+            return "houseads";
         }
         log.info("End offersAction execute()");
         return Action.SUCCESS;

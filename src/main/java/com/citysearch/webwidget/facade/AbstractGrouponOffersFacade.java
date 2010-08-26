@@ -7,7 +7,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.citysearch.webwidget.api.bean.GrouponResponse;
-import com.citysearch.webwidget.api.proxy.GrouponProxy;
+import com.citysearch.webwidget.bean.DealsResponse;
 import com.citysearch.webwidget.bean.GrouponDeal;
 import com.citysearch.webwidget.bean.RequestBean;
 import com.citysearch.webwidget.exception.CitysearchException;
@@ -76,18 +76,6 @@ public abstract class AbstractGrouponOffersFacade {
         return deal;
     }
 
-    public List<GrouponDeal> getDeals(RequestBean request)
-            throws InvalidRequestParametersException, CitysearchException {
-        validate(request);
-        GrouponProxy proxy = new GrouponProxy();
-        List<GrouponResponse> dealsFromGroupon = proxy.getOffers(request, displaySize);
-        List<GrouponDeal> deals = new ArrayList<GrouponDeal>();
-        if (dealsFromGroupon != null && !dealsFromGroupon.isEmpty()) {
-            for (GrouponResponse response : dealsFromGroupon) {
-                GrouponDeal deal = toGrouponDeal(response);
-                deals.add(deal);
-            }
-        }
-        return deals;
-    }
+    public abstract DealsResponse getDeals(RequestBean request)
+            throws InvalidRequestParametersException, CitysearchException;
 }

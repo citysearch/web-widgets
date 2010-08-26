@@ -52,7 +52,8 @@
         <!-- Struts configuration for Nearby Deals-->
         <action name="deals" class="com.citysearch.webwidget.action.DealsAction">
             <result name="success">/jsp/NearbyDeals.jsp</result>
-            <result name="backfill" type="chain">offersbackfill</result>
+            <result name="houseads">/jsp/HouseAds300x250.jsp</result>
+            <result name="backfill" type="chain">nearbyplaces</result>
         </action>
     </package>
 </struts>
