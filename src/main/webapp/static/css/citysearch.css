@@ -89,13 +89,21 @@
 .ctsrch_groupon {height:230px;width:280px;border:solid 10px #0144a7;}
 .ctsrch_groupon .ctsrch_header {height:40px;background:#fbfbfb url(../img/groupon_header.png) no-repeat;}
 .ctsrch_groupon .ctsrch_headerText {padding:6px 0 0 120px;color:#313131;}
+.ctsrch_groupon .ctsrch_container {padding:0 10px;}
 .ctsrch_groupon_top {color:#0c826f;}
 .ctsrch_groupon_top .ctsrch_groupon_value {padding-right:3px;font-size:25px;font-weight:bold;color:#3fa1f9;}
 .ctsrch_groupon_top .ctsrch_groupon_price {padding-left:3px;font-size:25px;font-weight:bold;color:#cb1313;}
-.ctsrch_groupon .ctsrch_leftSide {width:33%;}
-.ctsrch_groupon .ctsrch_rightSide {width:66%;}
-.ctsrch_groupon .ctsrch_bizPhoto img {width:74px;height:58px;}
-.ctsrch_groupon .ctsrch_groupon_viewIt {width:72px;height:20px;background:#fff url(../img/groupon_viewit.png) no-repeat;}
+.ctsrch_groupon_top .ctsrch_groupon_viewIt img {border:0;}
+.ctsrch_groupon_mid {height:88px;overflow:hidden;}
+.ctsrch_groupon_mid .ctsrch_leftSide {width:33%;}
+.ctsrch_groupon_mid .ctsrch_leftSide .ctsrch_bizPhoto img {width:74px;height:58px;}
+.ctsrch_groupon_mid .ctsrch_rightSide {width:66%;font-size:11px;}
+.ctsrch_groupon_mid .ctsrch_rightSide a.ctsrch_groupon_vendor {font-weight:bold;text-decoration:underline;}
+.ctsrch_groupon_btm {margin:0 -10px;height:71px;border-top:1px solid #808080;background-color:#e2ecfb;}
+.ctsrch_groupon_btm .ctsrch_listing {float:left;margin:3px 3%;width:43.5%;}
+.ctsrch_groupon_btm .ctsrch_listing .ctsrch_reviewFont {color:#000;padding-top:2px;}
+.ctsrch_groupon_btm .ctsrch_listing .ctsrch_mainLink a {font-size:11px;}
+.ctsrch_groupon_btm .ctsrch_listing .ctsrch_cityFont {font-weight:normal;}
 
 /* Project Yellow Styles */
 .ctsrch_yelp {width:640px;padding:0 10px 0 10px;margin:10px 0 5px 0;background-color:#FFFADA;border:0;}

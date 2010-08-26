@@ -10,35 +10,71 @@
     <div class="ctsrch_container">
         <!-- Groupon Deals -->
         <div class="ctsrch_groupon_top">
-            <span class="ctsrch_groupon_value">$25</span>
+            <span class="ctsrch_groupon_value">$42</span>
             for
-            <span class="ctsrch_groupon_price">$10</span>
+            <span class="ctsrch_groupon_price">$85</span>
             value
+            <a class="ctsrch_groupon_viewIt" href="http://www.groupon.com/deals/epicurean-school-of-culinary-arts"><img src="http://localhost:8080/web-widgets/static/img/groupon_viewit.png" width="72px" height="20px" /></a>
         </div>
-        <div class="ctsrch_groupon_mid">
+        <div class="ctsrch_groupon_mid clearfix">
             <div class="ctsrch_leftSide">
                 <div class="ctsrch_bizPhoto">
-                    <a href="http://www.groupon.com/deals/green-door-tavern/"><img width="74px" height="58px" src="http://www.groupon.com/images/site_images/0127/7116/TRAIN-west-hollywood_profile.jpg" border="0"/></a>
+                    <a href="http://www.groupon.com/deals/epicurean-school-of-culinary-arts"><img width="74px" height="58px" src="http://www.groupon.com/images/site_images/0128/5340/Epicurean-School-of-Culinary-Arts_profile.jpg" border="0"/></a>
                 </div>
             </div>
             <div class="ctsrch_rightSide">
-                <div class="">
-                    <a href="http://www.groupon.com/deals/green-door-tavern/" class="ctsrch_mainLink">The Point</a>:
-                    Today's Deal:
-                    <span class="ctsrch_tagLine">
-                        $10 for $25 Worth of Upscale Brunch and Afternoon Bistro Fare at The Point in Culver City (Up to $25)
+                <div class="ctsrch_groupon_deal">
+                    <a href="http://www.groupon.com/deals/epicurean-school-of-culinary-arts" class="ctsrch_groupon_vendor">Epicurean School of Culinary Arts</a>
+                    : Today's Deal:
+                    <span class="ctsrch_groupon_detail">
+                        $42 for a Three-Hour Cooking Workshop at Epicurean School of Culinary Arts in West Hollywood
                     </span>
                 </div>
                 <div class="ctsrch_groupon_expire">
-                    Expires Nov 19, 2010
-                </div>
-                <div class="ctsrch_groupon_viewIt">
-                    <a href="http://www.groupon.com/deals/green-door-tavern/">View it</a>
+                    Expires Sept 27, 2011
                 </div>
             </div>
         </div>
         <div class="ctsrch_groupon_btm">
-
+            <!-- PFPx2 -->
+            <div class="ctsrch_listing">
+                <div class="ctsrch_starContainer clearfix">
+                    <div class="ctsrch_stars">
+                        <span class="full"></span><span class="full"></span><span class="full"></span><span class="full"></span><span class="empty"></span>
+                    </div>
+                    <div class="ctsrch_reviewFont">
+                        6 Reviews
+                    </div>
+                </div>
+                <div class="ctsrch_mainLink">
+                    <a href="http://www.groupon.com/deals/epicurean-school-of-culinary-arts" />Epicurean School of Culinary Arts</a>
+                </div>
+                <div class="ctsrch_cityFont">
+                    1158 Glendale Galleria
+                </div>
+                <div class="ctsrch_cityFont">
+                    Glendale, CA 91210
+                </div>
+            </div>
+            <div class="ctsrch_listing">
+                <div class="ctsrch_starContainer clearfix">
+                    <div class="ctsrch_stars">
+                        <span class="full"></span><span class="full"></span><span class="full"></span><span class="full"></span><span class="empty"></span>
+                    </div>
+                    <div class="ctsrch_reviewFont">
+                        6 Reviews
+                    </div>
+                </div>
+                <div class="ctsrch_mainLink">
+                    <a href="http://www.groupon.com/deals/epicurean-school-of-culinary-arts" />Epicurean School of Culinary Arts</a>
+                </div>
+                <div class="ctsrch_cityFont">
+                    1158 Glendale Galleria
+                </div>
+                <div class="ctsrch_cityFont">
+                    Glendale, CA 91210
+                </div>
+            </div>
         </div>
     </div>
 </div>
