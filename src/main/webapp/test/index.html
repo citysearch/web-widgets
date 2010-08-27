@@ -17,7 +17,7 @@
 
         label {float:left;font-size:12px;font-weight:bold;width:80px;color:#626669;}
         label .requiredField {font-size:1.1em;color:#DF1400;}
-        input {float:left;width:250px;}
+        input, select {float:left;width:250px;}
         input.checkbox {width:auto;margin-right:5px;}
         input.submit {margin-left:80px;width:auto;}
     </style>
@@ -33,6 +33,9 @@
                     <label>emulate:</label>
                     <select id="emulate">
                         <option value="">---</option>
+                        <option disabled="disabled">2010.08.27</option>
+                        <option value="urbanspoon-2010.08.27">Urbanspoon</option>
+                        <option value="cbs-2010.08.27">CBS</option>
                         <option disabled="disabled">2010.08.17</option>
                         <option value="citysearch-2010.08.17">Citysearch</option>
                         <option value="insider-2010.08.17">Insider Pages</option>
@@ -55,6 +58,8 @@
                         <option disabled="disabled">Production Tags</option>
                         <option value="5480.iac.grd/citygrid;sz=300x250">5480.iac.grd/citygrid;sz=300x250</option>
                         <option value="5480.iac.grd/citygrid;sz=645x100">5480.iac.grd/citygrid;sz=645x100</option>
+                        <option value="5480.iac.grd/cbs;sz=300x250">5480.iac.grd/cbs;sz=300x250</option>
+                        <option value="5480.iac.grd/cbs;sz=645x100">5480.iac.grd/cbs;sz=645x100</option>
                         <option value="5480.iac.grd/citysearch;sz=645x100">5480.iac.grd/citysearch;sz=645x100</option>
                         <option value="5480.iac.grd/yelp;sz=645x100">5480.iac.grd/yelp;sz=645x100</option>
                         <option value="5480.iac.grd/yelp;sz=660x80">5480.iac.grd/yelp;sz=660x80</option>
@@ -70,15 +75,29 @@
                 </div>
                 <div class="clearfix">
                     <label>publisher:</label>
-                    <input id="publisher" type="text" value="citysearch" />
+                    <select id="publisher">
+                        <option value="citysearch">citysearch</option>
+                        <option value="insider_pages">insider_pages</option>
+                        <option value="yelp">yelp</option>
+                        <option value="urbanspoon">urbanspoon</option>
+                        <option value="cbs">cbs</option>
+                    </select>
                 </div>
                 <div class="clearfix">
                     <label>adUnitSize:</label>
-                    <input id="adUnitSize" type="text" value="645x100" />
+                    <select id="adUnitSize">
+                        <option value="645x100">645x100</option>
+                        <option value="300x250">300x250</option>
+                        <option value="660x80">660x80</option>
+                    </select>
                 </div>
                 <div class="clearfix">
                     <label>adUnitName:</label>
-                    <input id="adUnitName" type="text" value="nearby" />
+                    <select id="adUnitName">
+                        <option value="nearby">nearby</option>
+                        <option value="offers">offers</option>
+                        <option value="deals">deals</option>
+                    </select>
                 </div>
             </div>
 
