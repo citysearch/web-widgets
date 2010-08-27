@@ -12,6 +12,7 @@ import com.citysearch.webwidget.bean.GrouponDeal;
 import com.citysearch.webwidget.bean.RequestBean;
 import com.citysearch.webwidget.exception.CitysearchException;
 import com.citysearch.webwidget.exception.InvalidRequestParametersException;
+import com.citysearch.webwidget.util.Utils;
 
 public abstract class AbstractGrouponOffersFacade {
     private Logger log = Logger.getLogger(getClass());
@@ -44,11 +45,17 @@ public abstract class AbstractGrouponOffersFacade {
         }
     }
 
-    public GrouponDeal toGrouponDeal(GrouponResponse response) {
+    public GrouponDeal toGrouponDeal(RequestBean request, GrouponResponse response)
+            throws CitysearchException {
         GrouponDeal deal = new GrouponDeal();
 
         deal.setId(response.getId());
-        deal.setDealUrl(response.getDealUrl());
+
+        String dealUrl = response.getDealUrl();
+        dealUrl = Utils.getTrackingUrl(dealUrl, null, null, request.getDartClickTrackUrl(), null,
+                null, request.getPublisher(), request.getAdUnitName(), request.getAdUnitSize());
+        deal.setDealUrl(dealUrl);
+
         deal.setTitle(response.getTitle());
         deal.setSmallImageUrl(response.getSmallImageUrl());
         deal.setMediumImageUrl(response.getMediumImageUrl());
@@ -68,8 +75,16 @@ public abstract class AbstractGrouponOffersFacade {
         deal.setTippedDate(response.getTippedDate());
         deal.setSoldOut(response.isSoldOut());
         deal.setQuantitySold(response.getQuantitySold());
-        deal.setPrice(response.getPrice());
-        deal.setValue(response.getValue());
+        if (response.getPrice() != null) {
+            String price = response.getPrice();
+            price = StringUtils.replace(price, "USD", "");
+            deal.setPrice("$" + price);
+        }
+        if (response.getValue() != null) {
+            String value = response.getValue();
+            value = StringUtils.replace(value, "USD", "");
+            deal.setValue("$" + value);
+        }
         deal.setDiscountAmount(response.getDiscountAmount());
         deal.setDiscountPercent(response.getDiscountPercent());
 
