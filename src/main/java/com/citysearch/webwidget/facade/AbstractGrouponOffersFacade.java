@@ -1,6 +1,9 @@
 package com.citysearch.webwidget.facade;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -12,10 +15,12 @@ import com.citysearch.webwidget.bean.GrouponDeal;
 import com.citysearch.webwidget.bean.RequestBean;
 import com.citysearch.webwidget.exception.CitysearchException;
 import com.citysearch.webwidget.exception.InvalidRequestParametersException;
+import com.citysearch.webwidget.util.PropertiesLoader;
 import com.citysearch.webwidget.util.Utils;
 
 public abstract class AbstractGrouponOffersFacade {
     private Logger log = Logger.getLogger(getClass());
+    private static final String DATE_FORMAT = "reviewdate.format";
     protected String contextPath;
     protected int displaySize;
 
@@ -69,7 +74,13 @@ public abstract class AbstractGrouponOffersFacade {
         deal.setVendorWebsite(response.getVendorWebsite());
         deal.setStatus(response.getStatus());
         deal.setStartDate(response.getStartDate());
-        deal.setEnddate(response.getEnddate());
+
+        SimpleDateFormat formatter = new SimpleDateFormat(PropertiesLoader.getAPIProperties()
+                .getProperty(DATE_FORMAT));
+        Date date = Utils.parseDate(response.getEnddate(), formatter);
+        DateFormat df = new SimpleDateFormat("MMM dd, yyyy");
+        deal.setEnddate(df.format(date));
+
         deal.setTipped(response.isTipped());
         deal.setTippingPoint(response.getTippingPoint());
         deal.setTippedDate(response.getTippedDate());
