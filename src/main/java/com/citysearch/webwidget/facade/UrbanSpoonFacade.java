@@ -31,8 +31,11 @@ public class UrbanSpoonFacade extends AbstractGrouponOffersFacade {
         DealsResponse dealsResponse = new DealsResponse();
         if (dealsFromGroupon != null && !dealsFromGroupon.isEmpty()) {
             GrouponResponse response = dealsFromGroupon.get(0);
-            GrouponDeal deal = toGrouponDeal(response);
+            GrouponDeal deal = toGrouponDeal(request, response);
             dealsResponse.setGrouponDeal(deal);
+            
+            //Reset the what so that the ads are relevant
+            request.setWhat(deal.getVendorName());
         } else {
             AbstractOffersFacade facade = new ConquestOffersFacade(contextPath, 1);
             List<Offer> offers = facade.getOffers(request);
