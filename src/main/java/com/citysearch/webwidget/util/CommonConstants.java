@@ -82,4 +82,5 @@ public class CommonConstants {
     public final static String PUBLISHER_CITYSEARCH = "citysearch";
     public final static String PUBLISHER_INSIDERPAGES = "insider_pages";
     public final static String PUBLISHER_URBANSPOON = "urbanspoon";
+    public final static String PUBLISHER_CBS = "cbs";
 }

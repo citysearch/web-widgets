@@ -19,6 +19,8 @@ public class NearByPlacesFacadeFactory {
         } else if (publisher.equalsIgnoreCase(CommonConstants.PUBLISHER_URBANSPOON)
                 && displaySize == 3) {
             return new InsiderPagesNearByPlacesFacade(contextPath, displaySize);
+        } else if (publisher.equalsIgnoreCase(CommonConstants.PUBLISHER_CBS)) {
+            return new CBSNearbyPlacesFacade(contextPath, displaySize);
         }
         return null;
     }
