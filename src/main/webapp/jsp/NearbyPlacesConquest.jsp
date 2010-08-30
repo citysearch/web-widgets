@@ -93,9 +93,11 @@
                             <a href='<s:property value="adDisplayTrackingURL" />' ><img width="47px" height="47px" src='<s:property value="adImageURL" />' border="0"/></a>
                         </s:else>
                     </div>
-                    <div class="ctsrch_milesFont">
-                        <s:property value="distance" /> mi away
-                    </div>
+                    <s:if test="%{distance != -1}">
+	                    <div class="ctsrch_milesFont">
+	                        <s:property value="distance" /> mi away
+	                    </div>
+                    </s:if>
                 </div>
                 <div class="ctsrch_rightSide">
                     <div class="ctsrch_mainLink">
