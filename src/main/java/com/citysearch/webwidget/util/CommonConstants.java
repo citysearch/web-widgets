@@ -68,7 +68,8 @@ public class CommonConstants {
     
     public static final int EXTENDED_RADIUS = 25;
     public static final int DEFAULT_RADIUS = 25;
-
+    public static final String DISTANCE_DISPLAY_CUTOFF = "nearby.distance.display.cutoff";
+    
     public static final String MANTLE_AD_SIZE = "300x250";
     public static final String CONQUEST_AD_SIZE = "645x100";
     public static final int MANTLE_DISPLAY_SIZE = 3;

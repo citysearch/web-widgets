@@ -3,6 +3,7 @@ package com.citysearch.webwidget.facade.helper;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -14,6 +15,7 @@ import com.citysearch.webwidget.bean.NearbyPlace;
 import com.citysearch.webwidget.bean.RequestBean;
 import com.citysearch.webwidget.exception.CitysearchException;
 import com.citysearch.webwidget.util.CommonConstants;
+import com.citysearch.webwidget.util.PropertiesLoader;
 import com.citysearch.webwidget.util.Utils;
 
 public class SearchHelper {
@@ -80,15 +82,23 @@ public class SearchHelper {
         int userReviewCount = Utils.toInteger(reviewCount);
         nearbyPlace.setReviewCount(userReviewCount);
 
-        // Do not use the distance element here. Because the distance element is
-        // returned only if latlon is passed.
+        // Calculate distance only if lat&lon passed in request
         if (!StringUtils.isBlank(request.getLatitude())
-                && !StringUtils.isBlank(request.getLongitude())) {
+                && !StringUtils.isBlank(request.getLongitude())
+                && !StringUtils.isBlank(location.getLatitude())
+                && !StringUtils.isBlank(location.getLongitude())) {
             BigDecimal sourceLat = new BigDecimal(request.getLatitude());
             BigDecimal sourceLon = new BigDecimal(request.getLongitude());
             BigDecimal destLat = new BigDecimal(location.getLatitude());
             BigDecimal destLon = new BigDecimal(location.getLongitude());
             double distance = Utils.getDistance(sourceLat, sourceLon, destLat, destLon);
+            
+            Properties appProperties = PropertiesLoader.getApplicationProperties();
+            String propValue = appProperties.getProperty(CommonConstants.DISTANCE_DISPLAY_CUTOFF);
+            if (!StringUtils.isBlank(propValue) && StringUtils.isNumeric(propValue)) {
+                double nPropValue = Double.valueOf(propValue);
+                distance = (distance > nPropValue) ? -1 : distance;
+            }
             nearbyPlace.setDistance(distance);
         } else {
             nearbyPlace.setDistance(-1);

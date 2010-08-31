@@ -17,8 +17,26 @@ public class PFPAd {
 	private String state;
 	private String postalCode;
 	private String adDestinationUrl;
+	private String latitude;
+	private String longitude;
+	
+	public String getLatitude() {
+        return latitude;
+    }
 
-	public String getName() {
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getName() {
 		return name;
 	}
 
