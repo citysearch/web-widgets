@@ -32,30 +32,29 @@ public class UrbanSpoonFacade extends AbstractGrouponOffersFacade {
         if (dealsFromGroupon != null && !dealsFromGroupon.isEmpty()) {
             GrouponResponse response = dealsFromGroupon.get(0);
             GrouponDeal deal = toGrouponDeal(request, response);
-            dealsResponse.setGrouponDeal(deal);
-            
-            //Reset the what so that the ads are relevant
-            request.setWhat(deal.getVendorName());
-        } else {
-            AbstractOffersFacade facade = new ConquestOffersFacade(contextPath, 1);
-            List<Offer> offers = facade.getOffers(request);
-            if (offers != null && !offers.isEmpty()) {
-                dealsResponse.setCitySearchOffer(offers.get(0));
+            if (deal != null) {
+                dealsResponse.setGrouponDeal(deal);
+                // Reset the what so that the ads are relevant
+                request.setWhat(deal.getVendorName());
+                // If no groupon deal and no city search offer, then we should be returning the
+                // nearby
+                // ad-unit. No logic requried here.
+                // If either groupon on cs offer is found, then return two nearby places.
+                AbstractNearByPlacesFacade facade = new UrbanSpoonNearbyPlacesFacade(contextPath, 2);
+                NearbyPlacesResponse nearbyResponse = facade.getNearbyPlaces(request);
+                List<NearbyPlace> places = new ArrayList<NearbyPlace>();
+                dealsResponse.setPlaces(nearbyResponse.getNearbyPlaces());
+                dealsResponse.setSearchResults(nearbyResponse.getSearchResults());
+                dealsResponse.setBackfill(nearbyResponse.getBackfill());
+                dealsResponse.setHouseAds(nearbyResponse.getHouseAds());
+            } else {
+                AbstractOffersFacade facade = new ConquestOffersFacade(contextPath, 1);
+                List<Offer> offers = facade.getOffers(request);
+                if (offers != null && !offers.isEmpty()) {
+                    dealsResponse.setCitySearchOffer(offers.get(0));
+                }
             }
         }
-        // If no groupon deal and no city search offer, then we should be returning the nearby
-        // ad-unit. No logic requried here.
-        // If either groupon on cs offer is found, then return two nearby places.
-        AbstractNearByPlacesFacade facade = null;
-        if (dealsResponse.getGrouponDeal() != null || dealsResponse.getCitySearchOffer() != null) {
-            facade = new UrbanSpoonNearbyPlacesFacade(contextPath, 2);
-        }
-        NearbyPlacesResponse nearbyResponse = facade.getNearbyPlaces(request);
-        List<NearbyPlace> places = new ArrayList<NearbyPlace>();
-        dealsResponse.setPlaces(nearbyResponse.getNearbyPlaces());
-        dealsResponse.setSearchResults(nearbyResponse.getSearchResults());
-        dealsResponse.setBackfill(nearbyResponse.getBackfill());
-        dealsResponse.setHouseAds(nearbyResponse.getHouseAds());
         return dealsResponse;
     }
 }

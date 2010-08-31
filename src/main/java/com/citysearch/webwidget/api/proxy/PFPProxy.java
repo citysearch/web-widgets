@@ -62,6 +62,8 @@ public class PFPProxy extends AbstractProxy {
 		ad.setState(adElm.getChildText(CommonConstants.STATE));
 		ad.setPostalCode(adElm.getChildText(ZIP_TAG));
 		ad.setAdDestinationUrl(adElm.getChildText(AD_DESTINATION_URL));
+		ad.setLatitude(adElm.getChildText("latitude"));
+		ad.setLongitude(adElm.getChildText("longitude"));
 		return ad;
 	}
 
