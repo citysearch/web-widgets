@@ -12,6 +12,7 @@ import com.citysearch.webwidget.exception.InvalidRequestParametersException;
 import com.citysearch.webwidget.facade.AbstractGrouponOffersFacade;
 import com.citysearch.webwidget.facade.GrouponOffersFacadeFactory;
 import com.citysearch.webwidget.util.CommonConstants;
+import com.citysearch.webwidget.util.OneByOneTrackingUtil;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ModelDriven;
 
@@ -73,14 +74,44 @@ public class DealsAction extends AbstractCitySearchAction implements ModelDriven
         } catch (InvalidRequestParametersException ihre) {
             log.error(ihre.getDetailedMessage());
             houseAds = getHouseAds(dealsRequest.getDartClickTrackUrl(), 3);
+            try {
+                String oneByOneTrackingUrl = OneByOneTrackingUtil.getTrackingUrl("EXCEPTION");
+                setOneByOneTrackingUrl(oneByOneTrackingUrl);
+            } catch (Exception e) {
+                log.error(e.getMessage());
+            }
             return "houseads";
         } catch (Exception e) {
             log.error(e.getMessage());
             houseAds = getHouseAds(dealsRequest.getDartClickTrackUrl(), 3);
+            try {
+                String oneByOneTrackingUrl = OneByOneTrackingUtil.getTrackingUrl("EXCEPTION");
+                setOneByOneTrackingUrl(oneByOneTrackingUrl);
+            } catch (Exception exp) {
+                log.error(exp.getMessage());
+            }
             return "houseads";
         }
+        set1x1TrackingPixel();
         log.info("End offersAction execute()");
         return Action.SUCCESS;
     }
 
+    private void set1x1TrackingPixel() {
+        String trackingKey = null;
+        if (dealsResponse.getGrouponDeal() != null) {
+            trackingKey = "DEALS.300x250.1G-0H";
+            if (dealsResponse.getHouseAds() != null && !dealsResponse.getHouseAds().isEmpty()) {
+                trackingKey = "DEALS.300x250.1G-1H";
+            }
+        } else {
+            trackingKey = "DEALS.300x250.1O";
+        }
+        try {
+            String oneByOneTrackingUrl = OneByOneTrackingUtil.getTrackingUrl(trackingKey);
+            setOneByOneTrackingUrl(oneByOneTrackingUrl);
+        } catch (Exception exp) {
+            log.error(exp.getMessage());
+        }
+    }
 }
