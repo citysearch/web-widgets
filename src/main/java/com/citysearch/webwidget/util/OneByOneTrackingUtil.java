@@ -44,7 +44,7 @@ public class OneByOneTrackingUtil {
 		return strBuilder.toString();
 	}
 
-	private static String getTrackingUrl(String key) throws CitysearchException {
+	public static String getTrackingUrl(String key) throws CitysearchException {
 		if (trackingProperties == null) {
 			trackingProperties = PropertiesLoader.getTrackingProperties();
 		}
