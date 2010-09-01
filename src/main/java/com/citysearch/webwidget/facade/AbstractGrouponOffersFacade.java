@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 
 import com.citysearch.webwidget.api.bean.GrouponResponse;
@@ -89,13 +90,28 @@ public abstract class AbstractGrouponOffersFacade {
         if (response.getPrice() != null) {
             String price = response.getPrice();
             price = StringUtils.replace(price, "USD", "");
-            price = StringUtils.substringBefore(price, ".");
+            String decimalPart = StringUtils.substringAfter(price, ".");
+            if (decimalPart != null && decimalPart.trim().length() > 0) {
+                if (!StringUtils.isNumeric(decimalPart) || NumberUtils.toDouble(decimalPart) == 0) {
+                    price = StringUtils.substringBefore(price, ".");
+                }
+            } else {
+                price = StringUtils.substringBefore(price, ".");
+            }
+            
             deal.setPrice("$" + price);
         }
         if (response.getValue() != null) {
             String value = response.getValue();
             value = StringUtils.replace(value, "USD", "");
-            value = StringUtils.substringBefore(value, ".");
+            String decimalPart = StringUtils.substringAfter(value, ".");
+            if (decimalPart != null && decimalPart.trim().length() > 0) {
+                if (!StringUtils.isNumeric(decimalPart) || NumberUtils.toDouble(decimalPart) == 0) {
+                    value = StringUtils.substringBefore(value, ".");
+                }
+            } else {
+                value = StringUtils.substringBefore(value, ".");
+            }
             deal.setValue("$" + value);
         }
         deal.setDiscountAmount(response.getDiscountAmount());
