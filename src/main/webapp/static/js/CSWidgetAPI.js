@@ -34,6 +34,15 @@ var citygrid = {
             (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(script);
         },
 
+        // script tag injection to fetch css
+        styleInject : function(url) {
+            var style = document.createElement("link");
+            style.setAttribute("rel", "stylesheet");
+            style.setAttribute("type","text/css");
+            style.setAttribute("href", url);
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(style);
+        },
+
         // call by the code provided by backend
         loadWidget : function(widgetHTML) {
             widgetHTML = widgetHTML.replace(/&amp;/g, "&");
