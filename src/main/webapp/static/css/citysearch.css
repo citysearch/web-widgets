@@ -47,7 +47,7 @@
 .ctsrch_stars .full {display:inline-block;width:12px;height:13px;margin:0;padding:0;background:url('../img/Star.png') no-repeat;}
 .ctsrch_stars .half {display:inline-block;width:12px;height:13px;margin:0;padding:0;background:url('../img/HalfStar.png') no-repeat;}
 .ctsrch_stars .empty {display:inline-block;width:12px;height:13px;margin:0;padding:0;background:url('../img/EmptyStar.png') no-repeat;}
-.ctsrch_reviewFont {float:left;margin-left:5px;font-size:10px;color:#006699;font-weight:bold;}
+.ctsrch_reviewFont {float:left;margin-left:5px;padding-top:2px;font-size:10px;color:#006699;font-weight:bold;}
 .ctsrch_cityFont, .ctsrch_phone {white-space:nowrap;overflow:hidden;width:100%;font-weight:bold;font-size:11px;}
 .ctsrch_tagLine {overflow:hidden;width:100%;font-size:11px;}
 .ctsrch_displayUrl {font-size:11px;white-space:nowrap;overflow:hidden;width:100%;}
@@ -90,12 +90,16 @@
 .ctsrch_offers_box {height:auto;border-radius:10px;-moz-border-radius:10px; -webkit-border-radius:10px;}
 .ctsrch_offers_box .ctsrch_header {background-position:0 -565px;border-radius:10px 10px 0 0;-moz-border-radius:10px 10px 0 0; -webkit-border-radius:10px 10px 0 0;}
 .ctsrch_offers_box .ctsrch_container {padding:10px 15px 7px;}
+.ctsrch_offers_box .ctsrch_listing {height:81px;}
 .ctsrch_offers_box .ctsrch_leftSide {width:40%;}
 .ctsrch_offers_box .ctsrch_rightSide {width:59%;}
 .ctsrch_offers_box .ctsrch_offers_details {border-top:1px solid #6da7c6;padding-top:5px;}
 .ctsrch_offers_box .ctsrch_bizPhoto {text-align:left;}
 .ctsrch_offers_box .ctsrch_bizPhoto img {height:57px;width:94px;border:0;padding:0;}
-.footer .ctsrch_sponserText {font-size:10px;font-style:italic;}
+.ctsrch_offers_box .ctsrch_offers_print {float:left;margin-top:10px;}
+.ctsrch_offers_box .ctsrch_offers_print a {padding:4px 20px;}
+.ctsrch_footer {clear:both;margin-top:5px;}
+.ctsrch_footer .ctsrch_sponserText {float:right;font-size:10px;font-style:italic;}
 
 /* Groupon */
 .ctsrch_groupon {height:230px;width:280px;border:solid 10px #0144a7;}
@@ -113,7 +117,7 @@
 .ctsrch_groupon_mid .ctsrch_rightSide a.ctsrch_groupon_vendor {font-weight:bold;text-decoration:underline;}
 .ctsrch_groupon_btm {margin:0 -10px;height:71px;border-top:1px solid #808080;background-color:#e2ecfb;}
 .ctsrch_groupon_btm .ctsrch_listing {float:left;margin:3px 3%;width:43.5%;}
-.ctsrch_groupon_btm .ctsrch_listing .ctsrch_reviewFont {color:#000;padding-top:2px;}
+.ctsrch_groupon_btm .ctsrch_listing .ctsrch_reviewFont {color:#000;}
 .ctsrch_groupon_btm .ctsrch_listing .ctsrch_mainLink a {font-size:11px;}
 .ctsrch_groupon_btm .ctsrch_listing .ctsrch_cityFont {font-weight:normal;}
 

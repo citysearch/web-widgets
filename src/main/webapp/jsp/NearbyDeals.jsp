@@ -52,10 +52,10 @@
                         </div>
                         <div class="ctsrch_mainLink">
                             <s:if test="%{isValidCallbackFunction == true}">
-                                <a class="ctsrch_busNameFont" href='<s:property value="callBackFunction" />'><s:property value="name" /></a>
+                                <s:property value="name" />
                             </s:if>
                             <s:else>
-                                <a href='<s:property value="adDisplayTrackingURL" />' ><s:property value="name" /></a>
+                                <s:property value="name" />
                             </s:else>
                         </div>
                         <s:if test="%{isValidLocation == true}">
@@ -69,13 +69,13 @@
                 <s:iterator value="dealsResponse.backfill" status="placesStatus">
                     <div class="ctsrch_listing">
                         <div class="ctsrch_mainLink" >
-                            <a href='<s:property value="adDisplayTrackingURL" />'><s:property value="category" /></a>
+                            <s:property value="category" />
                         </div>
                         <div class="ctsrch_tagLine" >
                             <s:property value="description" />
                         </div>
                         <div class="ctsrch_displayUrl" >
-                            <a href='<s:property value="adDisplayTrackingURL" />'><s:property value="adDisplayURL" /></a>
+                            <s:property value="adDisplayURL" />
                         </div>
                         <s:if test='%{offers != null && !"".equals(offers)}'>
                              <div class="ctsrch_offersFont" >
@@ -99,10 +99,10 @@
                         </div>
                         <div class="ctsrch_mainLink">
                             <s:if test="%{isValidCallbackFunction == true}">
-                                <a class="ctsrch_busNameFont" href='<s:property value="callBackFunction" />'><s:property value="name" /></a>
+                                <s:property value="name" />
                             </s:if>
                             <s:else>
-                                <a href='<s:property value="adDisplayTrackingURL" />' ><s:property value="name" /></a>
+                                <s:property value="name" />
                             </s:else>
                         </div>
                         <s:if test="%{isValidLocation == true}">
@@ -116,13 +116,13 @@
                 <s:iterator value="dealsResponse.houseAds" status="hadStatus">
                     <div class="ctsrch_listing">
                         <div class="ctsrch_mainLink">
-                            <a href='<s:property value="destinationUrl" />'><s:property value="title" /></a>
+                            <s:property value="title" />
                         </div>
                         <div class="ctsrch_tagLine">
                             <s:property value="tagLine" />
                         </div>
                         <div class="ctsrch_displayUrl" >
-                            <a href='<s:property value="destinationUrl" />'><s:property value="displayUrl" /></a>
+                            <s:property value="displayUrl" />
                         </div>
                     </div>
                 </s:iterator>
@@ -140,6 +140,9 @@
         </div>
         <div class="ctsrch_container">
             <div class="ctsrch_listing">
+                <div class="ctsrch_mainLink">
+                    <a href='<s:property value="dealsResponse.citySearchOffer.profileTrackingUrl" />' ><s:property value="dealsResponse.citySearchOffer.listingName" /></a>
+                </div>
                 <div class="ctsrch_leftSide">
                     <div class="ctsrch_bizPhoto">
                         <a href='<s:property value="dealsResponse.citySearchOffer.profileTrackingUrl" />' >
@@ -148,9 +151,6 @@
                     </div>
                 </div>
                 <div class="ctsrch_rightSide">
-                    <div class="ctsrch_mainLink">
-                        <a href='<s:property value="dealsResponse.citySearchOffer.profileTrackingUrl" />' ><s:property value="dealsResponse.citySearchOffer.listingName" /></a>
-                    </div>
                     <div class="ctsrch_starContainer clearfix">
                         <div class="ctsrch_stars">
                             <s:iterator value="dealsResponse.citySearchOffer.listingRating" status="stat"><span class='<s:if test="%{dealsResponse.citySearchOffer.listingRating[#stat.index] == 2}">full</s:if><s:elseif test="%{dealsResponse.citySearchOffer.listingRating[#stat.index] == 1}">half</s:elseif><s:else>empty</s:else>'> </span></s:iterator>
@@ -163,6 +163,9 @@
                         <s:property value="dealsResponse.citySearchOffer.phone" />
                     </div>
                     <div class="ctsrch_cityFont">
+                        <s:property value="dealsResponse.citySearchOffer.street" />
+                    </div>
+                    <div class="ctsrch_cityFont">
                         <s:property value="dealsResponse.citySearchOffer.location" /> <s:property value="dealsResponse.citySearchOffer.zip" />
                     </div>
                 </div>
@@ -172,13 +175,14 @@
                     <s:property value="dealsResponse.citySearchOffer.offerDescription" />
                 </div>
             </div>
+            <div class="ctsrch_offers_print">
+                <a href='<s:property value="dealsResponse.citySearchOffer.couponUrl" />' >
+                    Get Offer
+                </a>
+            </div>
             <div class="ctsrch_footer clearfix">
                 <div class="ctsrch_sponserText">Ads by CityGrid</div>
-                <div class="ctsrch_offers_print">
-                    <a href='<s:property value="dealsResponse.citySearchOffer.couponUrl" />' >
-                        Get Offer
-                    </a>
-                </div>
+
             </div>
         </div>
     </div>
