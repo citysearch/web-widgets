@@ -1,7 +1,9 @@
 package com.citysearch.webwidget.api.proxy;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
@@ -26,12 +28,6 @@ public class GrouponProxy extends AbstractProxy {
 
     private String getGrouponQueryString(RequestBean request) throws CitysearchException {
         StringBuilder apiQueryString = new StringBuilder();
-
-        Properties properties = PropertiesLoader.getAPIProperties();
-        String apiKey = properties.getProperty(GROUPON_API_KEY_PROPERTY);
-        apiQueryString.append(constructQueryParam(APIFieldNameConstants.API_KEY, apiKey));
-
-        apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
         apiQueryString.append(constructQueryParam(APIFieldNameConstants.LATITUDE,
                 request.getLatitude()));
 
@@ -131,10 +127,15 @@ public class GrouponProxy extends AbstractProxy {
         StringBuilder urlStringBuilder = new StringBuilder(
                 properties.getProperty(GROUPON_URL_PROPERTY));
         urlStringBuilder.append(getGrouponQueryString(request));
+        
+        String apiKey = properties.getProperty(GROUPON_API_KEY_PROPERTY);
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put("X-GrouponToken", apiKey);
+        
         log.info("GrouponProxy.getOffers: Query: " + urlStringBuilder.toString());
         Document grouponResponse = null;
         try {
-            grouponResponse = getAPIResponse(urlStringBuilder.toString(), null);
+            grouponResponse = getAPIResponse(urlStringBuilder.toString(), headers);
             log.info("GrouponProxy.getOffers: successful response");
         } catch (InvalidHttpResponseException ihe) {
             throw new CitysearchException(this.getClass().getName(), "getOffers", ihe);
