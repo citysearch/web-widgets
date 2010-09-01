@@ -22,6 +22,7 @@ import com.citysearch.webwidget.util.Utils;
 public abstract class AbstractGrouponOffersFacade {
     private Logger log = Logger.getLogger(getClass());
     private static final String DATE_FORMAT = "reviewdate.format";
+    private static final String GROUPON_TRACKING_URL_KEY = "groupon.tracking.url";
     protected String contextPath;
     protected int displaySize;
 
@@ -58,8 +59,8 @@ public abstract class AbstractGrouponOffersFacade {
         deal.setId(response.getId());
 
         String dealUrl = response.getDealUrl();
-        dealUrl = Utils.getTrackingUrl(dealUrl, null, null, request.getDartClickTrackUrl(), null,
-                null, request.getPublisher(), request.getAdUnitName(), request.getAdUnitSize());
+        dealUrl = Utils.getThirdPartyTrackingUrl(dealUrl, request.getDartClickTrackUrl(),
+                GROUPON_TRACKING_URL_KEY);
         deal.setDealUrl(dealUrl);
 
         deal.setTitle(response.getTitle());
@@ -98,7 +99,7 @@ public abstract class AbstractGrouponOffersFacade {
             } else {
                 price = StringUtils.substringBefore(price, ".");
             }
-            
+
             deal.setPrice("$" + price);
         }
         if (response.getValue() != null) {
