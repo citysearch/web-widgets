@@ -118,7 +118,7 @@
 .ctsrch_groupon_btm {margin:0 -10px;height:71px;border-top:1px solid #808080;background-color:#e2ecfb;}
 .ctsrch_groupon_btm .ctsrch_listing {float:left;margin:3px 3%;width:43.5%;}
 .ctsrch_groupon_btm .ctsrch_listing .ctsrch_reviewFont {color:#000;}
-.ctsrch_groupon_btm .ctsrch_listing .ctsrch_mainLink a {font-size:11px;}
+.ctsrch_groupon_btm .ctsrch_listing .ctsrch_mainLink {font-size:11px;}
 .ctsrch_groupon_btm .ctsrch_listing .ctsrch_cityFont {font-weight:normal;}
 
 /* Project Yellow Styles */
