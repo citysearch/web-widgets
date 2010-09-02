@@ -25,6 +25,7 @@ public class GrouponProxy extends AbstractProxy {
     private Logger log = Logger.getLogger(getClass());
     private static final String GROUPON_URL_PROPERTY = "groupon.url";
     private static final String GROUPON_API_KEY_PROPERTY = "groupon.apikey";
+    private static final String GROUPON_LONGITUDE = "lng";
 
     private String getGrouponQueryString(RequestBean request) throws CitysearchException {
         StringBuilder apiQueryString = new StringBuilder();
@@ -32,8 +33,7 @@ public class GrouponProxy extends AbstractProxy {
                 request.getLatitude()));
 
         apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
-        apiQueryString.append(constructQueryParam(APIFieldNameConstants.LONGITUDE,
-                request.getLongitude()));
+        apiQueryString.append(constructQueryParam(GROUPON_LONGITUDE, request.getLongitude()));
 
         return apiQueryString.toString();
     }
@@ -127,11 +127,11 @@ public class GrouponProxy extends AbstractProxy {
         StringBuilder urlStringBuilder = new StringBuilder(
                 properties.getProperty(GROUPON_URL_PROPERTY));
         urlStringBuilder.append(getGrouponQueryString(request));
-        
+
         String apiKey = properties.getProperty(GROUPON_API_KEY_PROPERTY);
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("X-GrouponToken", apiKey);
-        
+
         log.info("GrouponProxy.getOffers: Query: " + urlStringBuilder.toString());
         Document grouponResponse = null;
         try {
