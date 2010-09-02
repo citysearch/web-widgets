@@ -39,6 +39,9 @@ public abstract class AbstractGrouponOffersFacade {
         if (StringUtils.isBlank(request.getWhat())) {
             errors.add("What is required.");
         }
+        if (StringUtils.isBlank(request.getWhere())) {
+            errors.add("Where is required.");
+        }
         if (StringUtils.isBlank(request.getLatitude())
                 || StringUtils.isBlank(request.getLongitude())) {
             errors.add("Invalid Latitude and/or Longitude.");
