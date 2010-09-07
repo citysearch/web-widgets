@@ -37,7 +37,7 @@
                 </div>
             </div>
             <div class="ctsrch_groupon_btm">
-                <!-- PFPx2 -->
+                <!-- PFP -->
                 <s:iterator value="dealsResponse.places" status="placesStatus">
                     <div class="ctsrch_listing">
                         <div class="ctsrch_starContainer clearfix">
@@ -52,10 +52,10 @@
                         </div>
                         <div class="ctsrch_mainLink">
                             <s:if test="%{isValidCallbackFunction == true}">
-                                <s:property value="name" />
+                                <a class="ctsrch_busNameFont" href='<s:property value="callBackFunction" />'><s:property value="name" /></a>
                             </s:if>
                             <s:else>
-                                <s:property value="name" />
+                                <a href='<s:property value="adDisplayTrackingURL" />' ><s:property value="name" /></a>
                             </s:else>
                         </div>
                         <s:if test="%{isValidLocation == true}">
@@ -69,13 +69,13 @@
                 <s:iterator value="dealsResponse.backfill" status="placesStatus">
                     <div class="ctsrch_listing">
                         <div class="ctsrch_mainLink" >
-                            <s:property value="category" />
+                            <a href='<s:property value="adDisplayTrackingURL" />'><s:property value="category" /></a>
                         </div>
                         <div class="ctsrch_tagLine" >
                             <s:property value="description" />
                         </div>
                         <div class="ctsrch_displayUrl" >
-                            <s:property value="adDisplayURL" />
+                            <a href='<s:property value="adDisplayTrackingURL" />'><s:property value="adDisplayURL" /></a>
                         </div>
                         <s:if test='%{offers != null && !"".equals(offers)}'>
                              <div class="ctsrch_offersFont" >
@@ -99,10 +99,10 @@
                         </div>
                         <div class="ctsrch_mainLink">
                             <s:if test="%{isValidCallbackFunction == true}">
-                                <s:property value="name" />
+                                <a class="ctsrch_busNameFont" href='<s:property value="callBackFunction" />'><s:property value="name" /></a>
                             </s:if>
                             <s:else>
-                                <s:property value="name" />
+                                <a href='<s:property value="adDisplayTrackingURL" />' ><s:property value="name" /></a>
                             </s:else>
                         </div>
                         <s:if test="%{isValidLocation == true}">
@@ -116,16 +116,19 @@
                 <s:iterator value="dealsResponse.houseAds" status="hadStatus">
                     <div class="ctsrch_listing">
                         <div class="ctsrch_mainLink">
-                            <s:property value="title" />
+                            <a href='<s:property value="destinationUrl" />'><s:property value="title" /></a>
                         </div>
                         <div class="ctsrch_tagLine">
                             <s:property value="tagLine" />
                         </div>
                         <div class="ctsrch_displayUrl" >
-                            <s:property value="displayUrl" />
+                            <a href='<s:property value="destinationUrl" />'><s:property value="displayUrl" /></a>
                         </div>
                     </div>
                 </s:iterator>
+                <div class="ctsrch_footer clearfix">
+                    <div class="ctsrch_sponserText">Ads by CityGrid</div>
+                </div>
             </div>
         </div>
     </div>
@@ -182,7 +185,6 @@
             </div>
             <div class="ctsrch_footer clearfix">
                 <div class="ctsrch_sponserText">Ads by CityGrid</div>
-
             </div>
         </div>
     </div>

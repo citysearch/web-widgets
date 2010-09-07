@@ -99,7 +99,7 @@
 .ctsrch_offers_box .ctsrch_offers_print {float:left;margin-top:10px;}
 .ctsrch_offers_box .ctsrch_offers_print a {padding:4px 20px;}
 .ctsrch_footer {clear:both;margin-top:5px;}
-.ctsrch_footer .ctsrch_sponserText {float:right;font-size:10px;font-style:italic;}
+.ctsrch_footer .ctsrch_sponserText {float:right;margin-right:3px;font-size:10px;font-style:italic;}
 
 /* Groupon */
 .ctsrch_groupon {height:230px;width:280px;border:solid 10px #0144a7;}
@@ -116,10 +116,12 @@
 .ctsrch_groupon_mid .ctsrch_rightSide {width:66%;font-size:11px;}
 .ctsrch_groupon_mid .ctsrch_rightSide a.ctsrch_groupon_vendor {font-weight:bold;text-decoration:underline;}
 .ctsrch_groupon_btm {margin:0 -10px;height:71px;border-top:1px solid #808080;background-color:#e2ecfb;}
-.ctsrch_groupon_btm .ctsrch_listing {float:left;margin:3px 3%;width:43.5%;}
+.ctsrch_groupon_btm .ctsrch_listing {float:left;margin:3px 3%;width:94%;height:auto;}
 .ctsrch_groupon_btm .ctsrch_listing .ctsrch_reviewFont {color:#000;}
 .ctsrch_groupon_btm .ctsrch_listing .ctsrch_mainLink {font-size:11px;}
+.ctsrch_groupon_btm .ctsrch_listing .ctsrch_mainLink a {color:#000;}
 .ctsrch_groupon_btm .ctsrch_listing .ctsrch_cityFont {font-weight:normal;}
+.ctsrch_groupon_btm .ctsrch_listing .ctsrch_displayUrl a {color:#000;font-weight:normal;}
 
 /* Project Yellow Styles */
 .ctsrch_yelp {width:640px;padding:0 10px 0 10px;margin:10px 0 5px 0;background-color:#FFFADA;border:0;}

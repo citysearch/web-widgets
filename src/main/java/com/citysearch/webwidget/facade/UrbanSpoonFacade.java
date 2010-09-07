@@ -35,8 +35,8 @@ public class UrbanSpoonFacade extends AbstractGrouponOffersFacade {
             dealsResponse.setGrouponDeal(deal);
             // Reset the what so that the ads are relevant
             request.setWhat(deal.getVendorName());
-            
-            AbstractNearByPlacesFacade facade = new UrbanSpoonNearbyPlacesFacade(contextPath, 2);
+
+            AbstractNearByPlacesFacade facade = new UrbanSpoonNearbyPlacesFacade(contextPath, 1);
             NearbyPlacesResponse nearbyResponse = facade.getNearbyPlaces(request);
 
             dealsResponse.setPlaces(nearbyResponse.getNearbyPlaces());
