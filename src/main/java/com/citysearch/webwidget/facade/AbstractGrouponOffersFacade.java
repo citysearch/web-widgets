@@ -16,6 +16,7 @@ import com.citysearch.webwidget.bean.GrouponDeal;
 import com.citysearch.webwidget.bean.RequestBean;
 import com.citysearch.webwidget.exception.CitysearchException;
 import com.citysearch.webwidget.exception.InvalidRequestParametersException;
+import com.citysearch.webwidget.util.CommonConstants;
 import com.citysearch.webwidget.util.PropertiesLoader;
 import com.citysearch.webwidget.util.Utils;
 
@@ -57,6 +58,8 @@ public abstract class AbstractGrouponOffersFacade {
 
     public GrouponDeal toGrouponDeal(RequestBean request, GrouponResponse response)
             throws CitysearchException {
+        String adUnitIdentifier = request.getAdUnitIdentifier();
+        
         GrouponDeal deal = new GrouponDeal();
 
         deal.setId(response.getId());
@@ -66,7 +69,13 @@ public abstract class AbstractGrouponOffersFacade {
                 GROUPON_TRACKING_URL_KEY);
         deal.setDealUrl(dealUrl);
 
-        deal.setTitle(response.getTitle());
+        StringBuilder titleLengthProp = new StringBuilder(adUnitIdentifier);
+        titleLengthProp.append(".");
+        titleLengthProp.append(CommonConstants.TITLE_LENGTH);
+        String title = response.getTitle();
+        title = Utils.getAbbreviatedString(title, titleLengthProp.toString());
+        deal.setTitle(title);
+        
         deal.setSmallImageUrl(response.getSmallImageUrl());
         deal.setMediumImageUrl(response.getMediumImageUrl());
         deal.setLargeImageUrl(response.getLargeImageUrl());
