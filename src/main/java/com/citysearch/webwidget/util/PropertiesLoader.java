@@ -1,5 +1,7 @@
 package com.citysearch.webwidget.util;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -7,6 +9,7 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 
 import com.citysearch.webwidget.exception.CitysearchException;
+
 /**
  * This class loads properties from property files.
  * 
@@ -24,7 +27,7 @@ public class PropertiesLoader {
 	private static Properties apiProperties;
 	private static Properties applicationProperties;
 	private static Properties fieldProperties;
-	
+
 	/**
 	 * Takes the file name as input and reads the properties from the file.
 	 * Returns the Properties object that contains parameters as key,value pairs
@@ -58,6 +61,30 @@ public class PropertiesLoader {
 		return properties;
 	}
 
+	public static void loadAPIProperties(String fileName)
+			throws CitysearchException {
+		InputStream inputStream = null;
+		try {
+			inputStream = new FileInputStream(fileName);
+			apiProperties = new Properties();
+			apiProperties.load(inputStream);
+		} catch (FileNotFoundException fexp) {
+			throw new CitysearchException("PropertiesLoader",
+					"loadAPIProperties", fexp);
+		} catch (IOException ioexcep) {
+			throw new CitysearchException("PropertiesLoader",
+					"loadAPIProperties", ioexcep);
+		} finally {
+			try {
+				if (inputStream != null)
+					inputStream.close();
+			} catch (IOException ioexcep) {
+				throw new CitysearchException("PropertiesLoader",
+						"loadAPIProperties", ioexcep);
+			}
+		}
+	}
+
 	/**
 	 * Read the error.properties file. If that file is missing, throws
 	 * CitysearchException
@@ -81,9 +108,10 @@ public class PropertiesLoader {
 	 * @throws CitysearchException
 	 */
 	public static Properties getAPIProperties() throws CitysearchException {
-		if (apiProperties == null) {
-			apiProperties = getProperties(API_PROPERTIES_FILE);
-		}
+		/*
+		 * if (apiProperties == null) { apiProperties =
+		 * getProperties(API_PROPERTIES_FILE); }
+		 */
 		return apiProperties;
 	}
 
@@ -98,7 +126,7 @@ public class PropertiesLoader {
 	public static Properties getTrackingProperties() throws CitysearchException {
 		return getProperties(TRACKING_PROPERTIES_FILE);
 	}
-	
+
 	public static Properties getFieldProperties() throws CitysearchException {
 		if (fieldProperties == null) {
 			fieldProperties = getProperties(FIELD_PROPERTIES_FILE);

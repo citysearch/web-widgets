@@ -115,7 +115,7 @@ public class SearchHelper {
 
         nearbyPlace.setAdDisplayURL(location.getAdDisplayUrl());
         nearbyPlace.setAdImageURL(location.getImageUrl());
-        nearbyPlace.setPhone(location.getPhone());
+        nearbyPlace.setPhone(Utils.parsePhone(location.getPhone()));
         nearbyPlace.setOffers(location.getOffers());
 
         nearbyPlace.setCallBackFunction(request.getCallBackFunction());

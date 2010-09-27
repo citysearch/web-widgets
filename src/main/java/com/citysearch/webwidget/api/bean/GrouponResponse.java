@@ -1,6 +1,5 @@
 package com.citysearch.webwidget.api.bean;
 
-import java.util.List;
 
 public class GrouponResponse {
 	private String id;
@@ -28,14 +27,14 @@ public class GrouponResponse {
 	private String value;
 	private String discountAmount;
 	private String discountPercent;
-	private List<GrouponCondition> conditions;
+	private GrouponCondition condition;
 
-	public List<GrouponCondition> getConditions() {
-		return conditions;
+	public GrouponCondition getCondition() {
+		return condition;
 	}
 
-	public void setConditions(List<GrouponCondition> conditions) {
-		this.conditions = conditions;
+	public void setCondition(GrouponCondition condition) {
+		this.condition = condition;
 	}
 
 	public String getId() {

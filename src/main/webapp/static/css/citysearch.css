@@ -110,12 +110,14 @@
 .ctsrch_groupon_top .ctsrch_groupon_value {padding-right:3px;font-size:25px;font-weight:bold;color:#3fa1f9;}
 .ctsrch_groupon_top .ctsrch_groupon_price {padding-left:3px;font-size:25px;font-weight:bold;color:#cb1313;}
 .ctsrch_groupon_top .ctsrch_groupon_viewIt img {border:0;}
-.ctsrch_groupon_mid {height:88px;overflow:hidden;}
-.ctsrch_groupon_mid .ctsrch_leftSide {width:33%;}
-.ctsrch_groupon_mid .ctsrch_leftSide .ctsrch_bizPhoto img {width:74px;height:58px;}
-.ctsrch_groupon_mid .ctsrch_rightSide {width:66%;font-size:11px;}
-.ctsrch_groupon_mid .ctsrch_rightSide a.ctsrch_groupon_vendor {font-weight:bold;text-decoration:underline;}
-.ctsrch_groupon_btm {margin:0 -10px;height:71px;border-top:1px solid #808080;background-color:#e2ecfb;}
+.ctsrch_groupon_mid {height:102px;overflow:hidden;}
+.ctsrch_groupon_mid .ctsrch_leftSide {width:40%;padding-right:2%;}
+.ctsrch_groupon_mid .ctsrch_leftSide .ctsrch_bizPhoto img {width:100px;height:61px;}
+.ctsrch_groupon_mid .ctsrch_rightSide {width:57%;font-size:11px;}
+.ctsrch_groupon_mid .ctsrch_rightSide a.ctsrch_groupon_vendor {font-weight:bold;font-size:12px;text-decoration:underline;}
+.ctsrch_groupon_btm {margin:0 -10px;height:57px;font-size:11px;border-top:1px solid #808080;background-color:#e2ecfb;}
+.ctsrch_groupon_btm .ctsrch_groupon_header {margin-left:10px;}
+.ctsrch_groupon_btm .ctsrch_groupon_conditions {margin: 0 10px;}
 .ctsrch_groupon_btm .ctsrch_listing {float:left;margin:3px 3%;width:94%;height:53px;}
 .ctsrch_groupon_btm .ctsrch_listing .ctsrch_reviewFont {color:#000;}
 .ctsrch_groupon_btm .ctsrch_listing .ctsrch_mainLink {font-size:11px;}

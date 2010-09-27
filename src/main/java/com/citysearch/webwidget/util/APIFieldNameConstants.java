@@ -24,6 +24,7 @@ public class APIFieldNameConstants {
 
     //PFP
     public static final String PUBLISHER_CODE = "publishercode";
+    public static final String ROTATION = "rotation";
 
     // Review API Field Names
     public static final String TAG_ID = "tag_id";

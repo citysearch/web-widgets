@@ -6,6 +6,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -52,16 +53,9 @@ public class OfferProxy extends AbstractProxy {
 	protected String getQueryString(RequestBean request)
 			throws CitysearchException {
 		log.info("Start OfferProxy getQueryString()");
-		StringBuilder strBuilder = new StringBuilder();
-
-		strBuilder.append(constructQueryParam(APIFieldNameConstants.RPP,
-				RPP_OFFERS));
-		strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-
-		strBuilder.append(constructQueryParam(APIFieldNameConstants.CLIENT_IP,
-				request.getClientIP()));
-		strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-
+		Map<String, String> parameters = new HashMap<String, String>();
+		parameters.put(APIFieldNameConstants.RPP, RPP_OFFERS);
+		parameters.put(APIFieldNameConstants.CLIENT_IP, request.getClientIP());
 		if (!StringUtils.isBlank(request.getWhat())) {
 			// Offers API throws internal error when reading sushi+restaurant
 			String what = request.getWhat().trim();
@@ -71,59 +65,41 @@ public class OfferProxy extends AbstractProxy {
 				throw new CitysearchException("OffersHelper", "getQueryString",
 						excep);
 			}
-			strBuilder.append(constructQueryParam(APIFieldNameConstants.WHAT,
-					what));
+			parameters.put(APIFieldNameConstants.WHAT, what);
 		}
 
 		if (!StringUtils.isBlank(request.getLatitude())
 				&& !StringUtils.isBlank(request.getLongitude())) {
-			strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-			strBuilder.append(constructQueryParam(
-					APIFieldNameConstants.LATITUDE, request.getLatitude()
-							.trim()));
-
-			strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-			strBuilder.append(constructQueryParam(
-					APIFieldNameConstants.LONGITUDE, request.getLongitude()
-							.trim()));
+			parameters.put(APIFieldNameConstants.LATITUDE, request
+					.getLatitude());
+			parameters.put(APIFieldNameConstants.LONGITUDE, request
+					.getLongitude());
 		} else {
-			strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-			strBuilder.append(constructQueryParam(APIFieldNameConstants.WHERE,
-					request.getWhere().trim()));
+			parameters.put(APIFieldNameConstants.WHERE, request.getWhere());
 		}
 		if (!StringUtils.isBlank(request.getTag())) {
-			strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-			strBuilder.append(constructQueryParam(APIFieldNameConstants.TAG,
-					request.getTag().trim()));
+			parameters.put(APIFieldNameConstants.TAG, request.getTag());
 		}
 		if (!StringUtils.isBlank(request.getExpiresBefore())) {
-			strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-			strBuilder.append(constructQueryParam(
-					APIFieldNameConstants.EXPIRES_BEFORE, request
-							.getExpiresBefore().trim()));
+			parameters.put(APIFieldNameConstants.EXPIRES_BEFORE, request
+					.getExpiresBefore());
 		}
 		if (!StringUtils.isBlank(request.getCustomerHasbudget())) {
-			strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-			strBuilder.append(constructQueryParam(
-					APIFieldNameConstants.CUSTOMER_HASBUDGET, String
-							.valueOf(request.getCustomerHasbudget().trim())));
+			parameters.put(APIFieldNameConstants.CUSTOMER_HASBUDGET, String
+					.valueOf(request.getCustomerHasbudget()));
 		}
 		if (!StringUtils.isBlank(request.getRadius())) {
-			strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
 			String radius = Utils.parseRadius(request.getRadius());
 			request.setRadius(radius);
-			strBuilder.append(constructQueryParam(APIFieldNameConstants.RADIUS,
-					request.getRadius()));
+			parameters.put(APIFieldNameConstants.RADIUS, request.getRadius());
 		}
 		if (!StringUtils.isBlank(request.getCallBackFunction())) {
-			strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-			strBuilder.append(constructQueryParam(
-					APIFieldNameConstants.CALLBACK, request
-							.getCallBackFunction().trim()));
+			parameters.put(APIFieldNameConstants.CALLBACK, request
+					.getCallBackFunction());
 		}
-		log.info("Start OfferProxy getQueryString() querystring is "
-				+ strBuilder);
-		return strBuilder.toString();
+		String query = getQueryString(parameters);
+		log.info("Start OfferProxy getQueryString() querystring is " + query);
+		return query;
 	}
 
 	private OfferAPIBean toOffer(Element offerElement)

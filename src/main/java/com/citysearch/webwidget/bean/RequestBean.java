@@ -2,14 +2,12 @@ package com.citysearch.webwidget.bean;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.citysearch.webwidget.exception.CitysearchException;
 import com.citysearch.webwidget.exception.InvalidRequestParametersException;
-import com.citysearch.webwidget.util.PropertiesLoader;
 
 public class RequestBean {
 	private Logger log = Logger.getLogger(getClass());
@@ -44,6 +42,15 @@ public class RequestBean {
 	protected String rpp;
 	protected String expiresBefore;
 	protected String customerHasbudget;
+	protected boolean rotation;
+
+	public boolean isRotation() {
+		return rotation;
+	}
+
+	public void setRotation(boolean rotation) {
+		this.rotation = rotation;
+	}
 
 	public String getTagId() {
 		return tagId;
@@ -319,5 +326,17 @@ public class RequestBean {
 		str.append(".");
 		str.append(adUnitSize);
 		return str.toString().toUpperCase();
+	}
+
+	public String getPlacementString() {
+		StringBuilder str = new StringBuilder();
+		str.append(publisher);
+		str.append("_");
+		str.append("contentads");
+		str.append("_");
+		str.append(adUnitName);
+		str.append("_");
+		str.append(adUnitSize);
+		return str.toString().toLowerCase();
 	}
 }

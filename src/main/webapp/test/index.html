@@ -33,9 +33,6 @@
                     <label>emulate:</label>
                     <select id="emulate">
                         <option value="">---</option>
-                        <option disabled="disabled">2010.08.27</option>
-                        <option value="urbanspoon-2010.08.27">Urbanspoon</option>
-                        <option value="cbs-2010.08.27">CBS</option>
                         <option disabled="disabled">2010.08.17</option>
                         <option value="citysearch-2010.08.17">Citysearch</option>
                         <option value="insider-2010.08.17">Insider Pages</option>
@@ -48,8 +45,10 @@
                     <label>site:</label>
                     <select id="site">
                         <option value="prod">Prod</option>
-                        <option value="qa">QA</option>
-                        <option value="dev">Dev</option>
+                        <option value="qa">QA (ec2)</option>
+                        <option value="localhost">Localhost</option>
+                        <option value="qalax">QA (lax)</option>
+                        <option value="dev">Dev (lax)</option>
                     </select>
                 </div>
                 <div class="clearfix">
@@ -67,10 +66,14 @@
                         <option value="5480cs.testsite/citygrid;sz=300x250">5480cs.testsite/citygrid;sz=300x250</option>
                         <option value="5480cs.testsite/citygrid;sz=645x100">5480cs.testsite/citygrid;sz=645x100</option>
                         <option value="5480cs.testsite/yelp;sz=645x100">5480cs.testsite/yelp;sz=645x100</option>
-                        <option value="5480cs.testsite/yelp;sz=660x80">5480cs.testsite/yelp;sz=660x80</option>
+                        <option value="5480cs.testsite/laxqabox;sz=300x250">5480cs.testsite/laxqabox;sz=300x250</option>
+                        <option value="5480cs.testsite/laxqabox;sz=645x100">5480cs.testsite/laxqabox;sz=645x100</option>
+                        <option value="5480cs.testsite/laxyelp;sz=645x100">5480cs.testsite/laxyelp;sz=645x100</option>
                         <option disabled="disabled">Dev Tags</option>
                         <option value="5480.iac.citysearchdev/citygrid;sz=300x250">5480.iac.citysearchdev/citygrid;sz=300x250</option>
                         <option value="5480.iac.citysearchdev/citygrid;sz=645x100">5480.iac.citysearchdev/citygrid;sz=645x100</option>
+                        <option value="5480.iac.citysearchdev/devbox;sz=300x250">5480.iac.citysearchdev/devbox;sz=300x250</option>
+                        <option value="5480.iac.citysearchdev/devbox;sz=645x100">5480.iac.citysearchdev/devbox;sz=645x100</option>
                     </select>
                 </div>
                 <div class="clearfix">

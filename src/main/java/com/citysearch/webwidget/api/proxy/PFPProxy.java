@@ -1,7 +1,9 @@
 package com.citysearch.webwidget.api.proxy;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.SortedMap;
@@ -18,295 +20,404 @@ import com.citysearch.webwidget.bean.RequestBean;
 import com.citysearch.webwidget.exception.CitysearchException;
 import com.citysearch.webwidget.exception.InvalidHttpResponseException;
 import com.citysearch.webwidget.exception.InvalidRequestParametersException;
+import com.citysearch.webwidget.util.APIFieldNameConstants;
 import com.citysearch.webwidget.util.CommonConstants;
 import com.citysearch.webwidget.util.PropertiesLoader;
 import com.citysearch.webwidget.util.Utils;
 
 public class PFPProxy extends AbstractProxy {
-    private Logger log = Logger.getLogger(getClass());
-    private final static String PFP_LOCATION_URL = "pfplocation.url";
-    private final static String PFP_URL = "pfp.url";
-    private static final String AD_TAG = "ad";
-    private static final String TYPE_TAG = "type";
-    private static final String REVIEW_RATING_TAG = "overall_review_rating";
-    private static final String REVIEWS_TAG = "reviews";
-    private static final String LISTING_ID_TAG = "listingId";
-    private static final String TAGLINE_TAG = "tagline";
-    private static final String AD_DISPLAY_URL_TAG = "ad_display_url";
-    private static final String AD_IMAGE_URL_TAG = "ad_image_url";
-    private static final String PHONE_TAG = "phone";
-    private static final String DESC_TAG = "description";
-    private static final String ZIP_TAG = "zip";
-    private static final String AD_DESTINATION_URL = "ad_destination_url";
-    private static final String AD_TYPE_PFP = "local PFP";
-    private static final String AD_TYPE_BACKFILL = "backfill";
+	private Logger log = Logger.getLogger(getClass());
+	private final static String PFP_LOCATION_URL = "pfplocation.url";
+	private final static String PFP_URL = "pfp.url";
+	private static final String AD_TAG = "ad";
+	private static final String TYPE_TAG = "type";
+	private static final String REVIEW_RATING_TAG = "overall_review_rating";
+	private static final String REVIEWS_TAG = "reviews";
+	private static final String LISTING_ID_TAG = "listingId";
+	private static final String TAGLINE_TAG = "tagline";
+	private static final String AD_DISPLAY_URL_TAG = "ad_display_url";
+	private static final String AD_IMAGE_URL_TAG = "ad_image_url";
+	private static final String PHONE_TAG = "phone";
+	private static final String DESC_TAG = "description";
+	private static final String ZIP_TAG = "zip";
+	private static final String AD_DESTINATION_URL = "ad_destination_url";
+	private static final String AD_TYPE_PFP = "local PFP";
+	private static final String AD_TYPE_BACKFILL = "backfill";
 
-    private Document pfpLocationResponse;
-    private Document pfpResponse;
+	private Document pfpLocationResponse;
+	private Document pfpResponse;
 
-    protected String getWhereQueryString(RequestBean request, Integer requiredNoOfAds)
-            throws CitysearchException {
-        StringBuilder apiQueryString = new StringBuilder(getWhereQueryString(request));
-        if (requiredNoOfAds != null && requiredNoOfAds != 0) {
-            apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
-            apiQueryString.append(constructQueryParam("max", String.valueOf(requiredNoOfAds)));
-        }
-        return apiQueryString.toString();
-    }
+	protected String getWhereQueryString(RequestBean request,
+			Integer requiredNoOfAds) throws CitysearchException {
+		Map<String, String> parameters = new HashMap<String, String>();
+		parameters.put(APIFieldNameConstants.PUBLISHER, request.getPublisher());
+		parameters.put(APIFieldNameConstants.WHAT, request.getWhat());
+		parameters.put(APIFieldNameConstants.WHERE, request.getWhere());
+		if (requiredNoOfAds != null && requiredNoOfAds != 0) {
+			parameters.put(APIFieldNameConstants.MAX, String
+					.valueOf(requiredNoOfAds));
+		}
+		parameters.put(APIFieldNameConstants.PLACEMENT, request
+				.getPlacementString());
+		return getQueryString(parameters);
+	}
 
-    protected String getLatLonQueryString(RequestBean request, Integer requiredNoOfAds)
-            throws CitysearchException {
-        StringBuilder apiQueryString = new StringBuilder(getLatLonQueryString(request));
-        if (requiredNoOfAds != null && requiredNoOfAds != 0) {
-            apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
-            apiQueryString.append(constructQueryParam("max", String.valueOf(requiredNoOfAds)));
-        }
-        return apiQueryString.toString();
-    }
+	protected String getLatLonQueryString(RequestBean request,
+			Integer requiredNoOfAds) throws CitysearchException {
+		Map<String, String> parameters = new HashMap<String, String>();
+		parameters.put(APIFieldNameConstants.PUBLISHER, request.getPublisher());
+		parameters.put(APIFieldNameConstants.WHAT, request.getWhat());
+		parameters.put(APIFieldNameConstants.LATITUDE, request.getLatitude());
+		parameters.put(APIFieldNameConstants.LONGITUDE, request.getLongitude());
+		if (!StringUtils.isBlank(request.getRadius())) {
+			parameters.put(APIFieldNameConstants.RADIUS, request.getRadius());
+		}
+		if (requiredNoOfAds != null && requiredNoOfAds != 0) {
+			parameters.put(APIFieldNameConstants.MAX, String
+					.valueOf(requiredNoOfAds));
+		}
+		parameters.put(APIFieldNameConstants.PLACEMENT, request
+				.getPlacementString());
+		return getQueryString(parameters);
+	}
 
-    private PFPAd toPFPAd(Element adElm) {
-        PFPAd ad = new PFPAd();
-        ad.setName(adElm.getChildText(CommonConstants.NAME));
-        ad.setRating(adElm.getChildText(REVIEW_RATING_TAG));
-        ad.setReviewCount(adElm.getChildText(REVIEWS_TAG));
-        ad.setDistance(adElm.getChildText(CommonConstants.DISTANCE));
-        ad.setCategory(adElm.getChildText(TAGLINE_TAG));
-        ad.setListingId(adElm.getChildText(LISTING_ID_TAG));
-        ad.setAdDisplayUrl(adElm.getChildText(AD_DISPLAY_URL_TAG));
-        ad.setImageUrl(adElm.getChildText(AD_IMAGE_URL_TAG));
-        ad.setPhone(adElm.getChildText(PHONE_TAG));
-        ad.setOffers(adElm.getChildText(CommonConstants.OFFERS));
-        ad.setDescription(adElm.getChildText(DESC_TAG));
-        ad.setStreet(adElm.getChildText(CommonConstants.STREET));
-        ad.setCity(adElm.getChildText(CommonConstants.CITY));
-        ad.setState(adElm.getChildText(CommonConstants.STATE));
-        ad.setPostalCode(adElm.getChildText(ZIP_TAG));
-        ad.setAdDestinationUrl(adElm.getChildText(AD_DESTINATION_URL));
-        ad.setLatitude(adElm.getChildText("latitude"));
-        ad.setLongitude(adElm.getChildText("longitude"));
-        return ad;
-    }
+	private String getCustomPFPLocationQueryString(RequestBean request,
+			Integer requiredNoOfAds) throws CitysearchException {
+		Map<String, String> parameters = new HashMap<String, String>();
+		parameters.put(APIFieldNameConstants.PUBLISHER, request.getPublisher());
+		parameters.put(APIFieldNameConstants.WHAT, request.getWhat());
+		if (!StringUtils.isEmpty(request.getWhere())) {
+			parameters.put(APIFieldNameConstants.WHERE, request.getWhere());
+		}
+		if (!StringUtils.isEmpty(request.getLatitude())) {
+			parameters.put(APIFieldNameConstants.LATITUDE, request
+					.getLatitude());
+		}
+		if (!StringUtils.isEmpty(request.getLongitude())) {
+			parameters.put(APIFieldNameConstants.LONGITUDE, request
+					.getLongitude());
+		}
+		if (!StringUtils.isBlank(request.getRadius())) {
+			parameters.put(APIFieldNameConstants.RADIUS, request.getRadius());
+		}
+		if (requiredNoOfAds != null && requiredNoOfAds != 0) {
+			parameters.put(APIFieldNameConstants.MAX, String
+					.valueOf(requiredNoOfAds));
+		}
+		parameters.put(APIFieldNameConstants.PLACEMENT, request
+				.getPlacementString());
+		if (request.isRotation()) {
+			parameters.put(APIFieldNameConstants.ROTATION, String
+					.valueOf(request.isRotation()));
+		}
+		return getQueryString(parameters);
+	}
 
-    private PFPAd toPFPAdBackfill(Element adElm) {
-        PFPAd ad = new PFPAd();
-        String category = adElm.getChildText(TAGLINE_TAG);
-        if (StringUtils.isNotBlank(category)) {
-            category = category.replaceAll("<b>", "");
-            category = category.replaceAll("</b>", "");
-            ad.setCategory(category);
-        }
-        ad.setImageUrl(adElm.getChildText(AD_IMAGE_URL_TAG));
+	private PFPAd toPFPAd(Element adElm) {
+		PFPAd ad = new PFPAd();
+		ad.setName(adElm.getChildText(CommonConstants.NAME));
+		ad.setRating(adElm.getChildText(REVIEW_RATING_TAG));
+		ad.setReviewCount(adElm.getChildText(REVIEWS_TAG));
+		ad.setDistance(adElm.getChildText(CommonConstants.DISTANCE));
+		ad.setCategory(adElm.getChildText(TAGLINE_TAG));
+		ad.setListingId(adElm.getChildText(LISTING_ID_TAG));
+		ad.setAdDisplayUrl(adElm.getChildText(AD_DISPLAY_URL_TAG));
+		ad.setImageUrl(adElm.getChildText(AD_IMAGE_URL_TAG));
+		ad.setPhone(adElm.getChildText(PHONE_TAG));
+		ad.setOffers(adElm.getChildText(CommonConstants.OFFERS));
+		ad.setDescription(adElm.getChildText(DESC_TAG));
+		ad.setStreet(adElm.getChildText(CommonConstants.STREET));
+		ad.setCity(adElm.getChildText(CommonConstants.CITY));
+		ad.setState(adElm.getChildText(CommonConstants.STATE));
+		ad.setPostalCode(adElm.getChildText(ZIP_TAG));
+		ad.setAdDestinationUrl(adElm.getChildText(AD_DESTINATION_URL));
+		ad.setLatitude(adElm.getChildText("latitude"));
+		ad.setLongitude(adElm.getChildText("longitude"));
+		return ad;
+	}
 
-        String description = adElm.getChildText(DESC_TAG);
-        if (StringUtils.isNotBlank(description)) {
-            description = description.replaceAll("<b>", "");
-            description = description.replaceAll("</b>", "");
-            ad.setDescription(description);
-        }
+	private PFPAd toPFPAdBackfill(Element adElm) {
+		PFPAd ad = new PFPAd();
+		String category = adElm.getChildText(TAGLINE_TAG);
+		if (StringUtils.isNotBlank(category)) {
+			category = category.replaceAll("<b>", "");
+			category = category.replaceAll("</b>", "");
+			ad.setCategory(category);
+		}
+		ad.setImageUrl(adElm.getChildText(AD_IMAGE_URL_TAG));
 
-        ad.setOffers(adElm.getChildText(CommonConstants.OFFERS));
-        ad.setAdDisplayUrl(adElm.getChildText(AD_DISPLAY_URL_TAG));
-        ad.setAdDestinationUrl(adElm.getChildText(AD_DESTINATION_URL));
-        ad.setListingId(adElm.getChildText(LISTING_ID_TAG));
-        ad.setPhone(adElm.getChildText(PHONE_TAG));
-        return ad;
-    }
+		String description = adElm.getChildText(DESC_TAG);
+		if (StringUtils.isNotBlank(description)) {
+			description = description.replaceAll("<b>", "");
+			description = description.replaceAll("</b>", "");
+			ad.setDescription(description);
+		}
 
-    private List<PFPAd> getNearbyPlacesBackfill(Document doc, int requiredNoOfBackfills)
-            throws CitysearchException {
-        log.info("PFPProxy.getNearbyPlacesBackfill: Begin");
-        List<PFPAd> backfills = null;
-        if (doc != null && doc.hasRootElement()) {
-            List<Element> backfillElms = new ArrayList<Element>();
-            Element rootElement = doc.getRootElement();
-            List<Element> children = rootElement.getChildren(AD_TAG);
-            if (children != null && !children.isEmpty()) {
-                for (Element elm : children) {
-                    String adType = StringUtils.trim(elm.getChildText(TYPE_TAG));
-                    if (adType != null && adType.equalsIgnoreCase(AD_TYPE_BACKFILL)) {
-                        backfillElms.add(elm);
-                    }
-                }
-                if (!backfillElms.isEmpty()) {
-                    List<Element> elmsToConvert = new ArrayList<Element>();
-                    if (backfillElms.size() >= requiredNoOfBackfills) {
-                        for (int idx = 0; idx < requiredNoOfBackfills; idx++) {
-                            elmsToConvert.add(backfillElms.get(idx));
-                        }
-                    } else {
-                        elmsToConvert = backfillElms;
-                    }
-                    backfills = new ArrayList<PFPAd>();
-                    for (Element elm : elmsToConvert) {
-                        backfills.add(toPFPAdBackfill(elm));
-                    }
-                }
-            }
-        }
-        log.info("PFPProxy.getNearbyPlacesBackfill: End");
-        return backfills;
-    }
+		ad.setOffers(adElm.getChildText(CommonConstants.OFFERS));
+		ad.setAdDisplayUrl(adElm.getChildText(AD_DISPLAY_URL_TAG));
+		ad.setAdDestinationUrl(adElm.getChildText(AD_DESTINATION_URL));
+		ad.setListingId(adElm.getChildText(LISTING_ID_TAG));
+		ad.setPhone(adElm.getChildText(PHONE_TAG));
+		return ad;
+	}
 
-    private List<PFPAd> getAds(RequestBean request, Document doc) throws CitysearchException {
-        log.info("PFPProxy.getAds: Begin");
-        List<PFPAd> pfpAds = new ArrayList<PFPAd>();
-        if (doc != null && doc.hasRootElement()) {
-            SortedMap<Double, List<Element>> elmsSortedByDistance = new TreeMap<Double, List<Element>>();
-            Element rootElement = doc.getRootElement();
-            List<Element> children = rootElement.getChildren(AD_TAG);
-            if (children != null && !children.isEmpty()) {
-                for (Element elm : children) {
-                    String adType = StringUtils.trim(elm.getChildText(TYPE_TAG));
-                    if (adType != null && adType.equalsIgnoreCase(AD_TYPE_PFP)) {
-                        pfpAds.add(toPFPAd(elm));
-                    }
-                }
-            }
-        }
-        log.info("PFPProxy.getAds: End");
-        return pfpAds;
-    }
+	private List<PFPAd> getNearbyPlacesBackfill(Document doc,
+			int requiredNoOfBackfills) throws CitysearchException {
+		log.info("PFPProxy.getNearbyPlacesBackfill: Begin");
+		List<PFPAd> backfills = null;
+		if (doc != null && doc.hasRootElement()) {
+			List<Element> backfillElms = new ArrayList<Element>();
+			Element rootElement = doc.getRootElement();
+			List<Element> children = rootElement.getChildren(AD_TAG);
+			if (children != null && !children.isEmpty()) {
+				for (Element elm : children) {
+					String adType = StringUtils
+							.trim(elm.getChildText(TYPE_TAG));
+					if (adType != null
+							&& adType.equalsIgnoreCase(AD_TYPE_BACKFILL)) {
+						backfillElms.add(elm);
+					}
+				}
+				if (!backfillElms.isEmpty()) {
+					List<Element> elmsToConvert = new ArrayList<Element>();
+					if (backfillElms.size() >= requiredNoOfBackfills) {
+						for (int idx = 0; idx < requiredNoOfBackfills; idx++) {
+							elmsToConvert.add(backfillElms.get(idx));
+						}
+					} else {
+						elmsToConvert = backfillElms;
+					}
+					backfills = new ArrayList<PFPAd>();
+					for (Element elm : elmsToConvert) {
+						backfills.add(toPFPAdBackfill(elm));
+					}
+				}
+			}
+		}
+		log.info("PFPProxy.getNearbyPlacesBackfill: End");
+		return backfills;
+	}
 
-    @Deprecated
-    private List<PFPAd> getClosestPlaces(RequestBean request, Document doc, int requiredSize)
-            throws CitysearchException {
-        log.info("PFPProxy.getClosestPlaces: Begin");
-        List<PFPAd> pfpAds = null;
-        if (doc != null && doc.hasRootElement()) {
-            SortedMap<Double, List<Element>> elmsSortedByDistance = new TreeMap<Double, List<Element>>();
-            Element rootElement = doc.getRootElement();
-            List<Element> children = rootElement.getChildren(AD_TAG);
-            if (children != null && !children.isEmpty()) {
-                for (Element elm : children) {
-                    String adType = StringUtils.trim(elm.getChildText(TYPE_TAG));
-                    if (adType != null && adType.equalsIgnoreCase(AD_TYPE_PFP)) {
-                        String distanceStr = elm.getChildText(CommonConstants.DISTANCE);
-                        double distance = 0.0;
-                        if (!StringUtils.isBlank(distanceStr) && StringUtils.isNumeric(distanceStr)) {
-                            distance = Double.valueOf(distanceStr);
-                        }
-                        if (elmsSortedByDistance.containsKey(distance)) {
-                            elmsSortedByDistance.get(distance).add(elm);
-                        } else {
-                            List<Element> elms = new ArrayList<Element>();
-                            elms.add(elm);
-                            elmsSortedByDistance.put(distance, elms);
-                        }
-                    }
-                }
-                pfpAds = getTopResults(request, elmsSortedByDistance, requiredSize);
-            }
-        }
-        log.info("PFPProxy.getClosestPlaces: End");
-        return pfpAds;
-    }
+	private List<PFPAd> getAds(RequestBean request, Document doc)
+			throws CitysearchException {
+		log.info("PFPProxy.getAds: Begin");
+		List<PFPAd> pfpAds = new ArrayList<PFPAd>();
+		if (doc != null && doc.hasRootElement()) {
+			SortedMap<Double, List<Element>> elmsSortedByDistance = new TreeMap<Double, List<Element>>();
+			Element rootElement = doc.getRootElement();
+			List<Element> children = rootElement.getChildren(AD_TAG);
+			if (children != null && !children.isEmpty()) {
+				for (Element elm : children) {
+					String adType = StringUtils
+							.trim(elm.getChildText(TYPE_TAG));
+					if (adType != null && adType.equalsIgnoreCase(AD_TYPE_PFP)) {
+						pfpAds.add(toPFPAd(elm));
+					}
+				}
+			}
+		}
+		log.info("PFPProxy.getAds: End");
+		return pfpAds;
+	}
 
-    @Deprecated
-    private List<PFPAd> getTopReviewedPlaces(RequestBean request, Document doc,
-            Set<String> listingsToIgnore, int requiredSize) throws CitysearchException {
-        log.info("PFPProxy.getTopReviewedPlaces: Begin");
-        List<PFPAd> pfpAds = null;
-        if (doc != null && doc.hasRootElement()) {
-            SortedMap<Double, List<Element>> elmsSortedByRating = new TreeMap<Double, List<Element>>();
-            Element rootElement = doc.getRootElement();
-            List<Element> children = rootElement.getChildren(AD_TAG);
-            if (children != null && !children.isEmpty()) {
-                for (Element elm : children) {
-                    String adType = StringUtils.trim(elm.getChildText(TYPE_TAG));
-                    String listingId = StringUtils.trim(elm.getChildText(LISTING_ID_TAG));
-                    if (adType != null && adType.equalsIgnoreCase(AD_TYPE_PFP)
-                            && !listingsToIgnore.contains(listingId)) {
-                        String rating = elm.getChildText(REVIEW_RATING_TAG);
-                        double ratings = Utils.getRatingValue(rating);
-                        if (elmsSortedByRating.containsKey(ratings)) {
-                            elmsSortedByRating.get(ratings).add(elm);
-                        } else {
-                            List<Element> elms = new ArrayList<Element>();
-                            elms.add(elm);
-                            elmsSortedByRating.put(ratings, elms);
-                        }
-                    }
-                }
-                pfpAds = getTopResults(request, elmsSortedByRating, requiredSize);
-            }
-        }
-        log.info("PFPProxy.getTopReviewedPlaces: End");
-        return pfpAds;
-    }
+	@Deprecated
+	private List<PFPAd> getClosestPlaces(RequestBean request, Document doc,
+			int requiredSize) throws CitysearchException {
+		log.info("PFPProxy.getClosestPlaces: Begin");
+		List<PFPAd> pfpAds = null;
+		if (doc != null && doc.hasRootElement()) {
+			SortedMap<Double, List<Element>> elmsSortedByDistance = new TreeMap<Double, List<Element>>();
+			Element rootElement = doc.getRootElement();
+			List<Element> children = rootElement.getChildren(AD_TAG);
+			if (children != null && !children.isEmpty()) {
+				for (Element elm : children) {
+					String adType = StringUtils
+							.trim(elm.getChildText(TYPE_TAG));
+					if (adType != null && adType.equalsIgnoreCase(AD_TYPE_PFP)) {
+						String distanceStr = elm
+								.getChildText(CommonConstants.DISTANCE);
+						double distance = 0.0;
+						if (!StringUtils.isBlank(distanceStr)
+								&& StringUtils.isNumeric(distanceStr)) {
+							distance = Double.valueOf(distanceStr);
+						}
+						if (elmsSortedByDistance.containsKey(distance)) {
+							elmsSortedByDistance.get(distance).add(elm);
+						} else {
+							List<Element> elms = new ArrayList<Element>();
+							elms.add(elm);
+							elmsSortedByDistance.put(distance, elms);
+						}
+					}
+				}
+				pfpAds = getTopResults(request, elmsSortedByDistance,
+						requiredSize);
+			}
+		}
+		log.info("PFPProxy.getClosestPlaces: End");
+		return pfpAds;
+	}
 
-    @Deprecated
-    private List<PFPAd> getTopResults(RequestBean request,
-            SortedMap<Double, List<Element>> sortedElms, int requiredSize)
-            throws CitysearchException {
-        List<PFPAd> pfpAds = null;
-        if (!sortedElms.isEmpty()) {
-            List<Element> elmsToConvert = new ArrayList<Element>();
-            for (int j = 0; j < sortedElms.size(); j++) {
-                if (elmsToConvert.size() >= requiredSize) {
-                    break;
-                }
-                Double key = sortedElms.firstKey();
-                List<Element> elms = sortedElms.remove(key);
-                for (int idx = 0; idx < elms.size(); idx++) {
-                    if (elmsToConvert.size() == requiredSize) {
-                        break;
-                    }
-                    elmsToConvert.add(elms.get(idx));
-                }
-            }
+	@Deprecated
+	private List<PFPAd> getTopReviewedPlaces(RequestBean request, Document doc,
+			Set<String> listingsToIgnore, int requiredSize)
+			throws CitysearchException {
+		log.info("PFPProxy.getTopReviewedPlaces: Begin");
+		List<PFPAd> pfpAds = null;
+		if (doc != null && doc.hasRootElement()) {
+			SortedMap<Double, List<Element>> elmsSortedByRating = new TreeMap<Double, List<Element>>();
+			Element rootElement = doc.getRootElement();
+			List<Element> children = rootElement.getChildren(AD_TAG);
+			if (children != null && !children.isEmpty()) {
+				for (Element elm : children) {
+					String adType = StringUtils
+							.trim(elm.getChildText(TYPE_TAG));
+					String listingId = StringUtils.trim(elm
+							.getChildText(LISTING_ID_TAG));
+					if (adType != null && adType.equalsIgnoreCase(AD_TYPE_PFP)
+							&& !listingsToIgnore.contains(listingId)) {
+						String rating = elm.getChildText(REVIEW_RATING_TAG);
+						double ratings = Utils.getRatingValue(rating);
+						if (elmsSortedByRating.containsKey(ratings)) {
+							elmsSortedByRating.get(ratings).add(elm);
+						} else {
+							List<Element> elms = new ArrayList<Element>();
+							elms.add(elm);
+							elmsSortedByRating.put(ratings, elms);
+						}
+					}
+				}
+				pfpAds = getTopResults(request, elmsSortedByRating,
+						requiredSize);
+			}
+		}
+		log.info("PFPProxy.getTopReviewedPlaces: End");
+		return pfpAds;
+	}
 
-            pfpAds = new ArrayList<PFPAd>();
-            for (Element elm : elmsToConvert) {
-                pfpAds.add(toPFPAd(elm));
-            }
-        }
-        return pfpAds;
-    }
+	@Deprecated
+	private List<PFPAd> getTopResults(RequestBean request,
+			SortedMap<Double, List<Element>> sortedElms, int requiredSize)
+			throws CitysearchException {
+		List<PFPAd> pfpAds = null;
+		if (!sortedElms.isEmpty()) {
+			List<Element> elmsToConvert = new ArrayList<Element>();
+			for (int j = 0; j < sortedElms.size(); j++) {
+				if (elmsToConvert.size() >= requiredSize) {
+					break;
+				}
+				Double key = sortedElms.firstKey();
+				List<Element> elms = sortedElms.remove(key);
+				for (int idx = 0; idx < elms.size(); idx++) {
+					if (elmsToConvert.size() == requiredSize) {
+						break;
+					}
+					elmsToConvert.add(elms.get(idx));
+				}
+			}
 
-    public PFPResponse getAdsFromPFPLocation(RequestBean request, int requiredNoOfAds)
-            throws InvalidRequestParametersException, CitysearchException {
-        request.validate();
-        Properties properties = PropertiesLoader.getAPIProperties();
-        StringBuilder urlStringBuilder = new StringBuilder(properties.getProperty(PFP_LOCATION_URL));
-        urlStringBuilder.append(getLatLonQueryString(request, requiredNoOfAds));
-        log.info("PFPProxy.getAdsFromPFPLocation: Query: " + urlStringBuilder.toString());
-        try {
-            pfpLocationResponse = getAPIResponse(urlStringBuilder.toString(), null);
-            log.info("PFPProxy.getAdsFromPFPLocation: successful response");
-        } catch (InvalidHttpResponseException ihe) {
-            throw new CitysearchException(this.getClass().getName(), "getAdsFromPFPLocation", ihe);
-        }
-        PFPResponse response = new PFPResponse();
-        List<PFPAd> ads = getAds(request, pfpLocationResponse);
-        response.setLocalPfp(ads);
-        return response;
-    }
+			pfpAds = new ArrayList<PFPAd>();
+			for (Element elm : elmsToConvert) {
+				pfpAds.add(toPFPAd(elm));
+			}
+		}
+		return pfpAds;
+	}
 
-    public PFPResponse getAdsFromPFP(RequestBean request, int requiredNoOfAds,
-            Set<String> listingIdsToIgnore) throws InvalidRequestParametersException,
-            CitysearchException {
-        log.info("PFPProxy.getAdsFromPFP: Begin");
-        request.validate();
-        Properties properties = PropertiesLoader.getAPIProperties();
-        StringBuilder urlStringBuilder = new StringBuilder(properties.getProperty(PFP_URL));
-        urlStringBuilder.append(getWhereQueryString(request, requiredNoOfAds));
-        log.info("PFPProxy.getAdsFromPFP: Query: " + urlStringBuilder.toString());
-        try {
-            pfpResponse = getAPIResponse(urlStringBuilder.toString(), null);
-            log.info("PFPProxy.getAdsFromPFP: successful response");
-        } catch (InvalidHttpResponseException ihe) {
-            throw new CitysearchException(this.getClass().getName(), "getAdsFromPFP", ihe);
-        }
-        PFPResponse response = new PFPResponse();
-        List<PFPAd> ads = getAds(request, pfpResponse);
-        response.setLocalPfp(ads);
-        return response;
-    }
+	public PFPResponse getAdsFromPFPLocation(RequestBean request,
+			int requiredNoOfAds) throws InvalidRequestParametersException,
+			CitysearchException {
+		request.validate();
+		Properties properties = PropertiesLoader.getAPIProperties();
+		StringBuilder urlStringBuilder = new StringBuilder(properties
+				.getProperty(PFP_LOCATION_URL));
+		urlStringBuilder.append(getLatLonQueryString(request, requiredNoOfAds));
+		log.info("PFPProxy.getAdsFromPFPLocation: Query: "
+				+ urlStringBuilder.toString());
+		try {
+			pfpLocationResponse = getAPIResponse(urlStringBuilder.toString(),
+					null);
+			log.info("PFPProxy.getAdsFromPFPLocation: successful response");
+		} catch (InvalidHttpResponseException ihe) {
+			throw new CitysearchException(this.getClass().getName(),
+					"getAdsFromPFPLocation", ihe);
+		}
+		PFPResponse response = new PFPResponse();
+		List<PFPAd> ads = getAds(request, pfpLocationResponse);
+		response.setLocalPfp(ads);
+		return response;
+	}
 
-    public PFPResponse getBackFill(int requiredNoOfBackfills) throws CitysearchException {
-        List<PFPAd> backfills = getNearbyPlacesBackfill(pfpResponse, requiredNoOfBackfills);
-        PFPResponse response = new PFPResponse();
-        response.setBackfill(backfills);
-        return response;
-    }
+	public PFPResponse getAdsFromPFPLocationCustom(RequestBean request,
+			int requiredNoOfAds) throws InvalidRequestParametersException,
+			CitysearchException {
+		request.validate();
+		Properties properties = PropertiesLoader.getAPIProperties();
+		StringBuilder urlStringBuilder = new StringBuilder(properties
+				.getProperty(PFP_LOCATION_URL));
+		urlStringBuilder.append(getCustomPFPLocationQueryString(request,
+				requiredNoOfAds));
+		log.info("PFPProxy.getAdsFromPFPLocationCustom: Query: "
+				+ urlStringBuilder.toString());
+		try {
+			pfpLocationResponse = getAPIResponse(urlStringBuilder.toString(),
+					null);
+			log
+					.info("PFPProxy.getAdsFromPFPLocationCustom: successful response");
+		} catch (InvalidHttpResponseException ihe) {
+			throw new CitysearchException(this.getClass().getName(),
+					"getAdsFromPFPLocationCustom", ihe);
+		}
+		PFPResponse response = new PFPResponse();
+		List<PFPAd> ads = getAds(request, pfpLocationResponse);
+		response.setLocalPfp(ads);
+		return response;
+	}
+
+	public PFPResponse getAdsFromPFP(RequestBean request, int requiredNoOfAds,
+			Set<String> listingIdsToIgnore)
+			throws InvalidRequestParametersException, CitysearchException {
+		log.info("PFPProxy.getAdsFromPFP: Begin");
+		request.validate();
+		Properties properties = PropertiesLoader.getAPIProperties();
+		StringBuilder urlStringBuilder = new StringBuilder(properties
+				.getProperty(PFP_URL));
+		urlStringBuilder.append(getWhereQueryString(request, requiredNoOfAds));
+		log.info("PFPProxy.getAdsFromPFP: Query: "
+				+ urlStringBuilder.toString());
+		try {
+			pfpResponse = getAPIResponse(urlStringBuilder.toString(), null);
+			log.info("PFPProxy.getAdsFromPFP: successful response");
+		} catch (InvalidHttpResponseException ihe) {
+			throw new CitysearchException(this.getClass().getName(),
+					"getAdsFromPFP", ihe);
+		}
+		PFPResponse response = new PFPResponse();
+		List<PFPAd> ads = getAds(request, pfpResponse);
+		response.setLocalPfp(ads);
+		return response;
+	}
+
+	public PFPResponse getBackFill(int requiredNoOfBackfills)
+			throws CitysearchException {
+		List<PFPAd> backfills = new ArrayList<PFPAd>();
+		if (pfpLocationResponse != null) {
+			List<PFPAd> locationBackfills = getNearbyPlacesBackfill(
+					pfpLocationResponse, requiredNoOfBackfills);
+			if (locationBackfills != null && !locationBackfills.isEmpty()) {
+				backfills.addAll(locationBackfills);
+			}
+		}
+		if (pfpResponse != null) {
+			requiredNoOfBackfills = requiredNoOfBackfills - backfills.size();
+			List<PFPAd> pfpfills = getNearbyPlacesBackfill(pfpResponse,
+					requiredNoOfBackfills);
+			if (pfpfills != null && !pfpfills.isEmpty()) {
+				backfills.addAll(pfpfills);
+			}
+		}
+		PFPResponse response = new PFPResponse();
+		response.setBackfill(backfills);
+		return response;
+	}
 }

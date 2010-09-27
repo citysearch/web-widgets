@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 import java.util.Set;
@@ -94,22 +95,18 @@ public class ProfileProxy extends AbstractProxy {
 	 */
 	private String getProfileQueryString(RequestBean request)
 			throws CitysearchException {
-		StringBuilder strBuilder = new StringBuilder();
+		Map<String, String> parameters = new HashMap<String, String>();
 		Properties properties = PropertiesLoader.getAPIProperties();
 		String apiKey = properties
 				.getProperty(CommonConstants.API_KEY_PROPERTY);
-		strBuilder.append(constructQueryParam(APIFieldNameConstants.API_KEY,
-				apiKey));
-		strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-		strBuilder.append(constructQueryParam(APIFieldNameConstants.PUBLISHER,
-				request.getPublisher()));
-		strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-		strBuilder.append(constructQueryParam(APIFieldNameConstants.LISTING_ID,
-				request.getListingId()));
-		strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-		strBuilder.append(constructQueryParam(APIFieldNameConstants.CLIENT_IP,
-				request.getClientIP()));
-		return strBuilder.toString();
+		parameters.put(APIFieldNameConstants.API_KEY, apiKey);
+		parameters.put(APIFieldNameConstants.PUBLISHER, request.getPublisher());
+		parameters
+				.put(APIFieldNameConstants.LISTING_ID, request.getListingId());
+		parameters.put(APIFieldNameConstants.CLIENT_IP, request.getClientIP());
+		parameters.put(APIFieldNameConstants.PLACEMENT, request
+				.getPlacementString());
+		return getQueryString(parameters);
 	}
 
 	/**

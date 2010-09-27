@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -85,105 +86,60 @@ public class AbstractProxy {
 		return xmlDocument;
 	}
 
+	protected String getQueryString(Map<String, String> parameters)
+			throws CitysearchException {
+		StringBuilder query = new StringBuilder();
+		if (parameters != null && !parameters.isEmpty()) {
+			int idx = 0;
+			for (String key : parameters.keySet()) {
+				if (idx > 0)
+					query.append(CommonConstants.SYMBOL_AMPERSAND);
+				query.append(constructQueryParam(key, parameters.get(key)));
+				++idx;
+			}
+		}
+		return query.toString();
+	}
+
 	protected String getQueryString(RequestBean request)
 			throws CitysearchException {
-		StringBuilder apiQueryString = new StringBuilder();
-
+		Map<String, String> parameters = new HashMap<String, String>();
 		Properties properties = PropertiesLoader.getAPIProperties();
 		String apiKey = properties
 				.getProperty(CommonConstants.API_KEY_PROPERTY);
-		apiQueryString.append(constructQueryParam(
-				APIFieldNameConstants.API_KEY, apiKey));
-
-		apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
-		apiQueryString.append(constructQueryParam(
-				APIFieldNameConstants.PUBLISHER, request.getPublisher()));
-
-		apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
-		apiQueryString.append(constructQueryParam(APIFieldNameConstants.WHAT,
-				request.getWhat()));
-
+		parameters.put(APIFieldNameConstants.API_KEY, apiKey);
+		parameters.put(APIFieldNameConstants.PUBLISHER, request.getPublisher());
+		parameters.put(APIFieldNameConstants.WHAT, request.getWhat());
 		if (!StringUtils.isBlank(request.getLatitude())
 				&& !StringUtils.isBlank(request.getLongitude())) {
-			apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
-			apiQueryString.append(constructQueryParam(
-					APIFieldNameConstants.LATITUDE, request.getLatitude()));
-
-			apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
-			apiQueryString.append(constructQueryParam(
-					APIFieldNameConstants.LONGITUDE, request.getLongitude()));
-
+			parameters.put(APIFieldNameConstants.LATITUDE, request
+					.getLatitude());
+			parameters.put(APIFieldNameConstants.LONGITUDE, request
+					.getLongitude());
 			String radius = (StringUtils.isBlank(request.getRadius())) ? String
 					.valueOf(CommonConstants.DEFAULT_RADIUS) : request
 					.getRadius();
-			apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
-			apiQueryString.append(constructQueryParam(
-					APIFieldNameConstants.RADIUS, radius));
+			parameters.put(APIFieldNameConstants.RADIUS, radius);
 		} else {
-			apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
-			apiQueryString.append(constructQueryParam(
-					APIFieldNameConstants.WHERE, request.getWhere()));
+			parameters.put(APIFieldNameConstants.WHERE, request.getWhere());
 		}
-		return apiQueryString.toString();
-	}
-
-	protected String getLatLonQueryString(RequestBean request)
-			throws CitysearchException {
-		StringBuilder apiQueryString = new StringBuilder();
-
-		Properties properties = PropertiesLoader.getAPIProperties();
-		String apiKey = properties
-				.getProperty(CommonConstants.API_KEY_PROPERTY);
-		apiQueryString.append(constructQueryParam(
-				APIFieldNameConstants.API_KEY, apiKey));
-
-		apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
-		apiQueryString.append(constructQueryParam(
-				APIFieldNameConstants.PUBLISHER, request.getPublisher()));
-
-		apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
-		apiQueryString.append(constructQueryParam(APIFieldNameConstants.WHAT,
-				request.getWhat()));
-
-		apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
-		apiQueryString.append(constructQueryParam(
-				APIFieldNameConstants.LATITUDE, request.getLatitude()));
-
-		apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
-		apiQueryString.append(constructQueryParam(
-				APIFieldNameConstants.LONGITUDE, request.getLongitude()));
-
-		String radius = (StringUtils.isBlank(request.getRadius())) ? String
-				.valueOf(CommonConstants.DEFAULT_RADIUS) : request.getRadius();
-		apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
-		apiQueryString.append(constructQueryParam(APIFieldNameConstants.RADIUS,
-				radius));
-
-		return apiQueryString.toString();
+		parameters.put(APIFieldNameConstants.PLACEMENT, request
+				.getPlacementString());
+		return getQueryString(parameters);
 	}
 
 	protected String getWhereQueryString(RequestBean request)
 			throws CitysearchException {
-		StringBuilder apiQueryString = new StringBuilder();
-
+		Map<String, String> parameters = new HashMap<String, String>();
 		Properties properties = PropertiesLoader.getAPIProperties();
 		String apiKey = properties
 				.getProperty(CommonConstants.API_KEY_PROPERTY);
-		apiQueryString.append(constructQueryParam(
-				APIFieldNameConstants.API_KEY, apiKey));
-
-		apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
-		apiQueryString.append(constructQueryParam(
-				APIFieldNameConstants.PUBLISHER, request.getPublisher()));
-
-		apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
-		apiQueryString.append(constructQueryParam(APIFieldNameConstants.WHAT,
-				request.getWhat()));
-
-		apiQueryString.append(CommonConstants.SYMBOL_AMPERSAND);
-		apiQueryString.append(constructQueryParam(APIFieldNameConstants.WHERE,
-				request.getWhere()));
-
-		return apiQueryString.toString();
+		parameters.put(APIFieldNameConstants.API_KEY, apiKey);
+		parameters.put(APIFieldNameConstants.PUBLISHER, request.getPublisher());
+		parameters.put(APIFieldNameConstants.WHAT, request.getWhat());
+		parameters.put(APIFieldNameConstants.WHERE, request.getWhere());
+		parameters.put(APIFieldNameConstants.PLACEMENT, request
+				.getPlacementString());
+		return getQueryString(parameters);
 	}
 }

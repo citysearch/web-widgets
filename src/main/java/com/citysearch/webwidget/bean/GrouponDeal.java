@@ -1,5 +1,7 @@
 package com.citysearch.webwidget.bean;
 
+import java.util.List;
+
 public class GrouponDeal {
 	private String id;
 	private String dealUrl;
@@ -26,8 +28,16 @@ public class GrouponDeal {
 	private String value;
 	private String discountAmount;
 	private String discountPercent;
-
+	private List<String> details;
 	private Profile profile;
+
+	public List<String> getDetails() {
+		return details;
+	}
+
+	public void setDetails(List<String> details) {
+		this.details = details;
+	}
 
 	public String getId() {
 		return id;

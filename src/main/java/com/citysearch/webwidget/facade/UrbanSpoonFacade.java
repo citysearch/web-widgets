@@ -60,6 +60,7 @@ public class UrbanSpoonFacade extends AbstractGrouponOffersFacade {
             request.setDartClickTrackUrl(grouponTrackingUrl.toString());
             GrouponDeal deal = toGrouponDeal(request, response);
             dealsResponse.setGrouponDeal(deal);
+            /*
             // Reset the what so that the ads are relevant
             request.setWhat(deal.getVendorName());
 
@@ -71,7 +72,7 @@ public class UrbanSpoonFacade extends AbstractGrouponOffersFacade {
             dealsResponse.setSearchResults(nearbyResponse.getSearchResults());
             dealsResponse.setBackfill(nearbyResponse.getBackfill());
             dealsResponse.setHouseAds(nearbyResponse.getHouseAds());
-
+			*/
         } else {
             //Set the adunit name to offer so that we use the correct field properites.
             request.setAdUnitName(CommonConstants.AD_UNIT_NAME_OFFERS);

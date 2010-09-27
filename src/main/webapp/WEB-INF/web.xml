@@ -38,6 +38,17 @@
     <!-- Servlets & Mappings-->
     <servlet>
         <description />
+        <display-name>CitySearchBootstrapServlet</display-name>
+        <servlet-name>CitySearchBootstrapServlet</servlet-name>
+        <servlet-class>com.citysearch.webwidget.servlet.CitySearchBootstrapServlet</servlet-class>
+	   	<load-on-startup>0</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CitySearchBootstrapServlet</servlet-name>
+        <url-pattern>/init</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <description />
         <display-name>HealthCheckServlet</display-name>
         <servlet-name>HealthCheckServlet</servlet-name>
         <servlet-class>com.citysearch.webwidget.servlet.HealthCheckServlet</servlet-class>
@@ -57,26 +68,24 @@
         <servlet-name>CitySearchServlet</servlet-name>
         <url-pattern>/getwidget</url-pattern>
     </servlet-mapping>
-
+	
+	<servlet>
+        <description />
+        <display-name>CitySearchCSSServlet</display-name>
+        <servlet-name>CitySearchCSSServlet</servlet-name>
+        <servlet-class>com.citysearch.webwidget.servlet.CitySearchCSSServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CitySearchCSSServlet</servlet-name>
+        <url-pattern>/getcss</url-pattern>
+    </servlet-mapping>
+    
     <servlet>
         <servlet-name>jspSupportServlet</servlet-name>
         <servlet-class>org.apache.struts2.views.JspSupportServlet</servlet-class>
         <load-on-startup>5</load-on-startup>
     </servlet>
-    <!--
-    <servlet>
-        <servlet-name>ImageServlet</servlet-name>
-        <servlet-class>net.jawr.web.servlet.JawrServlet</servlet-class>
-        <init-param>
-            <param-name>configLocation</param-name>
-            <param-value>/jawr.properties</param-value>
-        </init-param>
-        <init-param>
-            <param-name>type</param-name>
-            <param-value>img</param-value>
-        </init-param>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
+    
     <servlet>
         <servlet-name>CSSServlet</servlet-name>
         <servlet-class>net.jawr.web.servlet.JawrServlet</servlet-class>
@@ -94,19 +103,19 @@
         <servlet-name>CSSServlet</servlet-name>
         <url-pattern>*.css</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ImageServlet</servlet-name>
-        <url-pattern>*.png</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ImageServlet</servlet-name>
-        <url-pattern>*.gif</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ImageServlet</servlet-name>
-        <url-pattern>*.jpg</url-pattern>
-    </servlet-mapping>
-    -->
+    
+    <servlet>
+		<description>
+		</description>
+		<display-name>SkyNetSearchServlet</display-name>
+		<servlet-name>SkyNetSearchServlet</servlet-name>
+		<servlet-class>com.citysearch.webwidget.servlet.SkyNetSearchServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>SkyNetSearchServlet</servlet-name>
+		<url-pattern>/getskynet</url-pattern>
+	</servlet-mapping>
+	
     <!-- Welcome file lists -->
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>

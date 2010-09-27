@@ -57,17 +57,15 @@ public class SearchProxy extends AbstractProxy {
 					double distance = Utils.getDistance(sourceLatitude,
 							sourceLongitude, businessLatitude,
 							businessLongitude);
-					if (childrenSize <= requiredNoOfLocations) {
-						// Since we are rounding the distance to the 10th,
-						// There might be
-						// multiple listings with the same distance.
-						if (elmsSortedByDistance.containsKey(distance)) {
-							elmsSortedByDistance.get(distance).add(elm);
-						} else {
-							List<Element> elms = new ArrayList<Element>();
-							elms.add(elm);
-							elmsSortedByDistance.put(distance, elms);
-						}
+					// Since we are rounding the distance to the 10th,
+					// There might be
+					// multiple listings with the same distance.
+					if (elmsSortedByDistance.containsKey(distance)) {
+						elmsSortedByDistance.get(distance).add(elm);
+					} else {
+						List<Element> elms = new ArrayList<Element>();
+						elms.add(elm);
+						elmsSortedByDistance.put(distance, elms);
 					}
 				}
 				if (!elmsSortedByDistance.isEmpty()) {

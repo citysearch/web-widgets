@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Userpage</title>
+    <meta name="keywords" content="car, auto" />
+    <link href="http://contentads.citygridmedia.com/ads/static/css/citysearch.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" language="javascript">
+    function getHostingURL() {
+        var HostingURL = document.getElementById('txtHostingURL').value;
+        if(cg)
+        {
+            cg.HostingURL = document.getElementById('txtHostingURL').value;
+            cg.what = document.getElementById('txtWhat').value;
+            cg.where = document.getElementById('txtWhere').value;
+            
+            document.getElementById(cg.target).innerHTML = '';
+            var scriptSrc = document.getElementById("CSWScript").src;
+            var data = eval(scriptSrc.split("?var=")[1]);
+            data = citygrid.common.checkInput(data);
+        }
+    }
+	function displayWhatWhere()
+	{
+	    try
+	    {
+	        if(cg)
+	        {
+	            document.getElementById('DivWhatWhere').innerHTML = "what: " + cg.what + ", Where:" + cg.where;
+	        }
+	    }
+	    catch (em) { 
+	    }
+	    setTimeout(displayWhatWhere, 1000);
+	}    
+    
+	window.addEvent('domready', function() {
+	    setTimeout(displayWhatWhere, 1000);
+	 });
+
+</script>
+</head>
+
+<body onload="setTimeout(displayWhatWhere, 1000);">
+    <H1><a href="Index.html">Back</a></H1>
+
+    <div id="DivWhatWhere" style="vertical-align: top;font-size:large;font-style:bold; "></div>
+    <br />
+    <div id="cgAdUnit" style="vertical-align: top; ">
+    </div>
+    <script type="text/javascript">
+        var cg = {
+            target: 'cgAdUnit',
+            adUnitName: 'nearby',                       // requesting for the Nearby Places ad unit
+            adUnitSize: '300x250',                      // requesting for the Mantle Ad Size
+            what: '',
+            where: 'Los Angeles',
+            publisher: 'insider_pages',
+            callBackUrl: '',
+            callBackFunction: 'navigate',
+            latitude: '',
+            longitude: '',
+            tags: '',
+            radius: 25,
+            clientIP: '75.200.154.76',
+            HostingURL: 'http://www.eatsushi.com'
+        };
+        function navigate(listing_id, phone)
+        {
+            // Map id passed to insider pages id
+            if (listing_id=="41735803") listing_id="3710603753";
+            if (listing_id=="37243591") listing_id = "15240030513";
+            if (listing_id=="603300392") listing_id="15250644776";
+            cgLaunch("http://www.insiderpages.com/b/" + listing_id, "insiderpages", "");
+        }
+        document.write('<script id="CSWScript" type="text/javascript" src="http://localhost:8080/ads/static/js/CSWidgetAPI.js?var=cg"><\/script>');
+    </script>
+
+<br />
+
+<table border="1">
+<tr>
+<td>
+Enter anyone of following:
+</td>
+</tr>
+<tr>
+<td>
+Hosting URL: <textarea id="txtHostingURL" style="height:25px;width:600px;overflow-y:scroll;">http://www.eatsushi.com</textarea>
+</td>
+</tr>
+<tr>
+<td>
+<textarea id="txtWhat" style="display:none;height:25px;width:600px;overflow-y:scroll;"></textarea>
+<br />
+<textarea id="txtWhere" style="display:none;height:25px;width:600px;overflow-y:scroll;">Los angeles</textarea>
+<br />
+</td>
+</tr>
+
+</table>
+<input id="Button2" type="button" value="ChangeHostingURL" onclick="getHostingURL();"/>
+</body>
+</html>

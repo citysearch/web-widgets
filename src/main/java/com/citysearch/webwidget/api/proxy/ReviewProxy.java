@@ -66,11 +66,6 @@ public class ReviewProxy extends AbstractProxy {
 			strBuilder.append(constructQueryParam(APIFieldNameConstants.MAX,
 					request.getMax()));
 		}
-		if (!StringUtils.isEmpty(request.getPlacement())) {
-			strBuilder.append(CommonConstants.SYMBOL_AMPERSAND);
-			strBuilder.append(constructQueryParam(
-					APIFieldNameConstants.PLACEMENT, request.getPlacement()));
-		}
 		return strBuilder.toString();
 	}
 

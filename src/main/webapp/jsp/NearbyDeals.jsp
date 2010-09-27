@@ -20,7 +20,7 @@
             <div class="ctsrch_groupon_mid clearfix">
                 <div class="ctsrch_leftSide">
                     <div class="ctsrch_bizPhoto">
-                        <a href="<s:property value="dealsResponse.grouponDeal.dealUrl" />"><img width="74px" height="58px" src="<s:property value="dealsResponse.grouponDeal.mediumImageUrl" />" border="0"/></a>
+                        <a href="<s:property value="dealsResponse.grouponDeal.dealUrl" />"><img width="100px" height="61px" src="<s:property value="dealsResponse.grouponDeal.mediumImageUrl" />" border="0"/></a>
                     </div>
                 </div>
                 <div class="ctsrch_rightSide">
@@ -37,98 +37,14 @@
                 </div>
             </div>
             <div class="ctsrch_groupon_btm">
-                <!-- PFP -->
-                <s:iterator value="dealsResponse.places" status="placesStatus">
-                    <div class="ctsrch_listing">
-                        <div class="ctsrch_starContainer clearfix">
-                            <div class="ctsrch_stars">
-                                <s:iterator value="rating" status="stat"><span class='<s:if test="%{rating[#stat.index] == 2}">full</s:if><s:elseif test="%{rating[#stat.index] == 1}">half</s:elseif><s:else>empty</s:else>'> </span></s:iterator>
-                            </div>
-                            <s:if test="%{reviewCount > 0}">
-                                <div class="ctsrch_reviewFont">
-                                    <s:property value="reviewCount" /> Reviews
-                                </div>
-                            </s:if>
-                        </div>
-                        <div class="ctsrch_mainLink">
-                            <s:if test="%{isValidCallbackFunction == true}">
-                                <a class="ctsrch_busNameFont" href='<s:property value="callBackFunction" />'><s:property value="name" /></a>
-                            </s:if>
-                            <s:else>
-                                <a href='<s:property value="adDisplayTrackingURL" />' ><s:property value="name" /></a>
-                            </s:else>
-                        </div>
-                        <s:if test="%{isValidLocation == true}">
-                            <div class="ctsrch_cityFont">
-                                <s:property value="location" />
-                            </div>
-                        </s:if>
-                    </div>
-                </s:iterator>
-                <!-- Backfill -->
-                <s:iterator value="dealsResponse.backfill" status="placesStatus">
-                    <div class="ctsrch_listing">
-                        <div class="ctsrch_mainLink" >
-                            <a href='<s:property value="adDisplayTrackingURL" />'><s:property value="category" /></a>
-                        </div>
-                        <div class="ctsrch_tagLine" >
-                            <s:property value="description" />
-                        </div>
-                        <div class="ctsrch_displayUrl" >
-                            <a href='<s:property value="adDisplayTrackingURL" />'><s:property value="adDisplayURL" /></a>
-                        </div>
-                        <s:if test='%{offers != null && !"".equals(offers)}'>
-                             <div class="ctsrch_offersFont" >
-                                 <s:property value="offers" />
-                             </div>
-                        </s:if>
-                    </div>
-                </s:iterator>
-                <!-- Search -->
-                <s:iterator value="dealsResponse.searchResults" status="placesStatus">
-                    <div class="ctsrch_listing">
-                        <div class="ctsrch_starContainer clearfix">
-                            <div class="ctsrch_stars">
-                                <s:iterator value="rating" status="stat"><span class='<s:if test="%{rating[#stat.index] == 2}">full</s:if><s:elseif test="%{rating[#stat.index] == 1}">half</s:elseif><s:else>empty</s:else>'> </span></s:iterator>
-                            </div>
-                            <s:if test="%{reviewCount > 0}">
-                                <div class="ctsrch_reviewFont">
-                                    <s:property value="reviewCount" /> Reviews
-                                </div>
-                            </s:if>
-                        </div>
-                        <div class="ctsrch_mainLink">
-                            <s:if test="%{isValidCallbackFunction == true}">
-                                <a class="ctsrch_busNameFont" href='<s:property value="callBackFunction" />'><s:property value="name" /></a>
-                            </s:if>
-                            <s:else>
-                                <a href='<s:property value="adDisplayTrackingURL" />' ><s:property value="name" /></a>
-                            </s:else>
-                        </div>
-                        <s:if test="%{isValidLocation == true}">
-                            <div class="ctsrch_cityFont">
-                                <s:property value="location" />
-                            </div>
-                        </s:if>
-                    </div>
-                </s:iterator>
-                <!-- House Ads -->
-                <s:iterator value="dealsResponse.houseAds" status="hadStatus">
-                    <div class="ctsrch_listing">
-                        <div class="ctsrch_mainLink">
-                            <a href='<s:property value="destinationUrl" />'><s:property value="title" /></a>
-                        </div>
-                        <div class="ctsrch_tagLine">
-                            <s:property value="tagLine" />
-                        </div>
-                        <div class="ctsrch_displayUrl" >
-                            <a href='<s:property value="destinationUrl" />'><s:property value="displayUrl" /></a>
-                        </div>
-                    </div>
-                </s:iterator>
-                <div class="ctsrch_footer clearfix">
-                    <div class="ctsrch_sponserText">Ads by CityGrid</div>
-                </div>
+            	<s:if test="%{!dealsResponse.grouponDeal.details != null && !dealsResponse.grouponDeal.details.isEmpty()}">
+	                <div class="ctsrch_groupon_header">
+	                    Terms and Conditions:
+	                </div>
+	                <div class="ctsrch_groupon_conditions">
+	                    <s:property value="dealsResponse.grouponDeal.details[0]" />
+	                </div>
+                </s:if>
             </div>
         </div>
     </div>
