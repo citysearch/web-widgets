@@ -69,14 +69,14 @@ public class SkyNetSearchServlet extends HttpServlet {
         response.setContentType("text/xml");
         String urlFromRquestParam = (String) request.getParameter(("url"));
         String apiUrl = properties.getString("API_URL");
-        ;
         String urlString = apiUrl + urlFromRquestParam;
         URL url = new URL(urlString);
-
+        
+        System.out.println(urlString);
         System.out.println("ip:" + request.getRemoteAddr() + " host:" + request.getRemoteHost());
 
-        String ipAddress = request.getRemoteHost();
-        // ipAddress ="74.208.64.80";
+        String ipAddress = request.getRemoteAddr();
+        //ipAddress ="74.208.64.80";
 
         // System.out.println(cl.getCountry(request.getRemoteHost()).getName());
         String cacheLimit = properties.getString("cacheLimit");
