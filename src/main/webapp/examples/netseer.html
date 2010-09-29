@@ -62,7 +62,8 @@
             tags: '',
             radius: 25,
             clientIP: '75.200.154.76',
-            HostingURL: 'http://www.eatsushi.com'
+            HostingURL: 'http://www.eatsushi.com',
+            site: '192.168.0.100'
         };
         function navigate(listing_id, phone)
         {
@@ -72,7 +73,7 @@
             if (listing_id=="603300392") listing_id="15250644776";
             cgLaunch("http://www.insiderpages.com/b/" + listing_id, "insiderpages", "");
         }
-        document.write('<script id="CSWScript" type="text/javascript" src="http://localhost:8080/ads/static/js/CSWidgetAPI.js?var=cg"><\/script>');
+        document.write('<script id="CSWScript" type="text/javascript" src="http://192.168.0.100:8080/ads/static/js/CSWidgetAPI.js?var=cg"><\/script>');
     </script>
 
 <br />

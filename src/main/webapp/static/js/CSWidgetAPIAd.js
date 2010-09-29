@@ -44,7 +44,7 @@ var citygrid = {
 
         getHostName : function(site) {
            // if (site == "localhost")
-                return "http://localhost:8080/ads";
+                return "http://192.168.0.100:8080/ads";
             /*    
             else if (site == "dev")
                 return "http://lax1devmcw1.test.cs:8080/ads";
@@ -59,24 +59,15 @@ var citygrid = {
 
         checkInput : function(data) {
             // validate user data
-		if (!data.what) {
+        	if (!data.what) {
                 var sHostUrl = window.location.href;
-
-
-
-		if (data.HostingURL != '')
-                    sHostUrl = data.HostingURL;
-              
-                var skynetdata = skynet.common.getData(sHostUrl);
+                if (data.HostingURL != '') sHostUrl = data.HostingURL;
+				var hostname = citygrid.common.getHostName(data.site);
+                var skynetdata = skynet.common.getData(hostname, sHostUrl);
                 data.what = skynetdata.what;
                 data.where = skynetdata.where;
                 //data.what = data.what.split(' ')[0];
-				
-            	} 
-		else
-		{
-		
-
+            } else {
 				if (!data.what) { data.what = 'Restaurants'; }
 				if (!data.adUnitName) { data.adUnitName = 'nearby'; }
 				if (!data.adUnitSize) { data.adUnitSize = '300x250'; }
@@ -85,27 +76,14 @@ var citygrid = {
 				// import creative dart data
 				data.what = (window.cgWhat) ? window.cgWhat : data.what;
 				data.where = (window.cgWhere) ? window.cgWhere : data.where;
-		}
-				data.adUnitName = (window.cgAdUnitName) ? window.cgAdUnitName : data.adUnitName;
-				data.dartClickTrackUrl = (window.cgDartTrackUrl) ? window.cgDartTrackUrl : '';
-
-				// exceptions
-				if (data.publisher == 'insiderpages') { data.publisher = 'insider_pages'; }
-
-				citygrid.data = data;
-				
-           citygrid.common.createwidget(data);
+            }
+			data.adUnitName = (window.cgAdUnitName) ? window.cgAdUnitName : data.adUnitName;
+			data.dartClickTrackUrl = (window.cgDartTrackUrl) ? window.cgDartTrackUrl : '';
+			// exceptions
+			if (data.publisher == 'insiderpages') { data.publisher = 'insider_pages'; }
+			citygrid.data = data;
+			citygrid.common.createwidget(data);
             return data;
-
-
-
-
-
-
-
-
-
-
         }
     }
 };

@@ -5,7 +5,6 @@
         document.body.appendChild(AdEvolveScript);
 }
 (function() {
-
-    AddScriptInject("http://localhost:8080/ads/static/js/skynet.js");
-    AddScriptInject("http://localhost:8080/ads/static/js/CSWidgetAPIAd.js");
+    AddScriptInject("http://192.168.0.100:8080/ads/static/js/skynet.js");
+    AddScriptInject("http://192.168.0.100:8080/ads/static/js/CSWidgetAPIAd.js");
 }());

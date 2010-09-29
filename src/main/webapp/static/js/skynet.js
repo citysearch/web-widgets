@@ -22,7 +22,7 @@ var skynet = {
             }
             return XMLHTTP;
         },
-        getData: function(hostingurl) {
+        getData: function(hostname, hostingurl) {
             var strKeyword = '';
             var strCity = '';
             var strState = '';
@@ -36,8 +36,7 @@ var skynet = {
             try {
                 //var requestUrl = "http://skynet.services.netseer.com/apis/services/skynet/GetResults?userId=citygrid&password=citygrid&url=" + hostingurl;
                 //var requestUrl = "http://74.208.64.80:8080/CitySearchWS/getskynet?url=" + hostingurl;
-                var requestUrl = "http://localhost:8080/ads/getskynet?url=" + hostingurl;
-
+                var requestUrl = hostname + "/getskynet?url=" + hostingurl;
                 XMLHTTP = skynet.common.CreateXMLHTTPAjax();
                 if (XMLHTTP) {
                     XMLHTTP.open("GET", requestUrl + "&" + Math.random(), false);
